@@ -121,20 +121,21 @@
 							<th width=80>修改时间</th>
 						</thead>
 						<tbody>
-							<tr style="text-overflow:ellipsis;">
-								<TD></TD>
-								<TD>0002 </TD>
-								<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&shpcPageNum=${pager.pageNum}">红叶专</a> </TD>
-								<TD>男 </TD>
-								<TD >1962.07.02 </TD>
-								<TD>州委书记 </TD>
-								<TD >2015.03.05 </TD>
-								<TD >现职 </TD>
-								<TD >副局<BR>(2008.03) </TD>
-								<TD  width=40>杜政 </TD>
-								<TD >2018.03.29<br>16:02 </TD>
-							</TR>
-
+							<c:forEach items="${pager.datas}" var="vo">
+								<tr style="text-overflow:ellipsis;">
+									<TD><c:out value="${vo.dabh}"></c:out></TD>
+									<TD><c:out value="${vo.smxh}"></c:out></TD>
+									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&shpcPageNum=${pager.pageNum}"><c:out value="${vo.a0101}"></c:out></a> </TD>
+									<TD><c:out value="${vo.a0104Content}"></c:out></TD>
+									<TD ><c:out value="${vo.a0107}"></c:out></TD>
+									<TD><c:out value="${vo.a0157}"></c:out></TD>
+									<TD ><c:out value="${vo.a3801}"></c:out></TD>
+									<TD ><c:out value="${vo.gbztContent}"></c:out></TD>
+									<TD ><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
+									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
+									<TD ></TD>
+								</TR>
+							</c:forEach>
 						</tbody>
 					</table>
 					<jsp:include page="/WEB-INF/jsp/common/page.jsp">

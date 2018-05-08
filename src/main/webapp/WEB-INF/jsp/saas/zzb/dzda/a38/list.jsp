@@ -32,8 +32,6 @@
 	<div class="row-fluid">
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
-			<form class=""id="importForm" enctype="multipart/form-data">
-				<input type="hidden" name="b01Id" value="${b01Id}"/>
 				<div class="portlet-title">
 					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
@@ -74,31 +72,37 @@
 					</div>
 
 				</div>
-			</form>
 				<div class="clearfix">
 					<div class="control-group">
 							<form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-								<div style=" float:left;text-align: center">
-									档案编号：<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
-									扫描序号：<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
-									姓名：<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-									干部状态：
+								<div style=" float:left;margin-top:4px">档案编号:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;扫描序号:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
+								<div style="float:left">
+									<SelectTag:SelectTag id="gbztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.gbztCodeQuery}"/>
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
+								<div style="float:left">
+									<SelectTag:SelectTag id="daztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.daztCodeQuery}"/>
 								</div>
 								<div style="float:left">
-									<SelectTag:SelectTag id="gbztCodeQuery" width="200px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path }/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.gbztCodeQuery}"/>
+									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+									<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
 								</div>
-								<div style=" float:left">档案状态：</div>
-								<div style="float:left">
-									<SelectTag:SelectTag id="daztCodeQuery" width="200px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path }/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.daztCodeQuery}"/>
-								</div>
-								<div style="float:left">
-									<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
-								<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
-									</div>
 							</form>
 					</div>
 

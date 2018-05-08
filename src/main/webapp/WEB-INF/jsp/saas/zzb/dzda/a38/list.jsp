@@ -38,7 +38,7 @@
 					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
 
-						<a id="sample_editable_1_new" class="btn green" href="${path }/sys/tenant/privilege/add?&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+						<a id="sample_editable_1_new" class="btn green" href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-plus"></i>添加
 						</a>
 						<div class="btn-group" style="padding-bottom: 0px">
@@ -124,7 +124,7 @@
 							<tr style="text-overflow:ellipsis;">
 								<TD></TD>
 								<TD>0002 </TD>
-								<TD ><a href="${path}/zzb/app/console/daDemo/manage">红叶专</a> </TD>
+								<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&shpcPageNum=${pager.pageNum}">红叶专</a> </TD>
 								<TD>男 </TD>
 								<TD >1962.07.02 </TD>
 								<TD>州委书记 </TD>

@@ -66,5 +66,18 @@ public class A38Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/a38/list",model);
     }
 
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/editManage")
+    public ModelAndView editManage(String id){
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("id",id);
+        return new ModelAndView("saas/zzb/dzda/a38/manage",map);
+    }
 
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/add")
+    public ModelAndView add(){
+        Map<String, Object> map = Maps.newHashMap();
+        return new ModelAndView("saas/zzb/dzda/a38/addDaBase",map);
+    }
 }

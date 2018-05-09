@@ -132,16 +132,6 @@
 //
 //	})();
 
-	jQuery(document).ready(function() {
-		App.init();
-		var startDate = $("#pcsjValue").datepicker({
-			language:  'zh-CN',
-			format: "yyyymmdd",
-			pickerPosition: "bottom-left",
-			weekStart : 1,
-			autoclose : true
-		});
-	});
 	var myVld = new EstValidate("form1");
 	<%--function formSubmit(){--%>
 		<%--var bool = myVld.form();--%>

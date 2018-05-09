@@ -12,14 +12,6 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-	<link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-	<!-- BEGIN PAGE LEVEL STYLES -->
-	<link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-	<link href="${path }/css/style.css" rel="stylesheet" type="text/css">
-	<!-- END PAGE LEVEL STYLES -->
 	<title>电子档案系统</title>
 	<style type="text/css">
 		form {
@@ -32,14 +24,15 @@
 	<div class="row-fluid">
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
-			<form class=""id="importForm" enctype="multipart/form-data">
-				<input type="hidden" name="b01Id" value="${b01Id}"/>
 				<div class="portlet-title">
 					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
 
-						<a id="sample_editable_1_new" class="btn green" href="${path }/sys/tenant/privilege/add?&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+						<a id="sample_editable_1_new" class="btn green" href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-plus"></i>添加
+						</a>
+						<a  class="btn green" href="#">
+							高级查询
 						</a>
 						<div class="btn-group" style="padding-bottom: 0px">
 							<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -61,12 +54,7 @@
 								</li>
 							</ul>
 						</div>
-						<a  class="btn green" href="#">
-							高级查询
-						</a>
-
 						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
-
 						<a class="btn green" href="javascript:fileDown('list')">
 							输出
 						</a>
@@ -74,31 +62,37 @@
 					</div>
 
 				</div>
-			</form>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-								<div style=" float:left;text-align: center">
-									档案编号：<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
-									扫描序号：<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
-									姓名：<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-									干部状态：
+								<div style=" float:left;margin-top:4px">档案编号:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;扫描序号:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
+								<div style=" float:left;">
+									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
+								<div style="float:left">
+									<SelectTag:SelectTag id="gbztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${gbztCodeQuery}"/>
+								</div>
+								<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
+								<div style="float:left">
+									<SelectTag:SelectTag id="daztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${daztCodeQuery}"/>
 								</div>
 								<div style="float:left">
-									<SelectTag:SelectTag id="gbztCodeQuery" width="200px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path }/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.gbztCodeQuery}"/>
+									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+									<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
 								</div>
-								<div style=" float:left">档案状态：</div>
-								<div style="float:left">
-									<SelectTag:SelectTag id="daztCodeQuery" width="200px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path }/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.daztCodeQuery}"/>
-								</div>
-								<div style="float:left">
-									<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
-								<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
-									</div>
 							</form>
 					</div>
 
@@ -121,20 +115,21 @@
 							<th width=80>修改时间</th>
 						</thead>
 						<tbody>
-							<tr style="text-overflow:ellipsis;">
-								<TD></TD>
-								<TD>0002 </TD>
-								<TD ><a href="${path}/zzb/app/console/daDemo/manage">红叶专</a> </TD>
-								<TD>男 </TD>
-								<TD >1962.07.02 </TD>
-								<TD>州委书记 </TD>
-								<TD >2015.03.05 </TD>
-								<TD >现职 </TD>
-								<TD >副局<BR>(2008.03) </TD>
-								<TD  width=40>杜政 </TD>
-								<TD >2018.03.29<br>16:02 </TD>
-							</TR>
-
+							<c:forEach items="${pager.datas}" var="vo">
+								<tr style="text-overflow:ellipsis;">
+									<TD><c:out value="${vo.dabh}"></c:out></TD>
+									<TD><c:out value="${vo.smxh}"></c:out></TD>
+									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&shpcPageNum=${pager.pageNum}"><c:out value="${vo.a0101}"></c:out></a> </TD>
+									<TD><c:out value="${vo.a0104Content}"></c:out></TD>
+									<TD ><c:out value="${vo.a0107}"></c:out></TD>
+									<TD><c:out value="${vo.a0157}"></c:out></TD>
+									<TD ><c:out value="${vo.a3801}"></c:out></TD>
+									<TD ><c:out value="${vo.gbztContent}"></c:out></TD>
+									<TD ><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
+									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
+									<TD ></TD>
+								</TR>
+							</c:forEach>
 						</tbody>
 					</table>
 					<jsp:include page="/WEB-INF/jsp/common/page.jsp">
@@ -168,51 +163,14 @@
 		document.getElementById("btn-unloadFile").click();
 	}
 	function pagehref (pageNum ,pageSize){
-		<%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data:{
-				'b01Id':"${b01Id}",
-				'pageNum':pageNum,
-				'pageSize':pageSize
-			},
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		$("#pageNum").val(pageNum);
+		$("#pageSize").val(pageSize);
+		$("#searchForm").submit();
 
 	}
 
 	function searchSubmit(){
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data : $("#searchForm").serialize(),
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		document.searchForm.submit();
 	}
 
 
@@ -253,25 +211,12 @@
 		document.getElementById("btn-"+fileName).click();
 	}
 	function clearData(){
-		$("#xmQuery").val('');
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data : $("#searchForm").serialize(),
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		$("#dabhQuery").val('');
+		$("#smxhQuery").val('');
+		$("#a0101Query").val('');
+		$("#gbztCodeQuery").val('');
+		$("#daztCodeQuery").val('');
+		document.searchForm.submit();
 	}
 	function exportGbrmsp(){
 		$.cloudAjax({

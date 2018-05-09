@@ -12,14 +12,6 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-	<link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-	<!-- BEGIN PAGE LEVEL STYLES -->
-	<link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-	<link href="${path }/css/style.css" rel="stylesheet" type="text/css">
-	<!-- END PAGE LEVEL STYLES -->
 	<title>电子档案系统</title>
 	<style type="text/css">
 		form {
@@ -38,6 +30,9 @@
 
 						<a id="sample_editable_1_new" class="btn green" href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-plus"></i>添加
+						</a>
+						<a  class="btn green" href="#">
+							高级查询
 						</a>
 						<div class="btn-group" style="padding-bottom: 0px">
 							<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -59,12 +54,7 @@
 								</li>
 							</ul>
 						</div>
-						<a  class="btn green" href="#">
-							高级查询
-						</a>
-
 						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
-
 						<a class="btn green" href="javascript:fileDown('list')">
 							输出
 						</a>
@@ -74,7 +64,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -92,12 +82,12 @@
 								<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
 								<div style="float:left">
 									<SelectTag:SelectTag id="gbztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.gbztCodeQuery}"/>
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${gbztCodeQuery}"/>
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
 								<div style="float:left">
 									<SelectTag:SelectTag id="daztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${vo.daztCodeQuery}"/>
+													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${daztCodeQuery}"/>
 								</div>
 								<div style="float:left">
 									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
@@ -173,51 +163,14 @@
 		document.getElementById("btn-unloadFile").click();
 	}
 	function pagehref (pageNum ,pageSize){
-		<%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data:{
-				'b01Id':"${b01Id}",
-				'pageNum':pageNum,
-				'pageSize':pageSize
-			},
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		$("#pageNum").val(pageNum);
+		$("#pageSize").val(pageSize);
+		$("#searchForm").submit();
 
 	}
 
 	function searchSubmit(){
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data : $("#searchForm").serialize(),
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		document.searchForm.submit();
 	}
 
 
@@ -258,25 +211,12 @@
 		document.getElementById("btn-"+fileName).click();
 	}
 	function clearData(){
-		$("#xmQuery").val('');
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data : $("#searchForm").serialize(),
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
+		$("#dabhQuery").val('');
+		$("#smxhQuery").val('');
+		$("#a0101Query").val('');
+		$("#gbztCodeQuery").val('');
+		$("#daztCodeQuery").val('');
+		document.searchForm.submit();
 	}
 	function exportGbrmsp(){
 		$.cloudAjax({

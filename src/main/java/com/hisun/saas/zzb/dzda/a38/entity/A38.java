@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.a38.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "a38")
-public class A38 extends TombstoneEntity implements Serializable {
+public class A38 extends TenantEntity implements Serializable {
     private String id;
     private String a01Id;//人员主键
     private String a0101;//姓名

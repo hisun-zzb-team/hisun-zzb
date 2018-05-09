@@ -6,6 +6,7 @@
 
 package com.hisun.saas.zzb.dzda.a38.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hisun.base.controller.BaseController;
 import com.hisun.base.dao.util.CommonConditionQuery;
@@ -16,14 +17,12 @@ import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
-import com.hisun.saas.sys.tenant.privilege.service.TenantPrivilegeService;
-import com.hisun.saas.sys.tenant.privilege.vo.TenantPrivilegeVo;
 import com.hisun.saas.sys.tenant.tenant.service.TenantService;
 import com.hisun.saas.sys.tenant.user.service.TenantUserService;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.util.ValidateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -35,10 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author liuzj {279421824@qq.com}
@@ -53,15 +49,41 @@ public class A38Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
-    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize) throws UnsupportedEncodingException {
+    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
-//        query.add(CommonRestrictions.and(" pId = :pId ", "pId", pId));
+        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
+        if(StringUtils.isNotEmpty(dabhQuery)){
+            query.add(CommonRestrictions.and(" dabh like :dabhQuery ", "dabhQuery","%"+dabhQuery+"%"));
+        }
+        if(StringUtils.isNotEmpty(smxhQuery)){
+            query.add(CommonRestrictions.and(" smxh like :smxhQuery ", "smxhQuery","%"+smxhQuery+"%"));
+        }
+        if(StringUtils.isNotEmpty(a0101Query)){
+            query.add(CommonRestrictions.and(" a0101 like :a0101Query ", "a0101Query","%"+a0101Query+"%"));
+        }
+        if(StringUtils.isNotEmpty(gbztCodeQuery)){
+            String str[] = gbztCodeQuery.split(",");
+            List gbztCodeList =  Arrays.asList(str);
+            query.add(CommonRestrictions.and(" gbztCode in (:gbztCodeList)", "gbztCodeList",gbztCodeList));
+        }
+        if(StringUtils.isNotEmpty(daztCodeQuery)){
+            String str[] = daztCodeQuery.split(",");
+            List daztCodeList =  Arrays.asList(str);
+            query.add(CommonRestrictions.and(" daztCode in (:daztCodeList) ", "daztCodeList",daztCodeList));
+        }
         Long total = a38Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
-//        orderBy.add(CommonOrder.asc("sort"));
+        orderBy.add(CommonOrder.desc("smxh"));
+        orderBy.add(CommonOrder.asc("a0101"));
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        model.put("dabhQuery",dabhQuery);
+        model.put("smxhQuery",smxhQuery);
+        model.put("a0101Query",a0101Query);
+        model.put("gbztCodeQuery",gbztCodeQuery);
+        model.put("daztCodeQuery",daztCodeQuery);
         model.put("pager",pager);
         return new ModelAndView("saas/zzb/dzda/a38/list",model);
     }
@@ -70,7 +92,9 @@ public class A38Controller extends BaseController {
     @RequestMapping(value = "/editManage")
     public ModelAndView editManage(String id){
         Map<String, Object> map = Maps.newHashMap();
+        A38 a38 = a38Service.getByPK(id);
         map.put("id",id);
+        map.put("a0101",a38.getA0101());
         return new ModelAndView("saas/zzb/dzda/a38/manage",map);
     }
 
@@ -78,6 +102,125 @@ public class A38Controller extends BaseController {
     @RequestMapping(value = "/add")
     public ModelAndView add(){
         Map<String, Object> map = Maps.newHashMap();
-        return new ModelAndView("saas/zzb/dzda/a38/addDaBase",map);
+        return new ModelAndView("saas/zzb/dzda/a38/add",map);
+    }
+
+    @RequestMapping(value = "/smxh/check")
+    public @ResponseBody Map<String, Object> smxhCheck(
+            @RequestParam("smxh") String smxh,@RequestParam(value="id",required=false)String id) throws GenericException {
+        Map<String, Object> map = Maps.newHashMap();
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" smxh = :smxh ", "smxh", smxh));
+        if(StringUtils.isNotBlank(id)){
+            A38 a38 = a38Service.getByPK(id);
+            if(StringUtils.equalsIgnoreCase(a38.getSmxh(), smxh)){
+                map.put("success", true);
+            }else{
+                Long total = a38Service.count(query);
+                if(total>=1){
+                    map.put("success", false);
+                }else{
+                    map.put("success", true);
+                }
+            }
+        }else{
+            Long total = a38Service.count(query);
+            if(total>=1){
+                map.put("success", false);
+            }else{
+                map.put("success", true);
+            }
+        }
+        return map;
+    }
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/save")
+    public @ResponseBody Map<String,Object> save(@ModelAttribute A38Vo vo) throws GenericException {
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        Map<String,String> vMap = ValidateUtil.validAll(vo);
+        if(vMap.size()>0){
+            returnMap.put("message","数据验证不通过");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            A38 entity = new A38();
+            BeanUtils.copyProperties(vo, entity);
+            entity.setId(null);
+            entity.setSjzt("1");
+            EntityWrapper.wrapperSaveBaseProperties(entity,details);
+            a38Service.save(entity);
+            returnMap.put("code",1);
+        }catch (GenericException e){
+            returnMap.put("code",-1);
+            returnMap.put("message", e.getMessage());
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+            returnMap.put("message", "系统错误，请联系管理员");
+        }
+
+        return returnMap;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/ajax/edit")
+    public ModelAndView edit(@RequestParam(value="id",required=true)String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        A38 a38 = a38Service.getByPK(id);
+        A38Vo vo = new A38Vo();
+        BeanUtils.copyProperties(a38,vo);
+        model.put("vo", vo);
+        return new ModelAndView("saas/zzb/dzda/a38/edit", model);
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/update")
+    public @ResponseBody Map<String,Object> update(@ModelAttribute A38Vo vo, HttpServletRequest request) throws GenericException{
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        Map<String,String> vMap = ValidateUtil.validAll(vo);
+        if(StringUtils.isBlank(vo.getA0101()) || vo.getA0101().length()<1 || vo.getA0101().length()>15){
+            returnMap.put("message","数据验证不通过");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        A38 entity = a38Service.getByPK(vo.getId());
+        if(entity==null){
+            returnMap.put("message","数据不存在");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            BeanUtils.copyProperties(vo, entity);
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            a38Service.update(entity);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+        }
+        return returnMap;
+    }
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/delete/{id}")
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        try{
+            a38Service.deleteByPK(id);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+        }
+
+        return returnMap;
     }
 }

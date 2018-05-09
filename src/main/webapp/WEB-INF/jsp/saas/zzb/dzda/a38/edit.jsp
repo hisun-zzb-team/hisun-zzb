@@ -52,7 +52,7 @@
 					<div id="a0107Group" class="control-group">
 						<label class="control-label">出生日期</label>
 						<div class="controls">
-							<input type="text" class="span10 m-wrap" id="a0107" name="a0107" maxlength="64" type="date" formatter="yyyymmdd"  value="${vo.a0107}"/>
+							<input type="text" class="span10 m-wrap" id="a0107" name="a0107" maxlength="64"  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"  value="${vo.a0107}"/>
 						</div>
 					</div>
 				</div>
@@ -80,7 +80,7 @@
 					<div id="dutyLevelTimeBaseGroup" class="control-group">
 						<label class="control-label">现职级时间</label>
 						<div class="controls">
-							<input type="text" class="span10 m-wrap" id="dutyLevelTimeBase" name="dutyLevelTimeBase" maxlength="64"  value="${vo.dutyLevelTimeBase}" />
+							<input type="text" class="span10 m-wrap" id="dutyLevelTimeBase" name="dutyLevelTimeBase" maxlength="64"  value="${vo.dutyLevelTimeBase}"  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
 						</div>
 					</div>
 				</div>
@@ -169,7 +169,7 @@
 					<div id="a3801Group" class="control-group">
 						<label class="control-label">接收日期</label>
 						<div class="controls">
-							<input type="text" class="span10 m-wrap" id="a3801" name="a3801" maxlength="8"  value="${vo.a3801}" />
+							<input type="text" class="span10 m-wrap" id="a3801" name="a3801" maxlength="8"  value="${vo.a3801}"  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
 						</div>
 					</div>
 				</div>
@@ -177,7 +177,7 @@
 					<div id="a3817Group" class="control-group">
 						<label class="control-label">转递日期</label>
 						<div class="controls">
-							<input type="text" class="span10 m-wrap" id="a3817" name="a3817" maxlength="8"  value="${vo.a3817}" />
+							<input type="text" class="span10 m-wrap" id="a3817" name="a3817" maxlength="8"  value="${vo.a3817}"  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
 						</div>
 					</div>
 				</div>

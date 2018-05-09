@@ -48,25 +48,25 @@
 <div class="portlet-title">
 	<div class="caption">姓名：${a0101}</div>
 	<div class="relationbetTop_but">
-		<button type="button" class="btn green" onclick="formSave()"><i class="icon-ok"></i> 保存 </button>&nbsp;
-		<div class="btn-group" style="padding-bottom: 0px">
-			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
-			干部库 <i class="icon-angle-down"></i>
-			</a>
-			<ul class="dropdown-menu">
-				<li >
-				<a onclick="viewA01()">查看干部信息</a>
-				</li>
-				<li>
-				<a onclick="selectTyle('kccl')">提取干部信息</a>
-				</li>
-				<li>
-				<a onclick="selectTyle('dascqk')">取消关联</a>
-				</li>
-			</ul>
-		</div>
-		<a  class="btn green" href="#">删除</a>
-		<a  class="btn green" href="javascript:zhuanchu()">转出</a>&nbsp;
+		<button type="button" class="btn green" onclick="formSave()"><i class="icon-ok"></i> 保存 </button>
+		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
+			<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
+			<%--干部库 <i class="icon-angle-down"></i>--%>
+			<%--</a>--%>
+			<%--<ul class="dropdown-menu">--%>
+				<%--<li >--%>
+				<%--<a onclick="viewA01()">查看干部信息</a>--%>
+				<%--</li>--%>
+				<%--<li>--%>
+				<%--<a onclick="selectTyle('kccl')">提取干部信息</a>--%>
+				<%--</li>--%>
+				<%--<li>--%>
+				<%--<a onclick="selectTyle('dascqk')">取消关联</a>--%>
+				<%--</li>--%>
+			<%--</ul>--%>
+		<%--</div>--%>
+		<a  class="btn green" href="javascript:del()">删除</a>
+		<a  class="btn green" href="javascript:zhuanchu()">转递</a>&nbsp;
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 			下载<i class="icon-angle-down"></i>
@@ -133,6 +133,7 @@
 						success : function(json){
 							if(json.code==1){
 								myLoading.hide();
+								tabIndex = $(e.target).attr('id');
 								if($(e.target).attr('id')=="#tab_1_2"){
 									$("[id='#tab_1_2']").tab('show');
 									mlLoad();
@@ -144,17 +145,22 @@
 									zwbdLoad();
 								}
 							}else{
+								$("[id='#tab_1_1']").tab('show');
 								myLoading.hide();
 								showTip("提示", json.message, 2000);
 								return false;
 							}
 						},
 						error : function(){
+							$("[id='#tab_1_1']").tab('show');
 							showTip("提示","出错了,请检查网络!",2000);
 							myLoading.hide();
 							return false;
 						}
 					});
+				}else{
+					$("[id='#tab_1_1']").tab('show');
+					return false;
 				}
 			}else{
 				if($(e.target).attr('id')=="#tab_1_1") {
@@ -170,8 +176,9 @@
 //					$("[id='#tab_1_4']").tab('show');
 					zwbdLoad();
 				}
+				tabIndex = $(e.target).attr('id');
 			}
-			tabIndex = $(e.target).attr('id');
+
 		});
 //		$("#tabs li a").each(function(){
 //			$(this).click(function(){
@@ -253,7 +260,7 @@
 	}
 	function zwbdLoad(){
 		$.ajax({
-			url : "${path }/zzb/dzda/a52/list",
+			url : "${path }/zzb/dzda/a52/ajax/list",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
@@ -359,6 +366,19 @@
 			}
 		});
 	}
+
+	var del = function(){
+		var id = "${id}";
+		var itemName = "${a0101}";
+		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){
+			if (data.code == "1") {
+				showTip("提示","删除成功", 2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list"},2000);
+			}else{
+				showTip("提示", data.message, 2000);
+			}
+		});
+	};
 </script>
 </body>
 </html>

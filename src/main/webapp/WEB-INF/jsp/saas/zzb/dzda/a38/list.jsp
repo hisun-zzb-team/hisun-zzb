@@ -39,7 +39,9 @@
 								导入<i class="icon-angle-down"></i>
 							</a>
 							<ul class="dropdown-menu">
-
+								<li >
+									<a onclick="unloadFile()">导入excel</a>
+								</li>
 								<li >
 									<a onclick="unloadFile()">导入Lrmx</a>
 								</li>

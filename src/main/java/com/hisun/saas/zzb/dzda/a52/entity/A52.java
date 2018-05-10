@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.a52.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,7 +19,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "a52")
-public class A52 extends TombstoneEntity implements Serializable {
+public class A52 extends TenantEntity implements Serializable {
     private String id;
     private A38 a38;//外键，人员档案主健
     private String a5204;//任职机构

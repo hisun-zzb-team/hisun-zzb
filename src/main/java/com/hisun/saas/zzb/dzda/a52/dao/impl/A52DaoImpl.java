@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.a52.dao.impl;
 
 import com.hisun.base.dao.impl.BaseDaoImpl;
+import com.hisun.saas.sys.tenant.base.dao.imp.TenantBaseDaoImpl;
 import com.hisun.saas.zzb.dzda.a52.dao.A52Dao;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Repository;
  * @author Marco {854476391@qq.com}
  */
 @Repository
-public class A52DaoImpl extends BaseDaoImpl<A52,String> implements A52Dao{
+public class A52DaoImpl extends TenantBaseDaoImpl<A52,String> implements A52Dao{
 
 }

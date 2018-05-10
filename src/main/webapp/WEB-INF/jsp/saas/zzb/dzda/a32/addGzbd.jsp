@@ -19,7 +19,7 @@
 
                 <i class="icon-reorder"></i>
 
-                <span class="hidden-480">增加职务变动</span>
+                <span class="hidden-480">增加工资变动</span>
 
             </div>
             <div class="tools">
@@ -27,22 +27,22 @@
 
             </div>
         </div>
-        <form action="${path}/zzb/dzda/a52/ajax/save" class="form-horizontal" id="form1" method="post">
+        <form action="${path}/zzb/dzda/a32/ajax/save" class="form-horizontal" id="form1" method="post">
 
                 <div class="row-fluid">
                     <div class="span6 ">
-                        <div id="a5204Group" class="control-group">
+                        <div id="gzbmGroup" class="control-group">
                             <label class="control-label"><span class="required">*</span>工作部门</label>
                             <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a5204" required maxlength="128" id="a5204" value="" />
+                                <input type="text" class="span8 m-wrap" name="gzbm" required maxlength="128" id="gzbm" value="" />
                             </div>
                         </div>
                     </div>
                     <div class="span6 ">
-                        <div id="a5211Group" class="control-group">
+                        <div id="zwmcGroup" class="control-group">
                             <label class="control-label">职务名称</label>
                             <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a5211"  maxlength="128" id="a5211" value="" />
+                                <input type="text" class="span8 m-wrap" name="zwmc"  maxlength="128" id="zwmc" value="" />
                             </div>
                         </div>
                     </div>
@@ -50,55 +50,63 @@
 
             <div class="row-fluid">
                 <div class="span6 ">
-                        <div id="a5227InGroup" class="control-group">
-                            <label class="control-label">任职时间</label>
+                        <div id="a3224Group" class="control-group">
+                            <label class="control-label">执行职务工资标准：</label>
                             <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a5227In"  maxlength="128" id="a5227In" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                                <input type="text" class="span8 m-wrap" name="a3224"  maxlength="128" id="a3224" value=""/>
                             </div>
                         </div>
                 </div>
                 <div class="span6 ">
-                        <div id="a5227OutGroup" class="control-group">
-                            <label class="control-label">免职时间</label>
+                        <div id="a3234Group" class="control-group">
+                            <label class="control-label">职务工资额：</label>
                             <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a5227Out"  maxlength="128" id="a5227Out" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                                <input type="text" class="span8 m-wrap" name="a3234"  maxlength="128" id="a3234" value=""/>
                             </div>
                         </div>
                 </div>
             </div>
             <div class="row-fluid">
                 <div class="span6 ">
-                        <div id="a0245Group" class="control-group">
-                            <label class="control-label">任职批准文号</label>
-                            <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a0245"  maxlength="128" id="a0245" value="" />
-                            </div>
+                    <div id="a3207Group" class="control-group">
+                        <label class="control-label">批准日期：</label>
+                        <div class="controls">
+                            <input type="text" class="span8 m-wrap" name="a3207"  maxlength="128" id="a3207" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                         </div>
+                    </div>
                 </div>
                 <div class="span6 ">
-                        <div id="a0267Group" class="control-group">
-                            <label class="control-label">免职批准文号</label>
+                        <div id="a3204Group" class="control-group">
+                            <label class="control-label">批准机关：</label>
                             <div class="controls">
-                                <input type="text" class="span8 m-wrap" name="a0267"  maxlength="128" id="a0267" value="" />
+                                <input type="text" class="span8 m-wrap" name="a3204"  maxlength="128" id="a3204" value="" />
                             </div>
                         </div>
                 </div>
             </div>
             <div class="row-fluid">
+                <div class="span6 ">
+                    <div id="a3211Group" class="control-group">
+                        <label class="control-label">批准文号：</label>
+                        <div class="controls">
+                            <input type="text"  class="span8 m-wrap" name="a3211"  maxlength="128" id="a3211" value="" />
+                        </div>
+                    </div>
+                    </div>
                 <div class="span6 ">
                     <div id="pxGroup" class="control-group">
-                        <label class="control-label"><span class="required">*</span>职务变动顺序号</label>
+                        <label class="control-label"><span class="required">*</span>工资变动顺序号</label>
                         <div class="controls">
                             <input type="text" number="true"  required maxlength="3" class="span8 m-wrap" name="px"  maxlength="128" id="px" value="${sort}" />
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
             <div  >
                 <center>
                 <div style="margin:auto;">
                     <input type="hidden" name="a38Id" value="${a38Id}">
-                    <button class="btn green" type="button" style="padding:7px 20px;" onclick="submitA52()">确定</button>
+                    <button class="btn green" type="button" style="padding:7px 20px;" onclick="submita32()">确定</button>
                     <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
                 </div>
                 </center>
@@ -109,14 +117,14 @@
     <script type="text/javascript">
         function cencal(){
             $("#catalogList").html("");
-            $("#a52Table").show();
+            $("#a32Table").show();
         }
         var addForm = new EstValidate("form1");
-        function submitA52(){
+        function submita32(){
             var bool = addForm.form();
             if(bool){
                 $.ajax({
-                    url : "${path }/zzb/dzda/a52/save",
+                    url : "${path }/zzb/dzda/a32/save",
                     type : "post",
                     data : $('#form1').serialize(),
                     dataType : "json",
@@ -126,7 +134,7 @@
                     success : function(json){
                         if(json.success){
                             $.ajax({
-                                url : "${path }/zzb/dzda/a52/ajax/list",
+                                url : "${path }/zzb/dzda/a32/ajax/list",
                                 type : "get",
                                 data : {"a38Id":"${a38Id}"},
                                 dataType : "html",

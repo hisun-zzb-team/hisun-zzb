@@ -50,7 +50,7 @@ public class A38Controller extends BaseController {
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery) throws UnsupportedEncodingException {
+    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
@@ -84,6 +84,8 @@ public class A38Controller extends BaseController {
         model.put("a0101Query",a0101Query);
         model.put("gbztCodeQuery",gbztCodeQuery);
         model.put("daztCodeQuery",daztCodeQuery);
+        model.put("gbztContentQuery",gbztContentQuery);
+        model.put("daztContentQuery",daztContentQuery);
         model.put("pager",pager);
         return new ModelAndView("saas/zzb/dzda/a38/list",model);
     }

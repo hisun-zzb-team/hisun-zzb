@@ -90,8 +90,8 @@
 					<div id="gbztContentGroup" class="control-group">
 						<label class="control-label">干部状态</label>
 						<div class="controls">
-							<Tree:tree id="gbztCode" valueName="gbztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB14-1994/RZZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-									   submitType="get" dataType="json" isSearch="true" isSelectTree="true" defaultkeys="${vo.gbztCode}" defaultvalues="${vo.gbztContent}"/>
+							<Tree:tree id="gbztCode" valueName="gbztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+									   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="radio" isSelectTree="true" defaultkeys="${vo.gbztCode}" defaultvalues="${vo.gbztContent}"/>
 						</div>
 					</div>
 				</div>
@@ -109,8 +109,8 @@
 					<div id="daztContentGroup" class="control-group">
 						<label class="control-label">档案状态</label>
 						<div class="controls">
-							<Tree:tree id="daztCode" valueName="daztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB09-2006/ZWJB" token="${sessionScope.OWASP_CSRFTOKEN}"
-									   submitType="get" dataType="json" isSearch="true" isSelectTree="true" defaultkeys="${vo.daztCode}" defaultvalues="${vo.daztContent}"/>
+							<Tree:tree id="daztCode" valueName="daztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+									   submitType="get" dataType="json" isSearch="false" isSelectTree="true" defaultkeys="${vo.daztCode}" defaultvalues="${vo.daztContent}"/>
 						</div>
 					</div>
 				</div>

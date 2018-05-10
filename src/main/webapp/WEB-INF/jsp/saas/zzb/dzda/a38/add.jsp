@@ -138,7 +138,7 @@
 										<label class="control-label">档案状态</label>
 										<div class="controls">
 											<Tree:tree id="daztCode" valueName="daztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB09-2006/ZWJB" token="${sessionScope.OWASP_CSRFTOKEN}"
-													   submitType="get" dataType="json" isSearch="true" isSelectTree="true"/>
+													   submitType="get" dataType="json" isSearch="false" isSelectTree="true"/>
 										</div>
 									</div>
 								</div>

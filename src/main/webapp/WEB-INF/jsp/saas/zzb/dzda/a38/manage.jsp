@@ -143,6 +143,12 @@
 								}else if($(e.target).attr('id')=="#tab_1_4"){
 									$("[id='#tab_1_4']").tab('show');
 									zwbdLoad();
+								}else if($(e.target).attr('id')=="#tab_1_5"){
+									$("[id='#tab_1_5']").tab('show');
+									gzbdLoad();
+								}else if($(e.target).attr('id')=="#tab_1_6"){
+									$("[id='#tab_1_6']").tab('show');
+									cljsLoad();
 								}
 							}else{
 								$("[id='#tab_1_1']").tab('show');
@@ -175,6 +181,12 @@
 				}else if($(e.target).attr('id')=="#tab_1_4"){
 //					$("[id='#tab_1_4']").tab('show');
 					zwbdLoad();
+				}else if($(e.target).attr('id')=="#tab_1_5"){
+					$("[id='#tab_1_5']").tab('show');
+					gzbdLoad();
+				}else if($(e.target).attr('id')=="#tab_1_6"){
+					$("[id='#tab_1_6']").tab('show');
+					cljsLoad();
 				}
 				tabIndex = $(e.target).attr('id');
 			}
@@ -223,13 +235,13 @@
 				myLoading.hide();
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","基本信息数据失败");
+				showTip("提示","基本信息加载失败");
 			}
 		});
 	}
 	function mlLoad(){
 		$.ajax({
-			url : "${path }/zzb/app/console/daDemo/ajax/mlxxManage",
+			url : "${path }/zzb/dzda/e01z1/ajax/mlxxManage",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
@@ -238,14 +250,14 @@
 				view.html(html);
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","基本信息数据失败");
+				showTip("提示","目录材料加载失败");
 			}
 		});
 	}
 
 	function zjclLoad(){
 		$.ajax({
-			url : "${path }/zzb/app/console/daDemo/ajax/zjclList",
+			url : "${path }/zzb/dzda/e01z4/ajax/zjclList",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
@@ -254,7 +266,7 @@
 				view.html(html);
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","基本信息数据失败");
+				showTip("提示","欠缺材料加载失败");
 			}
 		});
 	}
@@ -270,6 +282,37 @@
 			},
 			error : function(arg1, arg2, arg3){
 				showTip("提示","职务变动加载失败");
+			}
+		});
+	}
+
+	function gzbdLoad(){
+		$.ajax({
+			url : "${path }/zzb/dzda/a32/ajax/list",
+			type : "post",
+			data : {"a38Id":"${id}"},
+			dataType : "html",
+			success : function(html){
+				var view = $("#tab_show");
+				view.html(html);
+			},
+			error : function(arg1, arg2, arg3){
+				showTip("提示","工资变动加载失败");
+			}
+		});
+	}
+	function cljsLoad(){
+		$.ajax({
+			url : "${path }/zzb/dzda/e01z2/ajax/list",
+			type : "post",
+			data : {"a38Id":"${id}"},
+			dataType : "html",
+			success : function(html){
+				var view = $("#tab_show");
+				view.html(html);
+			},
+			error : function(arg1, arg2, arg3){
+				showTip("提示","接收材料加载失败");
 			}
 		});
 	}

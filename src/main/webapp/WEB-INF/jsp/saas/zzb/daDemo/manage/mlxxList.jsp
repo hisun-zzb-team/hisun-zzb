@@ -56,6 +56,9 @@
 			<%-- 表格开始 --%>
 			<form class=""id="importForm" enctype="multipart/form-data">
 				<input type="hidden" name="queryId" value="${queryId}"/>
+				<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
+				<input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
+				<input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
 				<div class="portlet-title">
 					<div class="caption">简历材料  共<font color="red"> 1 </font>条记录 </div>
 					<div class="clearfix fr">
@@ -152,20 +155,27 @@
 		document.getElementById("btn-unloadFile").click();
 	}
 	function add() {
+		var a38Id = $("#a38Id").val();
+		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeName = $("#currentNodeName").val();
+		alert("currentNodeId:"+currentNodeId);
+		alert("currentNodeName:"+currentNodeName);
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/daDemo/ajax/addMlcl",
+			url:"${path}/zzb/dzda/e01z1/ajax/addMlcl",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
 			data:{
-
+				"a38Id":a38Id,
+				"currentNodeId":currentNodeId,
+				"currentNodeName":currentNodeName
 			},
 			success:function(html){
 				$("#catalogList").html(html);
-				$("#treeId").val(nodeId);
+//				$("#treeId").val(nodeId);
 			},
 			error : function(){
 				myLoading.hide();

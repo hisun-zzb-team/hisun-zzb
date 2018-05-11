@@ -229,7 +229,7 @@
 	}
 	function mlLoad(){
 		$.ajax({
-			url : "${path }/zzb/app/console/daDemo/ajax/mlxxManage",
+			url : "${path }/zzb/dzda/e01z1/ajax/mlxxManage",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",

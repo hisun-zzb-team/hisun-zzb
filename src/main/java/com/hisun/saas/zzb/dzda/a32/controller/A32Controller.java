@@ -59,9 +59,9 @@ public class A32Controller extends BaseController {
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         Long total = a32Service.count(query);
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.asc("px"));
-        List<A32> resultList = a32Service.list(query,orderBy,pageNum,pageSize);
+        //CommonOrderBy orderBy = new CommonOrderBy();
+        //orderBy.add(CommonOrder.asc("px"));
+        List<A32> resultList = a32Service.list(query,null,pageNum,pageSize);
         PagerVo<A32> pager = new PagerVo<A32>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
         model.put("a38Id",a38Id);

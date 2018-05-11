@@ -8,6 +8,8 @@ package com.hisun.saas.zzb.dzda.a32.service.impl;
 
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.zzb.dzda.a32.dao.A32Dao;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
@@ -43,7 +45,7 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
         } else {
             sql = sql + "t.px=t.px+1";
         }
-        sql = sql + " where t.a38_id=(:a38Id)";
+        sql = sql + " where t.a38_id=(:a38Id) and t.tenant_id=(:tenantId)";
         if(newPx > oldPx) {
             sql = sql + " and t.px<=" + newPx + " and t.px >" + oldPx;
         } else if(newPx == oldPx) {
@@ -52,20 +54,21 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
             sql = sql + " and t.px<" + oldPx + " and t.px>=" + newPx;
         }
         Map<String, Object> paramMap=new HashMap<String, Object>();
+        paramMap.put("tenantId", UserLoginDetailsUtil.getUserLoginDetails().getTenantId());
         paramMap.put("a38Id", a38Id);
         this.a32Dao.update(sql, paramMap);
     }
     @Override
     public Integer getMaxSort(String a38Id) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String hql = "select max(t.px)+1 as sort from a32 t ";
+        String hql = "select max(t.px)+1 as sort from A32 t ";
         if (a38Id != null && !a38Id.equals("")) {
-            hql = hql + "where t.a38_id =:a38Id";
+            hql = hql + "where t.a38.id =:a38Id";
             map.put("a38Id", a38Id);
         } else {
-            hql = hql + "where t.a38_id is null";
+            hql = hql + "where t.a38.id is null";
         }
-        List<Map> maxSorts = this.a32Dao.nativeList(hql, map);
+        List<Map> maxSorts = this.a32Dao.list(hql, map);
         if (maxSorts.get(0).get("sort") == null) {
             return 1;
         } else {

@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.dacy.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 import org.hibernate.annotations.Cascade;
@@ -21,45 +22,45 @@ import java.util.List;
  */
 @Entity
 @Table(name = "e_apply_e01z8")
-public class EApplyE01Z8  extends TombstoneEntity implements Serializable {
-    private String id;
-    private A38 a38;
-    private String a0101;
-    private String manageTenantId;
-    private String manageTenantName;
-    private String e01Z801;
-    private String readContent;
-    private String e01Z807Id;
-    private String e01Z807Name;
-    private String e01Z824B;
-    private String e01Z824A;
-    private String readTime;
-    private String readDate;
-    private String accreditDate;
-    private String endReadDate;
-    private String auditingState;
-    private String refuseReason;
-    private String readState;
-    private String accreditType;
-    private String popedomStuffType;
-    private String applyRemark;
-    private String auditingRemark;
-    private String isShowToA0101;
-    private String alreadyReadTime;
-    private String phone;
-    private String sqdwpzld;
-    private String isPrint;
-    private Serializable checkTime;
-    private String isDownload;
-    private String officePhone;
-    private String applyType;
-    private String parentApplyE01Z8Id;
-    private String viewIpInfo;
-    private String applyFileName;
-    private String applyFilePath;
-    private String applyUserId;
-    private String applyUserName;
-    private List<EA38Log> a38Logs;
+public class EApplyE01Z8  extends TenantEntity implements Serializable {
+    private String id;//查阅记录id
+    private A38 a38;//档案id
+    private String a0101;//档案所属人姓名
+    private String manageTenantId;//档案管理单位id ，即申请单位id
+    private String manageTenantName;//档案管理单位名称，即申请单位名称
+    private String e01Z801;//批准人姓名
+    private String readContent;//查阅内容
+    private String e01Z807Id;//查阅人id
+    private String e01Z807Name;//查阅人姓名
+    private String e01Z824B;//查阅人单位id
+    private String e01Z824A;//查阅单位名称
+    private String readTime;//查阅时长
+    private String readDate;//开始查阅时间
+    private String accreditDate;//授权查阅时间
+    private String endReadDate;//结束查阅时间
+    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权
+    private String refuseReason;//拒绝原因
+    private String readState;//查阅状态。0：未查阅；1：已查阅。审核通过后提醒用户查阅档案，查阅后即不再提醒
+    private String accreditType;//授权类型。0：申请查阅授权；1：管理员主动授权查看记录
+    private String popedomStuffType;//授权材料范围类型。0：授权所有档案材料；1：授权指定的档案材料
+    private String applyRemark;//申请备注。申请阅档时由申请用户填写
+    private String auditingRemark;//审核备注。管理员审核申请时填写
+    private String isShowToA0101;//是否对申请用户可见。0:可见；1：不可见。申请用户删除此条信息时只是改变此状态。只有在管理员删除时才真正的删除
+    private String alreadyReadTime;//已经查看的时长
+    private String phone;//联系电话
+    private String sqdwpzld;//申请单位批准领导
+    private String isPrint;//是否能打印 0表示不打印 1表示打印
+    private Serializable checkTime;//处理时间
+    private String isDownload;//是否能下载图片 1表示能下载 0表示不能下载
+    private String officePhone;//办公电话
+    private String applyType;//申请产生的记录标示为0 管理员主动授权的为1（包括管理员再次授权的）
+    private String parentApplyE01Z8Id;//再次授权的父id
+    private String viewIpInfo;//当前浏览档案的ip
+    private String applyFileName;//上传附件名称
+    private String applyFilePath;//上传附件路径
+    private String applyUserId;//申请查阅人id
+    private String applyUserName;//申请查阅人名字
+    private List<EA38Log> a38Logs;//
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")

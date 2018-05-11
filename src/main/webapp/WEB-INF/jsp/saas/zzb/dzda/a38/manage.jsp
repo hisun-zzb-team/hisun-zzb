@@ -182,10 +182,10 @@
 //					$("[id='#tab_1_4']").tab('show');
 					zwbdLoad();
 				}else if($(e.target).attr('id')=="#tab_1_5"){
-					$("[id='#tab_1_5']").tab('show');
+			//		$("[id='#tab_1_5']").tab('show');
 					gzbdLoad();
 				}else if($(e.target).attr('id')=="#tab_1_6"){
-					$("[id='#tab_1_6']").tab('show');
+			//		$("[id='#tab_1_6']").tab('show');
 					cljsLoad();
 				}
 				tabIndex = $(e.target).attr('id');

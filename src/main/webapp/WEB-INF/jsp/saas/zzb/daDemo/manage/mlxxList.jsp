@@ -59,8 +59,9 @@
 				<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 				<input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
 				<input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
+				<input type="hidden" id="currentNodeParentId" name="currentNodeParentId" value="${currentNodeParentId}"/>
 				<div class="portlet-title">
-					<div class="caption">简历材料  共<font color="red"> 1 </font>条记录 </div>
+					<div class="caption">${currentNodeName} </div>
 					<div class="clearfix fr">
 						<a id="sample_editable_1_new" class="btn green" href="javascript:add()">
 							<i class="icon-plus"></i> 增加材料
@@ -119,20 +120,22 @@
 							<th width="90">操作</th>
 						</thead>
 						<tbody>
-							<tr style="text-overflow:ellipsis;">
-								<td>1</td>
-								<td><a href="javascript:edit()" class="">干部履历表</a></td>
-								<td>2000.11.02 </td>
-								<td>13</td>
-								<td>13</td>
-								<td><a href="javascript:uploadImg()" class="">加载</a></td>
-								<td><a href="javascript:view()" class="">浏览</a></td>
-								<td st>1</td>
-								<td>
-									<a href="javascript:edit()" class="">修改</a>|
-									<a href="#" class="">删除</a>
-								</td>
-							</tr>
+							<c:forEach items="${pager.datas}" var="vo">
+								<tr style="text-overflow:ellipsis;">
+									<td>${vo.e01Z104}</td>
+									<td><a href="javascript:edit()" class="">${vo.e01Z111}</a></td>
+									<td>${vo.e01Z117} </td>
+									<td>${vo.e01Z114}</td>
+									<td>${vo.yjztps}</td>
+									<td><a href="javascript:uploadImg()" class="">加载</a></td>
+									<td><a href="javascript:view()" class="">浏览</a></td>
+									<td st>${vo.e01Z107}</td>
+									<td>
+										<a href="javascript:edit('${vo.id}')" class="">修改</a>|
+										<a href="#" class="">删除</a>
+									</td>
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 					<jsp:include page="/WEB-INF/jsp/common/page.jsp">
@@ -158,8 +161,7 @@
 		var a38Id = $("#a38Id").val();
 		var currentNodeId = $("#currentNodeId").val();
 		var currentNodeName = $("#currentNodeName").val();
-		alert("currentNodeId:"+currentNodeId);
-		alert("currentNodeName:"+currentNodeName);
+		var currentNodeParentId = $("#currentNodeParentId").val();
 		$.ajax({
 			async:false,
 			type:"POST",
@@ -171,11 +173,12 @@
 			data:{
 				"a38Id":a38Id,
 				"currentNodeId":currentNodeId,
-				"currentNodeName":currentNodeName
+				"currentNodeName":currentNodeName,
+				"currentNodeParentId":currentNodeParentId
 			},
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
+			success:function(html){currentNodeId
+				$("#rightList").html(html);
+				$("#treeId").val();
 			},
 			error : function(){
 				myLoading.hide();
@@ -204,21 +207,29 @@
 			}
 		});
 	}
-	function edit() {
+	function edit(id) {
+		var a38Id = $("#a38Id").val();
+		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeName = $("#currentNodeName").val();
+		var currentNodeParentId = $("#currentNodeParentId").val();
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/daDemo/ajax/editMlcl",
+			url:"${path}/zzb/dzda/e01z1/ajax/editMlcl",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
 			data:{
-
+				"id":id,
+				"a38Id":a38Id,
+				"currentNodeId":currentNodeId,
+				"currentNodeName":currentNodeName,
+				"currentNodeParentId":currentNodeParentId
 			},
 			success:function(html){
-				$("#catalogList").html(html);
-				$("#treeId").val(nodeId);
+				$("#rightList").html(html);
+				$("#treeId").val(currentNodeId);
 			},
 			error : function(){
 				myLoading.hide();

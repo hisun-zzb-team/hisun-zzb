@@ -9,6 +9,9 @@ package com.hisun.saas.zzb.dzda.mlcl.service.impl;
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.tenant.tenant.entity.Tenant;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
@@ -34,77 +37,63 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         this.e01Z1Dao = (E01Z1Dao)baseDao;
     }
 
-//    public Integer getMaxSort(String pId) {
-//        Map<String, Object> map=new HashMap<String, Object>();
-//        String hql = "select max(e.sort)+1 as sort from ECatalogTypeInfo e ";
-//        if(pId!=null && !pId.equals("")) {
-//            hql = hql+"where e.parent.id =:pId";
-//            map.put("pId", pId);
-//        }else{
-//            hql = hql+"where e.parent is null";
-//        }
-//        List<Map> maxSorts = this.eCatalogTypeDao.list(hql, map);
-//        if(maxSorts.get(0).get("sort")==null){
-//            return 1;
-//        }else{
-//            Integer maxSort = ((Number) maxSorts.get(0).get("sort")).intValue();
-//            return maxSort;
-//        }
-//    }
-//
-//    public void updateCatalogType(E01Z1 e01z1, String oldPid, Integer oldSort){
-//        String newParentId = "";
-//        if(eCatalogTypeInfo.getParent()!=null){
-//            newParentId = eCatalogTypeInfo.getParent().getId();
-//        }
-//        if(com.hisun.util.StringUtils.trimNull2Empty(oldPid).equals(newParentId)){
-//            //父部门没有改变的情况下
-//            this.updateSort(eCatalogTypeInfo, oldSort);
-//        }else{
-//            //父部门改变的情况下
-//            String pId = "";
-//            if (eCatalogTypeInfo.getParent() != null) {
-//                pId = eCatalogTypeInfo.getParent().getId();
-//            }
-//            int newSort = eCatalogTypeInfo.getSort();
-//            int maxSort = this.getMaxSort(pId);
-//            if (newSort > maxSort) {
-//                newSort = maxSort;
-//            }
-//            eCatalogTypeInfo.setSort(newSort);
-//            this.updateSort(eCatalogTypeInfo, maxSort);
-//        }
-//        this.eCatalogTypeDao.update(eCatalogTypeInfo);
-//    }
-//
-//    private void updateSort(E01Z1 e01z1, Integer oldSort)  {
-//        CommonConditionQuery query = new CommonConditionQuery();
-//        Integer newSort = e01z1.getSort();
-//        String pId = "";
-//        if(e01z1.getParent()!=null){
-//            pId = e01z1.getParent().getId();
-//        }
-//        String sql="update e_catalog_type_info t set ";
-//        if(newSort>oldSort){
-//            sql+="t.sort=t.sort-1";
-//        }else{
-//            sql+="t.sort=t.sort+1";
-//        }
-//        if(pId!=null && !pId.equals("")) {
-//            sql +=" where  t.parent_id='"+e01z1.getParent().getId()+"'";
-//        }else{
-//            sql +=" where t.parent_id is null";
-//        }
-//
-//        if(newSort>oldSort){
-//            sql+=" and t.sort<="+newSort+" and t.sort >"+oldSort;
-//        }else{
-//            if(newSort==oldSort){
-//                sql+=" and t.sort = -100";
-//            }else{
-//                sql+=" and t.sort<"+oldSort+" and t.sort>="+newSort;
-//            }
-//        }
-//        this.eCatalogTypeDao.executeNativeBulk(sql,query);
-//    }
+    public Integer getMaxSort(String a38Id,String e01Z101B) {
+        Map<String, Object> map=new HashMap<String, Object>();
+        String hql = "select max(e.e01Z104)+1 as sort from e01z1 e ";
+        if(a38Id!=null && !a38Id.equals("")) {
+            hql = hql+"where e.a38.id =:a38Id";
+            map.put("a38Id", a38Id);
+        }else{
+            hql = hql+"where e.a38 is null";
+        }
+
+        if(e01Z101B!=null && !e01Z101B.equals("")) {
+            hql = hql+" and e.e01Z101B =:e01Z101B";
+            map.put("e01Z101B", e01Z101B);
+        }else{
+            hql = hql+" and e.e01Z101B is null";
+        }
+
+        List<Map> maxSorts = this.e01Z1Dao.list(hql, map);
+        if(maxSorts.get(0).get("sort")==null){
+            return 1;
+        }else{
+            Integer maxSort = ((Number) maxSorts.get(0).get("sort")).intValue();
+            return maxSort;
+        }
+    }
+
+    public void updateE01Z1(E01Z1 e01z1, String oldPid, Integer oldSort){
+        String newParentId = "";
+        if(e01z1.getA38()!=null){
+            newParentId = e01z1.getA38().getId();
+        }
+        this.updateSort(e01z1, oldSort);
+        this.e01Z1Dao.update(e01z1);
+    }
+
+    private void updateSort(E01Z1 e01z1, Integer oldSort)  {
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        CommonConditionQuery query = new CommonConditionQuery();
+        Integer newSort = e01z1.getE01Z104();
+        String sql="update e01z1 t set ";
+        if(newSort>oldSort){
+            sql+="t.e01z104=t.e01z104-1";
+        }else{
+            sql+="t.e01z104=t.e01z104+1";
+        }
+
+        sql +=" where t.tenant_id = '" + details.getTenantId()+"'";
+
+        if(newSort>oldSort){
+            sql+=" and t.e01z104<="+newSort+" and t.e01z104 >"+oldSort;
+        }else{
+            if(newSort==oldSort){
+                sql+=" and t.e01z104 = -100";
+            }else{
+                sql+=" and t.e01z104<"+oldSort+" and t.e01z104>="+newSort;
+            }
+        }
+        this.e01Z1Dao.executeNativeBulk(sql,query);
+    }
 }

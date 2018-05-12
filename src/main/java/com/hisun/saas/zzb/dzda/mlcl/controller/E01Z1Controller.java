@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author liuzj {279421824@qq.com}
+* @author zhout {605144321@qq.com}
 */
 @Controller
 @RequestMapping("/zzb/dzda/e01z1")
@@ -91,6 +91,7 @@ public class E01Z1Controller extends BaseController {
             String currentNodeName = eCatalogTypeInfo.getCatalogValue();
             vo.setE01Z101B(currentNodeCode);
             vo.setE01Z101A(currentNodeName);
+            vo.setECatalogTypeId(currentNodeId);
             String oldPid = "";
             int oldSort = e01Z1.getE01Z104();
             if(e01Z1.getA38()!=null){
@@ -147,6 +148,7 @@ public class E01Z1Controller extends BaseController {
             BeanUtils.copyProperties(e01Z1, vo);
             e01Z1.setE01Z101B(currentNodeCode);
             e01Z1.setE01Z101A(currentNodeName);
+            e01Z1.setECatalogTypeId(currentNodeId);
             if(StringUtils.isNotBlank(a38Id)){
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
             }

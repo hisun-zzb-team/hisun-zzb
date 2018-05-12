@@ -5,7 +5,7 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import java.util.List;
 
 /**
- * @author Rocky {zht_oui@163.com}
+ * @author zhout {605144321@qq.com}
  */
 public class E01Z1Vo {
     private String id;
@@ -13,6 +13,7 @@ public class E01Z1Vo {
     private String e01Z111Remark;
     private String e01Z117;
     private Integer e01Z107;
+    private String eCatalogTypeId;
     private String e01Z101B;
     private String e01Z101A;
     private Integer e01Z114;
@@ -67,6 +68,14 @@ public class E01Z1Vo {
 
     public void setE01Z107(Integer e01Z107) {
         this.e01Z107 = e01Z107;
+    }
+
+    public String getECatalogTypeId() {
+        return eCatalogTypeId;
+    }
+
+    public void setECatalogTypeId(String eCatalogTypeId) {
+        this.eCatalogTypeId = eCatalogTypeId;
     }
 
     public String getE01Z101B() {

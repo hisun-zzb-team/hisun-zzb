@@ -13,7 +13,7 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author liuzj {279421824@qq.com}
+ * @author zhout {605144321@qq.com}
  */
 @Repository
 public class E01Z1DaoImpl extends TenantBaseDaoImpl<E01Z1,String>

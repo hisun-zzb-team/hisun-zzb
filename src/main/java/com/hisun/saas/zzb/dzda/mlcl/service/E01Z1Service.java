@@ -10,7 +10,7 @@ import com.hisun.base.service.BaseService;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 
 /**
- * @author liuzj {279421824@qq.com}
+ * @author zhout {605144321@qq.com}
  */
 public interface E01Z1Service extends BaseService<E01Z1,String>{
     Integer getMaxSort(String ad8Id, String e01Z101B);

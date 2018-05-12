@@ -11,6 +11,7 @@ package com.hisun.saas.zzb.dzda.mlcl.vo;
  */
 public class MlclAggregateVo {
 
+    private String fileName;
     private String dirCode;
     private String nameCode;
     private int count;
@@ -37,5 +38,13 @@ public class MlclAggregateVo {
 
     public void setNameCode(String nameCode) {
         this.nameCode = nameCode;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

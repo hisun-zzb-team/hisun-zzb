@@ -211,13 +211,14 @@
             $fileJson.forEach(function (file) {
                 if (file.fileSize > $maxFileSize) {
                     isPass = false
-                    $checkResultJson.push({"message": "文件:" + file.fileName + " 大于" + ($maxFileSize / 1048576).toFixed(2) + "M。"});
+                    $checkResultJson.push({"message": "上传的图片文件:" + file.fileName + " 大于" + ($maxFileSize / 1048576).toFixed(2) + "M。"});
                 }
 
             });
             //检查每类材料份数
             $.ajax({
-                url: "${path}/zzb/dzda/mlcl/jztp/mlcl/${a38Id}",
+                async: false,
+                url: "${path}/zzb/dzda/mlcl/jztp/mlclAggregate/${a38Id}",
                 type: "get",
                 data: {},
                 dataType: "json",
@@ -225,12 +226,29 @@
                     "OWASP_CSRFTOKEN": "${sessionScope.OWASP_CSRFTOKEN}"
                 },
                 success: function (json) {
-                    if (json.success) {
-                        alert(json.mlclAggregateJson);
+                    if (json.success == true) {
+                        var $mlclAggregateJson = jQuery.parseJSON(json.mlclAggregateJson);
+                        $mlclAggregateJson.forEach(function (mlclAggregate) {
+                            var isExist = false;
+                            for (var i = 0; i < $aggregateFilelist.length; i++) {
+                                if ($aggregateFilelist[i].dirCode == mlclAggregate.dirCode
+                                        && $aggregateFilelist[i].nameCode == mlclAggregate.nameCode) {
+                                    isExist = true;
+                                    if ($aggregateFilelist[i].count != mlclAggregate.count) {
+                                        isPass = false
+                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传页数为:" + $aggregateFilelist[i].count});
+                                    }
+                                }
+                            }
+                            if (!isExist) {
+                                isPass = false
+                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传页数为:0"});
+                            }
+                        });
                     }
                 },
                 error: function () {
-
+                    showTip("提示", "系统错误！", 2000);
                 }
             });
 
@@ -250,10 +268,10 @@
                     $checkResultList.append($resultTR);
                     index++;
                 });
-            }else{
+            } else {
                 showTip("提示", "检查通过！", 2000);
             }
-            if (true) {
+            if (isPass) {
                 $("#isPass").val("true");
                 $("#uploadAndSaveFile").removeAttr("disabled");
             }
@@ -268,7 +286,7 @@
         $fileJson.forEach(function (file) {
             var dirCode = getDirCode(file.fileName);
             var nameCode = getFileNameCode(file.fileName).substring(0, 2);
-            if(dirCodeSelected ==null && nameCodeSelected==null){
+            if (dirCodeSelected == null && nameCodeSelected == null) {
                 var $resultTR = "";
                 $resultTR += "<tr>";
                 $resultTR += "<td>" + index + "</td>";
@@ -278,7 +296,7 @@
                 $resultTR += "</tr>";
                 $resultFilelist.append($resultTR);
                 index++;
-            }else {
+            } else {
                 if (nameCodeSelected == null || nameCodeSelected == "") {
                     if (dirCodeSelected == dirCode) {
                         var $resultTR = "";

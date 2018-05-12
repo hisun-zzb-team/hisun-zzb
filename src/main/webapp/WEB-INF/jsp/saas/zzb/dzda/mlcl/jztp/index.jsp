@@ -93,7 +93,7 @@
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 			},
-			url: "${path}/zzb/dzda/mlcl/jztp/ajax/list",// 请求的action路径
+			url: "${path}/zzb/dzda/mlcl/jztp/ajax/list/${a38Id}",// 请求的action路径
 			error: function () {// 请求失败处理函数
 				alert('请求失败');
 			},

@@ -117,7 +117,7 @@ public class JztpController extends BaseController {
                 childTreeNode.setName(e01Z1.getE01Z111());
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
-                childTreeNode.setpId(e01Z1.getE01Z101B());
+                childTreeNode.setpId(e01Z1.getECatalogTypeId());
                 childTreeNode.setNodeType("cl");
                 treeNodes.add(childTreeNode);
             }
@@ -133,7 +133,7 @@ public class JztpController extends BaseController {
 
 
 
-    @RequestMapping("/mlcl/{a38Id}")
+    @RequestMapping("/mlclAggregate/{a38Id}")
     public
     @ResponseBody
     Map<String, Object> mlclAggregate(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
@@ -154,6 +154,8 @@ public class JztpController extends BaseController {
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z107()));
                 mlclAggregateVo.setCount(e01Z1.getE01Z114());
+                mlclAggregateVo.setFileName(e01Z1.getE01Z111());
+                mlclAggregateVos.add(mlclAggregateVo);
             }
 
             map.put("success", true);
@@ -167,19 +169,19 @@ public class JztpController extends BaseController {
     }
 
 
-    @RequestMapping("/ajax/list")
-    public ModelAndView list(HttpServletRequest request) throws GenericException {
+    @RequestMapping("/ajax/list/{a38Id}")
+    public ModelAndView list(@PathVariable(value = "a38Id") String a38Id ,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
         String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
         String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
         String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
         try {
 
-
             map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
             map.put("currentNodeId", currentNodeId);
             map.put("currentNodeName", currentNodeName);
             map.put("currentNodeParentId", currentNodeParentId);
+            map.put("a38Id", a38Id);
         } catch (Exception e) {
             logger.error(e);
             throw new GenericException(e);

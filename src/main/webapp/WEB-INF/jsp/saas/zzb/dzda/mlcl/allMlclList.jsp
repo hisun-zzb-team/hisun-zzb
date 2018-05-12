@@ -58,6 +58,7 @@
 				<input type="hidden" name="queryId" value="${queryId}"/>
 				<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 				<input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
+				<input type="hidden" id="currentNodeCode" name="currentNodeCode" value="${currentNodeCode}"/>
 				<input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
 				<input type="hidden" id="currentNodeParentId" name="currentNodeParentId" value="${currentNodeParentId}"/>
 				<div class="portlet-title">
@@ -155,6 +156,7 @@
 	function add() {
 		var a38Id = $("#a38Id").val();
 		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeCode = $("#currentNodeCode").val();
 		var currentNodeName = $("#currentNodeName").val();
 		var currentNodeParentId = $("#currentNodeParentId").val();
 		$.ajax({
@@ -168,10 +170,11 @@
 			data:{
 				"a38Id":a38Id,
 				"currentNodeId":currentNodeId,
+				"currentNodeCode":currentNodeCode,
 				"currentNodeName":currentNodeName,
 				"currentNodeParentId":currentNodeParentId
 			},
-			success:function(html){currentNodeId
+			success:function(html){
 				$("#rightList").html(html);
 				$("#treeId").val();
 			},
@@ -205,6 +208,7 @@
 	function edit(id) {
 		var a38Id = $("#a38Id").val();
 		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeCode = $("#currentNodeCode").val();
 		var currentNodeName = $("#currentNodeName").val();
 		var currentNodeParentId = $("#currentNodeParentId").val();
 		$.ajax({
@@ -219,6 +223,7 @@
 				"id":id,
 				"a38Id":a38Id,
 				"currentNodeId":currentNodeId,
+				"currentNodeCode":currentNodeCode,
 				"currentNodeName":currentNodeName,
 				"currentNodeParentId":currentNodeParentId
 			},
@@ -262,6 +267,7 @@
 	function del(id,voname){
 		var a38Id = $("#a38Id").val();
 		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeCode = $("#currentNodeCode").val();
 		var currentNodeName = $("#currentNodeName").val();
 		var currentNodeParentId = $("#currentNodeParentId").val();
 		actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id,{} ,function(data,status){
@@ -274,6 +280,7 @@
 					dataType : "html",
 					data:{
 						"currentNodeId":currentNodeId,
+						"currentNodeCode":currentNodeCode,
 						"currentNodeParentId":currentNodeParentId,
 						"currentNodeName":currentNodeName,
 						"a38Id":a38Id

@@ -27,6 +27,7 @@
 	<form action="${path}/zzb/dzda/e01z1/save" class="form-horizontal" id="addForm" method="post">
 		<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 		<input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
+		<input type="hidden" id="currentNodeCode" name="currentNodeCode" value="${currentNodeCode}"/>
 		<input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
 		<input type="hidden" id="currentNodeParentId" name="currentNodeParentId" value="${currentNodeParentId}"/>
 		<table  border="0" style="width:100%;" cellPadding="5px">
@@ -158,6 +159,7 @@
 	$(function(){
 		$("#submitbut").on("click",function(){
 			var currentNodeId = $("#currentNodeId").val();
+			var currentNodeCode = $("#currentNodeCode").val();
 			var currentNodeName = $("#currentNodeName").val();
 			var currentNodeParentId = $("#currentNodeParentId").val();
 			var a38Id = $("#a38Id").val();
@@ -181,6 +183,7 @@
 								dataType : "html",
 								data:{
 									"currentNodeId":currentNodeId,
+									"currentNodeCode":currentNodeCode,
 									"currentNodeParentId":currentNodeParentId,
 									"currentNodeName":currentNodeName,
 									"a38Id":a38Id
@@ -214,6 +217,7 @@
 
 	function cencal(){
 		var currentNodeId = $("#currentNodeId").val();
+		var currentNodeCode = $("#currentNodeCode").val();
 		var currentNodeName = $("#currentNodeName").val();
 		var currentNodeParentId = $("#currentNodeParentId").val();
 		var a38Id = $("#a38Id").val();
@@ -224,6 +228,7 @@
 			dataType : "html",
 			data:{
 				"currentNodeId":currentNodeId,
+				"currentNodeCode":currentNodeCode,
 				"currentNodeParentId":currentNodeParentId,
 				"currentNodeName":currentNodeName,
 				"a38Id":a38Id

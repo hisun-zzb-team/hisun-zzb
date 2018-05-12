@@ -59,6 +59,7 @@
 
 	function onClickByTree (event, treeId, treeNode){
 		$("#currentNodeId").val(treeNode.id);//赋值
+		$("#currentNodeCode").val(treeNode.key);//赋值
 		$("#currentNodeName").val(treeNode.name);//赋值
 		$("#currentNodeParentId").val(treeNode.pId);//赋值
 		var a38Id = $("#a38Id").val();
@@ -72,6 +73,7 @@
 			},
 			data:{
 				"currentNodeId":treeNode.id,
+				"currentNodeCode":treeNode.key,
 				"currentNodeParentId":treeNode.pId,
 				"a38Id":a38Id
 			},
@@ -91,6 +93,7 @@
 		$("#currentNodeId").val(node.id);//赋值
 		$("#currentNodeName").val(node.name);//赋值
 		$("#currentNodeParentId").val(node.pId);//赋值
+		$("#currentNodeCode").val(node.key);//赋值
 		var a38Id = $("#a38Id").val();
 		$.ajax({
 			url: "${path}/zzb/dzda/e01z1/ajax/mlxxList",// 请求的action路径
@@ -98,6 +101,7 @@
 			dataType : "html",
 			data:{
 				"currentNodeId":node.id,
+				"currentNodeCode":node.key,
 				"currentNodeParentId":node.pId,
 				"currentNodeName":node.name,
 				"a38Id":a38Id

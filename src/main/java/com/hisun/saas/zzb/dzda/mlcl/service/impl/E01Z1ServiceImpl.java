@@ -39,13 +39,15 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
 
     public Integer getMaxSort(String a38Id,String e01Z101B) {
         Map<String, Object> map=new HashMap<String, Object>();
-        String hql = "select max(e.e01Z104)+1 as sort from e01z1 e ";
+        String hql = "select max(e.e01Z104)+1 as sort from E01Z1 e ";
         if(a38Id!=null && !a38Id.equals("")) {
             hql = hql+"where e.a38.id =:a38Id";
             map.put("a38Id", a38Id);
         }else{
             hql = hql+"where e.a38 is null";
         }
+
+
 
         if(e01Z101B!=null && !e01Z101B.equals("")) {
             hql = hql+" and e.e01Z101B =:e01Z101B";

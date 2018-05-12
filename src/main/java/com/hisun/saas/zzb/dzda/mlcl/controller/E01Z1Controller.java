@@ -30,10 +30,7 @@ import com.hisun.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -57,22 +54,42 @@ public class E01Z1Controller extends BaseController {
     @Resource
     private E01Z1Service e01Z1Service;
 
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${id}")
+    @RequiresPermissions("catalogType:*")
+    @RequestMapping(value = "/delete/{id}")
+    public @ResponseBody Map<String, Object> delete(
+            @PathVariable("id") String id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            this.e01Z1Service.deleteByPK(id);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
+
     @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改材料目录:${vo.e01Z111}")
     @RequiresPermissions("catalogType:*")
     @RequestMapping(value = "/update")
     public @ResponseBody Map<String, Object> update(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
+        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-        eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
-        String currentNodeName = eCatalogTypeInfo.getCatalogValue();
         String id = StringUtils.trimNull2Empty(request.getParameter("id"));
-        vo.setE01Z101B(currentNodeId);
-        vo.setE01Z101A(currentNodeName);
         try {
 
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z1 e01Z1 = this.e01Z1Service.getByPK(id);
+            if(StringUtils.isEmpty(currentNodeParentId)){
+                currentNodeId = e01Z1.getE01Z101B();
+            }
+            eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
+            String currentNodeName = eCatalogTypeInfo.getCatalogValue();
+            vo.setE01Z101B(currentNodeId);
+            vo.setE01Z101A(currentNodeName);
             String oldPid = "";
             int oldSort = e01Z1.getE01Z104();
             if(e01Z1.getA38()!=null){
@@ -107,7 +124,7 @@ public class E01Z1Controller extends BaseController {
         map.put("currentNodeParentId",currentNodeParentId);
         map.put("a38Id",a38Id);
         map.put("vo",e01Z1);
-        return new ModelAndView("saas/zzb/daDemo/manage/editMlcl",map);
+        return new ModelAndView("saas/zzb/dzda/mlcl/editMlcl",map);
     }
 
     @RequiresLog(operateType = LogOperateType.SAVE,description = "增加材料:${vo.e01Z111}")
@@ -141,6 +158,7 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+
     @RequestMapping(value = "/ajax/addMlcl")
     public @ResponseBody ModelAndView addMlcl(HttpServletRequest request){
         Map<String, Object> map = Maps.newHashMap();
@@ -155,9 +173,8 @@ public class E01Z1Controller extends BaseController {
 
         int sort = this.e01Z1Service.getMaxSort(a38Id,currentNodeId);
 
-        vo.setE01Z114(2);
-        vo.setE01Z124(1);
-        vo.setE01Z107(1);
+        vo.setE01Z104(sort);
+        vo.setE01Z107(sort);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
         currentNodeName = eCatalogTypeInfo.getCatalogValue();
@@ -166,7 +183,7 @@ public class E01Z1Controller extends BaseController {
         map.put("currentNodeParentId",currentNodeParentId);
         map.put("a38Id",a38Id);
         map.put("vo",vo);
-        return new ModelAndView("saas/zzb/daDemo/manage/addMlcl",map);
+        return new ModelAndView("saas/zzb/dzda/mlcl/addMlcl",map);
     }
 
     @RequestMapping(value = "/ajax/mlxxList")
@@ -178,7 +195,7 @@ public class E01Z1Controller extends BaseController {
         String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
         String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
-        boolean isParent = false;
+        String url = "saas/zzb/dzda/mlcl/mlclList";
 
         try{
 
@@ -196,7 +213,7 @@ public class E01Z1Controller extends BaseController {
             if(StringUtils.isEmpty(currentNodeParentId)){
                 orderBy.add(CommonOrder.asc("e01z101b"));
                 currentNodeName="所有材料";
-                isParent=true;
+                url = "saas/zzb/dzda/mlcl/allMlclList";
             }else {
                 ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
                 eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
@@ -219,14 +236,13 @@ public class E01Z1Controller extends BaseController {
             map.put("currentNodeName",currentNodeName);
             map.put("currentNodeParentId",currentNodeParentId);
             map.put("a38Id",a38Id);
-            map.put("isParent",isParent);
             map.put("total",total);
         }catch(Exception e){
             logger.error(e);
             throw new GenericException(e);
         }
         
-        return new ModelAndView("saas/zzb/daDemo/manage/mlxxList",map);
+        return new ModelAndView(url,map);
     }
 
     @RequestMapping(value = "/ajax/mlxxManage")
@@ -234,7 +250,7 @@ public class E01Z1Controller extends BaseController {
         Map<String, Object> map = Maps.newHashMap();
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         map.put("a38Id", a38Id);
-        return new ModelAndView("saas/zzb/daDemo/manage/mlxxManage",map);
+        return new ModelAndView("saas/zzb/dzda/mlcl/mlclManage",map);
     }
 
     @RequestMapping("/tree")

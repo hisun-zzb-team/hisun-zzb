@@ -47,21 +47,16 @@
 
             <TR height=28>
                 <th width="5%">序号</th>
-                <th width=8%>来件单位名称</th>
-                <th width=8%>来件单位代码</th>
+                <th width=10%>来件单位名称</th>
                 <th width=5%>收件日期</th>
                 <th width=5%>接收人</th>
-                <th width=5%>材料类号</th>
-                <th width=5%>材料编号</th>
-                <th width=8%>材料名称</th>
-                <th width=8%>材料名称代码</th>
+                <th width=10%>材料类号</th>
+                <th width=10%>材料名称</th>
                 <th width=5%>页数</th>
                 <th width=5%>制成日期</th>
-                <th width=5%>备注</th>
                 <th width=5%>份数</th>
-                <th width=5%>处理标识</th>
-                <th width=5%>零散序号</th>
-                <th width=5%>受理标识</th>
+                <th width=5%>处理状态</th>
+                <th width=5%>受理状态</th>
                 <th width=8%>操作</th>
             </thead>
             <tbody>
@@ -69,19 +64,14 @@
                 <tr style="text-overflow:ellipsis;">
                     <TD><c:out value="${vo.e01Z214}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z204A}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z204B}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z201}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z207}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z211}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z217}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z221A}"></c:out></TD>
-                    <TD><c:out value="${vo.e01Z221B}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z224}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z227}"></c:out></TD>
-                    <TD><c:out value="${vo.e01Z231}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z234}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z237Content}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z241}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z244Content}"></c:out></TD>
                     <td>
                         <a href="javascript:edite01z2('${vo.id}')" class="">修改</a>|

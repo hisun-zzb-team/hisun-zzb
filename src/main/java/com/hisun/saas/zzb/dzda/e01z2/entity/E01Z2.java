@@ -41,7 +41,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
     private Integer e01Z214;// 材料序号
 
     @Basic
-    @javax.persistence.Column(name = "e01z244_content", nullable = true, length = 64)
+    @Column(name = "e01z244_content", nullable = true, length = 64)
     public String getE01Z244Content() {
         return e01Z244Content;
     }
@@ -51,7 +51,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
     }
 
     @Basic
-    @javax.persistence.Column(name = "e01z237_content", nullable = true, length = 64)
+    @Column(name = "e01z237_content", nullable = true, length = 64)
     public String getE01Z237Content() {
         return e01Z237Content;
     }
@@ -63,7 +63,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
-    @javax.persistence.Column(name = "id", nullable = false, length = 64)
+    @Column(name = "id", nullable = false, length = 64)
     public String getId() {
         return id;
     }
@@ -82,7 +82,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
     }
 
     @Basic
-    @javax.persistence.Column(name = "e01z201", nullable = true, length = 64)
+    @Column(name = "e01z201", nullable = true, length = 64)
     public String getE01Z201() {
         return e01Z201;
     }
@@ -94,7 +94,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z204a", nullable = true, length = 512)
+    @Column(name = "e01z204a", nullable = true, length = 512)
     public String getE01Z204A() {
         return e01Z204A;
     }
@@ -106,7 +106,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z204b", nullable = true, length = 128)
+    @Column(name = "e01z204b", nullable = true, length = 128)
     public String getE01Z204B() {
         return e01Z204B;
     }
@@ -118,7 +118,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z207", nullable = true, length = 64)
+    @Column(name = "e01z207", nullable = true, length = 64)
     public String getE01Z207() {
         return e01Z207;
     }
@@ -130,7 +130,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z211", nullable = true, length = 8)
+    @Column(name = "e01z211", nullable = true, length = 8)
     public String getE01Z211() {
         return e01Z211;
     }
@@ -142,7 +142,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z217", nullable = true, length = 8)
+    @Column(name = "e01z217", nullable = true, length = 8)
     public String getE01Z217() {
         return e01Z217;
     }
@@ -155,7 +155,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z221a", nullable = true, length = 512)
+    @Column(name = "e01z221a", nullable = true, length = 512)
     public String getE01Z221A() {
         return e01Z221A;
     }
@@ -167,7 +167,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z221b", nullable = true, length = 512)
+    @Column(name = "e01z221b", nullable = true, length = 512)
     public String getE01Z221B() {
         return e01Z221B;
     }
@@ -179,7 +179,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z224", nullable = true)
+    @Column(name = "e01z224", nullable = true)
     public Integer getE01Z224() {
         return e01Z224;
     }
@@ -191,7 +191,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z227", nullable = true, length = 64)
+    @Column(name = "e01z227", nullable = true, length = 64)
     public String getE01Z227() {
         return e01Z227;
     }
@@ -203,7 +203,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z231", nullable = true, length = 512)
+    @Column(name = "e01z231", nullable = true, length = 512)
     public String getE01Z231() {
         return e01Z231;
     }
@@ -215,7 +215,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z234", nullable = true)
+    @Column(name = "e01z234", nullable = true)
     public Integer getE01Z234() {
         return e01Z234;
     }
@@ -227,7 +227,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z237", nullable = true, length = 64)
+    @Column(name = "e01z237", nullable = true, length = 64)
     public String getE01Z237() {
         return e01Z237;
     }
@@ -239,7 +239,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z241", nullable = true, length = 128)
+    @Column(name = "e01z241", nullable = true, length = 128)
     public String getE01Z241() {
         return e01Z241;
     }
@@ -251,7 +251,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z244", nullable = true, length = 8)
+    @Column(name = "e01z244", nullable = true, length = 8)
     public String getE01Z244() {
         return e01Z244;
     }
@@ -263,7 +263,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
     @Basic
-    @javax.persistence.Column(name = "e01z214", nullable = true)
+    @Column(name = "e01z214", nullable = true)
     public Integer getE01Z214() {
         return e01Z214;
     }

@@ -108,8 +108,8 @@
                         <th width=70>档案名称</th>
                         <th width=150>单位职务</th>
                         <th width=100>查阅申请内容</th>
-                        <th>查阅情况</th>
-                        <th width=70>申请时间</th>
+                        <th width="20%">查阅情况</th>
+                        <th width="15%">申请时间</th>
                         <th width=70>阅档状态</th>
                         <th width=70>申请情况</th>
                         <th width="60">操作</th>
@@ -117,12 +117,12 @@
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD style="CURSOR: hand; TEXT-ALIGN: center" ><c:out value="${vo.a0101}"></c:out></TD>
-                            <TD style="TEXT-ALIGN: center" width=40><c:out value="${vo.e01Z824A}"></c:out></TD>
-                            <TD ><c:out value="${vo.readContent}"></c:out> </TD>
-                            <TD ><a href="#">详情</a></TD>
-                            <TD style="TEXT-ALIGN: center"><c:out value="${vo.createDate}"></c:out></TD>
-                            <TD style="TEXT-ALIGN: center">
+                            <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z824A}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
+                            <TD width="20%"><a href="#">详情</a></TD>
+                            <TD width="10%"><c:out value="${vo.createDate}"></c:out></TD>
+                            <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                        等待授权
@@ -134,9 +134,9 @@
                                        拒绝授权
                                     </c:when>
                                 </c:choose></TD>
-                            <TD style="TEXT-ALIGN: center"><a href="javascript:view()">浏览</a></TD>
-                            <TD style="TEXT-ALIGN: center">
-                                <a href="#">删除 </a>
+                            <TD width="10%"><a href="javascript:view()">浏览</a></TD>
+                            <TD width="10%">
+                                <a href="javascript:deleteYdsq('${vo.id}')">删除 </a>
                             </TD>
                         </tr>
                         </c:forEach>
@@ -169,10 +169,24 @@
         });
 
     })();
+    function deleteYdsq(id){
+        console.log(id);
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id,null,function(json){
+            if(json.code == 1){
+                showTip("提示","操作成功");
+                setTimeout(function(){
+                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                },1500);
+
+            }else{
+                showTip("提示", json.message, 2000);
+            }
+        },"删除")
+    }
 
     var add = function(){
         $.ajax({
-            url:"${path}/zzb/app/console/daDemo/ajax/addApplyDa",
+            url:"${path}/zzb/dzda/cysq/ajax/add",
             type : "post",
             data: {},
             headers:{

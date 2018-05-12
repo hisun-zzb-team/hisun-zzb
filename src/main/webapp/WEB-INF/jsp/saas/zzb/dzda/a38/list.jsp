@@ -83,8 +83,8 @@
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
 								<div style="float:left">
-									<SelectTag:SelectTag id="gbztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${gbztCodeQuery}"/>
+									<SelectTag:SelectTag id="gbztCodeQuery"  width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 radioOrCheckbox="checkbox"  selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${gbztCodeQuery}"/>
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
 								<div style="float:left">

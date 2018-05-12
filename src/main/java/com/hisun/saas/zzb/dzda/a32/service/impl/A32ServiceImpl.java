@@ -4,14 +4,15 @@
  * 注意:本内容知识产权属于湖南海数互联信息技术有限公司所有,除非取得商业授权,否则不得用于商业目的.
  */
 
-package com.hisun.saas.zzb.dzda.a52.service.impl;
+package com.hisun.saas.zzb.dzda.a32.service.impl;
 
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.zzb.dzda.a52.dao.A52Dao;
-import com.hisun.saas.zzb.dzda.a52.entity.A52;
-import com.hisun.saas.zzb.dzda.a52.service.A52Service;
+import com.hisun.saas.zzb.dzda.a32.dao.A32Dao;
+import com.hisun.saas.zzb.dzda.a32.entity.A32;
+import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,14 +24,13 @@ import java.util.Map;
  * @author Marco {854476391@qq.com}
  */
 @Service
-public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Service {
-
-    private A52Dao a52Dao;
+public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Service {
+    private A32Dao a32Dao;
 
     @Resource
-    public void setBaseDao(BaseDao<A52, String> baseDao) {
+    public void setBaseDao(BaseDao<A32, String> baseDao) {
         this.baseDao = baseDao;
-        this.a52Dao = (A52Dao)baseDao;
+        this.a32Dao = (A32Dao)baseDao;
     }
 
     /**
@@ -39,7 +39,7 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
      * @param
      */
     public void updatePx(int oldPx,int newPx,String a38Id){
-        String sql = "UPDATE a52 t SET ";
+        String sql = "UPDATE a32 t SET ";
         if(newPx > oldPx) {
             sql = sql + "t.px=t.px-1";
         } else {
@@ -56,19 +56,19 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
         Map<String, Object> paramMap=new HashMap<String, Object>();
         paramMap.put("tenantId", UserLoginDetailsUtil.getUserLoginDetails().getTenantId());
         paramMap.put("a38Id", a38Id);
-        this.a52Dao.update(sql, paramMap);
+        this.a32Dao.update(sql, paramMap);
     }
     @Override
     public Integer getMaxSort(String a38Id) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String hql = "select max(t.px)+1 as sort from a52 t ";
+        String hql = "select max(t.px)+1 as sort from A32 t ";
         if (a38Id != null && !a38Id.equals("")) {
-            hql = hql + "where t.a38_id =:a38Id";
+            hql = hql + "where t.a38.id =:a38Id";
             map.put("a38Id", a38Id);
         } else {
-            hql = hql + "where t.a38_id is null";
+            hql = hql + "where t.a38.id is null";
         }
-        List<Map> maxSorts = this.a52Dao.nativeList(hql, map);
+        List<Map> maxSorts = this.a32Dao.list(hql, map);
         if (maxSorts.get(0).get("sort") == null) {
             return 1;
         } else {

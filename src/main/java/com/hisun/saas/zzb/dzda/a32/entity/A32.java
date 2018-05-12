@@ -7,7 +7,9 @@
 package com.hisun.saas.zzb.dzda.a32.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +19,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "a32")
-public class A32 extends TombstoneEntity implements Serializable {
+public class A32 extends TenantEntity implements Serializable {
     private String id;//工资变动id
     private A38 a38;//外键，人员档案主健
     private String gzbm;//工作部门
@@ -30,7 +32,9 @@ public class A32 extends TombstoneEntity implements Serializable {
     private Integer px;//工资变动顺序号
 
     @Id
-    @Column(name = "id")
+    @GenericGenerator(name = "generator", strategy = "uuid")
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id", nullable = false, unique = true, length = 32)
     public String getId() {
         return id;
     }

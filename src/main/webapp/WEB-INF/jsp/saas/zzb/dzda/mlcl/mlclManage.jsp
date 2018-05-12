@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@include file="/WEB-INF/jsp/inc/taglib.jsp"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
+<%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
   ~ http://www.hn-hisun.com
@@ -13,20 +13,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>单位管理</title>
-<link href="${path}/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
 <style type="text/css">
-	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
-	.page-content{   padding: 0 !important; }
 	ul.ztree{margin-bottom: 10px; background: #f1f3f6 !important;}
 	.portlet.box.grey.mainleft{background-color: #f1f3f6;overflow: hidden; padding: 0px !important; margin-bottom: 0px;}
 	.main_left{float:left; width:220px;  margin-right:10px; background-color: #f1f3f6; }
-	.main_right{display: table-cell; width:2000px; padding:20px 20px; }
-	.portlet-title .caption.mainlefttop{ border: none !important; background-color:#eaedf1;width: 220px; height: 48px;line-height: 48px;padding: 0;margin: 0;text-indent: 1em; }
-	.portlet.box .portlet-body.leftbody{padding: 15px 8px;}</style>
+	.main_right{display: table-cell; width:2000px;}
+</style>
 </head>
 <body>
-<div class="container-fluid">
-	<div class="row-fluid">
 		<div class="main_left">
 			<div class="portlet box grey mainleft">
 				<div class="portlet-body leftbody">
@@ -40,10 +34,6 @@
 			</div>
 		</div>
 		<div class="main_right" id="rightList" ></div>
-	</div>
-</div>
-<script type="text/javascript" src="${path}/js/common/est-validate-init.js"></script>
-<script type="text/javascript" src="${path}/js/common/validate-message.js"></script>
 <script type="text/javascript">
 	$(function(){
 		changeTreeDivHeight();
@@ -53,7 +43,7 @@
 		})
 	});
 	function changeTreeDivHeight(){
-		var divHeight = $(window).height()-60;
+		var divHeight = $(window).height()-170;
 		$("#leftTree_div").css('height',divHeight);
 	}
 

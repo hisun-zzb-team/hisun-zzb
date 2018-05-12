@@ -11,6 +11,7 @@ import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
+import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
 import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
@@ -75,7 +76,7 @@ public class A38 extends TenantEntity implements Serializable {
 
     private List<A32> a32s;
     private List<A52> a52s;
-
+    private List<E01Z2> e01z2s;
     private List<E01Z4> e01z4s;
     private List<E01Z1> e01z1s;
     private List<E01Z5> e01z5s;
@@ -629,6 +630,21 @@ public class A38 extends TenantEntity implements Serializable {
     public void setE01z4s(List<E01Z4> e01z4s) {
         this.e01z4s = e01z4s;
     }
+
+    @OneToMany(mappedBy = "a38", fetch = FetchType.LAZY)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    public List<E01Z2> getE01z2s() {
+        return e01z2s;
+    }
+
+    public void setE01z2s(List<E01Z2> e01z2s) {
+        this.e01z2s = e01z2s;
+    }
+
+
+
+
+
     @OneToMany(mappedBy = "a38", fetch = FetchType.LAZY)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     public List<E01Z1> getE01z1s() {

@@ -33,12 +33,12 @@
 					<input type="hidden" id="currentNodeId"  name="currentNodeId" value="" />
 					<input type="hidden" id="currentNodeName"  name="currentNodeName" value="" />
 					<input type="hidden" id="currentNodeParentId"  name="currentNodeParentId" value="" />
-					<Tree:tree id="leftTree" treeUrl="${path}/sys/tenant/tenant/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
+					<Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/jztp/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>
 				</div>
 			</div>
 		</div>
-		<div class="main_right" id="rightList" ></div>
+		<div class="main_right" id="jztpList" ></div>
 	</div>
 </div>
 <script type="text/javascript" src="${path}/js/common/est-validate-init.js"></script>
@@ -53,38 +53,30 @@
 	});
 	function changeTreeDivHeight(){
 		var divHeight = $(window).height()-60;
-		$("#leftTree_div").css('height',divHeight);
+		$("#a38MlclTree_div").css('height',divHeight);
 	}
 
 	function onClickByTree (event, treeId, treeNode){
 		$("#currentNodeId").val(treeNode.id);//赋值
 		$("#currentNodeName").val(treeNode.name);//赋值
 		$("#currentNodeParentId").val(treeNode.pId);//赋值
-		$.ajax({
-			url : "${path}/zzb/dzda/mlcl/jztp/ajax/list",
-			type : "get",
-			data : null,
-			dataType : "html",
-			headers: {
-				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-			},
-			data:{
-				"currentNodeId":treeNode.id,
-				"currentNodeParentId":treeNode.pId,
-				"currentNodeName":treeNode.name
-			},
-			success : function(html){
-				$("#rightList").html(html);
-			},
-			error : function(){
-
+		if(treeNode.pId==null || treeNode.pId==''){
+			refreshFileList();
+		}else{
+			if(treeNode.nodeType=="dir"){
+				refreshFileList(treeNode.key);
+			}else{
+				var zTree1 = $.fn.zTree.getZTreeObj("a38MlclTree");
+				var parentNode = zTree1.getNodeByParam('id',treeNode.pId);// 获取id为-1的点
+				refreshFileList(parentNode.key,treeNode.key);
 			}
-		});
+		}
 	}
+
 
 	$(document).ready(function(){
 		App.init();//必须，不然导航栏及其菜单无法折叠
-		var zTree = $.fn.zTree.getZTreeObj("leftTree");//取得树对象
+		var zTree = $.fn.zTree.getZTreeObj("a38MlclTree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
 		$("#currentNodeId").val(node.id);//赋值
 		$("#currentNodeName").val(node.name);//赋值
@@ -106,7 +98,7 @@
 				alert('请求失败');
 			},
 			success:function(html){
-				$("#rightList").html(html);
+				$("#jztpList").html(html);
 			}
 		});
 		zTree.selectNode(node);//默认选中
@@ -114,12 +106,12 @@
 	});
 
 	function refreshTree() {
-		$("#leftTree").empty();
-		refreshTreeTag("leftTree",setting_leftTree,"");
+		$("#a38MlclTree").empty();
+		refreshTreeTag("a38MlclTree",setting_a38MlclTree,"");
 		selectNodeTree();
 	}
 	function selectNodeTree(){
-		var zTree1 = $.fn.zTree.getZTreeObj("leftTree");
+		var zTree1 = $.fn.zTree.getZTreeObj("a38MlclTree");
 		var id = $("#currentNodeId").val();
 		var node = zTree1.getNodeByParam('id',id);// 获取id为-1的点
 		zTree1.selectNode(node);

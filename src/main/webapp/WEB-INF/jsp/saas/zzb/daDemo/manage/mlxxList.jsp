@@ -72,13 +72,13 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li >
-									<a onclick="uploadImg()">加载图片</a>
+									<a id="jztpButton">加载图片</a>
 								</li>
 								<li>
-									<a onclick="">卸载图片</a>
+									<a id="xztpButton">卸载图片</a>
 								</li>
 								<li>
-									<a onclick="fileDown('dangantupianxiazai')">下载图片</a>
+									<a id="downtpButton" >下载图片</a>
 								</li>
 							</ul>
 						</div>
@@ -153,6 +153,20 @@
 <%-- END PAGE CONTENT--%>
 </div>
 
+<div id="jztpModal" class="modal container hide fade" tabindex="-2" data-width="520">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close"  type="button"></button>
+				<h3 class="modal-title" id="title" >
+					加载图片
+				</h3>
+			</div>
+			<div class="modal-body" id="jztpPage">
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 	function unloadFile(){
 		document.getElementById("btn-unloadFile").click();
@@ -263,6 +277,39 @@
 	function fileDown(type) {
 		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
 	}
+
+	$("#jztpButton").click(function(){
+		var divHeight = $(window).height()-100;
+		var divWidth = $(window).width()-20;
+		$.ajax({
+			url: "${path}/zzb/dzda/mlcl/jztp/ajax/index/${a38Id}",
+			type: "get",
+			data: {},
+			headers: {
+				OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType: "html",
+			success: function (html) {
+				$('#jztpModal').attr("data-width",divWidth);
+				$('#jztpModal').attr("data-height",divHeight);
+				$('#jztpPage').html(html);
+				$('#jztpModal').modal({
+					keyboard: true
+				});
+			},
+			error: function () {
+				showTip("提示", "出错了请联系管理员", 1500);
+			}
+		});
+
+	});
+
+	$("#xztpButton").click(function(){
+
+	});
+	$("#downtpButton").click(function(){
+
+	});
 </script>
 </body>
 </html>

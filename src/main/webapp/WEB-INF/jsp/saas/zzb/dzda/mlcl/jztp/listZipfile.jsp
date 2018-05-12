@@ -216,7 +216,24 @@
 
             });
             //检查每类材料份数
-            //TODO 请求当前干部的的材料目录树JSON,然后对比$aggregateFilelist
+            $.ajax({
+                url: "${path}/zzb/dzda/mlcl/jztp/mlcl/${a38Id}",
+                type: "get",
+                data: {},
+                dataType: "json",
+                headers: {
+                    "OWASP_CSRFTOKEN": "${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success: function (json) {
+                    if (json.success) {
+                        alert(json.mlclAggregateJson);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
             //展示错误提示信息
             if ($checkResultJson.length > 0) {
                 $('#checkResultModal').modal({
@@ -251,29 +268,41 @@
         $fileJson.forEach(function (file) {
             var dirCode = getDirCode(file.fileName);
             var nameCode = getFileNameCode(file.fileName).substring(0, 2);
-            if (nameCodeSelected == null || nameCodeSelected == "") {
-                if (dirCodeSelected == dirCode) {
-                    var $resultTR = "";
-                    $resultTR += "<tr>";
-                    $resultTR += "<td>" + index + "</td>";
-                    $resultTR += "<td>" + file.fileName + "</td>";
-                    $resultTR += "<td>" + file.fileModifyDate + "</td>";
-                    $resultTR += "<td>" + (file.fileSize / 1048576).toFixed(2) + "M</td>";
-                    $resultTR += "</tr>";
-                    $resultFilelist.append($resultTR);
-                    index++;
-                }
-            } else {
-                if (dirCodeSelected == dirCode && nameCodeSelected == nameCode) {
-                    var $resultTR = "";
-                    $resultTR += "<tr>";
-                    $resultTR += "<td>" + index + "</td>";
-                    $resultTR += "<td>" + file.fileName + "</td>";
-                    $resultTR += "<td>" + file.fileModifyDate + "</td>";
-                    $resultTR += "<td>" + (file.fileSize / 1048576).toFixed(2) + "M</td>";
-                    $resultTR += "</tr>";
-                    $resultFilelist.append($resultTR);
-                    index++;
+            if(dirCodeSelected ==null && nameCodeSelected==null){
+                var $resultTR = "";
+                $resultTR += "<tr>";
+                $resultTR += "<td>" + index + "</td>";
+                $resultTR += "<td>" + file.fileName + "</td>";
+                $resultTR += "<td>" + file.fileModifyDate + "</td>";
+                $resultTR += "<td>" + (file.fileSize / 1048576).toFixed(2) + "M</td>";
+                $resultTR += "</tr>";
+                $resultFilelist.append($resultTR);
+                index++;
+            }else {
+                if (nameCodeSelected == null || nameCodeSelected == "") {
+                    if (dirCodeSelected == dirCode) {
+                        var $resultTR = "";
+                        $resultTR += "<tr>";
+                        $resultTR += "<td>" + index + "</td>";
+                        $resultTR += "<td>" + file.fileName + "</td>";
+                        $resultTR += "<td>" + file.fileModifyDate + "</td>";
+                        $resultTR += "<td>" + (file.fileSize / 1048576).toFixed(2) + "M</td>";
+                        $resultTR += "</tr>";
+                        $resultFilelist.append($resultTR);
+                        index++;
+                    }
+                } else {
+                    if (dirCodeSelected == dirCode && nameCodeSelected == nameCode) {
+                        var $resultTR = "";
+                        $resultTR += "<tr>";
+                        $resultTR += "<td>" + index + "</td>";
+                        $resultTR += "<td>" + file.fileName + "</td>";
+                        $resultTR += "<td>" + file.fileModifyDate + "</td>";
+                        $resultTR += "<td>" + (file.fileSize / 1048576).toFixed(2) + "M</td>";
+                        $resultTR += "</tr>";
+                        $resultFilelist.append($resultTR);
+                        index++;
+                    }
                 }
             }
         });

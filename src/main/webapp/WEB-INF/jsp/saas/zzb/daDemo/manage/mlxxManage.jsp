@@ -73,7 +73,6 @@
 			data:{
 				"currentNodeId":treeNode.id,
 				"currentNodeParentId":treeNode.pId,
-				"currentNodeName":treeNode.name,
 				"a38Id":a38Id
 			},
 			success : function(html){

@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.mlcl.dao.impl;
 
 import com.hisun.base.dao.impl.BaseDaoImpl;
+import com.hisun.saas.sys.tenant.base.dao.imp.TenantBaseDaoImpl;
 import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author liuzj {279421824@qq.com}
  */
 @Repository
-public class E01Z1DaoImpl extends BaseDaoImpl<E01Z1,String>
+public class E01Z1DaoImpl extends TenantBaseDaoImpl<E01Z1,String>
        implements E01Z1Dao {
 
 

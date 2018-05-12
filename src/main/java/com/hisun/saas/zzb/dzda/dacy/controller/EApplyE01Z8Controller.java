@@ -26,18 +26,27 @@ import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
-import com.hisun.util.StringUtils;
+import com.hisun.util.*;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +61,10 @@ public class EApplyE01Z8Controller extends BaseController {
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
     private A38Service a38Service;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadAbsolutePath;
+
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
                              @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
@@ -63,10 +76,10 @@ public class EApplyE01Z8Controller extends BaseController {
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and("isShowToA0101 = :isShowToA0101 ", "isShowToA0101", "0"));
         if(StringUtils.isNotBlank(userName)){
-            query.add(CommonRestrictions.and("e01Z807Name = :e01Z807Name ", "e01Z807Name", userName));
+            query.add(CommonRestrictions.and("a0101 like :a0101 ", "a0101","%"+ userName+"%"));
         }
         if(StringUtils.isNotBlank(readContent)){
-            query.add(CommonRestrictions.and("readContent = :readContent ", "readContent", readContent));
+            query.add(CommonRestrictions.and("readContent like :readContent ", "readContent", "%"+readContent+"%"));
         }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
@@ -74,11 +87,45 @@ public class EApplyE01Z8Controller extends BaseController {
         List<EApplyE01Z8> resultList = eApplyE01Z8Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<EApplyE01Z8> pager = new PagerVo<EApplyE01Z8>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
+        model.put("userName",userName);
+        model.put("readContent",readContent);
         return new ModelAndView("saas/zzb/dzda/dacy/list",model);
     }
     @RequestMapping(value = "/ajax/add")
-    public ModelAndView addApplyDa(){
+    public ModelAndView add(){
         return new ModelAndView("saas/zzb/dzda/dacy/add");
+    }
+
+
+
+    @RequestMapping(value = "/ajax/edit")
+    public ModelAndView edit(String id){
+        Map<String,Object> map = Maps.newHashMap();
+        EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(id);
+        map.put("entity",entity);
+        return new ModelAndView("saas/zzb/dzda/dacy/edit",map);
+    }
+
+    /**
+     * 删除材料
+     * @param id
+     * @return
+     * @throws GenericException
+     */
+    @RequestMapping("/deleteFile/{id}")
+    public @ResponseBody Map<String,Object> deleteFile(@PathVariable("id") String id) throws GenericException {
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        try{
+            EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(id);
+            entity.setApplyFilePath(null);
+            entity.setApplyFileName(null);
+            eApplyE01Z8Service.update(entity);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            throw new GenericException(e.getMessage());
+        }
+        return returnMap;
     }
 
     @RequestMapping(value = "/ajax/getDaxx")
@@ -101,9 +148,33 @@ public class EApplyE01Z8Controller extends BaseController {
     }
     @RequiresLog(operateType = LogOperateType.SAVE,description = "增加档案申请查阅记录:${vo.a0101}")
     @RequestMapping(value = "/save")
-    public @ResponseBody Map<String, Object> save(EApplyE01Z8Vo vo){
+    public @ResponseBody Map<String, Object> save(EApplyE01Z8Vo vo,HttpServletRequest req,
+                                                  @RequestParam(value="clFile",required = false) MultipartFile clFile){
         Map<String,Object> map = Maps.newHashMap();
         try {
+            String fileName = "";
+            String savePath = "";
+            if (clFile != null && !clFile.isEmpty()) {
+                    fileName = clFile.getOriginalFilename();
+                    if(fileName.endsWith(".doc") ||fileName.endsWith(".DOC") ||fileName.endsWith(".docx") ||fileName.endsWith(".DOCX") ) {
+                        String fileDir = uploadAbsolutePath + "/e01z8";
+                        File _fileDir = new File(fileDir);
+                        if (_fileDir.exists() == false) {
+                            _fileDir.mkdirs();
+                        }
+                        savePath = fileDir + File.separator + UUIDUtil.getUUID() +"."+ FileUtil.getExtend(fileName);;
+                       // savePath =fileDir;
+                        try {
+                            FileOutputStream fos = new FileOutputStream(new File(savePath));
+                            fos.write(clFile.getBytes());
+                            fos.flush();
+                            fos.close();
+                        } catch (Exception e) {
+                             e.printStackTrace();
+                            throw new GenericException(e);
+                        }
+                }
+            }
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             String a0a01s = vo.getA0101Content();
             String [] names = a0a01s.split(",");
@@ -115,6 +186,9 @@ public class EApplyE01Z8Controller extends BaseController {
                 EntityWrapper.wrapperSaveBaseProperties(entity,details);
                 entity.setIsShowToA0101("0");
                 entity.setAuditingState("0");
+                entity.setApplyType("0");
+                entity.setApplyFileName(fileName);
+                entity.setApplyFilePath(savePath);
                 entity.setApplyUserId(details.getUserid());
                 entity.setApplyUserName(details.getUsername());
                 eApplyE01Z8Service.save(entity);
@@ -153,6 +227,30 @@ public class EApplyE01Z8Controller extends BaseController {
         }
         return returnMap;
     }
+    @RequestMapping(value="/ajax/down")
+    public void templateDown(String id,HttpServletRequest req, HttpServletResponse resp) throws Exception{
+        EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(id);
+        if(entity.getApplyFilePath()!=null &&!entity.getApplyFilePath().equals("")){
+            String fileRealPath =entity.getApplyFilePath();
+            resp.setContentType("multipart/form-data");
+            //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
+            resp.setHeader("Content-Disposition", "attachment;fileName="
+                    +encode(fileRealPath.substring(fileRealPath.lastIndexOf(File.separator)+1)));
+            OutputStream output=resp.getOutputStream();
+            byte[] b= FileUtils.readFileToByteArray(new File(fileRealPath));
+            output.write(b);
+            output.flush();
+            output.close();
+        }
 
+    }
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        return filename;
+    }
 
 }

@@ -27,6 +27,7 @@ import java.util.List;
     private A38 a38;//档案id
     private String a0101;//档案所属人姓名
     private String manageTenantId;//档案管理单位id ，即申请单位id
+    private String sqcydazw;//申请查阅时填写的档案所属人单位职务
     private String manageTenantName;//档案管理单位名称，即申请单位名称
     private String e01Z801;//批准人姓名
     private String readContent;//查阅内容
@@ -71,6 +72,16 @@ import java.util.List;
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "sqcydazw", nullable = true, length = 256)
+    public String getSqcydazw() {
+        return sqcydazw;
+    }
+
+    public void setSqcydazw(String sqcydazw) {
+        this.sqcydazw = sqcydazw;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

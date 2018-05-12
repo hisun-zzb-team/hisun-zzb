@@ -15,6 +15,7 @@ public class EApplyE01Z8Vo implements Serializable{
     private String a0101;//档案所属人姓名
     private String a0101Content;//档案所属人姓名拼接字符串
     private String manageTenantName;//档案管理单位名称，即申请单位名称
+    private String sqcydazw;//申请查阅时填写的档案所属人单位职务
     private String readContent;//查阅内容
     private String e01Z824A;//查阅单位名称
     private String readTime;//查阅时长
@@ -25,6 +26,23 @@ public class EApplyE01Z8Vo implements Serializable{
     private String accreditType;//授权类型。0：申请查阅授权；1：管理员主动授权查看记录
     private String popedomStuffType;//授权材料范围类型。0：授权所有档案材料；1：授权指定的档案材料
     private String refuseReason;//拒绝原因
+    private String e01Z807Name;//查阅人姓名
+
+    public String getE01Z807Name() {
+        return e01Z807Name;
+    }
+
+    public void setE01Z807Name(String e01Z807Name) {
+        this.e01Z807Name = e01Z807Name;
+    }
+
+    public String getSqcydazw() {
+        return sqcydazw;
+    }
+
+    public void setSqcydazw(String sqcydazw) {
+        this.sqcydazw = sqcydazw;
+    }
 
     public String getA0101() {
         return a0101;

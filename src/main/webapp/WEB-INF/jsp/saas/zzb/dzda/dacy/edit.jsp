@@ -33,22 +33,16 @@
                         <input type="hidden" name="id" value="" id="id">
                         <input type="hidden" name="filePath" value="" id="filePath">
                         <div class="control-group" id="a0101Group">
-                            <label class="control-label">查阅何人档案<span class="required">*</span></label>
+                            <label class="control-label">查阅何人档案</label>
                             <div class="controls">
-                                <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="" />
-                                <a href="javascript:queryUser()">添加</a>
-                            </div>
-                        </div>
-                        <div  id="a0101ContentGroup" style="display: none">
-                            <label class="control-label"><span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span10 m-wrap"  name="a0101Content"  maxlength="200" id="a0101Content" value="" required/>
+                                <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="${entity.a0101}" />
+                                <%--<a href="javascript:queryUser()">添加</a>--%>
                             </div>
                         </div>
                         <div id="sqcydazwGroup" class="control-group">
                             <label class="control-label">单位职务</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.sqcydazw}"
                                        id="sqcydazw" name="sqcydazw" >
 
                                 <!--<input type="text" class="span10 m-wrap"  name="pcsj" formatter="yyyymmdd"   maxlength="8" id="pcsj" type="date"/>-->
@@ -58,7 +52,7 @@
                         <div id="readContentGroup" class="control-group">
                             <label class="control-label">查阅内容</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readContent}"
                                        id="readContent" name="readContent" >
                             </div>
 
@@ -67,7 +61,7 @@
 
                             <label class="control-label">查阅单位</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.e01Z824A}"
                                        id="e01Z824A" name="e01Z824A" >
                             </div>
                         </div>
@@ -75,7 +69,7 @@
 
                             <label class="control-label">查阅时间</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value="120"
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
                                        id="readTime" name="readTime"  number="true"    maxlength="5">分钟
                             </div>
                         </div>
@@ -83,14 +77,22 @@
 
                             <label class="control-label">联系电话</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.phone}"
                                        id="phone" name="phone" >
                             </div>
                         </div>
                         <div id="applyRemarkGroup" class="control-group">
                             <label class="control-label">备注</label>
                             <div class="controls">
-                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" ></textarea>
+                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" value="${entity.phone}"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="applyFileNameGroup">
+                            <label class="control-label"></label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.applyFileName}"
+                                       id="applyFileName" name="applyFileName" ><a href="javascript:downloadFile('${entity.id}')">下载</a>&nbsp;<a href="javascript:deleteFile('${entity.id}')">删除</a>
                             </div>
                         </div>
                         <div  id="clFileGroup" class="control-group">
@@ -120,73 +122,29 @@
     <%-- END PAGE CONTENT--%>
 </div>
 <script type="text/javascript">
-    function queryUser(){
-        var value = $("#a0101").val();
-        if(value == "" || value == null){
-            showTip("提示","请输入查阅人信息");
-            return;
-        }else {
-            $.ajax({
-                url : "${path }/zzb/dzda/cysq/ajax/getDaxx",
-                type : "get",
-                data : {"param":value},
-                dataType : "json",
-                success : function(json){
-                    if(json.success){
-                        var view = $("#a0101ContentGroup");
-                        var a0101 = $("#a0101Content").val();
-                        var value1 = $("#a0101").val();
-                        if(a0101 != ""){
-                            a0101 = a0101 + "," + value1;
-                            $("#a0101Content").val(a0101);
-                        }else {
-                            $("#a0101Content").val(value1);
-                        }
-
-                        var value = $("#a0101").val("");
-                        view.show();
-                    }else {
-                        showTip("提示","不存在此档案");
-                    }
-
-                },
-                error : function(arg1, arg2, arg3){
-                    showTip("提示","加载失败");
-                }
-            });
+    $(function(){
+       var applyFileName = "${entity.applyFileName}";
+        if(applyFileName =="" || applyFileName==null){
+           $("#applyFileNameGroup").hide();
         }
+    })
+    function downloadFile(id){
+        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
     }
+    function deleteFile(id){
+        $("#applyFileName").val("");
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
+            if(json.code == 1){
+                showTip("提示","操作成功");ile
+            }else{
+                showTip("提示", json.message, 2000);
+            }
+        },"删除")
 
- /*   var myLoading = new MyLoading("${path}",20000);
-    jQuery(document).ready(function() {
-        App.init();
-        var startDate = $("#pcsjValue").datepicker({
-            language:  'zh-CN',
-            format: "yyyymmdd",
-            pickerPosition: "bottom-left",
-            weekStart : 1,
-            autoclose : true
-        });
-        var sjwcsj = $("#pcsjValue").datepicker({
-            language:  'zh-CN',
-            format: "yyyymmdd",
-            pickerPosition: "bottom-left",
-            weekStart : 1,
-            autoclose : true
-        });
-
-    });*/
+    }
 
     var myVld = new EstValidate("form1");
     function formSubmit(){
-        var a0101 = $("#a0101").val();
-        var a0101Content = $("#a0101Content").val();
-        if(a0101 == ""||a0101==null ){
-            if(a0101Content == "" || a0101Content==null){
-                showTip("提示","查阅何人档案不能为空");
-                return;
-            }
-        }
         var bool = myVld.form();
         if(!bool){
             return;
@@ -210,7 +168,7 @@
                 "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
             },
             success : function(data){
-               // myLoading.hide();
+                // myLoading.hide();
                 if(data.success){
                     window.location.href ="${path }/zzb/dzda/cysq/list";
                 }else{

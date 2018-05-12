@@ -55,7 +55,7 @@ public class E01Z1Controller extends BaseController {
     private E01Z1Service e01Z1Service;
 
     @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${id}")
-    @RequiresPermissions("catalogType:*")
+    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
             @PathVariable("id") String id) throws GenericException {
@@ -71,7 +71,7 @@ public class E01Z1Controller extends BaseController {
     }
 
     @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改材料目录:${vo.e01Z111}")
-    @RequiresPermissions("catalogType:*")
+    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
     public @ResponseBody Map<String, Object> update(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -132,6 +132,7 @@ public class E01Z1Controller extends BaseController {
     }
 
     @RequiresLog(operateType = LogOperateType.SAVE,description = "增加材料:${vo.e01Z111}")
+    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> save(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -194,6 +195,7 @@ public class E01Z1Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/mlcl/addMlcl",map);
     }
 
+    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/mlxxList")
     public @ResponseBody ModelAndView mlxxList(HttpServletRequest request,
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,

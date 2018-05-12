@@ -135,7 +135,7 @@
 									mlLoad();
 								}else if($(e.target).attr('id')=="#tab_1_3"){
 									$("[id='#tab_1_3']").tab('show');
-									zjclLoad();
+									qqclLoad();
 								}else if($(e.target).attr('id')=="#tab_1_4"){
 									$("[id='#tab_1_4']").tab('show');
 									zwbdLoad();
@@ -173,7 +173,7 @@
 					mlLoad();
 				}else if($(e.target).attr('id')=="#tab_1_3"){
 //					$("[id='#tab_1_3']").tab('show');
-					zjclLoad();
+					qqclLoad();
 				}else if($(e.target).attr('id')=="#tab_1_4"){
 //					$("[id='#tab_1_4']").tab('show');
 					zwbdLoad();
@@ -198,7 +198,7 @@
 //					mlLoad();
 //				}else if($(this).attr("id")=="#tab_1_3"){
 //					$("[id='#tab_1_3']").tab('show');
-//					zjclLoad();
+//					qqclLoad();
 //				}else if($(this).attr("id")=="#tab_1_4"){
 //					$("[id='#tab_1_3']").tab('show');
 //					zwbdLoad();
@@ -251,9 +251,9 @@
 		});
 	}
 
-	function zjclLoad(){
+	function qqclLoad(){
 		$.ajax({
-			url : "${path }/zzb/dzda/e01z4/ajax/zjclList",
+			url : "${path }/zzb/dzda/e01z4/ajax/qqclList",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",

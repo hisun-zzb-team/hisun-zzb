@@ -29,20 +29,6 @@
     </style>
 </head>
 <body>
-<div id="jgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="title" >
-                    “红叶专”档案图片
-                </h3>
-            </div>
-            <div class="modal-body" id="jgAddDiv" style="background-color: #f1f3f6;">
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
     <div class="modal-dialog">
@@ -63,20 +49,12 @@
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <form class=""id="importForm" enctype="multipart/form-data">
-                <input type="hidden" name="b01Id" value="${b01Id}"/>
                 <div class="portlet-title">
                     <div class="caption">阅档申请</div>
                     <div class="clearfix fr">
-
                         <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                             阅档申请
                         </a>
-
-
-                        <%--<span class="controllerClass btn green file_but" >--%>
-                        <%--<i class="icon-circle-arrow-up"></i>清空数据--%>
-                        <%--<input class="file_progress" type="file" name="attachFile" id="btn-browseTemplate">--%>
-                        <%--</span>--%>
                     </div>
 
                 </div>
@@ -84,15 +62,13 @@
             <div class="clearfix">
                 <div class="control-group">
                     <div id="query" style="float: left;">
-                        <form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
+                        <form action="/zzb/dzda/cysq/list" method="POST" id="searchForm" name="searchForm">
                             <%--<input type="hidden" id="b01Id" name="b01Id" value="${b01Id}"/>--%>
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                            姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="" style="width: 80px;" />
-                            查阅申请内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="" style="width: 80px;" />
-
-
+                            姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
+                            查阅申请内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="${readContent}" style="width: 80px;" />
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -118,14 +94,14 @@
                         <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
                             <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z824A}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
                             <TD width="20%"><a href="#">详情</a></TD>
                             <TD width="10%"><c:out value="${vo.createDate}"></c:out></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
-                                       等待授权
+                                       待授权
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
                                        同意阅档
@@ -133,8 +109,25 @@
                                     <c:when test="${vo.auditingState == 2}">
                                        拒绝授权
                                     </c:when>
+                                    <c:when test="${vo.auditingState == 32}">
+                                        已收回
+                                    </c:when>
                                 </c:choose></TD>
-                            <TD width="10%"><a href="javascript:view()">浏览</a></TD>
+                            <TD width="10%">
+                                <c:choose>
+                                    <c:when test="${vo.auditingState == 0}">
+                                        <a href="javascript:editCysq('${vo.id}')">修改</a>
+                                    </c:when>
+                                    <c:when test="${vo.auditingState == 1}">
+                                        <a>浏览</a>
+                                    </c:when>
+                                    <c:when test="${vo.auditingState == 2}">
+                                        拒绝授权
+                                    </c:when>
+                                    <c:when test="${vo.auditingState == 3}">
+                                        <a>查看</a>
+                                    </c:when>
+                                 </c:choose></TD>
                             <TD width="10%">
                                 <a href="javascript:deleteYdsq('${vo.id}')">删除 </a>
                             </TD>
@@ -169,6 +162,57 @@
         });
 
     })();
+    function editCysq(id){
+        $.ajax({
+            url: "${path}/zzb/dzda/cysq/ajax/edit?id="+id,
+            type: "get",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#addDiv').html(html);
+
+                $('#addModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+
+
+    }
+
+    function pagehref (pageNum ,pageSize){
+        <%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
+        $.ajax({
+            async:false,
+            type:"POST",
+            url:"${path }/zzb/dzda/cysq/list",
+            dataType : "html",
+            headers:{
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data:{
+                'pageNum':pageNum,
+                'pageSize':pageSize
+            },
+            success:function(html){
+                window.location.href ="${path }/zzb/dzda/cysq/list";
+            },
+            error : function(){
+                myLoading.hide();
+                showTip("提示","出错了,请检查网络!",2000);
+            }
+        });
+
+    }
+
+
+
     function deleteYdsq(id){
         console.log(id);
         actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id,null,function(json){
@@ -229,89 +273,18 @@
             }
         });
     }
-    function pagehref (pageNum ,pageSize){
-        <%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
-        $.ajax({
-            async:false,
-            type:"POST",
-            url:"${path}/zzb/app/console/asetA01/ajax/list",
-            dataType : "html",
-            headers:{
-                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-            },
-            data:{
-                'b01Id':"${b01Id}",
-                'pageNum':pageNum,
-                'pageSize':pageSize
-            },
-            success:function(html){
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-            },
-            error : function(){
-                myLoading.hide();
-                showTip("提示","出错了,请检查网络!",2000);
-            }
-        });
-
-    }
 
     function searchSubmit(){
-        $.ajax({
-            async:false,
-            type:"POST",
-            url:"${path}/zzb/app/console/asetA01/ajax/list",
-            dataType : "html",
-            headers:{
-                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-            },
-            data : $("#searchForm").serialize(),
-            success:function(html){
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-            },
-            error : function(){
-                myLoading.hide();
-                showTip("提示","出错了,请检查网络!",2000);
-            }
-        });
+        document.searchForm.submit();
     }
 
-
-
-    var del = function(id,itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
-            if (data.success == true) {
-                showTip("提示","删除成功", 2000);
-                setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
-            }else{
-                showTip("提示", data.message, 2000);
-            }
-        });
-    };
     function uploadFile(fileName){
         document.getElementById("btn-"+fileName).click();
     }
     function clearData(){
-        $("#xmQuery").val('');
-        $.ajax({
-            async:false,
-            type:"POST",
-            url:"${path}/zzb/app/console/asetA01/ajax/list",
-            dataType : "html",
-            headers:{
-                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-            },
-            data : $("#searchForm").serialize(),
-            success:function(html){
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-            },
-            error : function(){
-                myLoading.hide();
-                showTip("提示","出错了,请检查网络!",2000);
-            }
-        });
+        $("#userName").val('');
+        $("#readContent").val('');
+
     }
     function exportGbrmsp(){
         $.cloudAjax({

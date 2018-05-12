@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.a38.dao.impl;
 
 import com.hisun.base.dao.impl.BaseDaoImpl;
+import com.hisun.saas.sys.tenant.base.dao.imp.TenantBaseDaoImpl;
 import com.hisun.saas.sys.tenant.privilege.dao.TenantPrivilegeDao;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.zzb.dzda.a38.dao.A38Dao;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Repository;
  * @author liuzj {279421824@qq.com}
  */
 @Repository
-public class A38DaoImpl extends BaseDaoImpl<A38,String>
+public class A38DaoImpl extends TenantBaseDaoImpl<A38,String>
        implements A38Dao {
 
 

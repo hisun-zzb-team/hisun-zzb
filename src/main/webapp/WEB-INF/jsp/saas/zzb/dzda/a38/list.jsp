@@ -28,9 +28,20 @@
 					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
 
-						<a id="sample_editable_1_new" class="btn green" href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
-							<i class="icon-plus"></i>添加
-						</a>
+						<div class="btn-group" style="padding-bottom: 0px">
+							<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+								添加<i class="icon-angle-down"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li >
+									<a href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">添加档案</a>
+								</li>
+								<li >
+									<a href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">批量添加材料</a>
+								</li>
+							</ul>
+						</div>
+
 						<a  class="btn green" href="#">
 							高级查询
 						</a>
@@ -82,14 +93,15 @@
 									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
-								<div style="float:left">
-									<SelectTag:SelectTag id="gbztCodeQuery"  width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox"  selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${gbztCodeQuery}"/>
+								<div style="float:left;width: 160px;">
+									<Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+											   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}" defaultvalues="${gbztContentQuery}"/>
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
-								<div style="float:left">
-									<SelectTag:SelectTag id="daztCodeQuery" width="150px" height="30px" moreSelectAll="false" token="${sessionScope.OWASP_CSRFTOKEN}"
-													 radioOrCheckbox="checkbox" moreSelectSearch="no" selectUrl="${path}/api/dictionary/select?typeCode=ZB14-1994/RZZT" defaultkeys="${daztCodeQuery}"/>
+								<div style="float:left;width: 160px;">
+									<Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+											   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
+
 								</div>
 								<div style="float:left">
 									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
@@ -218,6 +230,8 @@
 		$("#a0101Query").val('');
 		$("#gbztCodeQuery").val('');
 		$("#daztCodeQuery").val('');
+		$("#gbztContentQuery").val('');
+		$("#daztContentQuery").val('');
 		document.searchForm.submit();
 	}
 	function exportGbrmsp(){

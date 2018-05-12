@@ -154,7 +154,7 @@
                               view.html(html);
                           },
                           error : function(arg1, arg2, arg3){
-                              showTip("提示","职务变动加载失败");
+                              showTip("提示","工资变动加载失败");
                           }
                       });
                   },1500);

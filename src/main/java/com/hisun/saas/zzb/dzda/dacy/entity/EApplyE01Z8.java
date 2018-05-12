@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "e_apply_e01z8")
-public class EApplyE01Z8  extends TenantEntity implements Serializable {
+    public class EApplyE01Z8  extends TenantEntity implements Serializable {
     private String id;//查阅记录id
     private A38 a38;//档案id
     private String a0101;//档案所属人姓名

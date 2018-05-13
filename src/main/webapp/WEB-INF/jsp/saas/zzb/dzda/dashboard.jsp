@@ -14,7 +14,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <!-- BEGIN PAGE LEVEL STYLES -->
-    <title>电子档案管理系统</title>
+    <title>干部档案管理系统</title>
 
     <!-- END PAGE LEVEL STYLES -->
     <style type="text/css">
@@ -36,45 +36,46 @@
 
         <!--干部监督信息系统-->
         <div class="CadreSuper">
-            <h2>电子档案管理系统</h2>
+            <h2>干部档案管理系统</h2>
             <div class="CadreSjx">
                 <br><br>
-                <p>电子档案管理系统要实现了档案管理工作信息化，档案资料图片化，档案查阅无纸化和查阅远程化。</p>
+                <p>干部档案管理系统要实现了档案管理工作信息化，档案资料图片化，档案查阅无纸化和查阅远程化。</p>
                 <p> 通过该系统建成干部电子档案库，同时系统还将档案资料与干部信息相结合，实现查询干部基本信息能和电子档案无缝关联。提供档案借阅、查阅过程的网上办理功能。</p>
                 <p>在完成日常工作的过程中，自动形成各种档案信息名册（目录表、职务变动表等）和档案工作名册。</p>
-                <p>其功能包括档案登记、档案审核、欠缺档案管理、目录维护与打印、查阅和授权管理、档案转递、在线阅档、材料类别管理等功能</p>
+                <p>其功能包括档案登记、档案审核、欠缺材料管理、目录维护与打印、查阅和授权管理、档案转递与接收、在线阅档等功能</p>
             </div>
             <ul class="ulCadreSuperlist">
                 <li>
-                    <a href="${path}/zzb/app/console/daDemo/list">
+                    <a href="${path}/zzb/app/console/daDemo/catalogTypeManage">
+                        <img src="${path}/images/templateImage/dagl05.png">
+                        <p>档案库</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="${path}/zzb/dzda/a38/list">
                         <img src="${path}/images/templateImage/dagl01.png">
                         <p>档案管理</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/app/console/daDemo/shList">
+                    <a href="${path}/zzb/dzda/a38/shList">
                         <img src="${path}/images/templateImage/dagl02.png">
                         <p>档案审核</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/app/console/daDemo/zrManageList">
+                    <a href="${path}/zzb/dzda/dajs/list">
                         <img src="${path}/images/templateImage/dagl03.png">
                         <p>转入转出</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/app/console/daDemo/cyApplyList">
+                    <a href="${path}/zzb/dzda/cyshouquan/list">
                         <img src="${path}/images/templateImage/dagl04.png">
-                        <p>查阅管理</p>
+                        <p>档案查阅</p>
                     </a>
                 </li>
-                <li>
-                    <a href="${path}/zzb/app/console/daDemo/catalogTypeManage">
-                        <img src="${path}/images/templateImage/dagl05.png">
-                        <p>目录管理</p>
-                    </a>
-                </li>
+
             </ul>
 
         </div>

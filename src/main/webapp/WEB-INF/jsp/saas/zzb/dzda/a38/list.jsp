@@ -133,7 +133,7 @@
 								<tr style="text-overflow:ellipsis;">
 									<TD><c:out value="${vo.dabh}"></c:out></TD>
 									<TD><c:out value="${vo.smxh}"></c:out></TD>
-									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&shpcPageNum=${pager.pageNum}"><c:out value="${vo.a0101}"></c:out></a> </TD>
+									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }"><c:out value="${vo.a0101}"></c:out></a> </TD>
 									<TD><c:out value="${vo.a0104Content}"></c:out></TD>
 									<TD ><c:out value="${vo.a0107}"></c:out></TD>
 									<TD><c:out value="${vo.a0157}"></c:out></TD>

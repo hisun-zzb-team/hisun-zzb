@@ -18,17 +18,18 @@ import java.io.Serializable;
 @Entity
 @Table(name = "e01z4")
 public class E01Z4   extends TombstoneEntity implements Serializable {
-    private String id;
-    private A38 a38;
-    private String e01Z401;
-    private String e01Z401B;
-    private String e01Z401A;
-    private Integer e01Z407;
-    private String fileTime;
-    private String fileTypeCode;
-    private String fileTypeName;
-    private Integer px;
-    private String remark;
+    private String id;//欠缺材料主键
+    private A38 a38;//外键，人员档案主健
+    private String e01Z401;//欠缺材料名称
+    private String eCatalogTypeId;//材料类型主键
+    private String e01Z401B;//欠缺材料类型字典代码
+    private String e01Z401A;//欠缺材料类型字典内容
+    private Integer e01Z407;//份数
+    private String fileTime;//材料时间
+    private String fileTypeCode;//材料大类代码
+    private String fileTypeName;//材料大类内容
+    private Integer px;//欠缺材料排序号
+    private String remark;//备注
 
     @Id
     @Column(name = "id")
@@ -58,6 +59,16 @@ public class E01Z4   extends TombstoneEntity implements Serializable {
 
     public void setE01Z401(String e01Z401) {
         this.e01Z401 = e01Z401;
+    }
+
+    @Basic
+    @Column(name = "e_catalog_type_id")
+    public String getECatalogTypeId() {
+        return eCatalogTypeId;
+    }
+
+    public void setECatalogTypeId(String eCatalogTypeId) {
+        this.eCatalogTypeId = eCatalogTypeId;
     }
 
     @Basic

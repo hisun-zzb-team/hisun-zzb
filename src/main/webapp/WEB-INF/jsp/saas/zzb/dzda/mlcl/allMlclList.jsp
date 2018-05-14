@@ -57,13 +57,13 @@
             <form class="" id="importForm" enctype="multipart/form-data">
                 <input type="hidden" name="queryId" value="${queryId}"/>
                 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
-                <input type="hidden" id="EcatalogTypeTreeId" name="EcatalogTypeTreeId" value="${EcatalogTypeTreeId}"/>
-                <input type="hidden" id="EcatalogTypeTreeCode" name="EcatalogTypeTreeCode" value="${EcatalogTypeTreeCode}"/>
-                <input type="hidden" id="EcatalogTypeTreeName" name="EcatalogTypeTreeName" value="${EcatalogTypeTreeName}"/>
-                <input type="hidden" id="EcatalogTypeTreeParentId" name="EcatalogTypeTreeParentId"
-                       value="${EcatalogTypeTreeParentId}"/>
+                <input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
+                <input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
+                <input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>
+                <input type="hidden" id="eCatalogTypeTreeParentId" name="eCatalogTypeTreeParentId"
+                       value="${eCatalogTypeTreeParentId}"/>
                 <div class="portlet-title">
-                    <div class="caption">${EcatalogTypeTreeName} </div>
+                    <div class="caption">${eCatalogTypeTreeName} </div>
                     <div class="clearfix fr">
                         <div class="btn-group">
                             <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -171,10 +171,10 @@
     }
     function add() {
         var a38Id = $("#a38Id").val();
-        var EcatalogTypeTreeId = $("#EcatalogTypeTreeId").val();
-        var EcatalogTypeTreeCode = $("#EcatalogTypeTreeCode").val();
-        var EcatalogTypeTreeName = $("#EcatalogTypeTreeName").val();
-        var EcatalogTypeTreeParentId = $("#EcatalogTypeTreeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -185,10 +185,10 @@
             },
             data: {
                 "a38Id": a38Id,
-                "EcatalogTypeTreeId": EcatalogTypeTreeId,
-                "EcatalogTypeTreeCode": EcatalogTypeTreeCode,
-                "EcatalogTypeTreeName": EcatalogTypeTreeName,
-                "EcatalogTypeTreeParentId": EcatalogTypeTreeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
@@ -223,10 +223,10 @@
     }
     function edit(id) {
         var a38Id = $("#a38Id").val();
-        var EcatalogTypeTreeId = $("#EcatalogTypeTreeId").val();
-        var EcatalogTypeTreeCode = $("#EcatalogTypeTreeCode").val();
-        var EcatalogTypeTreeName = $("#EcatalogTypeTreeName").val();
-        var EcatalogTypeTreeParentId = $("#EcatalogTypeTreeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -238,14 +238,14 @@
             data: {
                 "id": id,
                 "a38Id": a38Id,
-                "EcatalogTypeTreeId": EcatalogTypeTreeId,
-                "EcatalogTypeTreeCode": EcatalogTypeTreeCode,
-                "EcatalogTypeTreeName": EcatalogTypeTreeName,
-                "EcatalogTypeTreeParentId": EcatalogTypeTreeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
-                $("#treeId").val(EcatalogTypeTreeId);
+                $("#treeId").val(eCatalogTypeTreeId);
             },
             error: function () {
                 myLoading.hide();
@@ -287,10 +287,10 @@
 
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
-        var EcatalogTypeTreeId = $("#EcatalogTypeTreeId").val();
-        var EcatalogTypeTreeCode = $("#EcatalogTypeTreeCode").val();
-        var EcatalogTypeTreeName = $("#EcatalogTypeTreeName").val();
-        var EcatalogTypeTreeParentId = $("#EcatalogTypeTreeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id, {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
@@ -300,10 +300,10 @@
                     type: 'POST',
                     dataType: "html",
                     data: {
-                        "EcatalogTypeTreeId": EcatalogTypeTreeId,
-                        "EcatalogTypeTreeCode": EcatalogTypeTreeCode,
-                        "EcatalogTypeTreeParentId": EcatalogTypeTreeParentId,
-                        "EcatalogTypeTreeName": EcatalogTypeTreeName,
+                        "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                        "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                        "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId,
+                        "eCatalogTypeTreeName": eCatalogTypeTreeName,
                         "a38Id": a38Id
                     },
                     headers: {

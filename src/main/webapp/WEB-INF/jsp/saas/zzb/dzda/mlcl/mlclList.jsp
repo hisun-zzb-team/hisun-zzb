@@ -240,7 +240,7 @@
         });
     }
     var viewImageMain = function (e01z1Id,e01Z101B) {
-        var divHeight = $(window).height() - 100;
+        var divHeight = $(window).height() -60;
 		var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
 		$('#viewImgModal').attr("data-width", divWidth);

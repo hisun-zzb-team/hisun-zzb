@@ -39,7 +39,7 @@ public class E01Z1  extends TenantEntity implements Serializable {
     private String e01Z204;//材料来处
     private String e01Z201;//材料接收时间
     private String e01Z231;//备注
-    private Integer yjztps;//已加载图片数
+    private Integer yjztps=0;//已加载图片数
     private Integer e01Z104;//排序号
     private List<EImages> images;
 

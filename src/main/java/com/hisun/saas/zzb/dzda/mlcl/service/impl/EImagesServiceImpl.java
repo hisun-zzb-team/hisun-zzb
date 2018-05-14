@@ -22,6 +22,7 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
+import com.hisun.util.DESUtil;
 import com.hisun.util.FileUtil;
 import com.hisun.util.UUIDUtil;
 import org.apache.commons.io.FileUtils;
@@ -89,7 +90,10 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                             isNeedDelete = false;
                             EImages eImages = new EImages();
                             eImages.setE01z1(e01Z1);
-                            eImages.setImgFilePath(tpFile.getPath().substring(uploadBasePath.length(),tpFile.getPath().length()));
+                            String encryptFilePath = tpFile.getPath().substring(0,tpFile.getPath().lastIndexOf("."));
+                            DESUtil.getInstance().encrypt(tpFile,new File(encryptFilePath));
+                            eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(),encryptFilePath.length()));
+                            FileUtils.deleteQuietly(tpFile);
                             eImages.setImgNo(tpFile.getName().substring(3, 4));
                             this.save(eImages);
                             //记录已加载图片数
@@ -132,7 +136,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         return Constants.DATP_STORE_PATH
                 + userLoginDetails.getTenantId() + File.separator
                 + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
-                + UUIDUtil.getUUID()+ File.separator;
+                + a38Id+ File.separator;
     }
 
     public void deleteEImagesByA38(A38 a38) throws Exception {

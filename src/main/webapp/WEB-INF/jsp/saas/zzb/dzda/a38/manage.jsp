@@ -253,7 +253,7 @@
 
 	function qqclLoad(){
 		$.ajax({
-			url : "${path }/zzb/dzda/e01z4/ajax/qqclList",
+			url : "${path }/zzb/dzda/e01z4/ajax/list",
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",

@@ -8,6 +8,7 @@ package com.hisun.saas.zzb.dzda.e01z4.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.io.Serializable;
 @Table(name = "e01z4")
 public class E01Z4   extends TombstoneEntity implements Serializable {
     private String id;//欠缺材料主键
-    private A38 a38;//外键，人员档案主健
+    private A38 a38;//外键，人员档案主键
     private String e01Z401;//欠缺材料名称
     private String eCatalogTypeId;//材料类型主键
     private String e01Z401B;//欠缺材料类型字典代码
@@ -32,7 +33,9 @@ public class E01Z4   extends TombstoneEntity implements Serializable {
     private String remark;//备注
 
     @Id
-    @Column(name = "id")
+    @GenericGenerator(name = "generator", strategy = "uuid")
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id", nullable = false, unique = true, length = 32)
     public String getId() {
         return id;
     }

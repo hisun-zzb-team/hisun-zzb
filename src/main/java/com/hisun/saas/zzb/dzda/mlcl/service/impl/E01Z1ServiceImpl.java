@@ -47,7 +47,31 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
             hql = hql+"where e.a38 is null";
         }
 
+        if(e01Z101B!=null && !e01Z101B.equals("")) {
+            hql = hql+" and e.e01Z101B =:e01Z101B";
+            map.put("e01Z101B", e01Z101B);
+        }else{
+            hql = hql+" and e.e01Z101B is null";
+        }
 
+        List<Map> maxSorts = this.e01Z1Dao.list(hql, map);
+        if(maxSorts.get(0).get("sort")==null){
+            return 1;
+        }else{
+            Integer maxSort = ((Number) maxSorts.get(0).get("sort")).intValue();
+            return maxSort;
+        }
+    }
+
+    public Integer getMaxSmSort(String a38Id,String e01Z101B) {
+        Map<String, Object> map=new HashMap<String, Object>();
+        String hql = "select max(e.e01Z107)+1 as sort from E01Z1 e ";
+        if(a38Id!=null && !a38Id.equals("")) {
+            hql = hql+"where e.a38.id =:a38Id";
+            map.put("a38Id", a38Id);
+        }else{
+            hql = hql+"where e.a38 is null";
+        }
 
         if(e01Z101B!=null && !e01Z101B.equals("")) {
             hql = hql+" and e.e01Z101B =:e01Z101B";
@@ -65,11 +89,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         }
     }
 
-    public void updateE01Z1(E01Z1 e01z1, String oldPid, Integer oldSort){
-        String newParentId = "";
-        if(e01z1.getA38()!=null){
-            newParentId = e01z1.getA38().getId();
-        }
+    public void updateE01Z1(E01Z1 e01z1, Integer oldSort){
         this.updateSort(e01z1, oldSort);
         this.e01Z1Dao.update(e01z1);
     }
@@ -85,7 +105,9 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
             sql+="t.e01z104=t.e01z104+1";
         }
 
-        sql +=" where t.tenant_id = '" + details.getTenantId()+"'";
+        sql +=" where t.tenant_id = '" + details.getTenantId() + "'"
+                + " and t.a38_id = '" + e01z1.getA38().getId() + "'"
+                + " and t.e01z101b = '" + e01z1.getE01Z101B() + "'";
 
         if(newSort>oldSort){
             sql+=" and t.e01z104<="+newSort+" and t.e01z104 >"+oldSort;

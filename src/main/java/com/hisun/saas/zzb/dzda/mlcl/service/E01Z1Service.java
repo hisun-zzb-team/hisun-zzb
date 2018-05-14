@@ -14,5 +14,6 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
  */
 public interface E01Z1Service extends BaseService<E01Z1,String>{
     Integer getMaxSort(String ad8Id, String e01Z101B);
-    void updateE01Z1(E01Z1 e01z1, String oldPid, Integer oldSort);
+    Integer getMaxSmSort(String ad8Id, String e01Z101B);
+    void updateE01Z1(E01Z1 e01z1, Integer oldSort);
 }

@@ -90,10 +90,10 @@
 			type: 'POST',
 			dataType : "html",
 			data:{
-				"currentNodeId":node.id,
-				"currentNodeCode":node.key,
-				"currentNodeParentId":node.pId,
-				"currentNodeName":node.name,
+				"currentNodeId":"",
+				"currentNodeCode":"",
+				"currentNodeParentId":"",
+				"currentNodeName":"所有材料",
 				"a38Id":a38Id
 			},
 			headers: {

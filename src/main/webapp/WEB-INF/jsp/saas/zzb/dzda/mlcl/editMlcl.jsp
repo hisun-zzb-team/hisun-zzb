@@ -28,6 +28,7 @@
 		<input type="hidden" name="id" id="id" value="${vo.id}"/>
 		<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 		<input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
+		<input type="hidden" id="yjztps" name="yjztps" value="${yjztps}"/>
 		<input type="hidden" id="currentNodeCode" name="currentNodeCode" value="${currentNodeCode}"/>
 		<input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
 		<input type="hidden" id="currentNodeParentId" name="currentNodeParentId" value="${currentNodeParentId}"/>

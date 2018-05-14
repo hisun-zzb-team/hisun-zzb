@@ -191,7 +191,8 @@
     });
 
     var getDirCode = function (name) {
-        return name.substring(name.indexOf("/") + 1, name.indexOf("."));
+        var tmp = name.substring(0,name.lastIndexOf("/"));
+        return tmp.substring(0,tmp.indexOf("."));
     }
     var getFileNameCode = function (name) {
         return name.substring(name.lastIndexOf("/") + 1, name.lastIndexOf("."));
@@ -248,7 +249,7 @@
                     }
                 },
                 error: function () {
-                    showTip("提示", "系统错误！", 2000);
+                    showTip("提示", "系统错误！", 1500);
                 }
             });
 
@@ -269,7 +270,7 @@
                     index++;
                 });
             } else {
-                showTip("提示", "检查通过！", 2000);
+                showTip("提示", "检查通过！", 1500);
             }
             if (isPass) {
                 $("#isPass").val("true");
@@ -329,7 +330,7 @@
     $("#uploadAndSaveFile").click(function () {
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/jztp/save",
+                url: "${path}/zzb/dzda/mlcl/jztp/save/${a38Id}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -341,7 +342,7 @@
                     if (json.success == true) {
                         showTip("提示", json.message, 2000);
                     } else {
-                        showTip("提示", "上传失败!", 2000);
+                        showTip("提示", json.message, 2000);
                     }
                 },
                 error: function (arg1, arg2, arg3) {

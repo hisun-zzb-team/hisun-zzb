@@ -16,9 +16,8 @@ public class Constants {
     //允许图片最大大小2M
     public static final Integer DATP_MAX_FILE_SIZE =2097152;
 
-
-
     //档案存储路径
     public static final String DATP_STORE_PATH = File.separator+"a38"+File.separator;
+    public static final String[] EXCLUDE_FILE_AND_DIR={"__MACOSX",".DS_Store"};
 
 }

@@ -24,7 +24,7 @@
 	<div class="span6" style="width: 25%; margin: 0px;padding: 0px;background: #f1f3f6;border-right:1px solid #AACEFF">
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
 				<div style="margin: 0px;padding: 0px">
-					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/e01z1/ajax/typeAndE01z1Tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
+					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="viewImages" submitType="post" dataType="json" isSearch="false"/>
 				</div>
 		</div>
@@ -67,7 +67,7 @@
 		$.ajax({
 			async: false,
 			type: "POST",
-			url:"${path}/zzb/dzda/e01z1/ajax/viewImg",
+			url:"${path}/zzb/dzda/mlcl/images/ajax/viewImg",
 			dataType: "html",
 			headers: {
 				"OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'

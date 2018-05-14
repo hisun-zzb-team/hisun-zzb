@@ -12,8 +12,9 @@
         <div class="portlet-title" style="vertical-align: middle;">
             <div class="caption">本地材料</div>
             <div class="clearfix fr">
-                <a id="checkFile" class="btn green" href="#"><i class="icon-plus"></i>检查</a>
-                <a id="uploadAndSaveFile" class="btn green" href="#" disabled><i class="icon-plus"></i>保存</a>
+                <a id="checkFile" class="btn green" href="#"><i class="icon-question-sign"></i>查看检查结果</a>
+                <a id="uploadAndSaveFile" class="btn green" href="#" disabled><i class="icon-save"></i>保存</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
             </div>
         </div>
         <div class="clearfix">

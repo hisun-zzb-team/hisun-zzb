@@ -259,7 +259,7 @@
         $('#viewImgModal').attr("data-height", divHeight);
         $('#viewImgModal').attr("data-width", divWidth);
         $.ajax({
-            url: "${path}/zzb/dzda/e01z1/ajax/viewMain/"+$("#a38Id").val(),
+            url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+$("#a38Id").val(),
             type: "post",
             data: {
                 "a0101":"${a0101}",

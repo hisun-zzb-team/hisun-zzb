@@ -180,7 +180,7 @@
 					},
 					success : function(json){
 						if(json.success){
-							refreshTree();
+							refreshTreeManege();
 							$.ajax({
 								url: "${path}/zzb/dzda/e01z1/ajax/mlxxList",// 请求的action路径
 								type: 'POST',

@@ -110,7 +110,7 @@
 		zTree.expandNode(node, true, false , true);//展开
 	});
 
-	function refreshTree() {
+	function refreshTreeManege() {
 		$("#leftTree").empty();
 		refreshTreeTag("leftTree",setting_leftTree,"");
 		selectNodeTree();

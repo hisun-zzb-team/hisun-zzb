@@ -74,7 +74,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a>加载图片</a>
+                                    <a href="#" id="jztpButton">加载图片</a>
                                 </li>
                                 <li>
                                     <a onclick="">卸载图片</a>
@@ -146,6 +146,20 @@
                     <jsp:param value="${pager.pageSize }" name="pageSize"/>
                     <jsp:param value="${pager.pageNum }" name="page"/>
                 </jsp:include>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="jztpModal" class="modal container hide fade" tabindex="-1" data-width="520">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="title" >
+                    加载图片
+                </h3>
+            </div>
+            <div class="modal-body" id="jztpPage">
             </div>
         </div>
     </div>
@@ -245,7 +259,7 @@
         $('#viewImgModal').attr("data-height", divHeight);
 		$('#viewImgModal').attr("data-width", divWidth);
         $.ajax({
-            url: "${path}/zzb/dzda/e01z1/ajax/viewMain/"+$("#a38Id").val(),
+            url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+$("#a38Id").val(),
             type: "post",
             data: {
 				"a0101":"${a0101}",
@@ -308,6 +322,30 @@
             }
         });
     }
+    $("#jztpButton").click(function(){
+        var divHeight = $(window).height()-100;
+        var divWidth = $(window).width()-20;
+        $('#jztpModal').attr("data-width",divWidth);
+        $('#jztpModal').attr("data-height",divHeight);
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/jztp/ajax/index/${a38Id}",
+            type: "post",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#jztpPage').html(html);
+                $('#jztpModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    });
 </script>
 </body>
 </html>

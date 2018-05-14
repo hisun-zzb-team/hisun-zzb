@@ -57,13 +57,13 @@
             <form class="" id="importForm" enctype="multipart/form-data">
                 <input type="hidden" name="queryId" value="${queryId}"/>
                 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
-                <input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
-                <input type="hidden" id="currentNodeCode" name="currentNodeCode" value="${currentNodeCode}"/>
-                <input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
-                <input type="hidden" id="currentNodeParentId" name="currentNodeParentId"
-                       value="${currentNodeParentId}"/>
+                <input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
+                <input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
+                <input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>
+                <input type="hidden" id="eCatalogTypeTreeParentId" name="eCatalogTypeTreeParentId"
+                       value="${eCatalogTypeTreeParentId}"/>
                 <div class="portlet-title">
-                    <div class="caption">${currentNodeName} </div>
+                    <div class="caption">${eCatalogTypeTreeName} </div>
                     <div class="clearfix fr">
                         <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                             <i class="icon-plus"></i> 增加材料
@@ -157,10 +157,10 @@
     }
     function add() {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -171,10 +171,10 @@
             },
             data: {
                 "a38Id": a38Id,
-                "currentNodeId": currentNodeId,
-                "currentNodeCode": currentNodeCode,
-                "currentNodeName": currentNodeName,
-                "currentNodeParentId": currentNodeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
@@ -209,10 +209,10 @@
     }
     function edit(id) {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -224,14 +224,14 @@
             data: {
                 "id": id,
                 "a38Id": a38Id,
-                "currentNodeId": currentNodeId,
-                "currentNodeCode": currentNodeCode,
-                "currentNodeName": currentNodeName,
-                "currentNodeParentId": currentNodeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
-                $("#treeId").val(currentNodeId);
+                $("#treeId").val(eCatalogTypeTreeId);
             },
             error: function () {
                 myLoading.hide();
@@ -274,10 +274,10 @@
 
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id, {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
@@ -287,10 +287,10 @@
                     type: 'POST',
                     dataType: "html",
                     data: {
-                        "currentNodeId": currentNodeId,
-                        "currentNodeCode": currentNodeCode,
-                        "currentNodeParentId": currentNodeParentId,
-                        "currentNodeName": currentNodeName,
+                        "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                        "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                        "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId,
+                        "eCatalogTypeTreeName": eCatalogTypeTreeName,
                         "a38Id": a38Id
                     },
                     headers: {

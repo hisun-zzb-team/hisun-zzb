@@ -29,7 +29,7 @@ public class E01Z1  extends TenantEntity implements Serializable {
     private String e01Z111Remark;//材料名称备注
     private String e01Z117;//材料制成时间
     private Integer e01Z107;//扫描序号（单份材料的扫描序号）
-    private String eCatalogTypeId;//材料目录主键
+    private String eCatalogTypeId;//材料类别主键
     private String e01Z101B;//材料类别字典代码
     private String e01Z101A;//材料类别字典内容
     private Integer e01Z114;//材料页数

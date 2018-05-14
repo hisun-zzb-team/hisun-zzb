@@ -23,7 +23,7 @@ public class E01Z1Vo {
     private String e01Z204;
     private String e01Z201;
     private String e01Z231;
-    private Integer yjztps;
+    private Integer yjztps = 0;
     private Integer e01Z104;
     private List<EImages> images;
 

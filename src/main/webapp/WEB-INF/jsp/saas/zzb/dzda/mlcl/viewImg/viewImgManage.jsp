@@ -74,6 +74,7 @@
 			},
 			data: {
 				"a38Id": "${a38Id}",
+				"myDirName": "${myDirName}",
 				"e01z1Id": nodeId
 			},
 			success: function (html) {

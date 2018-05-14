@@ -23,6 +23,7 @@ import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclAggregateVo;
@@ -93,10 +94,46 @@ public class EImagesController extends BaseController {
         map.put("a0101", a0101);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
     }
-
+    private String getTpStorePath(String a38Id) {
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        return Constants.DATP_STORE_PATH
+                + userLoginDetails.getTenantId() + File.separator
+                + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
+                + a38Id + File.separator;
+    }
     @RequestMapping(value = "/ajax/viewImg")
-    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName)throws GenericException {
+    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
+        String storePath = getTpStorePath(a38Id);
+        List images = new ArrayList();
+        int imagesSize = 0;
+        if(!e01z1Id.equals("")){
+            E01Z1 e01z1 = new E01Z1();
+            e01z1 = this.e01Z1Service.getByPK(e01z1Id);
+
+            List<EImages> eImages = new ArrayList<EImages>();
+            eImages = e01z1.getImages();
+
+            for(EImages image : eImages){
+                String jiamfilePath = image.getImgFilePath();//加密的图片路径
+                String jianmfilePath = "";//解密的图片路径
+                String dirPath = uploadBasePath +storePath+"/"+myDirName;
+                File storeDir = new File(dirPath);
+                if (storeDir.exists() == false) {
+                    storeDir.mkdirs();
+                }
+                jiamfilePath = uploadBasePath+jiamfilePath;
+                String fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\"));
+
+                jianmfilePath =dirPath + File.separator+image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\")+1)+".jpg";
+
+                DESUtil.getInstance().decrypt(new File(jiamfilePath),new File(jianmfilePath));
+                images.add(jianmfilePath);
+            }
+         imagesSize = images.size();
+        }
+
+        map.put("imagesSize", imagesSize);
         map.put("a38Id", a38Id);
         map.put("e01z1Id", e01z1Id);
         map.put("myDirName", myDirName);

@@ -22,10 +22,12 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -35,6 +37,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -209,10 +213,11 @@ public class E01Z1Controller extends BaseController {
         String url = "saas/zzb/dzda/mlcl/mlclList";
 
         try{
+            A38 a38 = this.a38Service.getByPK(a38Id);
 
             CommonConditionQuery query = new CommonConditionQuery();
 
-            if(StringUtils.isEmpty(currentNodeParentId)){
+            if(StringUtils.isEmpty(currentNodeId)){
                 query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
             }else {
                 query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
@@ -221,7 +226,7 @@ public class E01Z1Controller extends BaseController {
 
             Long total = this.e01Z1Service.count(query);
             CommonOrderBy orderBy = new CommonOrderBy();
-            if(StringUtils.isEmpty(currentNodeParentId)){
+            if(StringUtils.isEmpty(currentNodeId)){
                 orderBy.add(CommonOrder.asc("e01z101b"));
                 currentNodeName="所有材料";
                 url = "saas/zzb/dzda/mlcl/allMlclList";
@@ -248,6 +253,7 @@ public class E01Z1Controller extends BaseController {
             map.put("currentNodeName",currentNodeName);
             map.put("currentNodeParentId",currentNodeParentId);
             map.put("a38Id",a38Id);
+            map.put("a0101",a38.getA0101());
             map.put("total",total);
         }catch(Exception e){
             logger.error(e);
@@ -276,11 +282,6 @@ public class E01Z1Controller extends BaseController {
             List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
             List<TreeNode> treeNodes = new ArrayList<TreeNode>();
             TreeNode treeNode = new TreeNode();
-            treeNode.setId("0");
-            treeNode.setName("目录类型");
-            treeNode.setpId("0");
-            treeNode.setOpen(true);
-            treeNodes.add(treeNode);
             TreeNode childTreeNode=null;
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
                 childTreeNode = new TreeNode();
@@ -304,4 +305,95 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+    /**
+     *
+     * @param a38Id 档案主键
+     * @param a0101 档案姓名
+     * @param archiveId 档案材料字典ID
+     * @param e01z1Id 档案材料ID
+     * @param showType  浏览的位置  如果为refer则是   如果是viewApply则为查阅列表进入
+     * @return
+     * @throws GenericException
+     */
+    @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
+    @RequestMapping("/ajax/viewMain/{a38Id}")
+    public
+    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        String myDirName = "";
+        map.put("a38Id", a38Id);
+        map.put("archiveId", archiveId);
+        map.put("e01z1Id", e01z1Id);
+        map.put("myDirName", myDirName);
+        map.put("a0101", a0101);
+        return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
+    }
+
+    @RequestMapping(value = "/ajax/viewImg")
+    public ModelAndView viewImg(@PathVariable(value = "a38Id") String a38Id,String archiveId,String myDirName){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("a38Id", a38Id);
+        map.put("archiveId", archiveId);
+        map.put("myDirName", myDirName);
+        return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
+    }
+
+    @RequestMapping("/ajax/typeAndE01z1Tree/{a38Id}")
+    public
+    @ResponseBody
+    Map<String, Object> typeAndE01z1Tree(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            CommonConditionQuery query = new CommonConditionQuery();
+            CommonOrderBy orderBy = new CommonOrderBy();
+            orderBy.add(CommonOrder.asc("sort"));
+            List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+            A38 a38 = a38Service.getByPK(a38Id);
+            CommonConditionQuery query1 = new CommonConditionQuery();
+            query1.add(CommonRestrictions.and("a38.id=:a38Id","a38Id",a38Id));
+            CommonOrderBy orderBy1 = new CommonOrderBy();
+            orderBy1.add(CommonOrder.asc("e01z104"));
+            List<E01Z1> e01Z1s = e01Z1Service.list(query1, orderBy1);
+            List<MlclTreeNode> treeNodes = new ArrayList<MlclTreeNode>();
+            MlclTreeNode treeNode = new MlclTreeNode();
+            treeNode.setId(a38.getId());
+            treeNode.setName(a38.getA0101());
+            treeNode.setNodeType("a38");
+            treeNode.setOpen(true);
+            treeNodes.add(treeNode);
+            MlclTreeNode childTreeNode = null;
+            for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
+                childTreeNode = new MlclTreeNode();
+                childTreeNode.setId(eCatalogTypeInfo.getId());
+                childTreeNode.setName(eCatalogTypeInfo.getCatalogValue());
+                childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
+                childTreeNode.setNodeType("dir");
+                if (eCatalogTypeInfo.getParent() == null) {
+                    childTreeNode.setpId(a38.getId());
+                } else {
+                    childTreeNode.setpId(eCatalogTypeInfo.getParent().getId());
+                }
+                treeNodes.add(childTreeNode);
+            }
+            for (E01Z1 e01Z1 : e01Z1s) {
+                childTreeNode = new MlclTreeNode();
+                childTreeNode.setId(e01Z1.getId());
+                childTreeNode.setName(e01Z1.getE01Z111());
+                DecimalFormat decimalFormat = new DecimalFormat("00");
+                childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
+                childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                childTreeNode.setNodeType("cl");
+                treeNodes.add(childTreeNode);
+            }
+            map.put("success", true);
+            map.put("data", treeNodes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e, e);
+            map.put("success", false);
+        }
+        return map;
+    }
 }

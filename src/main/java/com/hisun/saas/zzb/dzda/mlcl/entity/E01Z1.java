@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.mlcl.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import org.hibernate.annotations.Cascade;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "e01z1")
-public class E01Z1  extends TombstoneEntity implements Serializable {
+public class E01Z1  extends TenantEntity implements Serializable {
     private String id;//材料主键
     private A38 a38;//外键，档案基本信息主键
     private String e01Z111;//材料名称

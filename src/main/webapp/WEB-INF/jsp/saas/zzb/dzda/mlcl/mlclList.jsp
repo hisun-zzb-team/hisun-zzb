@@ -22,16 +22,16 @@
     </style>
 </head>
 <body>
-<div id="jgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
+<div id="viewImgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close" type="button"></button>
                 <h3 class="modal-title" id="title">
-                    “红叶专”档案图片
+                    “${a0101}”档案图片
                 </h3>
             </div>
-            <div class="modal-body" id="jgAddDiv" style="background-color: #f1f3f6;">
+            <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
             </div>
         </div>
     </div>
@@ -130,7 +130,7 @@
                             <td>${vo.e01Z114}</td>
                             <td>${vo.yjztps}</td>
                             <td><a href="javascript:uploadImg()" class="">加载</a></td>
-                            <td><a href="javascript:view()" class="">浏览</a></td>
+                            <td><a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}')" class="">浏览</a></td>
                             <td st>${vo.e01Z107}</td>
                             <td>
                                 <a href="javascript:edit('${vo.id}')" class="">修改</a>|
@@ -239,21 +239,26 @@
             }
         });
     }
-    var view = function () {
+    var viewImageMain = function (e01z1Id,e01Z101B) {
         var divHeight = $(window).height() - 100;
-        $('#jgModal').attr("data-height", divHeight);
+		var divWidth = $(window).width() - 100;
+        $('#viewImgModal').attr("data-height", divHeight);
+		$('#viewImgModal').attr("data-width", divWidth);
         $.ajax({
-            url: "${path}/zzb/app/console/daDemo/ajax/viewImgManage",
+            url: "${path}/zzb/dzda/e01z1/ajax/viewMain/"+$("#a38Id").val(),
             type: "post",
-            data: {},
+            data: {
+				"a0101":"${a0101}",
+				"archiveId":e01Z101B,
+				"e01z1Id":e01z1Id
+			},
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
             },
             dataType: "html",
             success: function (html) {
-                $('#jgAddDiv').html(html);
-
-                $('#jgModal').modal({
+                $('#viewImgDiv').html(html);
+                $('#viewImgModal').modal({
                     keyboard: true
                 });
             },

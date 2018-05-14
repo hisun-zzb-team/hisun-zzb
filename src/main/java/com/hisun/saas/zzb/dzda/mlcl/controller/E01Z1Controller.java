@@ -171,6 +171,7 @@ public class E01Z1Controller extends BaseController {
 
         vo.setE01Z104(sort);
         vo.setE01Z107(smSort);
+        vo.setE01Z124(1);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
         currentNodeName = eCatalogTypeInfo.getCatalogValue();
@@ -202,6 +203,7 @@ public class E01Z1Controller extends BaseController {
             e01Z1.setE01Z101B(currentNodeCode);
             e01Z1.setE01Z101A(currentNodeName);
             e01Z1.setECatalogTypeId(currentNodeId);
+            e01Z1.setYjztps(0);
             if(StringUtils.isNotBlank(a38Id)){
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
             }
@@ -340,7 +342,6 @@ public class E01Z1Controller extends BaseController {
     public
     @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-
         String myDirName = "";
         map.put("a38Id", a38Id);
         map.put("archiveId", archiveId);
@@ -351,10 +352,10 @@ public class E01Z1Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/viewImg")
-    public ModelAndView viewImg(@PathVariable(value = "a38Id") String a38Id,String archiveId,String myDirName){
+    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName)throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("a38Id", a38Id);
-        map.put("archiveId", archiveId);
+        map.put("e01z1Id", e01z1Id);
         map.put("myDirName", myDirName);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
     }
@@ -377,12 +378,6 @@ public class E01Z1Controller extends BaseController {
             orderBy1.add(CommonOrder.asc("e01z104"));
             List<E01Z1> e01Z1s = e01Z1Service.list(query1, orderBy1);
             List<MlclTreeNode> treeNodes = new ArrayList<MlclTreeNode>();
-            MlclTreeNode treeNode = new MlclTreeNode();
-            treeNode.setId(a38.getId());
-            treeNode.setName(a38.getA0101());
-            treeNode.setNodeType("a38");
-            treeNode.setOpen(true);
-            treeNodes.add(treeNode);
             MlclTreeNode childTreeNode = null;
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
                 childTreeNode = new MlclTreeNode();
@@ -390,6 +385,7 @@ public class E01Z1Controller extends BaseController {
                 childTreeNode.setName(eCatalogTypeInfo.getCatalogValue());
                 childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
                 childTreeNode.setNodeType("dir");
+                childTreeNode.setOpen(true);
                 if (eCatalogTypeInfo.getParent() == null) {
                     childTreeNode.setpId(a38.getId());
                 } else {
@@ -397,14 +393,30 @@ public class E01Z1Controller extends BaseController {
                 }
                 treeNodes.add(childTreeNode);
             }
+
             for (E01Z1 e01Z1 : e01Z1s) {
+                String text = e01Z1.getE01Z111();
+                String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
+                int imagesCount = e01Z1.getYjztps();
+                String title=e01Z1.getE01Z111();
+
+                if(!e01z117.equals("")){
+                    text = text +","+ e01z117;
+                    title =title+"  制成时间："+e01z117;
+                }
+                if(imagesCount != 0){
+                    text = text +","+ imagesCount;
+                    title =title+"  图片数："+imagesCount;
+                }
                 childTreeNode = new MlclTreeNode();
                 childTreeNode.setId(e01Z1.getId());
-                childTreeNode.setName(e01Z1.getE01Z111());
+                childTreeNode.setName(text);
+                childTreeNode.setDescription(title);
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
                 childTreeNode.setpId(e01Z1.getECatalogTypeId());
                 childTreeNode.setNodeType("cl");
+
                 treeNodes.add(childTreeNode);
             }
             map.put("success", true);

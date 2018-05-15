@@ -26,13 +26,17 @@
 
 					</div>
 					<div class="relationbetTop_but">
-						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
+
+						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('0')">待审</button>
+						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('1')">保存</button>
 						<a class="btn " href="${path }/zzb/dzda/a38/list"><i class="icon-remove-sign"></i> 取消</a>
 					</div>
 				</div>
 				<form action="" class="form-horizontal" id="form1" method="post">
 					<input type="hidden" name="dataType" value="${vo.dataType}" id="dataType"/>
 					<input type="hidden" name="parentId" value="${vo.parentId}" id="parentId"/>
+					<input type="hidden" name="sjzt" value="${vo.sjzt}" id="sjzt"/>
+
 					<input type="hidden" name="id" value="${vo.id }"/>
 					<dl class="dlattrbute">
 						<dt><a href="###">基本信息</a></dt>
@@ -259,7 +263,8 @@
 		App.init();
 	});
 	var form1 = new EstValidate("form1");
-	function formSubmit(){
+	function formSubmit(sjzt){
+		$("#sjzt").val(sjzt);
 		var bool = form1.form();
 		if(bool){
 			$.ajax({

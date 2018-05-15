@@ -99,6 +99,48 @@ public class A38Controller extends BaseController {
     }
 
     @RequiresPermissions("a38:*")
+    @RequestMapping("/shList")
+    public ModelAndView shList(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+                             String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery) throws UnsupportedEncodingException {
+        Map<String,Object> model = new HashMap<String,Object>();
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "0"));
+        if(StringUtils.isNotEmpty(dabhQuery)){
+            query.add(CommonRestrictions.and(" dabh like :dabhQuery ", "dabhQuery","%"+dabhQuery+"%"));
+        }
+        if(StringUtils.isNotEmpty(smxhQuery)){
+            query.add(CommonRestrictions.and(" smxh like :smxhQuery ", "smxhQuery","%"+smxhQuery+"%"));
+        }
+        if(StringUtils.isNotEmpty(a0101Query)){
+            query.add(CommonRestrictions.and(" a0101 like :a0101Query ", "a0101Query","%"+a0101Query+"%"));
+        }
+        if(StringUtils.isNotEmpty(gbztCodeQuery)){
+            String str[] = gbztCodeQuery.split(",");
+            List gbztCodeList =  Arrays.asList(str);
+            query.add(CommonRestrictions.and(" gbztCode in (:gbztCodeList)", "gbztCodeList",gbztCodeList));
+        }
+        if(StringUtils.isNotEmpty(daztCodeQuery)){
+            String str[] = daztCodeQuery.split(",");
+            List daztCodeList =  Arrays.asList(str);
+            query.add(CommonRestrictions.and(" daztCode in (:daztCodeList) ", "daztCodeList",daztCodeList));
+        }
+        Long total = a38Service.count(query);
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("smxh"));
+        orderBy.add(CommonOrder.asc("a0101"));
+        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
+        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        model.put("dabhQuery",dabhQuery);
+        model.put("smxhQuery",smxhQuery);
+        model.put("a0101Query",a0101Query);
+        model.put("gbztCodeQuery",gbztCodeQuery);
+        model.put("daztCodeQuery",daztCodeQuery);
+        model.put("gbztContentQuery",gbztContentQuery);
+        model.put("daztContentQuery",daztContentQuery);
+        model.put("pager",pager);
+        return new ModelAndView("saas/zzb/dzda/a38/shList",model);
+    }
+    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/editManage")
     public ModelAndView editManage(String id){
         Map<String, Object> map = Maps.newHashMap();
@@ -228,7 +270,7 @@ public class A38Controller extends BaseController {
             A38 entity = new A38();
             BeanUtils.copyProperties(vo, entity);
             entity.setId(null);
-            entity.setSjzt("1");
+//            entity.setSjzt("1");
             EntityWrapper.wrapperSaveBaseProperties(entity,details);
             a38Service.save(entity);
             returnMap.put("code",1);

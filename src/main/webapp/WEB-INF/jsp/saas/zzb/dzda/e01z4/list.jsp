@@ -28,20 +28,6 @@
 	</style>
 </head>
 <body>
-<div id="editZjclModal" class="modal container hide fade" tabindex="-1" data-width="600">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button data-dismiss="modal" class="close"  type="button"></button>
-				<h3 class="modal-title" >
-					修改欠缺材料
-				</h3>
-			</div>
-			<div class="modal-body" id="editZjclDiv">
-			</div>
-		</div>
-	</div>
-</div>
 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 <div class="container-fluid" >
 	<div class="row-fluid">
@@ -55,10 +41,6 @@
 							添加
 						</a>
 
-						<%--<span class="controllerClass btn green file_but" >--%>
-						<%--<i class="icon-circle-arrow-up"></i>清空数据--%>
-						<%--<input class="file_progress" type="file" name="attachFile" id="btn-browseTemplate">--%>
-						<%--</span>--%>
 					</div>
 
 				</div>
@@ -85,7 +67,7 @@
 								<td st>${vo.remark}</td>
 								<td>
 									<a href="javascript:edit('${vo.id}')" class="">修改</a>|
-									<a href="javascript:del('${vo.id}')" class="">删除</a>
+									<a href="javascript:del('${vo.id}','${vo.e01Z401}')" class="">删除</a>
 								</td>
 							</tr>
 						</c:forEach>
@@ -105,8 +87,6 @@
 </div>
 
 <%-- END PAGE CONTENT--%>
-</div>
-<div class="main_right" id="rightList" >
 <script type="text/javascript">
 	(function(){
 		App.init();
@@ -153,8 +133,8 @@
 			},
 			dataType : "html",
 			success:function(html){
-				$("#e01z1Table").hide();
-				$("#rightList").html(html);
+				var view = $("#tab_show");
+				view.html(html);
 			},
 			error : function(){
 				showTip("提示","出错了请联系管理员", 1500);
@@ -175,11 +155,40 @@
 			},
 			dataType : "html",
 			success : function(html){
-				$("#e01z1Table").hide();
-				$("#rightList").html(html);
+				var view = $("#tab_show");
+				view.html(html);
 			},
 			error : function(){
 				showTip("提示","出错了请联系管理员", 1500);
+			}
+		});
+	}
+
+	function del(id, voname) {
+		var a38Id = $("#a38Id").val();
+		actionByConfirm1(voname, "${path}/zzb/dzda/e01z4/delete/" + id, {}, function (data, status) {
+			if (data.success == true) {
+				showTip("提示", "成功删除！", 2000);
+				$.ajax({
+					url: "${path }/zzb/dzda/e01z4/ajax/list",
+					type: 'POST',
+					dataType: "html",
+					data: {
+						"a38Id": a38Id
+					},
+					headers: {
+						"OWASP_CSRFTOKEN": "${sessionScope.OWASP_CSRFTOKEN}"
+					},
+					success: function (html) {
+						var view = $("#tab_show");
+						view.html(html);
+					},
+					error: function () {
+						showTip("提示", "删除失败!", 2000);
+					}
+				});
+			} else {
+				showTip("提示", data.msg, 2000);
 			}
 		});
 	}

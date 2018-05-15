@@ -67,8 +67,7 @@
 						<div id="pxGroup" class="control-group">
 							<label class="control-label">材料顺序号<span class="required">*</span></label>
 							<div class="controls">
-								<input size="16" type="text" required class="span6 m-wrap" value="2"
-									   id="px" name="px" >
+								<input size="16" type="text" required class="span6 m-wrap" value="${vo.px }" id="px" name="px" >
 							</div>
 
 						</div>
@@ -144,8 +143,8 @@
 								},
 								success : function(html){
 									$("#rightList").hide();
-									$("#e01z1Table").show();
-									$("#e01z1Table").html(html);
+									var view = $("#tab_show");
+									view.html(html);
 								},
 								error : function(){
 									alert('请求失败');
@@ -171,24 +170,37 @@
 	function cencal(){
 		var a38Id = $("#a38Id").val();
 		$.ajax({
-			url: "${path}/zzb/dzda/e01z4/ajax/list",// 请求的action路径
-			type: 'POST',
+			url : "${path }/zzb/dzda/e01z4/ajax/list",
+			type : "post",
+			data : {"a38Id":a38Id},
 			dataType : "html",
-			data:{
-				"a38Id":a38Id
-			},
-			headers: {
-				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-			},
 			success : function(html){
-				$("#rightList").hide();
-				$("#e01z1Table").show();
-				$("#e01z1Table").html(html);
+				var view = $("#tab_show");
+				view.html(html);
 			},
-			error : function(){
-				alert('请求失败');
+			error : function(arg1, arg2, arg3){
+				showTip("提示","欠缺材料加载失败");
 			}
 		});
+		<%--$.ajax({--%>
+			<%--url: "${path}/zzb/dzda/e01z4/ajax/list",// 请求的action路径--%>
+			<%--type: 'POST',--%>
+			<%--dataType : "html",--%>
+			<%--data:{--%>
+				<%--"a38Id":a38Id--%>
+			<%--},--%>
+			<%--headers: {--%>
+				<%--"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"--%>
+			<%--},--%>
+			<%--success : function(html){--%>
+				<%--$("#rightList").hide();--%>
+				<%--$("#e01z1Table").show();--%>
+				<%--$("#e01z1Table").html(html);--%>
+			<%--},--%>
+			<%--error : function(){--%>
+				<%--alert('请求失败');--%>
+			<%--}--%>
+		<%--});--%>
 	}
 
 	function changeFile(obj){

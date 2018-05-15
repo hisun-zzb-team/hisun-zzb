@@ -8,7 +8,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>增加欠缺材料</title>
+	<title>修改欠缺材料</title>
 </head>
 <body>
 <div class="container-fluid">
@@ -64,7 +64,7 @@
 						<div id="pxGroup" class="control-group">
 							<label class="control-label">材料顺序号<span class="required">*</span></label>
 							<div class="controls">
-								<input size="16" type="text" required class="span6 m-wrap" value="2" value="${vo.px}"
+								<input size="16" type="text" required class="span6 m-wrap" value="${vo.px}"
 									   id="px" name="px" >
 							</div>
 
@@ -128,29 +128,6 @@
 	});
 
 	var myVld = new EstValidate("form1");
-	<%--function formUpdate(){--%>
-	<%--var bool = myVld.form();--%>
-	<%--if(bool){--%>
-	<%--$.cloudAjax({--%>
-	<%--path : '${path}',--%>
-	<%--url : "${path }/zzb/app/console/bwh/save",--%>
-	<%--type : "post",--%>
-	<%--data : $("#form1").serialize(),--%>
-	<%--dataType : "json",--%>
-	<%--success : function(data){--%>
-	<%--if(data.success){--%>
-	<%--showTip("提示","操作成功",2000);--%>
-	<%--setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);--%>
-	<%--}else{--%>
-	<%--showTip("提示", json.message, 2000);--%>
-	<%--}--%>
-	<%--},--%>
-	<%--error : function(){--%>
-	<%--showTip("提示","出错了请联系管理员",2000);--%>
-	<%--}--%>
-	<%--});--%>
-	<%--}--%>
-	<%--}--%>
 	function formSubmit(){
 		var bool = myVld.form();
 		if(!bool){
@@ -232,9 +209,8 @@
 									"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 								},
 								success : function(html){
-									$("#rightList").hide();
-									$("#e01z1Table").show();
-									$("#e01z1Table").html(html);
+									var view = $("#tab_show");
+									view.html(html);
 								},
 								error : function(){
 									alert('请求失败');
@@ -270,9 +246,8 @@
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			success : function(html){
-				$("#rightList").hide();
-				$("#e01z1Table").show();
-				$("#e01z1Table").html(html);
+				var view = $("#tab_show");
+				view.html(html);
 			},
 			error : function(){
 				alert('请求失败');

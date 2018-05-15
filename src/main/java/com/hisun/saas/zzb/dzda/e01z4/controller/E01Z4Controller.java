@@ -80,6 +80,7 @@ public class E01Z4Controller extends BaseController {
 
             Long total = this.e01Z4Service.count(query);
             CommonOrderBy orderBy = new CommonOrderBy();
+            orderBy.add(CommonOrder.asc("px"));
             List<E01Z4> entities = this.e01Z4Service.list(query, orderBy, pageNum, pageSize);
             List<E01Z4Vo> vos = new ArrayList<>();
             E01Z4Vo vo = null;
@@ -158,7 +159,7 @@ public class E01Z4Controller extends BaseController {
 
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z4 e01Z4 = this.e01Z4Service.getByPK(id);
-            int oldSort = 0;
+            int oldSort = e01Z4.getPx();
 
             BeanUtils.copyProperties(e01Z4, vo);
             e01Z4.setA38(this.a38Service.getByPK(e01Z4.getA38().getId()));

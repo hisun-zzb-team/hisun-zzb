@@ -48,7 +48,8 @@
 <div class="portlet-title">
 	<div class="caption">姓名：${a0101}</div>
 	<div class="relationbetTop_but">
-		<button type="button" class="btn green" onclick="formSave()"><i class="icon-ok"></i> 保存 </button>
+		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
+		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 保存 </button>
 		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
 			<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
 			<%--干部库 <i class="icon-angle-down"></i>--%>
@@ -65,8 +66,8 @@
 				<%--</li>--%>
 			<%--</ul>--%>
 		<%--</div>--%>
-		<a  class="btn green" href="javascript:del()">删除</a>
-		<a  class="btn green" href="javascript:zhuanchu()">转递</a>&nbsp;
+		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
+		<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>&nbsp;
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 			下载<i class="icon-angle-down"></i>
@@ -360,7 +361,7 @@
 		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
 	}
 
-	function formSave(){
+	function formSave(sjzt){
 		var bool = true;
 		var isSave = false;
 		if($("#tabs li[class='active']").find("a").attr("id")=="#tab_1_1"){
@@ -369,6 +370,7 @@
 		}
 		if(isSave == true){
 			if(bool){
+				$("#sjzt").val(sjzt);
 				saveA38();
 			}
 		}else{

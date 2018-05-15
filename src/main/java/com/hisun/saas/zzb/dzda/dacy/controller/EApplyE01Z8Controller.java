@@ -113,6 +113,7 @@ public class EApplyE01Z8Controller extends BaseController {
      * @throws GenericException
      */
     @RequestMapping("/deleteFile/{id}")
+    @RequiresPermissions("cysq:*")
     public @ResponseBody Map<String,Object> deleteFile(@PathVariable("id") String id) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
@@ -148,6 +149,7 @@ public class EApplyE01Z8Controller extends BaseController {
     }
     @RequiresLog(operateType = LogOperateType.SAVE,description = "增加档案申请查阅记录:${vo.a0101}")
     @RequestMapping(value = "/save")
+    @RequiresPermissions("cysq:*")
     public @ResponseBody Map<String, Object> save(EApplyE01Z8Vo vo,HttpServletRequest req,
                                                   @RequestParam(value="clFile",required = false) MultipartFile clFile){
         Map<String,Object> map = Maps.newHashMap();
@@ -175,8 +177,14 @@ public class EApplyE01Z8Controller extends BaseController {
                         }
                 }
             }
+            String a0a01s;
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            String a0a01s = vo.getA0101Content();
+            if(StringUtils.isNotBlank(vo.getId())){
+                vo.setId(null);
+                a0a01s=vo.getA0101();
+            }else {
+                a0a01s = vo.getA0101Content();
+            }
             String [] names = a0a01s.split(",");
             //一次申请查询多人档案
             for (String name : names){
@@ -187,13 +195,63 @@ public class EApplyE01Z8Controller extends BaseController {
                 entity.setIsShowToA0101("0");
                 entity.setAuditingState("0");
                 entity.setApplyType("0");
+                entity.setAccreditType("0");
                 entity.setApplyFileName(fileName);
+                entity.setE01Z807Name(details.getUsername());
                 entity.setApplyFilePath(savePath);
                 entity.setApplyUserId(details.getUserid());
                 entity.setApplyUserName(details.getUsername());
+                EntityWrapper.wrapperSaveBaseProperties(entity,details);
                 eApplyE01Z8Service.save(entity);
             }
+            map.put("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+            map.put("success", false);
+        }
+        return map;
+    }
 
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "增加档案申请查阅记录:${vo.a0101}")
+    @RequestMapping(value = "/update")
+    @RequiresPermissions("cysq:*")
+    public @ResponseBody Map<String, Object> update(EApplyE01Z8Vo vo,HttpServletRequest req,
+                                                  @RequestParam(value="clFile",required = false) MultipartFile clFile){
+        Map<String,Object> map = Maps.newHashMap();
+        try {
+            String fileName = "";
+            String savePath = "";
+            EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(vo.getId());
+            if (clFile != null && !clFile.isEmpty()) {
+                fileName = clFile.getOriginalFilename();
+                if(fileName.equals(entity.getApplyFileName())){
+                    FileUtils.deleteQuietly(new File(entity.getApplyFilePath()));
+                }
+                if(fileName.endsWith(".doc") ||fileName.endsWith(".DOC") ||fileName.endsWith(".docx") ||fileName.endsWith(".DOCX") ) {
+                    String fileDir = uploadAbsolutePath + "/e01z8";
+                    File _fileDir = new File(fileDir);
+                    if (_fileDir.exists() == false) {
+                        _fileDir.mkdirs();
+                    }
+                    savePath = fileDir + File.separator + UUIDUtil.getUUID() +"."+ FileUtil.getExtend(fileName);;
+                    try {
+                        FileOutputStream fos = new FileOutputStream(new File(savePath));
+                        fos.write(clFile.getBytes());
+                        fos.flush();
+                        fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new GenericException(e);
+                    }
+                    vo.setApplyFileName(fileName);
+                    vo.setApplyFilePath(savePath);
+                }
+            }
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            BeanUtils.copyProperties(entity,vo);
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            eApplyE01Z8Service.update(entity);
             map.put("success", true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -204,12 +262,36 @@ public class EApplyE01Z8Controller extends BaseController {
     }
 
     /**
+     * 撤销申请 物理删除
+     * @param id
+     * @return
+     * @throws GenericException
+     */
+    @RequestMapping("/deleteSq/{id}")
+    @RequiresPermissions("cysq:*")
+    public @ResponseBody Map<String,Object> deleteSq(@PathVariable("id") String id) throws GenericException {
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        try{
+            eApplyE01Z8Service.deleteByPK(id);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            returnMap.put("code",0);
+            returnMap.put("message","删除失败");
+            logger.error(e,e);
+            throw new GenericException(e.getMessage());
+        }
+        return returnMap;
+    }
+
+
+    /**
      * 改变状态 逻辑删除
      * @param id
      * @return
      * @throws GenericException
      */
     @RequestMapping("/delete/{id}")
+    @RequiresPermissions("cysq:*")
     public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
@@ -228,6 +310,7 @@ public class EApplyE01Z8Controller extends BaseController {
         return returnMap;
     }
     @RequestMapping(value="/ajax/down")
+    @RequiresPermissions("cysq:*")
     public void templateDown(String id,HttpServletRequest req, HttpServletResponse resp) throws Exception{
         EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(id);
         if(entity.getApplyFilePath()!=null &&!entity.getApplyFilePath().equals("")){

@@ -72,10 +72,10 @@ public class E01Z1Controller extends BaseController {
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,
                                                @RequestParam(value="pageSize",defaultValue="10") int pageSize) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
-        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
-        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
-        String currentNodeCode = StringUtils.trimNull2Empty(request.getParameter("currentNodeCode"));
-        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
+        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
+        String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
+        String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
+        String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         String url = "saas/zzb/dzda/mlcl/mlclList";
 
@@ -85,19 +85,19 @@ public class E01Z1Controller extends BaseController {
             CommonConditionQuery query = new CommonConditionQuery();
 
             CommonOrderBy orderBy = new CommonOrderBy();
-            if(StringUtils.isEmpty(currentNodeId)){
+            if(StringUtils.isEmpty(eCatalogTypeTreeId)){
                 orderBy.add(CommonOrder.asc("e01z101b"));
-                currentNodeName="所有材料";
+                eCatalogTypeTreeName="所有材料";
                 url = "saas/zzb/dzda/mlcl/allMlclList";
             }else {
                 ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-                eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
-                currentNodeName = eCatalogTypeInfo.getCatalogValue();
+                eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+                eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
                 orderBy.add(CommonOrder.asc("e01Z104"));
             }
 
             CommonConditionQuery eCatalogTypeQuery = new CommonConditionQuery();
-            eCatalogTypeQuery.add(CommonRestrictions.and(" parent.id = :id ", "id", currentNodeId));
+            eCatalogTypeQuery.add(CommonRestrictions.and(" parent.id = :id ", "id", eCatalogTypeTreeId));
             List<E01Z1> entities = new ArrayList<>();
             Long eCatalogTypetotal = this.eCatalogTypeService.count(eCatalogTypeQuery);
 
@@ -117,11 +117,11 @@ public class E01Z1Controller extends BaseController {
                 }
                 url = "saas/zzb/dzda/mlcl/allMlclList";
             }else  {
-                if(StringUtils.isEmpty(currentNodeId)){
+                if(StringUtils.isEmpty(eCatalogTypeTreeId)){
                     query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
                 }else {
                     query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
-                    query.add(CommonRestrictions.and(" e01z101b = :e01z101b ", "e01z101b", currentNodeCode));
+                    query.add(CommonRestrictions.and(" e01z101b = :e01z101b ", "e01z101b", eCatalogTypeTreeCode));
                 }
                 total=this.e01Z1Service.count(query);
                 entities = this.e01Z1Service.list(query, orderBy, pageNum, pageSize);
@@ -138,10 +138,10 @@ public class E01Z1Controller extends BaseController {
             }
             PagerVo<E01Z1Vo> pager = new PagerVo<E01Z1Vo>(vos, total.intValue(), pageNum, pageSize);
             map.put("pager", pager);
-            map.put("currentNodeId",currentNodeId);
-            map.put("currentNodeCode",currentNodeCode);
-            map.put("currentNodeName",currentNodeName);
-            map.put("currentNodeParentId",currentNodeParentId);
+            map.put("eCatalogTypeTreeId",eCatalogTypeTreeId);
+            map.put("eCatalogTypeTreeCode",eCatalogTypeTreeCode);
+            map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
+            map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
             map.put("a38Id",a38Id);
             map.put("a0101",a38.getA0101());
             map.put("total",total);
@@ -156,28 +156,29 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/ajax/addMlcl")
     public @ResponseBody ModelAndView addMlcl(HttpServletRequest request){
         Map<String, Object> map = Maps.newHashMap();
-        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
-        String currentNodeCode = StringUtils.trimNull2Empty(request.getParameter("currentNodeCode"));
-        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
-        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
+        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
+        String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
+        String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
+        String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
 
         E01Z1Vo vo = new E01Z1Vo();
-        vo.setE01Z101B(currentNodeCode);
-        vo.setE01Z101A(currentNodeName);
+        vo.setE01Z101B(eCatalogTypeTreeCode);
+        vo.setE01Z101A(eCatalogTypeTreeName);
 
-        int sort = this.e01Z1Service.getMaxSort(a38Id,currentNodeCode);
-        int smSort = this.e01Z1Service.getMaxSmSort(a38Id,currentNodeCode);
+        int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeTreeCode);
+        int smSort = this.e01Z1Service.getMaxSmSort(a38Id,eCatalogTypeTreeCode);
 
         vo.setE01Z104(sort);
         vo.setE01Z107(smSort);
+        vo.setE01Z124(1);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-        eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
-        currentNodeName = eCatalogTypeInfo.getCatalogValue();
-        map.put("currentNodeId",currentNodeId);
-        map.put("currentNodeCode",currentNodeCode);
-        map.put("currentNodeName",currentNodeName);
-        map.put("currentNodeParentId",currentNodeParentId);
+        eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+        eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
+        map.put("eCatalogTypeTreeId",eCatalogTypeTreeId);
+        map.put("eCatalogTypeTreeCode",eCatalogTypeTreeCode);
+        map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
+        map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
         map.put("a38Id",a38Id);
         map.put("vo",vo);
         return new ModelAndView("saas/zzb/dzda/mlcl/addMlcl",map);
@@ -188,20 +189,20 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> save(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
-        String currentNodeCode = StringUtils.trimNull2Empty(request.getParameter("currentNodeCode"));
-        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
+        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
+        String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
+        String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-        eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
-        currentNodeName = eCatalogTypeInfo.getCatalogValue();
+        eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+        eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
         try {
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z1 e01Z1 = new E01Z1();
             BeanUtils.copyProperties(e01Z1, vo);
-            e01Z1.setE01Z101B(currentNodeCode);
-            e01Z1.setE01Z101A(currentNodeName);
-            e01Z1.setECatalogTypeId(currentNodeId);
+            e01Z1.setE01Z101B(eCatalogTypeTreeCode);
+            e01Z1.setE01Z101A(eCatalogTypeTreeName);
+            e01Z1.setECatalogTypeId(eCatalogTypeTreeId);
             if(StringUtils.isNotBlank(a38Id)){
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
             }
@@ -222,17 +223,14 @@ public class E01Z1Controller extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         String id = StringUtils.trimNull2Empty(request.getParameter("id"));
         E01Z1 e01Z1 = e01Z1Service.getByPK(id);
-        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
-        String currentNodeCode = StringUtils.trimNull2Empty(request.getParameter("currentNodeCode"));
-        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
-        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
+        String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
-        map.put("currentNodeId",currentNodeId);
-        map.put("currentNodeCode",e01Z1.getE01Z101B());
-        map.put("currentNodeName",currentNodeName);
-        map.put("catalogTypeName",e01Z1.getE01Z101A());
+        map.put("eCatalogTypeTreeEditId",e01Z1.getECatalogTypeId());
+        map.put("eCatalogTypeTreeEditCode",e01Z1.getE01Z101B());
+        map.put("eCatalogTypeTreeEditName",e01Z1.getE01Z101A());
+        map.put("catalogTypeEditName",e01Z1.getE01Z101A());
         map.put("yjztps",e01Z1.getYjztps());
-        map.put("currentNodeParentId",currentNodeParentId);
+        map.put("eCatalogTypeTreeParentEditId",eCatalogTypeTreeParentId);
         map.put("a38Id",a38Id);
         map.put("vo",e01Z1);
         return new ModelAndView("saas/zzb/dzda/mlcl/editMlcl",map);
@@ -243,23 +241,23 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/update")
     public @ResponseBody Map<String, Object> update(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
-        String currentNodeCode = StringUtils.trimNull2Empty(request.getParameter("currentNodeCode"));
-        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));
+        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeEditId"));
+        String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeEditCode"));
+        String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentEditId"));
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         String id = StringUtils.trimNull2Empty(request.getParameter("id"));
         try {
 
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z1 e01Z1 = this.e01Z1Service.getByPK(id);
-            if(StringUtils.isEmpty(currentNodeParentId)){
-                currentNodeCode = e01Z1.getE01Z101B();
+            if(StringUtils.isEmpty(eCatalogTypeTreeParentId)){
+                eCatalogTypeTreeCode = e01Z1.getE01Z101B();
             }
-            eCatalogTypeInfo=eCatalogTypeService.getByPK(currentNodeId);
-            String currentNodeName = eCatalogTypeInfo.getCatalogValue();
-            vo.setE01Z101B(currentNodeCode);
-            vo.setE01Z101A(currentNodeName);
-            vo.setECatalogTypeId(currentNodeId);
+            eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+            String eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
+            vo.setE01Z101B(eCatalogTypeTreeCode);
+            vo.setE01Z101A(eCatalogTypeTreeName);
+            vo.setECatalogTypeId(eCatalogTypeTreeId);
             int oldSort = e01Z1.getE01Z104();
 
             BeanUtils.copyProperties(e01Z1, vo);
@@ -325,95 +323,5 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    /**
-     *
-     * @param a38Id 档案主键
-     * @param a0101 档案姓名
-     * @param archiveId 档案材料字典ID
-     * @param e01z1Id 档案材料ID
-     * @param showType  浏览的位置  如果为refer则是   如果是viewApply则为查阅列表进入
-     * @return
-     * @throws GenericException
-     */
-    @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
-    @RequestMapping("/ajax/viewMain/{a38Id}")
-    public
-    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType) throws GenericException {
-        Map<String, Object> map = new HashMap<String, Object>();
 
-        String myDirName = "";
-        map.put("a38Id", a38Id);
-        map.put("archiveId", archiveId);
-        map.put("e01z1Id", e01z1Id);
-        map.put("myDirName", myDirName);
-        map.put("a0101", a0101);
-        return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
-    }
-
-    @RequestMapping(value = "/ajax/viewImg")
-    public ModelAndView viewImg(@PathVariable(value = "a38Id") String a38Id,String archiveId,String myDirName){
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("a38Id", a38Id);
-        map.put("archiveId", archiveId);
-        map.put("myDirName", myDirName);
-        return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
-    }
-
-    @RequestMapping("/ajax/typeAndE01z1Tree/{a38Id}")
-    public
-    @ResponseBody
-    Map<String, Object> typeAndE01z1Tree(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-            CommonConditionQuery query = new CommonConditionQuery();
-            CommonOrderBy orderBy = new CommonOrderBy();
-            orderBy.add(CommonOrder.asc("sort"));
-            List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
-            A38 a38 = a38Service.getByPK(a38Id);
-            CommonConditionQuery query1 = new CommonConditionQuery();
-            query1.add(CommonRestrictions.and("a38.id=:a38Id","a38Id",a38Id));
-            CommonOrderBy orderBy1 = new CommonOrderBy();
-            orderBy1.add(CommonOrder.asc("e01z104"));
-            List<E01Z1> e01Z1s = e01Z1Service.list(query1, orderBy1);
-            List<MlclTreeNode> treeNodes = new ArrayList<MlclTreeNode>();
-            MlclTreeNode treeNode = new MlclTreeNode();
-            treeNode.setId(a38.getId());
-            treeNode.setName(a38.getA0101());
-            treeNode.setNodeType("a38");
-            treeNode.setOpen(true);
-            treeNodes.add(treeNode);
-            MlclTreeNode childTreeNode = null;
-            for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
-                childTreeNode = new MlclTreeNode();
-                childTreeNode.setId(eCatalogTypeInfo.getId());
-                childTreeNode.setName(eCatalogTypeInfo.getCatalogValue());
-                childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
-                childTreeNode.setNodeType("dir");
-                if (eCatalogTypeInfo.getParent() == null) {
-                    childTreeNode.setpId(a38.getId());
-                } else {
-                    childTreeNode.setpId(eCatalogTypeInfo.getParent().getId());
-                }
-                treeNodes.add(childTreeNode);
-            }
-            for (E01Z1 e01Z1 : e01Z1s) {
-                childTreeNode = new MlclTreeNode();
-                childTreeNode.setId(e01Z1.getId());
-                childTreeNode.setName(e01Z1.getE01Z111());
-                DecimalFormat decimalFormat = new DecimalFormat("00");
-                childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
-                childTreeNode.setpId(e01Z1.getECatalogTypeId());
-                childTreeNode.setNodeType("cl");
-                treeNodes.add(childTreeNode);
-            }
-            map.put("success", true);
-            map.put("data", treeNodes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e, e);
-            map.put("success", false);
-        }
-        return map;
-    }
 }

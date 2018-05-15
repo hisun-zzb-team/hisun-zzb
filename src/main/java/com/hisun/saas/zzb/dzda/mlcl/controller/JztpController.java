@@ -100,8 +100,9 @@ public class JztpController extends BaseController {
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
                 childTreeNode = new MlclTreeNode();
                 childTreeNode.setId(eCatalogTypeInfo.getId());
-                childTreeNode.setName(eCatalogTypeInfo.getCatalogValue());
+                childTreeNode.setName(eCatalogTypeInfo.getCatalogCode()+"."+eCatalogTypeInfo.getCatalogValue());
                 childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
+                childTreeNode.setOpen(true);
                 childTreeNode.setNodeType("dir");
                 if (eCatalogTypeInfo.getParent() == null) {
                     childTreeNode.setpId(a38.getId());
@@ -111,9 +112,24 @@ public class JztpController extends BaseController {
                 treeNodes.add(childTreeNode);
             }
             for (E01Z1 e01Z1 : e01Z1s) {
+                String text = e01Z1.getE01Z111();
+                String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
+                int imagesCount = e01Z1.getE01Z114();
+                String title=e01Z1.getE01Z111();
+
+                if(!e01z117.equals("")){
+                    text = text +","+ e01z117;
+                    title =title+" 制成时间："+e01z117;
+                }
+                if(imagesCount != 0){
+                    text = text +","+ imagesCount;
+                    title =title+" 材料页数："+imagesCount;
+                }
                 childTreeNode = new MlclTreeNode();
                 childTreeNode.setId(e01Z1.getId());
-                childTreeNode.setName(e01Z1.getE01Z111());
+                childTreeNode.setName(text);
+                childTreeNode.setDescription(title);
+
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
                 childTreeNode.setpId(e01Z1.getECatalogTypeId());
@@ -279,8 +295,10 @@ public class JztpController extends BaseController {
             if(Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) continue;
             boolean isExist = false;
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
-                if (file.getName().substring(0,file.getName().indexOf(".")).equals(eCatalogTypeInfo.getCatalogCode())) {
-                    isExist= true;
+                if(file.getName().indexOf(".")!=-1){
+                    if (file.getName().substring(0, file.getName().indexOf(".")).equals(eCatalogTypeInfo.getCatalogCode())) {
+                        isExist = true;
+                    }
                 }
             }
             if(!isExist){

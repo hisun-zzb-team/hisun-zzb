@@ -14,27 +14,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>加载图片</title>
 <link href="${path}/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
-<style type="text/css">
-	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
-	.page-content{   padding: 0 !important; }
-	ul.ztree{margin-bottom: 10px; background: #f1f3f6 !important;}
-	.portlet.box.grey.mainleft{background-color: #f1f3f6;overflow: hidden; padding: 0px !important; margin-bottom: 0px;}
-	.main_left{float:left; width:220px;  margin-right:10px; background-color: #f1f3f6; }
-	.main_right{display: table-cell; width:2000px; padding:20px 20px; }
-	.portlet-title .caption.mainlefttop{ border: none !important; background-color:#eaedf1;width: 220px; height: 48px;line-height: 48px;padding: 0;margin: 0;text-indent: 1em; }
-	.portlet.box .portlet-body.leftbody{padding: 15px 8px;}</style>
+
 </head>
 <body>
+
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="main_left">
+		<div class="main_left" style="width:25%">
 			<div class="portlet box grey mainleft">
 				<div class="portlet-body leftbody">
-					<input type="hidden" id="currentNodeId"  name="currentNodeId" value="" />
-					<input type="hidden" id="currentNodeName"  name="currentNodeName" value="" />
-					<input type="hidden" id="currentNodeParentId"  name="currentNodeParentId" value="" />
-					<Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/jztp/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
-							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>
+							<input type="hidden" id="currentNodeId"  name="currentNodeId" value="" />
+							<input type="hidden" id="currentNodeName"  name="currentNodeName" value="" />
+							<input type="hidden" id="currentNodeParentId"  name="currentNodeParentId" value="" />
+							<Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/jztp/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
+									   onClick="onClickByTreeByTpsc" submitType="post" dataType="json" isSearch="false"/>
+
 				</div>
 			</div>
 		</div>
@@ -52,11 +46,11 @@
 		})
 	});
 	function changeTreeDivHeight(){
-		var divHeight = $(window).height()-60;
+		var divHeight = $(window).height()-100;
 		$("#a38MlclTree_div").css('height',divHeight);
 	}
 
-	function onClickByTree (event, treeId, treeNode){
+	function onClickByTreeByTpsc (event, treeId, treeNode){
 		$("#currentNodeId").val(treeNode.id);//赋值
 		$("#currentNodeName").val(treeNode.name);//赋值
 		$("#currentNodeParentId").val(treeNode.pId);//赋值

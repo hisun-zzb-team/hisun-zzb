@@ -26,10 +26,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button data-dismiss="modal" class="close" type="button"></button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                                <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                 <h3 class="modal-title" id="title">
                     “${a0101}”档案图片
                 </h3>
+
             </div>
             <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
             </div>
@@ -57,13 +59,15 @@
             <form class="" id="importForm" enctype="multipart/form-data">
                 <input type="hidden" name="queryId" value="${queryId}"/>
                 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
-                <input type="hidden" id="currentNodeId" name="currentNodeId" value="${currentNodeId}"/>
-                <input type="hidden" id="currentNodeCode" name="currentNodeCode" value="${currentNodeCode}"/>
-                <input type="hidden" id="currentNodeName" name="currentNodeName" value="${currentNodeName}"/>
-                <input type="hidden" id="currentNodeParentId" name="currentNodeParentId"
-                       value="${currentNodeParentId}"/>
+                <input type="hidden" name="myDirName" id="myDirName" value=""/>
+
+                <input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
+                <input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
+                <input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>
+                <input type="hidden" id="eCatalogTypeTreeParentId" name="eCatalogTypeTreeParentId"
+                       value="${eCatalogTypeTreeParentId}"/>
                 <div class="portlet-title">
-                    <div class="caption">${currentNodeName} </div>
+                    <div class="caption">${eCatalogTypeTreeName} </div>
                     <div class="clearfix fr">
                         <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                             <i class="icon-plus"></i> 增加材料
@@ -74,7 +78,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a>加载图片</a>
+                                    <a href="#" id="jztpButton">加载图片</a>
                                 </li>
                                 <li>
                                     <a onclick="">卸载图片</a>
@@ -150,6 +154,20 @@
         </div>
     </div>
 </div>
+<div id="jztpModal" class="modal container hide fade" tabindex="-1" data-width="520">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="title" >
+                    加载图片
+                </h3>
+            </div>
+            <div class="modal-body" id="jztpPage">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     function unloadFile() {
@@ -157,10 +175,10 @@
     }
     function add() {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -171,10 +189,10 @@
             },
             data: {
                 "a38Id": a38Id,
-                "currentNodeId": currentNodeId,
-                "currentNodeCode": currentNodeCode,
-                "currentNodeName": currentNodeName,
-                "currentNodeParentId": currentNodeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
@@ -209,10 +227,10 @@
     }
     function edit(id) {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         $.ajax({
             async: false,
             type: "POST",
@@ -224,14 +242,14 @@
             data: {
                 "id": id,
                 "a38Id": a38Id,
-                "currentNodeId": currentNodeId,
-                "currentNodeCode": currentNodeCode,
-                "currentNodeName": currentNodeName,
-                "currentNodeParentId": currentNodeParentId
+                "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                "eCatalogTypeTreeName": eCatalogTypeTreeName,
+                "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
-                $("#treeId").val(currentNodeId);
+                $("#treeId").val(eCatalogTypeTreeId);
             },
             error: function () {
                 myLoading.hide();
@@ -240,17 +258,20 @@
         });
     }
     var viewImageMain = function (e01z1Id,e01Z101B) {
-        var divHeight = $(window).height() - 100;
+        var divHeight = $(window).height() -60;
 		var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
 		$('#viewImgModal').attr("data-width", divWidth);
+
+        var myDirName = $("#myDirName").val();
         $.ajax({
-            url: "${path}/zzb/dzda/e01z1/ajax/viewMain/"+$("#a38Id").val(),
+            url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+$("#a38Id").val(),
             type: "post",
             data: {
 				"a0101":"${a0101}",
 				"archiveId":e01Z101B,
-				"e01z1Id":e01z1Id
+				"e01z1Id":e01z1Id,
+                "myDirName":myDirName
 			},
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -258,14 +279,41 @@
             dataType: "html",
             success: function (html) {
                 $('#viewImgDiv').html(html);
-                $('#viewImgModal').modal({
-                    keyboard: true
-                });
+                $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },
             error: function () {
                 showTip("提示", "出错了请联系管理员", 1500);
             }
         });
+    }
+   function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
+       $('#viewImgModal').modal('hide');
+       $('#viewImgDiv').html("");
+       <%--var a38Id = $("#a38Id").val();--%>
+       <%--var myDirName = $("#myDirName").val();--%>
+       <%--$.ajax({--%>
+           <%--url: "${path}/zzb/dzda/mlcl/images/delete/jmImages",--%>
+           <%--type: "post",--%>
+           <%--data: {--%>
+               <%--"a38Id":a38Id,--%>
+               <%--"myDirName":myDirName--%>
+           <%--},--%>
+           <%--headers: {--%>
+               <%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
+           <%--},--%>
+           <%--dataType: "json",--%>
+           <%--success: function (data) {--%>
+               <%--if (data.success == "true" || data.success == true) {--%>
+
+               <%--}else{--%>
+                   <%--showTip("提示", "删除解密图片失败，请联系管理员!", 1300);--%>
+               <%--}--%>
+           <%--},--%>
+           <%--error: function () {--%>
+               <%--showTip("提示", "出错了请联系管理员!", 1300);--%>
+
+           <%--}--%>
+       <%--});--%>
     }
 
     function fileDown(type) {
@@ -274,10 +322,10 @@
 
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
-        var currentNodeId = $("#currentNodeId").val();
-        var currentNodeCode = $("#currentNodeCode").val();
-        var currentNodeName = $("#currentNodeName").val();
-        var currentNodeParentId = $("#currentNodeParentId").val();
+        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+        var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+        var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
+        var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
         actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id, {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
@@ -287,10 +335,10 @@
                     type: 'POST',
                     dataType: "html",
                     data: {
-                        "currentNodeId": currentNodeId,
-                        "currentNodeCode": currentNodeCode,
-                        "currentNodeParentId": currentNodeParentId,
-                        "currentNodeName": currentNodeName,
+                        "eCatalogTypeTreeId": eCatalogTypeTreeId,
+                        "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
+                        "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId,
+                        "eCatalogTypeTreeName": eCatalogTypeTreeName,
                         "a38Id": a38Id
                     },
                     headers: {
@@ -308,6 +356,30 @@
             }
         });
     }
+    $("#jztpButton").click(function(){
+        var divHeight = $(window).height()-100;
+        var divWidth = $(window).width()-20;
+        $('#jztpModal').attr("data-width",divWidth);
+        $('#jztpModal').attr("data-height",divHeight);
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/jztp/ajax/index/${a38Id}",
+            type: "post",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#jztpPage').html(html);
+                $('#jztpModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    });
 </script>
 </body>
 </html>

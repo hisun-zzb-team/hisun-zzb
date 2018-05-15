@@ -91,10 +91,10 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                             EImages eImages = new EImages();
                             eImages.setE01z1(e01Z1);
                             String encryptFilePath = tpFile.getPath().substring(0,tpFile.getPath().lastIndexOf("."));
-                            DESUtil.getInstance().encrypt(tpFile,new File(encryptFilePath));
+                            DESUtil.getInstance("a38Images").encrypt(tpFile,new File(encryptFilePath));
                             eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(),encryptFilePath.length()));
                             FileUtils.deleteQuietly(tpFile);
-                            eImages.setImgNo(tpFile.getName().substring(3, 4));
+                            eImages.setImgNo(tpFile.getName().substring(0,tpFile.getName().lastIndexOf(".")).substring(2));
                             this.save(eImages);
                             //记录已加载图片数
                             if(yjzTpMaps.get(e01Z1)!=null){

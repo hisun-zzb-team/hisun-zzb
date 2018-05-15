@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @author Marco {854476391@qq.com}
  */
 public class EApplyE01Z8Vo implements Serializable{
+    private String id;
     private String a0101;//档案所属人姓名
     private String a0101Content;//档案所属人姓名拼接字符串
     private String manageTenantName;//档案管理单位名称，即申请单位名称
@@ -27,6 +28,68 @@ public class EApplyE01Z8Vo implements Serializable{
     private String popedomStuffType;//授权材料范围类型。0：授权所有档案材料；1：授权指定的档案材料
     private String refuseReason;//拒绝原因
     private String e01Z807Name;//查阅人姓名
+    private String applyFilePath;//上传附件路径
+    private String applyUserName;//申请查阅人名字
+    private String isDownload;//是否能下载图片 1表示能下载 0表示不能下载
+    private String sqdwpzld;//申请单位批准领导
+    private String a38Id;
+    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限
+
+    public String getAuditingState() {
+        return auditingState;
+    }
+
+    public void setAuditingState(String auditingState) {
+        this.auditingState = auditingState;
+    }
+
+    public String getA38Id() {
+        return a38Id;
+    }
+
+    public void setA38Id(String a38Id) {
+        this.a38Id = a38Id;
+    }
+
+    public String getApplyUserName() {
+        return applyUserName;
+    }
+
+    public void setApplyUserName(String applyUserName) {
+        this.applyUserName = applyUserName;
+    }
+
+    public String getIsDownload() {
+        return isDownload;
+    }
+
+    public void setIsDownload(String isDownload) {
+        this.isDownload = isDownload;
+    }
+
+    public String getSqdwpzld() {
+        return sqdwpzld;
+    }
+
+    public void setSqdwpzld(String sqdwpzld) {
+        this.sqdwpzld = sqdwpzld;
+    }
+
+    public String getApplyFilePath() {
+        return applyFilePath;
+    }
+
+    public void setApplyFilePath(String applyFilePath) {
+        this.applyFilePath = applyFilePath;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getE01Z807Name() {
         return e01Z807Name;

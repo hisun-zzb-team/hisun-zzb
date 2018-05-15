@@ -171,7 +171,6 @@ public class E01Z1Controller extends BaseController {
 
         vo.setE01Z104(sort);
         vo.setE01Z107(smSort);
-        vo.setE01Z124(1);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
         eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();

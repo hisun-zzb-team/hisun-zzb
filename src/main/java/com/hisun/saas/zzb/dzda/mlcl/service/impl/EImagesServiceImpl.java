@@ -14,9 +14,9 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.service.impl.BaseServiceImpl;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.auth.session.mgt.quartz.QuartzSessionValidationScheduler;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
+import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
 import com.hisun.saas.zzb.dzda.mlcl.dao.EImagesDao;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
@@ -24,14 +24,12 @@ import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.util.DESUtil;
 import com.hisun.util.FileUtil;
-import com.hisun.util.UUIDUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -154,11 +152,11 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
             query.add(CommonRestrictions.and("", "id", e01Z1.getId()));
             this.eImagesDao.executeBulk(deleteEImages.toString(), query);
         }
-        StringBuffer updateE01z1 = new StringBuffer();
-        updateE01z1.append(" update E01Z1 e01Z1 set e01Z1.yjztps = 0 where e01Z1.a38.id =:id");
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and("", "id", a38.getId()));
-        this.e01Z1Dao.executeBulk(updateE01z1.toString(), query);
+//        StringBuffer updateE01z1 = new StringBuffer();
+//        updateE01z1.append(" update E01Z1 e01Z1 set e01Z1.yjztps = 0 where e01Z1.a38.id =:id");
+//        CommonConditionQuery query = new CommonConditionQuery();
+//        query.add(CommonRestrictions.and("", "id", a38.getId()));
+//        this.e01Z1Dao.executeBulk(updateE01z1.toString(), query);
     }
 
 

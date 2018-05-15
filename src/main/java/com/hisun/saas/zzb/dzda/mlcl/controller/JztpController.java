@@ -197,12 +197,13 @@ public class JztpController extends BaseController {
                              @PathVariable(value = "a38Id") String a38Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //将原有图片目录移入临时文件夹
+        String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);
         try {
             A38 a38 = this.a38Service.getByPK(a38Id);
-            String fileName = file.getOriginalFilename();
-            //取A38ID的最后一位作为目录
-            String storePath = getTpStorePath(a38Id);
             String storeRealPath = uploadBasePath + getTpStorePath(a38Id);
+            //
+            FileUtils.moveDirectory(new File(storeTmpRealPath),new File(storeTmpRealPath));
             File storeRealPathFile = new File(storeRealPath);
             if (storeRealPathFile.exists() == false) {
                 storeRealPathFile.mkdirs();
@@ -220,13 +221,21 @@ public class JztpController extends BaseController {
             zipfos.flush();
             zipfos.close();
             zipis.close();
+            //将原有图片目录移入临时文件夹
+  //          String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);
+//            File storeRealTmpPathFile = new File(storeTmpRealPath);
+//            if (storeRealTmpPathFile.exists() == false) {
+//                storeRealTmpPathFile.mkdirs();
+//            }
+            FileUtils.moveDirectory(storeRealPathFile,new File(storeTmpRealPath));
+
             //解压zip
             CompressUtil.unzip(zipStoreRealPath, storeRealPath);
             FileUtils.deleteQuietly(zipFile);
             //写入eimages
             List<File> files = FileUtil.listFilesOrderByName(storeRealPathFile);
             if(checkTpDirByCataolog(files)){
-                eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
+               // eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
                 map.put("success", true);
                 map.put("message", "保存成功!");
             }else{
@@ -235,6 +244,7 @@ public class JztpController extends BaseController {
                 map.put("message", "目录结构错误!");
             }
         } catch (Exception e) {
+
             logger.error(e);
             throw new GenericException(e);
         }
@@ -247,6 +257,14 @@ public class JztpController extends BaseController {
                 + userLoginDetails.getTenantId() + File.separator
                 + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
                 + a38Id + File.separator;
+    }
+
+    private String getTpStoreTmpPath(String a38Id) {
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        return Constants.DATP_STORE_PATH
+                + userLoginDetails.getTenantId() + File.separator
+                + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
+                + UUIDUtil.getUUID() + File.separator;
     }
 
 

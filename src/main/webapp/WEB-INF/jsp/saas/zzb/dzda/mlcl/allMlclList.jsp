@@ -26,10 +26,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button data-dismiss="modal" class="close" type="button"></button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                 <h3 class="modal-title" id="title">
                     “${a0101}”档案图片
                 </h3>
+
             </div>
             <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
             </div>
@@ -280,6 +282,35 @@
                 showTip("提示", "出错了请联系管理员", 1500);
             }
         });
+    }
+    function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
+        $('#viewImgModal').modal('hide');
+        $('#viewImgDiv').html("");
+        <%--var a38Id = $("#a38Id").val();--%>
+        <%--var myDirName = $("#myDirName").val();--%>
+        <%--$.ajax({--%>
+        <%--url: "${path}/zzb/dzda/mlcl/images/delete/jmImages",--%>
+        <%--type: "post",--%>
+        <%--data: {--%>
+        <%--"a38Id":a38Id,--%>
+        <%--"myDirName":myDirName--%>
+        <%--},--%>
+        <%--headers: {--%>
+        <%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
+        <%--},--%>
+        <%--dataType: "json",--%>
+        <%--success: function (data) {--%>
+        <%--if (data.success == "true" || data.success == true) {--%>
+
+        <%--}else{--%>
+        <%--showTip("提示", "删除解密图片失败，请联系管理员!", 1300);--%>
+        <%--}--%>
+        <%--},--%>
+        <%--error: function () {--%>
+        <%--showTip("提示", "出错了请联系管理员!", 1300);--%>
+
+        <%--}--%>
+        <%--});--%>
     }
     function fileDown(type) {
         window.open("${path }/zzb/app/console/daDemo/ajax/down?type=" + type);

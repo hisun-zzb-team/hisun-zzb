@@ -20,4 +20,7 @@ public class Constants {
     public static final String DATP_STORE_PATH = File.separator+"a38"+File.separator;
     public static final String[] EXCLUDE_FILE_AND_DIR={"__MACOSX",".DS_Store"};
 
+    //档案图片秘钥
+    public static final String DATP_KEY="a38Images";
+
 }

@@ -213,11 +213,10 @@ public class JztpController extends BaseController {
                              @PathVariable(value = "a38Id") String a38Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //将原有图片目录移入临时文件夹
+        String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);
         try {
             A38 a38 = this.a38Service.getByPK(a38Id);
-            String fileName = file.getOriginalFilename();
-            //取A38ID的最后一位作为目录
-            String storePath = getTpStorePath(a38Id);
             String storeRealPath = uploadBasePath + getTpStorePath(a38Id);
             File storeRealPathFile = new File(storeRealPath);
             if (storeRealPathFile.exists() == false) {
@@ -251,6 +250,7 @@ public class JztpController extends BaseController {
                 map.put("message", "目录结构错误!");
             }
         } catch (Exception e) {
+
             logger.error(e);
             throw new GenericException(e);
         }
@@ -263,6 +263,14 @@ public class JztpController extends BaseController {
                 + userLoginDetails.getTenantId() + File.separator
                 + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
                 + a38Id + File.separator;
+    }
+
+    private String getTpStoreTmpPath(String a38Id) {
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        return Constants.DATP_STORE_PATH
+                + userLoginDetails.getTenantId() + File.separator
+                + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
+                + UUIDUtil.getUUID() + File.separator;
     }
 
 

@@ -325,7 +325,6 @@
         actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id, {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
-                refreshTree();
                 $.ajax({
                     url: "${path}/zzb/dzda/e01z1/ajax/mlxxList",
                     type: 'POST',

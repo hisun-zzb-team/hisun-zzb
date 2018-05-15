@@ -63,6 +63,7 @@ public class E01Z1Controller extends BaseController {
         Map<String, Object> map = Maps.newHashMap();
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         map.put("a38Id", a38Id);
+        map.put("isAll", 2);
         return new ModelAndView("saas/zzb/dzda/mlcl/mlclManage",map);
     }
 
@@ -94,12 +95,16 @@ public class E01Z1Controller extends BaseController {
                 eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
                 eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
                 orderBy.add(CommonOrder.asc("e01Z104"));
+                if(StringUtils.isEmpty(eCatalogTypeTreeCode)&&StringUtils.isNotEmpty(eCatalogTypeTreeId)){
+                    eCatalogTypeTreeCode=eCatalogTypeInfo.getCatalogCode();
+                }
             }
 
             CommonConditionQuery eCatalogTypeQuery = new CommonConditionQuery();
             eCatalogTypeQuery.add(CommonRestrictions.and(" parent.id = :id ", "id", eCatalogTypeTreeId));
             List<E01Z1> entities = new ArrayList<>();
             Long eCatalogTypetotal = this.eCatalogTypeService.count(eCatalogTypeQuery);
+
 
             Long total = 0l;
             if(eCatalogTypetotal>0){

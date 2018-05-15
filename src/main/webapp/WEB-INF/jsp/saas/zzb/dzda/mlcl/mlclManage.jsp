@@ -27,6 +27,7 @@
 					<input type="hidden" id="eCatalogTypeTreeId"  name="eCatalogTypeTreeId" value="" />
 					<input type="hidden" id="eCatalogTypeTreeName"  name="eCatalogTypeTreeName" value="" />
 					<input type="hidden" id="eCatalogTypeTreeParentId"  name="eCatalogTypeTreeParentId" value="" />
+					<input type="hidden" id="isAll"  name="isAll" value="${isAll}" />
 					<input type="hidden" id="a38Id"  name="a38Id" value="${a38Id}" />
 					<Tree:tree id="leftTree" treeUrl="${path}/zzb/dzda/e01z1/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>
@@ -35,6 +36,69 @@
 		</div>
 		<div class="main_right" id="rightList" ></div>
 <script type="text/javascript">
+
+	function pagehref (pageNum ,pageSize){
+		var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
+		var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
+		var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
+		var a38Id = $("#a38Id").val();
+		var isAll = $("#isAll").val();
+		if(isAll==2){
+			alert(1);
+			$.ajax({
+				url : "${path}/zzb/dzda/e01z1/ajax/mlxxList",
+				type : "get",
+				data : null,
+				dataType : "html",
+				headers: {
+					"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+				},
+				data:{
+					"eCatalogTypeTreeId":"",
+					"eCatalogTypeTreeCode":"",
+					"eCatalogTypeTreeParentId":"",
+					"eCatalogTypeTreeName":"所有材料",
+					"a38Id":a38Id,
+					"pageNum":pageNum,
+					"pageSize":pageSize
+
+				},
+				success : function(html){
+					$("#rightList").html(html);
+				},
+				error : function(){
+
+				}
+			});
+		}else {
+			$.ajax({
+				url : "${path}/zzb/dzda/e01z1/ajax/mlxxList",
+				type : "get",
+				data : null,
+				dataType : "html",
+				headers: {
+					"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+				},
+				data:{
+					"eCatalogTypeTreeId":eCatalogTypeTreeId,
+					"eCatalogTypeTreeCode":eCatalogTypeTreeCode,
+					"eCatalogTypeTreeParentId":eCatalogTypeTreeParentId,
+					"a38Id":a38Id,
+					"pageNum":pageNum,
+					"pageSize":pageSize
+				},
+				success : function(html){
+					$("#rightList").html(html);
+					$("#isAll").val(1);
+				},
+				error : function(){
+
+				}
+			});
+		}
+
+	}
+
 	$(function(){
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
@@ -69,6 +133,7 @@
 			},
 			success : function(html){
 				$("#rightList").html(html);
+				$("#isAll").val(1);
 			},
 			error : function(){
 

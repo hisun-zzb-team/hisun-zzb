@@ -30,8 +30,7 @@
                     <!-- BEGIN FORM-->
 
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="" id="id">
-                        <input type="hidden" name="filePath" value="" id="filePath">
+                        <input type="hidden" name="id" value="${entity.id}" id="id">
                         <div class="control-group" id="a0101Group">
                             <label class="control-label">查阅何人档案</label>
                             <div class="controls">
@@ -81,17 +80,23 @@
                                        id="phone" name="phone" >
                             </div>
                         </div>
-                        <div id="applyRemarkGroup" class="control-group">
+                        <div id="applyRemarkGroup" class="control-group" >
                             <label class="control-label">备注</label>
                             <div class="controls">
-                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" value="${entity.phone}"></textarea>
+                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" value="${entity.applyRemark}"></textarea>
+                            </div>
+                        </div>
+                        <div id="jjlyGroup" class="control-group" >
+                            <label class="control-label">拒绝理由</label>
+                            <div class="controls">
+                                <textarea class="span10" style="" rows="2" name="jjly" maxlength="400" id="jjly" value="${entity.auditingRemark}"></textarea>
                             </div>
                         </div>
 
                         <div class="control-group" id="applyFileNameGroup">
                             <label class="control-label"></label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.applyFileName}"
+                                <input size="16" type="text"  class="span8 m-wrap" value="${entity.applyFileName}" readonly="readonly"
                                        id="applyFileName" name="applyFileName" ><a href="javascript:downloadFile('${entity.id}')">下载</a>&nbsp;<a href="javascript:deleteFile('${entity.id}')">删除</a>
                             </div>
                         </div>
@@ -105,8 +110,9 @@
                         </div>
                         <div class="control-group">
                             <div class="controls mt10">
-                                <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-
+                                <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('${entity.id}')" id="queding">确定</button>
+                                <button class="btn green" type="button" style="padding:7px 20px;" id="chexiaosq" onclick="deleteSq('${entity.id}')">撤销申请</button>
+                                <button class="btn green" type="button" style="padding:7px 20px;" id="cxsq" onclick="cxshenqing()">重新申请</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                             </div>
                         </div>
@@ -127,24 +133,46 @@
         if(applyFileName =="" || applyFileName==null){
            $("#applyFileNameGroup").hide();
         }
+        var auditingState= "${entity.auditingState}";
+        if(auditingState != "2" && auditingState !="3"){
+            $("#cxsq").hide();
+          //  $("#chexiaosq").hide();
+        }else {
+            $("#queding").hide();
+            $("#chexiaosq").hide();
+        }
+        if(auditingState =="2"){
+            $("#jjlyGroup").show();
+        }else{
+            $("#jjlyGroup").hide();
+        }
     })
-    function downloadFile(id){
-        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
-    }
-    function deleteFile(id){
-        $("#applyFileName").val("");
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
-            if(json.code == 1){
-                showTip("提示","操作成功");ile
-            }else{
-                showTip("提示", json.message, 2000);
+    function cxshenqing(){
+        var value = $("#a0101").val();
+        var flag = false;
+        if(value == "" || value == null){
+            showTip("提示","请输入查阅人信息");
+            return;
+        }
+        $.ajax({
+            url : "${path }/zzb/dzda/cysq/ajax/getDaxx",
+            type : "get",
+            data : {"param":value},
+            dataType : "json",
+            success : function(json){
+                if(json.success){
+                    flag = true;
+                }else {
+                    showTip("提示","不存在此档案");
+                }
+            },
+            error : function(arg1, arg2, arg3){
+                showTip("提示","加载失败");
             }
-        },"删除")
-
-    }
-
-    var myVld = new EstValidate("form1");
-    function formSubmit(){
+        });
+        if(flag){
+            return;
+        }
         var bool = myVld.form();
         if(!bool){
             return;
@@ -172,7 +200,95 @@
                 if(data.success){
                     window.location.href ="${path }/zzb/dzda/cysq/list";
                 }else{
-                    showTip("提示", json.message, 2000);
+                    showTip("提示", data.message, 2000);
+                }
+            },
+            error : function(arg1, arg2, arg3){
+                //myLoading.hide();
+                showTip("提示","出错了请联系管理员");
+            }
+        });
+    }
+    function downloadFile(id){
+        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
+    }
+    function deleteSq(id){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id,null,function(json){
+            if(json.code == 1){
+                showTip("提示","操作成功");
+                window.location.href ="${path }/zzb/dzda/cysq/list";
+            }else{
+                showTip("提示", json.message, 2000);
+            }
+        },"撤销申请")
+    }
+    function deleteFile(id){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
+            if(json.code == 1){
+                $("#applyFileName").val("");
+                showTip("提示","操作成功");
+            }else{
+                showTip("提示", json.message, 2000);
+            }
+        },"删除")
+
+    }
+
+    var myVld = new EstValidate("form1");
+    function formSubmit(){
+        var value = $("#a0101").val();
+        var flag = false;
+        if(value == "" || value == null){
+            showTip("提示","请输入查阅人信息");
+            return;
+        }
+            $.ajax({
+                url : "${path }/zzb/dzda/cysq/ajax/getDaxx",
+                type : "get",
+                data : {"param":value},
+                dataType : "json",
+                success : function(json){
+                    if(json.success){
+                       flag = true;
+                    }else {
+                        showTip("提示","不存在此档案");
+                    }
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","加载失败");
+                }
+            });
+        if(flag){
+            return;
+        }
+        var bool = myVld.form();
+        if(!bool){
+            return;
+        }
+        var fileInput = document.getElementById("clFile");
+        if (fileInput.files.length > 0) {
+            var name = fileInput.files[0].name
+            var arr = name.split(".");
+            if (arr.length < 2 || !(arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx" || arr[arr.length - 1] == "DOC" || arr[arr.length - 1] == "DOCX")) {
+                showTip("提示", "请上传word文件", 2000);
+                return;
+            }
+        }
+        //myLoading.show();
+        $("#form1").ajaxSubmit({
+            url : "${path }/zzb/dzda/cysq/update",
+            type : "post",
+            dataType : "json",
+            enctype : "multipart/form-data",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success : function(data){
+                // myLoading.hide();
+                if(data.success){
+                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                }else{
+                    showTip("提示", data.message, 2000);
                 }
             },
             error : function(arg1, arg2, arg3){

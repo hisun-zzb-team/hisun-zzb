@@ -42,7 +42,7 @@
                         <div  id="a0101ContentGroup" style="display: none">
                             <label class="control-label"><span class="required">*</span></label>
                             <div class="controls">
-                                <input type="text" class="span10 m-wrap"  name="a0101Content"  maxlength="200" id="a0101Content" value="" required/>
+                                <input type="text" class="span10 m-wrap"  name="a0101Content" readonly maxlength="200" id="a0101Content" value="" required/>
                             </div>
                         </div>
                         <div id="sqcydazwGroup" class="control-group">
@@ -181,11 +181,9 @@
     function formSubmit(){
         var a0101 = $("#a0101").val();
         var a0101Content = $("#a0101Content").val();
-        if(a0101 == ""||a0101==null ){
-            if(a0101Content == "" || a0101Content==null){
-                showTip("提示","查阅何人档案不能为空");
-                return;
-            }
+        if(a0101Content == "" || a0101Content==null){
+            showTip("提示","请添加查阅何人档案");
+            return;
         }
         var bool = myVld.form();
         if(!bool){

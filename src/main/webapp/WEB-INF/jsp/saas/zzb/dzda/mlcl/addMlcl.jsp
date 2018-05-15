@@ -126,11 +126,11 @@
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span6 ">
+				<div class="span11 ">
 					<div id="e01Z231Group" class="control-group">
 						<label class="control-label">备注</label>
 						<div class="controls">
-							<textarea id="e01Z231" name="e01Z231" class="span10 m-wrap">${vo.e01Z231}</textarea>
+							<textarea id="e01Z231" name="e01Z231" class="span12 m-wrap">${vo.e01Z231}</textarea>
 						</div>
 					</div>
 				</div>

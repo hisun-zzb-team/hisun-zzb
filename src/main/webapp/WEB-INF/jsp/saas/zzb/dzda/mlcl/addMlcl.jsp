@@ -225,7 +225,6 @@
 		var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
 		var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
 		var a38Id = $("#a38Id").val();
-		refreshTree();
 		$.ajax({
 			url: "${path}/zzb/dzda/e01z1/ajax/mlxxList",// 请求的action路径
 			type: 'POST',

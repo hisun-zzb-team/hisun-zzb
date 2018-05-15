@@ -122,24 +122,24 @@
 							<th width=40>性别</th>
 							<th width=70>出生年月</th>
 							<th>单位职务</th>
-							<th width=70>接收日期</th>
-							<th width=70>干部状态</th>
-							<th width=70>现职级时间</th>
-							<th width="5%">修改者</th>
-							<th width=80>修改时间</th>
+							<th width=70  style="text-align: center">接收日期</th>
+							<th width=70  style="text-align: center">干部状态</th>
+							<th width=70  style="text-align: center">现职级时间</th>
+							<th width="50">修改者</th>
+							<th width=70>修改时间</th>
 						</thead>
 						<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
 								<tr style="text-overflow:ellipsis;">
-									<TD><c:out value="${vo.dabh}"></c:out></TD>
-									<TD><c:out value="${vo.smxh}"></c:out></TD>
+									<TD  style="text-align: center"><c:out value="${vo.dabh}"></c:out></TD>
+									<TD  style="text-align: center"><c:out value="${vo.smxh}"></c:out></TD>
 									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }"><c:out value="${vo.a0101}"></c:out></a> </TD>
-									<TD><c:out value="${vo.a0104Content}"></c:out></TD>
+									<TD  style="text-align: center"><c:out value="${vo.a0104Content}"></c:out></TD>
 									<TD ><c:out value="${vo.a0107}"></c:out></TD>
 									<TD><c:out value="${vo.a0157}"></c:out></TD>
-									<TD ><c:out value="${vo.a3801}"></c:out></TD>
-									<TD ><c:out value="${vo.gbztContent}"></c:out></TD>
-									<TD ><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
+									<TD  style="text-align: center"><c:out value="${vo.a3801}"></c:out></TD>
+									<TD  style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
+									<TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
 									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
 									<TD ><fmt:formatDate value="${vo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
 								</TR>

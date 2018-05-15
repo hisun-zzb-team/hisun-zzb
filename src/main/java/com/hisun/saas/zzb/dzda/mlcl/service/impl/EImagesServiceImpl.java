@@ -47,6 +47,8 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
 
     @Resource
     private E01Z1Service e01Z1Service;
+    @Resource
+    private E01Z1Dao e01Z1Dao;
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
 
@@ -60,10 +62,10 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
 
 
     public void saveEImagesByJztp(A38 a38, File storePathFile) throws Exception {
-        //在加载图片之前,先清除原有的已加载的图片
+        //在加载图片之前,先清除原有的已加载的图片数据
         this.deleteEImagesByA38(a38);
         List<File> files = FileUtil.listFilesOrderByName(storePathFile);
-        Map<E01Z1 ,Integer> yjzTpMaps  = new HashMap<>();
+        Map<E01Z1, Integer> yjzTpMaps = new HashMap<>();
         for (File file : files) {
             if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) continue;
             //取得当前目录下的材料
@@ -85,23 +87,27 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                     for (E01Z1 e01Z1 : e01z1s) {
                         DecimalFormat decimalFormat = new DecimalFormat("00");
                         String nameCode = decimalFormat.format(e01Z1.getE01Z107());//当前材料对应文件编号
-                        String tpNameCode = tpFile.getName().substring(0,tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+
+                        String tpNameCode = "";
+                        if(tpFile.getName().lastIndexOf(".")!=-1) {
+                            tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                        }
                         if (tpNameCode.equals(nameCode)) {
                             isNeedDelete = false;
                             EImages eImages = new EImages();
                             eImages.setE01z1(e01Z1);
-                            String encryptFilePath = tpFile.getPath().substring(0,tpFile.getPath().lastIndexOf("."));
-                            DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile,new File(encryptFilePath));
-                            eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(),encryptFilePath.length()));
+                            String encryptFilePath = tpFile.getPath().substring(0, tpFile.getPath().lastIndexOf("."));
+                            DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile, new File(encryptFilePath));
+                            eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
                             FileUtils.deleteQuietly(tpFile);
-                            eImages.setImgNo(tpFile.getName().substring(0,tpFile.getName().lastIndexOf(".")).substring(2));
+                            eImages.setImgNo(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2));
                             this.save(eImages);
                             //记录已加载图片数
-                            if(yjzTpMaps.get(e01Z1)!=null){
-                                Integer count = yjzTpMaps.get(e01Z1)+1;
-                                yjzTpMaps.put(e01Z1,count);
-                            }else{
-                                yjzTpMaps.put(e01Z1,1);
+                            if (yjzTpMaps.get(e01Z1) != null) {
+                                Integer count = yjzTpMaps.get(e01Z1) + 1;
+                                yjzTpMaps.put(e01Z1, count);
+                            } else {
+                                yjzTpMaps.put(e01Z1, 1);
                             }
                         }
                     }
@@ -116,16 +122,16 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                 }
             } else {
                 //如果没有对应的材料,则为多余的材料目录进行删除
-                if(file.isDirectory()){
+                if (file.isDirectory()) {
                     FileUtils.deleteDirectory(file);
-                }else {
+                } else {
                     FileUtils.deleteQuietly(file);
                 }
             }
         }
 
         //处理已加载图片数
-        for(E01Z1 e01Z1 :yjzTpMaps.keySet()){
+        for (E01Z1 e01Z1 : yjzTpMaps.keySet()) {
             e01Z1.setYjztps(yjzTpMaps.get(e01Z1));
             this.e01Z1Service.update(e01Z1);
         }
@@ -136,19 +142,32 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         return Constants.DATP_STORE_PATH
                 + userLoginDetails.getTenantId() + File.separator
                 + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
-                + a38Id+ File.separator;
+                + a38Id + File.separator;
     }
 
-    public void deleteEImagesByA38(A38 a38) throws Exception {
-        StringBuffer hqlsb = new StringBuffer();
-        hqlsb.append(" delete from EImages EImages where EImages.e01z1.id = :id");
+    public void deleteEImagesByA38(A38 a38) {
+        StringBuffer deleteEImages = new StringBuffer();
+        deleteEImages.append(" delete from EImages EImages where EImages.e01z1.id = :id");
         List<E01Z1> e01Z1s = a38.getE01z1s();
-        for(E01Z1 e01Z1 : e01Z1s){
+        for (E01Z1 e01Z1 : e01Z1s) {
             CommonConditionQuery query = new CommonConditionQuery();
-            query.add(CommonRestrictions.and("","id",e01Z1.getId()));
-            this.eImagesDao.executeBulk(hqlsb.toString(),query);
+            query.add(CommonRestrictions.and("", "id", e01Z1.getId()));
+            this.eImagesDao.executeBulk(deleteEImages.toString(), query);
         }
-       // FileUtils.deleteDirectory(new File(getTpStorePath(a38.getId())));
+        StringBuffer updateE01z1 = new StringBuffer();
+        updateE01z1.append(" update E01Z1 e01Z1 set e01Z1.yjztps = 0 where e01Z1.a38.id =:id");
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and("", "id", a38.getId()));
+        this.e01Z1Dao.executeBulk(updateE01z1.toString(), query);
+    }
+
+
+    public void deleteEImagesAndFileByA38(A38 a38) throws Exception {
+        this.deleteEImagesByA38(a38);
+        File tpStorePathFile = new File(uploadBasePath+getTpStorePath(a38.getId()));
+        if (tpStorePathFile.exists()) {
+            FileUtils.deleteDirectory(tpStorePathFile);
+        }
     }
 
 }

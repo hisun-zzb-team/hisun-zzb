@@ -141,7 +141,7 @@
 									<TD ><c:out value="${vo.gbztContent}"></c:out></TD>
 									<TD ><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
 									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
-									<TD ></TD>
+									<TD ><fmt:formatDate value="${vo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
 								</TR>
 							</c:forEach>
 						</tbody>

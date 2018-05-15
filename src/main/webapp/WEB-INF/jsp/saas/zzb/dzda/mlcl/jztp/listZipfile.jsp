@@ -75,7 +75,7 @@
 <script type="text/javascript" src="${path}/js/jszip.min.js"></script>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
-    var myLoading = new MyLoading('${path}', {zindex: 11111});
+    var myLoading = new MyLoading('${path}', {zindex: 999999});
     $("#selectFile").click(function () {
         var currentNodeId = $("#currentNodeId").val();
         var currentNodeName = $("#currentNodeName").val();
@@ -220,7 +220,7 @@
             //检查每类材料份数
             $.ajax({
                 async: false,
-                url: "${path}/zzb/dzda/mlcl/jztp/mlclAggregate/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/mlclAggregate/${a38Id}",
                 type: "get",
                 data: {},
                 dataType: "json",
@@ -331,7 +331,7 @@
     $("#uploadAndSaveFile").click(function () {
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/jztp/save/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/save/${a38Id}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -341,6 +341,8 @@
                 },
                 success: function (json) {
                     if (json.success == true) {
+                        $('#jztpModal').modal('hide');
+                        mlLoad();
                         showTip("提示", json.message, 2000);
                     } else {
                         showTip("提示", json.message, 2000);

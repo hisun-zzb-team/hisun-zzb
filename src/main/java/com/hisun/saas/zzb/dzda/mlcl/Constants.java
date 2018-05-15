@@ -23,4 +23,6 @@ public class Constants {
     //档案图片秘钥
     public static final String DATP_KEY="a38Images";
 
+    public static final String DATP_ZIP_NAME = "档案图片";
+
 }

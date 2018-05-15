@@ -60,7 +60,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
 
 
     public void saveEImagesByJztp(A38 a38, File storePathFile) throws Exception {
-        //在加载图片之前,先清除原有的已加载的图片
+        //在加载图片之前,先清除原有的已加载的图片数据
         this.deleteEImagesByA38(a38);
         List<File> files = FileUtil.listFilesOrderByName(storePathFile);
         Map<E01Z1 ,Integer> yjzTpMaps  = new HashMap<>();
@@ -148,7 +148,6 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
             query.add(CommonRestrictions.and("","id",e01Z1.getId()));
             this.eImagesDao.executeBulk(hqlsb.toString(),query);
         }
-       // FileUtils.deleteDirectory(new File(getTpStorePath(a38.getId())));
     }
 
 }

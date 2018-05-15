@@ -213,13 +213,17 @@ public class JztpController extends BaseController {
                              @PathVariable(value = "a38Id") String a38Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-        //将原有图片目录移入临时文件夹
-        String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);
+        String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);//临时目录
+        String storeRealPath = uploadBasePath + getTpStorePath(a38Id);//正式目录
         try {
             A38 a38 = this.a38Service.getByPK(a38Id);
-            String storeRealPath = uploadBasePath + getTpStorePath(a38Id);
             File storeRealPathFile = new File(storeRealPath);
             if (storeRealPathFile.exists() == false) {
+                storeRealPathFile.mkdirs();
+            }else{
+                //如果存在,现将其移到临时目录下
+                FileUtils.moveDirectory(storeRealPathFile,new File(storeTmpRealPath));
+                //重新创建存储目录
                 storeRealPathFile.mkdirs();
             }
             //先将zip文件存入目录
@@ -242,15 +246,40 @@ public class JztpController extends BaseController {
             List<File> files = FileUtil.listFilesOrderByName(storeRealPathFile);
             if(checkTpDirByCataolog(files)){
                 eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
+                //删除临时文件
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if(storeTmpRealPathFile.exists()){
+                    FileUtils.deleteDirectory(storeTmpRealPathFile);
+                }
                 map.put("success", true);
                 map.put("message", "保存成功!");
             }else{
+                //删除已上传文件
                 FileUtils.deleteDirectory(storeRealPathFile);
+                //还原正式文件
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if(storeTmpRealPathFile.exists()){
+                    //将临时文件还原至正式目录
+                    FileUtils.moveDirectory(storeTmpRealPathFile,storeRealPathFile);
+                }
                 map.put("success", false);
                 map.put("message", "目录结构错误!");
             }
         } catch (Exception e) {
+            try{
+                //将正式目录数据清除
+                File storeRealPathFile = new File(storeRealPath);
+                if(storeRealPathFile.exists()){
+                    FileUtils.deleteDirectory(storeRealPathFile);
+                }
+                //将临时文件还原至正式目录
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if(storeTmpRealPathFile.exists()){
+                    FileUtils.moveDirectory(storeTmpRealPathFile,storeRealPathFile);
+                }
+            }catch (Exception e1){
 
+            }
             logger.error(e);
             throw new GenericException(e);
         }

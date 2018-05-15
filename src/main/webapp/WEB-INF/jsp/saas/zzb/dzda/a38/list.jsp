@@ -37,7 +37,7 @@
 									<a href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">添加档案</a>
 								</li>
 								<li >
-									<a href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">批量添加材料</a>
+									<a href="${path}/zzb/dzda/a38/plAddMlcl?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">批量添加材料</a>
 								</li>
 							</ul>
 						</div>
@@ -180,7 +180,6 @@
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
 		$("#searchForm").submit();
-
 	}
 
 	function searchSubmit(){

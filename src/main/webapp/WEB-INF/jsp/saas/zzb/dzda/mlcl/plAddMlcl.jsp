@@ -30,7 +30,7 @@
 						<a class="btn " href="${path }/zzb/dzda/a38/list"><i class="icon-remove-sign"></i> 取消</a>
 					</div>
 				</div>
-				<form action="${path}/zzb/dzda/a38/plSaveMlcl" class="form-horizontal" id="form1" method="post">
+				<form action="${path}/zzb/dzda/e01z1/plSaveMlcl" class="form-horizontal" id="form1" method="post">
 					<input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value=""/>
 					<input type="hidden" id="a38Ids" name="a38Ids" value=""/>
 					<dl class="dlattrbute">
@@ -151,7 +151,7 @@
 
 	function pagehref (pageNum ,pageSize){
 		$.ajax({
-			url: "${path}/zzb/dzda/a38/ajax/plGetA38List",// 请求的action路径
+			url: "${path}/zzb/dzda/e01z1/ajax/plGetA38List",// 请求的action路径
 			cache:false,
 			type: 'POST',
 			dataType : "html",
@@ -251,7 +251,7 @@
 		var bool = form1.form();
 		if(bool){
 			$.ajax({
-				url : "${path }/zzb/dzda/a38/plSaveMlcl",
+				url : "${path }/zzb/dzda/e01z1/plSaveMlcl",
 				type : "post",
 				data : $("#form1").serialize(),
 				headers:{

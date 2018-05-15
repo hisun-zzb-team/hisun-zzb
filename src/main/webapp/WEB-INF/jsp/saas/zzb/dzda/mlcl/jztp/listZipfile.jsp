@@ -220,7 +220,7 @@
             //检查每类材料份数
             $.ajax({
                 async: false,
-                url: "${path}/zzb/dzda/mlcl/jztp/mlclAggregate/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/mlclAggregate/${a38Id}",
                 type: "get",
                 data: {},
                 dataType: "json",
@@ -331,7 +331,7 @@
     $("#uploadAndSaveFile").click(function () {
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/jztp/save/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/save/${a38Id}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

@@ -30,6 +30,7 @@ import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.*;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,9 +38,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -48,8 +49,8 @@ import java.util.*;
  */
 
 @Controller
-@RequestMapping("/zzb/dzda/mlcl/jztp")
-public class JztpController extends BaseController {
+@RequestMapping("/zzb/dzda/mlcl/tpcl")
+public class DatpDealController extends BaseController {
 
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
@@ -100,7 +101,7 @@ public class JztpController extends BaseController {
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
                 childTreeNode = new MlclTreeNode();
                 childTreeNode.setId(eCatalogTypeInfo.getId());
-                childTreeNode.setName(eCatalogTypeInfo.getCatalogCode()+"."+eCatalogTypeInfo.getCatalogValue());
+                childTreeNode.setName(eCatalogTypeInfo.getCatalogCode() + "." + eCatalogTypeInfo.getCatalogValue());
                 childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
                 childTreeNode.setOpen(true);
                 childTreeNode.setNodeType("dir");
@@ -115,15 +116,15 @@ public class JztpController extends BaseController {
                 String text = e01Z1.getE01Z111();
                 String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
                 int imagesCount = e01Z1.getE01Z114();
-                String title=e01Z1.getE01Z111();
+                String title = e01Z1.getE01Z111();
 
-                if(!e01z117.equals("")){
-                    text = text +","+ e01z117;
-                    title =title+" 制成时间："+e01z117;
+                if (!e01z117.equals("")) {
+                    text = text + "," + e01z117;
+                    title = title + " 制成时间：" + e01z117;
                 }
-                if(imagesCount != 0){
-                    text = text +","+ imagesCount;
-                    title =title+" 材料页数："+imagesCount;
+                if (imagesCount != 0) {
+                    text = text + "," + imagesCount;
+                    title = title + " 材料页数：" + imagesCount;
                 }
                 childTreeNode = new MlclTreeNode();
                 childTreeNode.setId(e01Z1.getId());
@@ -220,9 +221,9 @@ public class JztpController extends BaseController {
             File storeRealPathFile = new File(storeRealPath);
             if (storeRealPathFile.exists() == false) {
                 storeRealPathFile.mkdirs();
-            }else{
+            } else {
                 //如果存在,现将其移到临时目录下
-                FileUtils.moveDirectory(storeRealPathFile,new File(storeTmpRealPath));
+                FileUtils.moveDirectory(storeRealPathFile, new File(storeTmpRealPath));
                 //重新创建存储目录
                 storeRealPathFile.mkdirs();
             }
@@ -244,40 +245,40 @@ public class JztpController extends BaseController {
             FileUtils.deleteQuietly(zipFile);
             //写入eimages
             List<File> files = FileUtil.listFilesOrderByName(storeRealPathFile);
-            if(checkTpDirByCataolog(files)){
-                eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
+            if (checkTpDirByCataolog(files)) {
+                eImagesService.saveEImagesByJztp(a38, storeRealPathFile);
                 //删除临时文件
                 File storeTmpRealPathFile = new File(storeTmpRealPath);
-                if(storeTmpRealPathFile.exists()){
+                if (storeTmpRealPathFile.exists()) {
                     FileUtils.deleteDirectory(storeTmpRealPathFile);
                 }
                 map.put("success", true);
                 map.put("message", "保存成功!");
-            }else{
+            } else {
                 //删除已上传文件
                 FileUtils.deleteDirectory(storeRealPathFile);
                 //还原正式文件
                 File storeTmpRealPathFile = new File(storeTmpRealPath);
-                if(storeTmpRealPathFile.exists()){
+                if (storeTmpRealPathFile.exists()) {
                     //将临时文件还原至正式目录
-                    FileUtils.moveDirectory(storeTmpRealPathFile,storeRealPathFile);
+                    FileUtils.moveDirectory(storeTmpRealPathFile, storeRealPathFile);
                 }
                 map.put("success", false);
                 map.put("message", "目录结构错误!");
             }
         } catch (Exception e) {
-            try{
+            try {
                 //将正式目录数据清除
                 File storeRealPathFile = new File(storeRealPath);
-                if(storeRealPathFile.exists()){
+                if (storeRealPathFile.exists()) {
                     FileUtils.deleteDirectory(storeRealPathFile);
                 }
                 //将临时文件还原至正式目录
                 File storeTmpRealPathFile = new File(storeTmpRealPath);
-                if(storeTmpRealPathFile.exists()){
-                    FileUtils.moveDirectory(storeTmpRealPathFile,storeRealPathFile);
+                if (storeTmpRealPathFile.exists()) {
+                    FileUtils.moveDirectory(storeTmpRealPathFile, storeRealPathFile);
                 }
-            }catch (Exception e1){
+            } catch (Exception e1) {
 
             }
             logger.error(e);
@@ -311,20 +312,103 @@ public class JztpController extends BaseController {
         List<ECatalogTypeInfo> eCatalogTypeInfos = this.eCatalogTypeService.list(query, orderBy);
         for (File file : files) {
             //排除一些系统自带生成的目录及文件
-            if(Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) continue;
+            if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) continue;
             boolean isExist = false;
             for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
-                if(file.getName().indexOf(".")!=-1){
+                if (file.getName().indexOf(".") != -1) {
                     if (file.getName().substring(0, file.getName().indexOf(".")).equals(eCatalogTypeInfo.getCatalogCode())) {
                         isExist = true;
                     }
                 }
             }
-            if(!isExist){
+            if (!isExist) {
                 ispass = false;
                 break;
             }
         }
         return ispass;
+    }
+
+
+    @RequestMapping(value = "/delete/{a38Id}")
+    public
+    @ResponseBody
+    Map<String, Object> delete(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        CommonConditionQuery query = new CommonConditionQuery();
+        try {
+            A38 a38 = this.a38Service.getByPK(a38Id);
+            this.eImagesService.deleteEImagesAndFileByA38(a38);
+            map.put("success", true);
+            map.put("message", "图片已卸载!");
+        } catch (Exception e) {
+            map.put("success", false);
+            map.put("message", "图片卸载错误!");
+        }
+        return map;
+    }
+
+
+    @RequestMapping(value = "/download/{a38Id}")
+    public void zipDown(@PathVariable(value = "a38Id") String a38Id, HttpServletResponse resp) {
+        String srcPath = uploadBasePath+getTpStorePath(a38Id);
+        String destPath = uploadBasePath+getTpStoreTmpPath(a38Id);
+        String zipPath = uploadBasePath + getTpStoreTmpPath(a38Id);
+       try {
+           File tpStorePathFile = new File(srcPath);
+           A38 a38 = this.a38Service.getByPK(a38Id);
+           if (tpStorePathFile.exists()) {
+               File destPathFile = new File(destPath);
+               FileUtils.copyDirectory(tpStorePathFile, destPathFile);
+               List<File> files = FileUtil.listFilesOrderByName(destPathFile);
+               for (File file : files) {
+                   if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) {
+                       continue;
+                   }
+                   List<File> tpFiles = FileUtil.listFilesOrderByName(file);
+                   for (File tpFile : tpFiles) {
+                       if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
+                           continue;
+                       }
+                       File newDestFile = new File(tpFile.getPath() + ".jpg");
+                       DESUtil.getInstance(Constants.DATP_KEY).decrypt(tpFile, newDestFile);
+                       FileUtils.deleteQuietly(tpFile);
+                   }
+               }
+               new File(zipPath).mkdirs();
+               String zipRealStorePath = zipPath+UUIDUtil.getUUID() + ".zip";
+               CompressUtil.zip(zipRealStorePath, destPath,a38.getA0101());
+               resp.setContentType("multipart/form-data");
+               resp.setHeader("Content-Disposition", "attachment;fileName=" + encode(a38.getA0101() + ".zip"));
+               OutputStream output = resp.getOutputStream();
+               FileInputStream fileInputStream = new FileInputStream(new File(zipRealStorePath));
+               byte[] buffer = new byte[8192];
+               int length;
+               while ((length = fileInputStream.read(buffer)) != -1) {
+                   output.write(buffer, 0, length);
+               }
+               output.flush();
+               output.close();
+           }
+       }catch (Exception e){
+           logger.error(e);
+           throw new GenericException(e.getMessage());
+       }finally {
+           try{
+               File destPathFile = new File(destPath);
+               File zipPathFile = new File(zipPath);
+               if(destPathFile.exists()) FileUtils.deleteDirectory(destPathFile);
+               if(zipPathFile.exists()) FileUtils.deleteDirectory(zipPathFile);
+           }catch (Exception e){}
+       }
+    }
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        return filename;
     }
 }

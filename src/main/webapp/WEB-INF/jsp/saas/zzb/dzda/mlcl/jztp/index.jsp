@@ -26,7 +26,7 @@
 							<input type="hidden" id="currentNodeId"  name="currentNodeId" value="" />
 							<input type="hidden" id="currentNodeName"  name="currentNodeName" value="" />
 							<input type="hidden" id="currentNodeParentId"  name="currentNodeParentId" value="" />
-							<Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/jztp/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
+							<Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/tpcl/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 									   onClick="onClickByTreeByTpsc" submitType="post" dataType="json" isSearch="false"/>
 
 				</div>
@@ -87,7 +87,7 @@
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 			},
-			url: "${path}/zzb/dzda/mlcl/jztp/ajax/list/${a38Id}",// 请求的action路径
+			url: "${path}/zzb/dzda/mlcl/tpcl/ajax/list/${a38Id}",// 请求的action路径
 			error: function () {// 请求失败处理函数
 				alert('请求失败');
 			},

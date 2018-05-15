@@ -18,5 +18,7 @@ import java.io.File;
 public interface EImagesService extends BaseService<EImages,String>{
 
     void saveEImagesByJztp(A38 a38, File storePathFile)throws Exception;
-    void deleteEImagesByA38(A38 a38) throws Exception;
+    void deleteEImagesByA38(A38 a38);
+    void deleteEImagesAndFileByA38(A38 a38) throws Exception;
+
 }

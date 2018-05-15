@@ -358,7 +358,7 @@
         $('#jztpModal').attr("data-width",divWidth);
         $('#jztpModal').attr("data-height",divHeight);
         $.ajax({
-            url: "${path}/zzb/dzda/mlcl/jztp/ajax/index/${a38Id}",
+            url: "${path}/zzb/dzda/mlcl/tpcl/ajax/index/${a38Id}",
             type: "post",
             data: {},
             headers: {
@@ -376,6 +376,32 @@
             }
         });
     });
+
+
+    $("#xztpButton").click(function(){
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",
+            type: "post",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "json",
+            success: function (json) {
+                if(json.success){
+                    showTip("提示", json.message, 1500);
+                }
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    });
+
+    $("#downloadButton").click(function(){
+        window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
+    });
+
 </script>
 </body>
 </html>

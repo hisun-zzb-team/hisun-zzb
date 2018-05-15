@@ -34,7 +34,6 @@
 		<div class="span12 responsive" id="e01z1Table">
 			<%-- 表格开始 --%>
 				<div class="portlet-title">
-					<div class="caption">欠缺材料  共<font color="red"> 1 </font>条记录 </div>
 					<div class="clearfix fr">
 
 						<a id="sample_editable_1_new" class="btn green" href="javascript:addQQcl()">

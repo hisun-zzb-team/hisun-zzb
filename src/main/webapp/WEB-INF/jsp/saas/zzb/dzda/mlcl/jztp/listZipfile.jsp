@@ -75,7 +75,7 @@
 <script type="text/javascript" src="${path}/js/jszip.min.js"></script>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
-    var myLoading = new MyLoading('${path}', {zindex: 11111});
+    var myLoading = new MyLoading('${path}', {zindex: 999999});
     $("#selectFile").click(function () {
         var currentNodeId = $("#currentNodeId").val();
         var currentNodeName = $("#currentNodeName").val();
@@ -341,6 +341,8 @@
                 },
                 success: function (json) {
                     if (json.success == true) {
+                        $('#jztpModal').modal('hide');
+                        mlLoad();
                         showTip("提示", json.message, 2000);
                     } else {
                         showTip("提示", json.message, 2000);

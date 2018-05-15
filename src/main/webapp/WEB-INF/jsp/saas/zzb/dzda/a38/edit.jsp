@@ -41,7 +41,7 @@
 					<div id="a0104Group" class="control-group">
 						<label class="control-label">性别</label>
 						<div class="controls">
-							<SelectTag:SelectTag id="a0104" valueName="a0104Content" textClass="m-wrap span10" defaultkeys="${vo.a0104}" defaultvalues="${vo.a0104Content}"
+							<SelectTag:SelectTag id="a0104" valueName="a0104Content" needNullValue="true" textClass="m-wrap span10" defaultkeys="${vo.a0104}" defaultvalues="${vo.a0104Content}"
 												 radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=GB/T2261.1-2003"/>
 						</div>
 					</div>

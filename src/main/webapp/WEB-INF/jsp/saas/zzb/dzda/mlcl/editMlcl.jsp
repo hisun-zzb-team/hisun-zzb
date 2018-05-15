@@ -139,10 +139,12 @@
 			</div>
 
 			<div class="row-fluid">
-				<div class="span6"  style="text-align: center">
-					<button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
-					<a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
-				</div>
+				<center>
+					<div style="margin:auto;">
+						<button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
+						<a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
+					</div>
+				</center>
 			</div>
 			<%--<tr>
 				<td colspan="2" style="text-align: center">

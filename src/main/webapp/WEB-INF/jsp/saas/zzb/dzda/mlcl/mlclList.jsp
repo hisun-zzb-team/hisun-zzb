@@ -26,10 +26,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button data-dismiss="modal" class="close" type="button"></button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                                <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                 <h3 class="modal-title" id="title">
                     “${a0101}”档案图片
                 </h3>
+
             </div>
             <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
             </div>
@@ -57,6 +59,8 @@
             <form class="" id="importForm" enctype="multipart/form-data">
                 <input type="hidden" name="queryId" value="${queryId}"/>
                 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
+                <input type="hidden" name="myDirName" id="myDirName" value=""/>
+
                 <input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
                 <input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
                 <input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>
@@ -258,13 +262,16 @@
 		var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
 		$('#viewImgModal').attr("data-width", divWidth);
+
+        var myDirName = $("#myDirName").val();
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+$("#a38Id").val(),
             type: "post",
             data: {
 				"a0101":"${a0101}",
 				"archiveId":e01Z101B,
-				"e01z1Id":e01z1Id
+				"e01z1Id":e01z1Id,
+                "myDirName":myDirName
 			},
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -272,14 +279,41 @@
             dataType: "html",
             success: function (html) {
                 $('#viewImgDiv').html(html);
-                $('#viewImgModal').modal({
-                    keyboard: true
-                });
+                $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },
             error: function () {
                 showTip("提示", "出错了请联系管理员", 1500);
             }
         });
+    }
+   function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
+       $('#viewImgModal').modal('hide');
+       $('#viewImgDiv').html("");
+       <%--var a38Id = $("#a38Id").val();--%>
+       <%--var myDirName = $("#myDirName").val();--%>
+       <%--$.ajax({--%>
+           <%--url: "${path}/zzb/dzda/mlcl/images/delete/jmImages",--%>
+           <%--type: "post",--%>
+           <%--data: {--%>
+               <%--"a38Id":a38Id,--%>
+               <%--"myDirName":myDirName--%>
+           <%--},--%>
+           <%--headers: {--%>
+               <%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
+           <%--},--%>
+           <%--dataType: "json",--%>
+           <%--success: function (data) {--%>
+               <%--if (data.success == "true" || data.success == true) {--%>
+
+               <%--}else{--%>
+                   <%--showTip("提示", "删除解密图片失败，请联系管理员!", 1300);--%>
+               <%--}--%>
+           <%--},--%>
+           <%--error: function () {--%>
+               <%--showTip("提示", "出错了请联系管理员!", 1300);--%>
+
+           <%--}--%>
+       <%--});--%>
     }
 
     function fileDown(type) {

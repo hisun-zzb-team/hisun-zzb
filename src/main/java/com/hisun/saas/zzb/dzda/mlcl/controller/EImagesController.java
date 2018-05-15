@@ -32,16 +32,19 @@ import com.hisun.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -65,7 +68,7 @@ public class EImagesController extends BaseController {
     private E01Z1Service e01Z1Service;
     @Resource
     private EImagesService eImagesService;
-
+    private final static String DEFAULT_IMG_HEAD_PATH = "/WEB-INF/images/tempNoPic.bmp";
     /**
      *
      * @param a38Id 档案主键
@@ -79,14 +82,16 @@ public class EImagesController extends BaseController {
     @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
     @RequestMapping("/ajax/viewMain/{a38Id}")
     public
-    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType) throws GenericException {
+    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-        String myDirName = "";
+
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         java.util.Date date = new java.util.Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSSS");
         String nowDate = df.format(date);
-        myDirName = userLoginDetails.getUserid()+nowDate;
+        if(myDirName==null || myDirName.equals("")) {
+            myDirName = userLoginDetails.getUserid() + nowDate;
+        }
         map.put("a38Id", a38Id);
         map.put("archiveId", archiveId);
         map.put("e01z1Id", e01z1Id);
@@ -105,7 +110,7 @@ public class EImagesController extends BaseController {
     public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         String storePath = getTpStorePath(a38Id);
-        List images = new ArrayList();
+        List<String> images = new ArrayList<String>();
         int imagesSize = 0;
         if(!e01z1Id.equals("")){
             E01Z1 e01z1 = new E01Z1();
@@ -116,24 +121,34 @@ public class EImagesController extends BaseController {
 
             for(EImages image : eImages){
                 String jiamfilePath = image.getImgFilePath();//加密的图片路径
-                String jianmfilePath = "";//解密的图片路径
-                String dirPath = uploadBasePath +storePath+"/"+myDirName;
-                File storeDir = new File(dirPath);
-                if (storeDir.exists() == false) {
-                    storeDir.mkdirs();
-                }
-                jiamfilePath = uploadBasePath+jiamfilePath;
-                String fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\"));
+//                String jianmfilePath = "";//解密的图片路径
+//                String dirPath = uploadBasePath +storePath+myDirName;
+//                File storeDir = new File(dirPath);
+//                if (storeDir.exists() == false) {
+//                    storeDir.mkdirs();
+//                }
+//                jiamfilePath = uploadBasePath+jiamfilePath;
+//                String fileName ="";
+//                if(image.getImgFilePath().lastIndexOf("\\")!=-1){
+//                    fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\")+1);
+//                }else{
+//                    fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("/")+1);
+//                }
+//                fileName = image.getE01z1().getE01Z101B()+fileName;//在入库的图片名前加入分类的编码
+//                String showFilePath = myDirName+ File.separator+fileName+".jpg";
+//                jianmfilePath =dirPath + File.separator+fileName+".jpg";
 
-                jianmfilePath =dirPath + File.separator+image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\")+1)+".jpg";
-
-                DESUtil.getInstance().decrypt(new File(jiamfilePath),new File(jianmfilePath));
-                images.add(jianmfilePath);
+//                File jianmfile = new File(jianmfilePath);//解密图片 检查是否已经解密，如果已经解密则不进行解密
+//                if(jianmfile.exists()== false){
+//                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
+//                }
+                images.add(jiamfilePath);
             }
          imagesSize = images.size();
         }
 
         map.put("imagesSize", imagesSize);
+        map.put("images", images);
         map.put("a38Id", a38Id);
         map.put("e01z1Id", e01z1Id);
         map.put("myDirName", myDirName);
@@ -147,7 +162,7 @@ public class EImagesController extends BaseController {
            String a38Id,String myDirName) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String path = uploadBasePath+"images"+File.separator+a38Id.substring(a38Id.length()-1)+File.separator+a38Id+"/"+myDirName;
+            String path = uploadBasePath+getTpStorePath(a38Id)+myDirName;
             File file = new File(path);
             File newFile = null;
             //删除图片
@@ -170,7 +185,7 @@ public class EImagesController extends BaseController {
                     for(int i=0;i<files.length;i++){
                         String fileName = files[i].getName();
                         if(!files[i].isDirectory() && fileName.lastIndexOf(".jpg") != -1){
-                            newFile = new File(path+"/"+fileName);
+                            newFile = new File(path+File.separator+fileName);
                             newFile.delete();
                         }
                     }
@@ -179,6 +194,7 @@ public class EImagesController extends BaseController {
             file.delete();
             map.put("success", true);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e);
             throw new GenericException(e);
         }
@@ -252,5 +268,41 @@ public class EImagesController extends BaseController {
             map.put("success", false);
         }
         return map;
+    }
+
+    @RequestMapping("/showImages")
+    public HttpEntity<byte[]> showImages(String imgPath,String a38Id,
+                                       HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (StringUtils.isEmpty(imgPath)==false) {
+//            String storePath = getTpStorePath(a38Id);
+            String zpRealPath = uploadBasePath +imgPath;
+            File file = new File(zpRealPath);
+            if (file.exists()) {
+//                FileInputStream fis = new FileInputStream(file);
+                Long fileLength = file.length();
+                byte[] buffer = new byte[fileLength.intValue()];
+//                fis.read(buffer);
+//                fos.write();
+                byte[] bytes= DESUtil.getInstance("a38Images").getDecryptByte(buffer);
+                StreamUtils.copy(bytes,response.getOutputStream());
+                response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+                return new HttpEntity(HttpStatus.OK);
+            } else {
+                //为空或者没有返回默认图片
+                File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_IMG_HEAD_PATH));
+                FileInputStream fis = new FileInputStream(defaultfile);
+                StreamUtils.copy(fis, response.getOutputStream());
+                response.setContentType(MediaType.IMAGE_PNG_VALUE);
+                return new HttpEntity(HttpStatus.OK);
+            }
+        } else {
+            //为空或者没有返回默认图片
+            File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_IMG_HEAD_PATH));
+            FileInputStream fis = new FileInputStream(defaultfile);
+            StreamUtils.copy(fis, response.getOutputStream());
+
+            response.setContentType(MediaType.IMAGE_PNG_VALUE);
+            return new HttpEntity(HttpStatus.OK);
+        }
     }
 }

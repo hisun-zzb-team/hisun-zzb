@@ -30,16 +30,17 @@
 		</div>
 	</div>
 	<div>
-		<div style="margin-bottom: 5px;text-align: right;margin-top: 10px">
-			<input type="hidden" name="id"  value="${id }"/>
-			<a href="javascript:void(0)" class="btn green" onclick="">打印</a>
-			<button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
-		</div>
+		<%--<div style="margin-bottom: 5px;text-align: right;margin-top: 10px">--%>
+			<%--<input type="hidden" name="id"  value="${id }"/>--%>
+			<%--&lt;%&ndash;<a href="javascript:void(0)" class="btn green" onclick="">打印</a>&ndash;%&gt;--%>
+			<%--<button type="button" class="btn btn-default" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>--%>
+		<%--</div>--%>
 		<div id="viewList" ></div>
 	</div>
 </div>
 <script type="text/javascript">
 	$(function(){
+		$("#myDirName").val("${myDirName}");
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
 		$(window).resize(function(){

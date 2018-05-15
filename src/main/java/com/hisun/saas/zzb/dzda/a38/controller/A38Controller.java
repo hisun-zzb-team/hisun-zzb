@@ -140,20 +140,32 @@ public class A38Controller extends BaseController {
         model.put("pager",pager);
         return new ModelAndView("saas/zzb/dzda/a38/shList",model);
     }
+    /**
+     *
+     * @param listType shList为审核档案
+     * @return
+     */
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/editManage")
-    public ModelAndView editManage(String id){
+    public ModelAndView editManage(String id,String listType){
         Map<String, Object> map = Maps.newHashMap();
         A38 a38 = a38Service.getByPK(id);
         map.put("id",id);
         map.put("a0101",a38.getA0101());
+        map.put("listType",listType);
         return new ModelAndView("saas/zzb/dzda/a38/manage",map);
     }
 
+    /**
+     *
+     * @param listType shList为审核档案
+     * @return
+     */
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/add")
-    public ModelAndView add(){
+    public ModelAndView add(String listType){
         Map<String, Object> map = Maps.newHashMap();
+        map.put("listType",listType);
         return new ModelAndView("saas/zzb/dzda/a38/add",map);
     }
 
@@ -317,6 +329,34 @@ public class A38Controller extends BaseController {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             BeanUtils.copyProperties(vo, entity);
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            a38Service.update(entity);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+        }
+        return returnMap;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/update/Sjzt")
+    public @ResponseBody Map<String,Object> updateSjzt(String a38Id,String sjzt) throws GenericException{
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        if(StringUtils.isBlank(a38Id)){
+            returnMap.put("message","主键为空");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        A38 entity = a38Service.getByPK(a38Id);
+        if(entity==null){
+            returnMap.put("message","数据不存在");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            entity.setSjzt(sjzt);
             a38Service.update(entity);
             returnMap.put("code",1);
         }catch (Exception e){

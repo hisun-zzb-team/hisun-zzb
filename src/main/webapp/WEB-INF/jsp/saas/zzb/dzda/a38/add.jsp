@@ -28,8 +28,8 @@
 					<div class="relationbetTop_but">
 
 						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('0')">待审</button>
-						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('1')">保存</button>
-						<a class="btn " href="${path }/zzb/dzda/a38/list"><i class="icon-remove-sign"></i> 取消</a>
+						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('1')">入库</button>
+						<a class="btn " href="javascript:cancel()"><i class="icon-remove-sign"></i> 取消</a>
 					</div>
 				</div>
 				<form action="" class="form-horizontal" id="form1" method="post">
@@ -277,7 +277,11 @@
 				dataType : "json",
 				success : function(data){
 					if(data.code=="1"){
-						setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list"},2000);
+						if(sjzt=="0"){
+							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList"},2000);
+						}else{
+							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list"},2000);
+						}
 						showTip("提示","保存成功", 1500);
 						//setTimeout(process.list,2000);
 					}else{
@@ -308,6 +312,14 @@
 
 				}
 			},"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});
+		}
+	}
+
+	function cancel(){
+		if("${listType}"=="shList"){
+			window.location.href = "${path}/zzb/dzda/a38/shList";
+		}else{
+			window.location.href = "${path}/zzb/dzda/a38/list";
 		}
 	}
 </script>

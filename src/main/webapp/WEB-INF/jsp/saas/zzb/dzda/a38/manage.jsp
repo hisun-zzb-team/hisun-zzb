@@ -49,7 +49,7 @@
 	<div class="caption">姓名：${a0101}</div>
 	<div class="relationbetTop_but">
 		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
-		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 保存 </button>
+		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库 </button>
 		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
 			<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
 			<%--干部库 <i class="icon-angle-down"></i>--%>
@@ -209,14 +209,6 @@
 
 	});
 
-	function cancel(){
-		var loadType = "${loadType}";
-		if(loadType=="zcManageList"){
-			window.location.href = "${path}/zzb/app/console/daDemo/zcManageList";
-		}else{
-			window.location.href = "${path}/zzb/dzda/a38/list";
-		}
-	}
 
 	//基本信息
 	function baseLoad(){
@@ -371,14 +363,45 @@
 		if(isSave == true){
 			if(bool){
 				$("#sjzt").val(sjzt);
-				saveA38();
+				saveA38(sjzt);
 			}
 		}else{
-			window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+			myLoading.show();
+			$.ajax({
+				url : "${path }/zzb/dzda/a38/update/Sjzt",
+				type : "post",
+				data : {
+					"a38Id":"${id}",
+					"sjzt":sjzt
+				},
+				headers:{
+					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+				},
+				dataType : "json",
+				success : function(json){
+					if(json.code==1){
+						myLoading.hide();
+						if(sjzt=="0"){
+							window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+						}else{
+							window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+						}
+					}else{
+						myLoading.hide();
+						showTip("提示", json.message, 2000);
+						return false;
+					}
+				},
+				error : function(){
+					showTip("提示","出错了,请检查网络!",2000);
+					myLoading.hide();
+					return false;
+				}
+			});
 		}
 	}
 
-	function saveA38(){
+	function saveA38(sjzt){
 		myLoading.show();
 		$.ajax({
 			url : "${path }/zzb/dzda/a38/update",
@@ -391,9 +414,11 @@
 			success : function(json){
 				if(json.code==1){
 					myLoading.hide();
-//							showTip("提示","保存成功",1000);
-//							setTimeout(function(){},2000);
-					window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+					if(sjzt=="0"){
+						window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+					}else{
+						window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+					}
 				}else{
 					myLoading.hide();
 					showTip("提示", json.message, 2000);
@@ -420,6 +445,14 @@
 			}
 		});
 	};
+
+	function cancel(){
+		if("${listType}"=="shList"){
+			window.location.href = "${path}/zzb/dzda/a38/shList";
+		}else{
+			window.location.href = "${path}/zzb/dzda/a38/list";
+		}
+	}
 </script>
 </body>
 </html>

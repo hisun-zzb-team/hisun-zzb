@@ -71,8 +71,7 @@ public class E01Z4ServiceImpl extends BaseServiceImpl<E01Z4,String>
             sql+="t.px=t.px+1";
         }
 
-        sql +=" where t.tenant_id = '" + details.getTenantId() + "'"
-                + " and t.a38_id = '" + e01z1.getA38().getId() + "'";
+        sql +=" where t.a38_id = '" + e01z1.getA38().getId() + "'";
 
         if(newSort>oldSort){
             sql+=" and t.px<="+newSort+" and t.px >"+oldSort;

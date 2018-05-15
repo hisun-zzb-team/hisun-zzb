@@ -98,18 +98,19 @@
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/list",
+			url:"${path }/zzb/dzda/e01z4/ajax/list",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
 			data:{
-				'b01Id':"${b01Id}",
-				'pageNum':pageNum,
-				'pageSize':pageSize
+				"a38Id":"${a38Id}",
+				"pageNum":pageNum,
+				"pageSize":pageSize
 			},
 			success:function(html){
-				$("#catalogList").html(html);
+				var view = $("#tab_show");
+				view.html(html);
 			},
 			error : function(){
 				myLoading.hide();

@@ -67,7 +67,7 @@
 						<div id="pxGroup" class="control-group">
 							<label class="control-label">材料顺序号<span class="required">*</span></label>
 							<div class="controls">
-								<input size="16" type="text" required class="span6 m-wrap" value="${vo.px }" id="px" name="px" >
+								<input size="16" type="text" required class="span6 m-wrap" value="${px }" id="px" name="px" >
 							</div>
 
 						</div>

@@ -218,8 +218,6 @@ public class JztpController extends BaseController {
         try {
             A38 a38 = this.a38Service.getByPK(a38Id);
             String storeRealPath = uploadBasePath + getTpStorePath(a38Id);
-            //
-            FileUtils.moveDirectory(new File(storeTmpRealPath),new File(storeTmpRealPath));
             File storeRealPathFile = new File(storeRealPath);
             if (storeRealPathFile.exists() == false) {
                 storeRealPathFile.mkdirs();
@@ -237,21 +235,13 @@ public class JztpController extends BaseController {
             zipfos.flush();
             zipfos.close();
             zipis.close();
-            //将原有图片目录移入临时文件夹
-  //          String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);
-//            File storeRealTmpPathFile = new File(storeTmpRealPath);
-//            if (storeRealTmpPathFile.exists() == false) {
-//                storeRealTmpPathFile.mkdirs();
-//            }
-            FileUtils.moveDirectory(storeRealPathFile,new File(storeTmpRealPath));
-
             //解压zip
             CompressUtil.unzip(zipStoreRealPath, storeRealPath);
             FileUtils.deleteQuietly(zipFile);
             //写入eimages
             List<File> files = FileUtil.listFilesOrderByName(storeRealPathFile);
             if(checkTpDirByCataolog(files)){
-               // eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
+                eImagesService.saveEImagesByJztp(a38,storeRealPathFile);
                 map.put("success", true);
                 map.put("message", "保存成功!");
             }else{

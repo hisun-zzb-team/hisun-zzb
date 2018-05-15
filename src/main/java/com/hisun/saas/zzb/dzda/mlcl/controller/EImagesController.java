@@ -68,7 +68,8 @@ public class EImagesController extends BaseController {
     private E01Z1Service e01Z1Service;
     @Resource
     private EImagesService eImagesService;
-    private final static String DEFAULT_IMG_HEAD_PATH = "/WEB-INF/images/tempNoPic.bmp";
+
+    private final static String DEFAULT_PHOTO = "/WEB-INF/images/tempNoPic.bmp";
     /**
      *
      * @param a38Id 档案主键
@@ -274,22 +275,15 @@ public class EImagesController extends BaseController {
     public HttpEntity<byte[]> showImages(String imgPath,String a38Id,
                                        HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (StringUtils.isEmpty(imgPath)==false) {
-//            String storePath = getTpStorePath(a38Id);
             String zpRealPath = uploadBasePath +imgPath;
             File file = new File(zpRealPath);
             if (file.exists()) {
-//                FileInputStream fis = new FileInputStream(file);
-                Long fileLength = file.length();
-                byte[] buffer = new byte[fileLength.intValue()];
-//                fis.read(buffer);
-//                fos.write();
-                byte[] bytes= DESUtil.getInstance("a38Images").getDecryptByte(buffer);
-                StreamUtils.copy(bytes,response.getOutputStream());
+                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,response.getOutputStream());
                 response.setContentType(MediaType.IMAGE_JPEG_VALUE);
                 return new HttpEntity(HttpStatus.OK);
             } else {
                 //为空或者没有返回默认图片
-                File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_IMG_HEAD_PATH));
+                File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_PHOTO));
                 FileInputStream fis = new FileInputStream(defaultfile);
                 StreamUtils.copy(fis, response.getOutputStream());
                 response.setContentType(MediaType.IMAGE_PNG_VALUE);
@@ -297,10 +291,9 @@ public class EImagesController extends BaseController {
             }
         } else {
             //为空或者没有返回默认图片
-            File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_IMG_HEAD_PATH));
+            File defaultfile = new File(request.getServletContext().getRealPath(DEFAULT_PHOTO));
             FileInputStream fis = new FileInputStream(defaultfile);
             StreamUtils.copy(fis, response.getOutputStream());
-
             response.setContentType(MediaType.IMAGE_PNG_VALUE);
             return new HttpEntity(HttpStatus.OK);
         }

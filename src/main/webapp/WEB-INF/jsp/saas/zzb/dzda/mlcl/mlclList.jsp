@@ -371,8 +371,8 @@
     }
 
     function jztp(id,e01Z111){
-        var divHeight = $(window).height()-100;
-        var divWidth = $(window).width()-20;
+        var divHeight = $(window).height()-300;
+        var divWidth = 800;
         $('#jztpModal').attr("data-width",divWidth);
         $('#jztpModal').attr("data-height",divHeight);
         $.ajax({

@@ -165,9 +165,9 @@
 
 	</form>
 </div>
-
+	<script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
-
+	var myLoading = new MyLoading("${path}",{zindex : 11111});
 	var editForm = new EstValidate("editForm");
 
 	$(function(){
@@ -179,6 +179,7 @@
 			var a38Id = $("#a38Id").val();
 			var bool = editForm.form();
 			if(bool){
+				myLoading.show();
 				$.ajax({
 					url : "${path}/zzb/dzda/e01z1/update",
 					type : "post",
@@ -205,13 +206,16 @@
 									"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 								},
 								success : function(html){
+									myLoading.hide();
 									$("#rightList").html(html);
 								},
 								error : function(){
-									alert('请求失败');
+									myLoading.hide();
+									showTip("警告","请求失败!",2000);
 								}
 							});
 						}else{
+							myLoading.hide();
 							document.getElementById("addForm").reset();
 							$(".control-group").removeClass("error").removeClass("success");
 							$(".help-inline").remove();
@@ -219,6 +223,7 @@
 						}
 					},
 					error : function(){
+						myLoading.hide();
 						document.getElementById("addForm").reset();
 						$(".control-group").removeClass("error").removeClass("success");
 						$(".help-inline").remove();

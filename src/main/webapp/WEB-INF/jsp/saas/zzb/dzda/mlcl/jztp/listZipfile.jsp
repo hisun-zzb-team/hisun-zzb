@@ -51,14 +51,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button data-dismiss="modal" class="close" type="button"></button>
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
+                    <%--<button data-dismiss="modal" class="close" type="button"></button>--%>
                     <h3 class="modal-title" id="title">
                         检查结果
                     </h3>
                 </div>
-                <div class="portlet-body">
-                    <table class="table table-striped table-bordered table-hover dataTable table-set" style="margin-right: 15px;margin-left: 15px;max-height: 300px;overflow: auto;">
-                        <thead>
+                <div class="portlet-body" style="margin-right: 15px;margin-left: 15px;max-height: 300px;overflow: auto;">
+                    <table class="table table-striped table-bordered table-hover dataTable table-set" >
+                    <thead>
                         <tr>
                             <th>序号</th>
                             <th>错误信息</th>
@@ -247,13 +248,13 @@
                                     isExist = true;
                                     if ($aggregateFilelist[i].count != mlclAggregate.count) {
                                         isPass = false
-                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传页数为:" + $aggregateFilelist[i].count});
+                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传图片数为:" + $aggregateFilelist[i].count});
                                     }
                                 }
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传页数为:0"});
+                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传图片数为:0"});
                             }
                         });
                         //判断已上传的文件目录是否多余实际要求的目录
@@ -365,8 +366,9 @@
                 success: function (json) {
                     if (json.success == true) {
                         $('#jztpModal').modal('hide');
-                        mlLoad();
+                        $('#jztpE01z1Modal').modal('hide');
                         showTip("提示", json.message, 2000);
+                        mlLoad();
                     } else {
                         showTip("提示", json.message, 2000);
                     }

@@ -88,6 +88,7 @@ public class E01Z1Controller extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
             if(StringUtils.isEmpty(eCatalogTypeTreeId)){
                 orderBy.add(CommonOrder.asc("e01z101b"));
+                orderBy.add(CommonOrder.asc("e01Z104"));
                 eCatalogTypeTreeName="所有材料";
                 url = "saas/zzb/dzda/mlcl/allMlclList";
             }else {

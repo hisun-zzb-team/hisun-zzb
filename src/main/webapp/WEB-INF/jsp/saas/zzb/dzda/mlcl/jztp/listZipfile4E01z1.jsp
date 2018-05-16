@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div class="portlet-body">
+        <div class="portlet-body" style="overflow: auto;" id="zipFile4E01z1Div">
             <table class="table table-striped table-bordered table-hover dataTable table-set">
                 <thead>
                 <tr>
@@ -48,20 +48,21 @@
             </table>
         </div>
     </div>
-    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="800">
+    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="600">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button data-dismiss="modal" class="close" type="button"></button>
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
+                    <%--<button data-dismiss="modal" class="close" type="button"></button>--%>
                     <h3 class="modal-title" id="title">
                         检查结果
                     </h3>
                 </div>
-                <div class="portlet-body">
+                <div class="portlet-body" style="margin-right: 15px;margin-left: 15px;overflow: auto;max-height: 300px;">
                     <table class="table table-striped table-bordered table-hover dataTable table-set">
                         <thead>
                         <tr>
-                            <th>序号</th>
+                            <th width="30">序号</th>
                             <th>错误信息</th>
                         </tr>
                         </thead>
@@ -77,6 +78,17 @@
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
     var myLoading = new MyLoading('${path}', {zindex: 999999});
+    $(function(){
+        changeZipFile4E01z1DivHeight();
+        //当浏览器大小改变的时候,要重新计算
+        $(window).resize(function(){
+            changeZipFile4E01z1DivHeight();
+        })
+    });
+    function changeZipFile4E01z1DivHeight(){
+        var divHeight = $(window).height()-390;
+        $("#zipFile4E01z1Div").css('height',divHeight);
+    }
     $("#selectFile").click(function () {
         var currentNodeId = $("#currentNodeId").val();
         var currentNodeName = $("#currentNodeName").val();

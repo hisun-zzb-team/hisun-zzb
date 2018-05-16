@@ -226,6 +226,7 @@ public class E01Z1  extends TenantEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "e01z1", fetch = FetchType.LAZY)
+    @OrderBy("imgNo")
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     public List<EImages> getImages() {
         return images;

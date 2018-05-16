@@ -25,7 +25,6 @@ public class E01Z1Vo {
     private String e01Z231;
     private Integer yjztps = 0;
     private Integer e01Z104;
-    private List<EImages> images;
 
     private String parentId;
     private String parentName;
@@ -164,14 +163,6 @@ public class E01Z1Vo {
 
     public void setE01Z104(Integer e01Z104) {
         this.e01Z104 = e01Z104;
-    }
-
-    public List<EImages> getImages() {
-        return images;
-    }
-
-    public void setImages(List<EImages> images) {
-        this.images = images;
     }
 
     public String getParentId() {

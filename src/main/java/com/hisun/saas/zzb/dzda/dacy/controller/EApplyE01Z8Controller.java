@@ -83,7 +83,7 @@ public class EApplyE01Z8Controller extends BaseController {
         }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
-      //  orderBy.add(CommonOrder.asc("px"));
+        orderBy.add(CommonOrder.desc("createDate"));
         List<EApplyE01Z8> resultList = eApplyE01Z8Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<EApplyE01Z8> pager = new PagerVo<EApplyE01Z8>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);

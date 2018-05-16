@@ -23,7 +23,7 @@
         <div class="portlet-title" style="text-align: right">
 
             <button type="button" class="btn green" onclick="formSubmit(1)">授权查阅全部档案</button>
-            <button type="button" class="btn green" onclick="formSubmit()">授权查阅指定目录</button>
+            <button type="button" class="btn green" onclick="bfsq()">授权查阅指定目录</button>
             <button type="button" class="btn green" onclick="formSubmit(2)">拒绝</button>
             <a class="btn" href="javascript:cancel()"><i class="icon-undo"></i>返回</a>
 
@@ -31,6 +31,7 @@
     </div>
     <form action="" class="form-horizontal" id="form1" method="post">
         <input type="hidden" name="id" value="${entity.id }"/>
+        <input type="hidden" name="e01z1IdContent" id="e01z1IdContent" value=""/>
         <input type="hidden" name="auditingState" id="auditingState" value=""/>
         <input type="hidden" name="a38Id" value="${a38Id}" id="a38Id">
         <div class="row-fluid">
@@ -119,12 +120,14 @@
                 <div id="isDownloadGroup" class="control-group">
                     <label class="control-label">允许下载</label>
                     <div class="controls">
-										<span class=""><input type="radio" value="0"
-                                                              name="isDownload" >否</span>
-
-                                        <span class="checked"><input type="radio" checked
-                                                                         value="1" name="isDownload" >是</span>
-
+                        <label class="radio">
+                            <input type="radio" name="isDownload" value="1" />
+                            是
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="isDownload" value="0" checked />
+                            否
+                        </label>
                     </div>
                 </div>
             </div>
@@ -145,7 +148,7 @@
                 <div id="applyRemarkGroup" class="control-group">
                     <label class="control-label">查阅理由</label>
                     <div class="controls">
-                        <textarea  class="span8 m-wrap" name="applyRemark"  maxlength="128" id="applyRemark" >${entity.applyRemark }</textarea>
+                        <textarea  class="span8 m-wrap" name="applyRemark"  maxlength="128" id="applyRemark" style="resize: none;">${entity.applyRemark }</textarea>
                     </div>
                 </div>
             </div>
@@ -153,7 +156,7 @@
                 <div id="auditingRemarkGroup" class="control-group">
                     <label class="control-label">备注</label>
                     <div class="controls">
-                        <textarea class="span8 m-wrap" name="auditingRemark"  maxlength="128" id="auditingRemark">${entity.auditingRemark }</textarea>
+                        <textarea class="span8 m-wrap" name="auditingRemark"  maxlength="128" id="auditingRemark" style="resize: none;">${entity.auditingRemark }</textarea>
                     </div>
                 </div>
             </div>
@@ -183,8 +186,9 @@
                     <c:forEach items="${a38s}" var="vo">
                         <tr style="text-overflow:ellipsis;" id="table1">
 
-                            <TD width=100><span style="margin-top: 5px; margin-right: 10px; display: inline-block;">
-                                <input type="radio" value="${vo.id}" name = 'a38IdValue' <c:if test="${a38Id==vo.id}">checked</c:if>> </span>
+                            <TD width=100><label class="radio">
+                                <input type="radio" value="${vo.id}" name = 'a38IdValue' <c:if test="${a38Id==vo.id}">checked</c:if>>
+                            </label>
                             </TD>
                             <TD><c:out value="${vo.a0101}"></c:out></TD>
                             <TD ><c:out value="${vo.a0104Content}"></c:out> </TD>
@@ -208,7 +212,51 @@
     </center>
 </div>
 
+<div id="bfsqModal" class="modal container hide fade" tabindex="-1" data-width="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="bufsqTitle" >
+                    档案阅档申请
+                </h3>
+            </div>
+            <div class="modal-body" id="bfsqDiv">
+
+            </div>
+            </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
+    function bfsq(){
+        var a38 = $("#a38Id").val();
+        if(a38 == "" || a38 == null){
+            showTip("提示","请选择要查阅和人档案");
+            return;
+        }
+        $.ajax({
+            url : "${path }/zzb/dzda/cyshouquan/ajax/tobfShouquan",
+            type : "post",
+            data : {"a38Id":a38},
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "html",
+            success : function(html){
+                $('#bfsqDiv').html(html);
+                $('#bfsqModal').modal({
+                    keyboard: true
+                });
+            },
+            error : function(){
+                showTip("提示","出错了,请检查网络!",2000);
+            }
+        });
+    }
+
+
     function queding(){
         var  a38Id =  $('input[name="a38IdValue"]:checked').val();
         $("#a38Id").val(a38Id);

@@ -18,7 +18,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "e_popedom_e01z1_relation")
-public class EPopedomE01Z1Relation{
+public class EPopedomE01Z1Relation implements Serializable{
     private String id;
     private EApplyE01Z8 applyE01Z8;
     private E01Z1 e01z1;

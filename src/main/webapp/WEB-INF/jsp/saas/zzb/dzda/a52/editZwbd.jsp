@@ -34,7 +34,7 @@
                     <div id="a5204Group" class="control-group">
                         <label class="control-label"><span class="required">*</span>工作部门</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a5204" required maxlength="128" id="a5204" value="" />
+                            <input type="text" class="span10 m-wrap" name="a5204" required maxlength="128" id="a5204" value="" />
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div id="a5211Group" class="control-group">
                         <label class="control-label">职务名称</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a5211"  maxlength="128" id="a5211" value="" />
+                            <input type="text" class="span10 m-wrap" name="a5211"  maxlength="128" id="a5211" value="" />
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <div id="a5227InGroup" class="control-group">
                         <label class="control-label">任职时间</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a5227In"  maxlength="128" id="a5227In" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                            <input type="text" class="span10 m-wrap" name="a5227In"  maxlength="128" id="a5227In" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     <div id="a5227OutGroup" class="control-group">
                         <label class="control-label">免职时间</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a5227Out"  maxlength="128" id="a5227Out" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                            <input type="text" class="span10 m-wrap" name="a5227Out"  maxlength="128" id="a5227Out" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div id="a0245Group" class="control-group">
                         <label class="control-label">任职批准文号</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a0245"  maxlength="128" id="a0245" value="" />
+                            <input type="text" class="span10 m-wrap" name="a0245"  maxlength="128" id="a0245" value="" />
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <div id="a0267Group" class="control-group">
                         <label class="control-label">免职批准文号</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="a0267"  maxlength="128" id="a0267" value="" />
+                            <input type="text" class="span10 m-wrap" name="a0267"  maxlength="128" id="a0267" value="" />
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                     <div id="pxGroup" class="control-group">
                         <label class="control-label"><span class="required">*</span>职务变动顺序号</label>
                         <div class="controls">
-                            <input type="number" class="span8 m-wrap" name="px"  maxlength="128" id="px" value="" />
+                            <input type="number" class="span10 m-wrap" name="px"  maxlength="128" id="px" value="" />
                         </div>
                     </div>
                 </div>

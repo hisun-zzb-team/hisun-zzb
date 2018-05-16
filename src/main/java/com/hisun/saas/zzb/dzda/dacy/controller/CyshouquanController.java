@@ -161,6 +161,7 @@ public class CyshouquanController extends BaseController {
             if(vo.getAuditingState().equals("1")) entity.setPopedomStuffType("0");
             entity.setSqdwpzld(details.getUsername());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            entity.setA38(a38Service.getByPK(vo.getA38Id()));
             eApplyE01Z8Service.update(entity);
             model.put("success",true);
         }catch (Exception e){
@@ -193,6 +194,7 @@ public class CyshouquanController extends BaseController {
             entity.setPopedomStuffType("1");
             entity.setSqdwpzld(details.getUsername());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            entity.setA38(a38Service.getByPK(vo.getA38Id()));
             eApplyE01Z8Service.update(entity);
             model.put("success",true);
         }catch (Exception e){

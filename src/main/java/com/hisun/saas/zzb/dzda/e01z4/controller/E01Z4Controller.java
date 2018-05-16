@@ -120,6 +120,7 @@ public class E01Z4Controller extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         try {
+            int sort = this.e01Z4Service.getMaxSort(a38Id);
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z4 e01Z4 = new E01Z4();
             BeanUtils.copyProperties(e01Z4, vo);
@@ -128,6 +129,12 @@ public class E01Z4Controller extends BaseController {
                 e01Z4.setA38(this.a38Service.getByPK(a38Id));
             }
             EntityWrapper.wrapperSaveBaseProperties(e01Z4,userLoginDetails);
+
+            int newSort = e01Z4.getPx();
+            if(newSort<sort){
+                e01Z4Service.updateSortBeforSave(e01Z4,sort);
+            }
+
             e01Z4Service.save(e01Z4);
             map.put("success", true);
         } catch (Exception e) {

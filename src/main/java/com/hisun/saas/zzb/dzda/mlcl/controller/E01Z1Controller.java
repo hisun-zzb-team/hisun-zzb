@@ -201,6 +201,7 @@ public class E01Z1Controller extends BaseController {
         eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
         eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
         try {
+            int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeTreeCode);
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z1 e01Z1 = new E01Z1();
             BeanUtils.copyProperties(e01Z1, vo);
@@ -211,6 +212,10 @@ public class E01Z1Controller extends BaseController {
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
             }
             EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
+            int newSort = e01Z1.getE01Z104();
+            if(newSort<sort){
+                e01Z1Service.updateSortBeforSave(e01Z1,sort);
+            }
             e01Z1Service.save(e01Z1);
             map.put("success", true);
         } catch (Exception e) {

@@ -120,4 +120,19 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         }
         this.e01Z1Dao.executeNativeBulk(sql,query);
     }
+
+    public void updateSortBeforSave(E01Z1 e01z1, Integer oldSort)  {
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        CommonConditionQuery query = new CommonConditionQuery();
+        Integer newSort = e01z1.getE01Z104();
+        String sql="update e01z1 t set ";
+        sql+="t.e01z104=t.e01z104+1";
+
+        sql +=" where t.tenant_id = '" + details.getTenantId() + "'"
+                + " and t.a38_id = '" + e01z1.getA38().getId() + "'"
+                + " and t.e01z101b = '" + e01z1.getE01Z101B() + "'";
+
+        sql+=" and t.e01z104<"+oldSort+" and t.e01z104>="+newSort;
+        this.e01Z1Dao.executeNativeBulk(sql,query);
+    }
 }

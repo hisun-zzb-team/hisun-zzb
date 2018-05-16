@@ -88,7 +88,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                     }
                     for (E01Z1 e01Z1 : e01z1s) {
                         DecimalFormat decimalFormat = new DecimalFormat("00");
-                        String nameCode = decimalFormat.format(e01Z1.getE01Z107());//当前材料对应文件编号
+                        String nameCode = decimalFormat.format(e01Z1.getE01Z104());//当前材料对应文件编号
 
                         String tpNameCode = "";
                         if (tpFile.getName().lastIndexOf(".") != -1) {
@@ -161,7 +161,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                 }
 
                 DecimalFormat decimalFormat = new DecimalFormat("00");
-                String nameCode = decimalFormat.format(e01Z1.getE01Z107());//当前材料对应文件编号
+                String nameCode = decimalFormat.format(e01Z1.getE01Z104());//当前材料对应文件编号
                 String tpNameCode = "";
                 if (tpFile.getName().lastIndexOf(".") != -1) {
                     tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号

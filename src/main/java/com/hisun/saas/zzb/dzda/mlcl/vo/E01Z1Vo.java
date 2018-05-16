@@ -12,7 +12,7 @@ public class E01Z1Vo {
     private String e01Z111;
     private String e01Z111Remark;
     private String e01Z117;
-    private Integer e01Z107;
+//    private Integer e01Z107;
     private String eCatalogTypeId;
     private String e01Z101B;
     private String e01Z101A;
@@ -62,13 +62,13 @@ public class E01Z1Vo {
         this.e01Z117 = e01Z117;
     }
 
-    public Integer getE01Z107() {
-        return e01Z107;
-    }
-
-    public void setE01Z107(Integer e01Z107) {
-        this.e01Z107 = e01Z107;
-    }
+//    public Integer getE01Z107() {
+//        return e01Z107;
+//    }
+//
+//    public void setE01Z107(Integer e01Z107) {
+//        this.e01Z107 = e01Z107;
+//    }
 
     public String getECatalogTypeId() {
         return eCatalogTypeId;

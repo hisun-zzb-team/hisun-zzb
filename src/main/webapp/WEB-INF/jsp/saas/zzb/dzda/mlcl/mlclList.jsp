@@ -122,7 +122,7 @@
                         <th width="60">图片数</th>
                         <th width="60">加载图片</th>
                         <th width="40">浏览</th>
-                        <th width="60">扫描排序</th>
+                        <%--<th width="60">扫描排序</th>--%>
                         <th width="90">操作</th>
                     </thead>
                     <tbody>
@@ -135,7 +135,7 @@
                             <td>${vo.yjztps}</td>
                             <td><a href="javascript:jztp('${vo.id}','${vo.e01Z111}')" class="">加载</a></td>
                             <td><a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}')" class="">浏览</a></td>
-                            <td st>${vo.e01Z107}</td>
+                            <%--<td st>${vo.e01Z107}</td>--%>
                             <td>
                                 <a href="javascript:edit('${vo.id}')" class="">修改</a>|
                                 <a href="javascript:del('${vo.id}','${vo.e01Z111}')" class="">删除</a>

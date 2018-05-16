@@ -28,7 +28,7 @@ public class E01Z1  extends TenantEntity implements Serializable {
     private String e01Z111;//材料名称
     private String e01Z111Remark;//材料名称备注
     private String e01Z117;//材料制成时间
-    private Integer e01Z107;//扫描序号（单份材料的扫描序号）
+//    private Integer e01Z107;//扫描序号（单份材料的扫描序号）
     private String eCatalogTypeId;//材料类别主键
     private String e01Z101B;//材料类别字典代码
     private String e01Z101A;//材料类别字典内容
@@ -95,15 +95,15 @@ public class E01Z1  extends TenantEntity implements Serializable {
         this.e01Z117 = e01Z117;
     }
 
-    @Basic
-    @Column(name = "e01z107")
-    public Integer getE01Z107() {
-        return e01Z107;
-    }
-
-    public void setE01Z107(Integer e01Z107) {
-        this.e01Z107 = e01Z107;
-    }
+//    @Basic
+//    @Column(name = "e01z107")
+//    public Integer getE01Z107() {
+//        return e01Z107;
+//    }
+//
+//    public void setE01Z107(Integer e01Z107) {
+//        this.e01Z107 = e01Z107;
+//    }
 
     @Basic
     @Column(name = "e_catalog_type_id")
@@ -247,7 +247,6 @@ public class E01Z1  extends TenantEntity implements Serializable {
         if (e01Z111Remark != null ? !e01Z111Remark.equals(e01Z1.e01Z111Remark) : e01Z1.e01Z111Remark != null)
             return false;
         if (e01Z117 != null ? !e01Z117.equals(e01Z1.e01Z117) : e01Z1.e01Z117 != null) return false;
-        if (e01Z107 != null ? !e01Z107.equals(e01Z1.e01Z107) : e01Z1.e01Z107 != null) return false;
         if (e01Z101B != null ? !e01Z101B.equals(e01Z1.e01Z101B) : e01Z1.e01Z101B != null) return false;
         if (e01Z101A != null ? !e01Z101A.equals(e01Z1.e01Z101A) : e01Z1.e01Z101A != null) return false;
         if (e01Z114 != null ? !e01Z114.equals(e01Z1.e01Z114) : e01Z1.e01Z114 != null) return false;
@@ -269,7 +268,6 @@ public class E01Z1  extends TenantEntity implements Serializable {
         result = 31 * result + (e01Z111 != null ? e01Z111.hashCode() : 0);
         result = 31 * result + (e01Z111Remark != null ? e01Z111Remark.hashCode() : 0);
         result = 31 * result + (e01Z117 != null ? e01Z117.hashCode() : 0);
-        result = 31 * result + (e01Z107 != null ? e01Z107.hashCode() : 0);
         result = 31 * result + (e01Z101B != null ? e01Z101B.hashCode() : 0);
         result = 31 * result + (e01Z101A != null ? e01Z101A.hashCode() : 0);
         result = 31 * result + (e01Z114 != null ? e01Z114.hashCode() : 0);

@@ -32,8 +32,8 @@
                 </div>
             </div>
         </div>
-        <div class="portlet-body">
-            <table class="table table-striped table-bordered table-hover dataTable table-set">
+        <div class="portlet-body" style="overflow: auto;" id="zipFileDiv">
+            <table class="table table-striped table-bordered table-hover dataTable table-set"  >
                 <thead>
                 <tr>
                     <th>序号</th>
@@ -57,7 +57,7 @@
                     </h3>
                 </div>
                 <div class="portlet-body">
-                    <table class="table table-striped table-bordered table-hover dataTable table-set">
+                    <table class="table table-striped table-bordered table-hover dataTable table-set" style="margin-right: 15px;margin-left: 15px;max-height: 300px;overflow: auto;">
                         <thead>
                         <tr>
                             <th>序号</th>

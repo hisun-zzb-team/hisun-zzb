@@ -172,10 +172,8 @@ public class E01Z1Controller extends BaseController {
         vo.setE01Z101A(eCatalogTypeTreeName);
 
         int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeTreeCode);
-        int smSort = this.e01Z1Service.getMaxSmSort(a38Id,eCatalogTypeTreeCode);
 
         vo.setE01Z104(sort);
-        vo.setE01Z107(smSort);
         vo.setE01Z124(1);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
@@ -348,9 +346,9 @@ public class E01Z1Controller extends BaseController {
             try {
                 UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
                 int sort = this.e01Z1Service.getMaxSort(a38Id,vo.getE01Z101B());
-                int smSort = this.e01Z1Service.getMaxSmSort(a38Id,vo.getE01Z101B());
+//                int smSort = this.e01Z1Service.getMaxSmSort(a38Id,vo.getE01Z101B());
                 vo.setE01Z104(sort);
-                vo.setE01Z107(smSort);
+//                vo.setE01Z107(smSort);
 
                 E01Z1 e01Z1 = new E01Z1();
                 org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1, vo);

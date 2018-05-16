@@ -133,7 +133,7 @@ public class DatpDealController extends BaseController {
                 childTreeNode.setDescription(title);
 
                 DecimalFormat decimalFormat = new DecimalFormat("00");
-                childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z107()));
+                childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z104()));
                 childTreeNode.setpId(e01Z1.getECatalogTypeId());
                 childTreeNode.setNodeType("cl");
                 treeNodes.add(childTreeNode);
@@ -168,7 +168,7 @@ public class DatpDealController extends BaseController {
                 mlclAggregateVo = new MlclAggregateVo();
                 mlclAggregateVo.setDirCode(e01Z1.getE01Z101B());
                 DecimalFormat decimalFormat = new DecimalFormat("00");
-                mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z107()));
+                mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z104()));
                 mlclAggregateVo.setCount(e01Z1.getE01Z114());
                 mlclAggregateVo.setFileName(e01Z1.getE01Z111());
                 mlclAggregateVos.add(mlclAggregateVo);
@@ -197,7 +197,7 @@ public class DatpDealController extends BaseController {
             MlclAggregateVo mlclAggregateVo = new MlclAggregateVo();
             mlclAggregateVo.setDirCode(e01Z1.getE01Z101B());
             DecimalFormat decimalFormat = new DecimalFormat("00");
-            mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z107()));
+            mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z104()));
             mlclAggregateVo.setCount(e01Z1.getE01Z114());
             mlclAggregateVo.setFileName(e01Z1.getE01Z111());
             mlclAggregateVos.add(mlclAggregateVo);

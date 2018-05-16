@@ -119,24 +119,30 @@
 					</div>
 				</div>
 				<div class="span6 ">
-					<div id="e01Z107Group" class="control-group">
-						<label class="control-label">扫描排序</label>
-						<div class="controls">
-							<input type="text" class="span10 m-wrap" readonly name="e01Z107" required maxlength="128" id="e01Z107" value="${vo.e01Z107}" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span11 ">
 					<div id="e01Z231Group" class="control-group">
 						<label class="control-label">备注</label>
 						<div class="controls">
 							<textarea id="e01Z231" name="e01Z231" class="span12 m-wrap">${vo.e01Z231}</textarea>
 						</div>
 					</div>
+					<%--<div id="e01Z107Group" class="control-group">--%>
+						<%--<label class="control-label">扫描排序</label>--%>
+						<%--<div class="controls">--%>
+							<%--<input type="text" class="span10 m-wrap" readonly name="e01Z107" required maxlength="128" id="e01Z107" value="${vo.e01Z107}" />--%>
+						<%--</div>--%>
+					<%--</div>--%>
 				</div>
 			</div>
+			<%--<div class="row-fluid">--%>
+				<%--<div class="span11 ">--%>
+					<%--<div id="e01Z231Group" class="control-group">--%>
+						<%--<label class="control-label">备注</label>--%>
+						<%--<div class="controls">--%>
+							<%--<textarea id="e01Z231" name="e01Z231" class="span12 m-wrap">${vo.e01Z231}</textarea>--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 
 			<div class="row-fluid">
 				<center>

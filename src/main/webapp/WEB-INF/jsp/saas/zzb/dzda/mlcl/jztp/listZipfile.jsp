@@ -267,7 +267,7 @@
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
+                                $checkResultJson.push({"message": "材料:[" + fileJson.fileName + "] 为多余材料,请删除后再上传!"});
                             }
                         });
                     }

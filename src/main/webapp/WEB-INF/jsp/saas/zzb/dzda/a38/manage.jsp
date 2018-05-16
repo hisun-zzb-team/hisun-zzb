@@ -371,7 +371,7 @@
 				url : "${path }/zzb/dzda/a38/update/Sjzt",
 				type : "post",
 				data : {
-					"a38Id":"${id}",
+					"a38Ids":"${id}",
 					"sjzt":sjzt
 				},
 				headers:{

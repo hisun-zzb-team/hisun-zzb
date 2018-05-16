@@ -270,24 +270,28 @@ public class A38Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/update/Sjzt")
-    public @ResponseBody Map<String,Object> updateSjzt(String a38Id,String sjzt) throws GenericException{
+    public @ResponseBody Map<String,Object> updateSjzt(String a38Ids,String sjzt) throws GenericException{
         Map<String,Object> returnMap = new HashMap<String,Object>();
-        if(StringUtils.isBlank(a38Id)){
+        if(StringUtils.isBlank(a38Ids)){
             returnMap.put("message","主键为空");
             returnMap.put("code",-1);
             return returnMap;
         }
-        A38 entity = a38Service.getByPK(a38Id);
-        if(entity==null){
-            returnMap.put("message","数据不存在");
-            returnMap.put("code",-1);
-            return returnMap;
-        }
         try{
-            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
-            entity.setSjzt(sjzt);
-            a38Service.update(entity);
+            String[] a38IdArr = a38Ids.split(",");
+            for(String id : a38IdArr) {
+                A38 entity = a38Service.getByPK(id);
+                if (entity == null) {
+                    returnMap.put("message", "数据不存在");
+                    returnMap.put("code", -1);
+                    return returnMap;
+                }
+
+                UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+                EntityWrapper.wrapperUpdateBaseProperties(entity, details);
+                entity.setSjzt(sjzt);
+                a38Service.update(entity);
+            }
             returnMap.put("code",1);
         }catch (Exception e){
             logger.error(e,e);

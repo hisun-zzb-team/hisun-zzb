@@ -133,7 +133,7 @@
                             <td>${vo.e01Z117} </td>
                             <td>${vo.e01Z114}</td>
                             <td>${vo.yjztps}</td>
-                            <td><a href="javascript:jztp('${vo.id}')" class="">加载</a></td>
+                            <td><a href="javascript:jztp('${vo.id}','${vo.e01Z111}')" class="">加载</a></td>
                             <td><a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}')" class="">浏览</a></td>
                             <td st>${vo.e01Z107}</td>
                             <td>
@@ -164,6 +164,20 @@
                 </h3>
             </div>
             <div class="modal-body" id="jztpPage">
+            </div>
+        </div>
+    </div>
+</div>
+<div id="jztpE01z1Modal" class="modal container hide fade" tabindex="-1" data-width="520">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="e01z1Title" >
+                    加载图片
+                </h3>
+            </div>
+            <div class="modal-body" id="jztpE01z1Page">
             </div>
         </div>
     </div>
@@ -356,7 +370,7 @@
         });
     }
 
-    function jztp(id){
+    function jztp(id,e01Z111){
         var divHeight = $(window).height()-300;
         var divWidth = 800;
         $('#jztpModal').attr("data-width",divWidth);
@@ -370,6 +384,7 @@
             },
             dataType: "html",
             success: function (html) {
+                $('#e01z1Title').html("加载“"+e01Z111+"”图片");
                 $('#jztpPage').html(html);
                 $('#jztpModal').modal({
                     keyboard: true
@@ -384,8 +399,8 @@
     $("#jztpButton").click(function(){
         var divHeight = $(window).height()-100;
         var divWidth = $(window).width()-20;
-        $('#jztpModal').attr("data-width",divWidth);
-        $('#jztpModal').attr("data-height",divHeight);
+        $('#jztpE01z1Modal').attr("data-width",divWidth);
+        $('#jztpE01z1Modal').attr("data-height",divHeight);
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/tpcl/ajax/index/${a38Id}",
             type: "post",
@@ -395,8 +410,8 @@
             },
             dataType: "html",
             success: function (html) {
-                $('#jztpPage').html(html);
-                $('#jztpModal').modal({
+                $('#jztpE01z1Page').html(html);
+                $('#jztpE01z1Modal').modal({
                     keyboard: true
                 });
             },
@@ -408,23 +423,32 @@
 
 
     $("#xztpButton").click(function(){
-        $.ajax({
-            url: "${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",
-            type: "post",
-            data: {},
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType: "json",
-            success: function (json) {
-                if(json.success){
-                    showTip("提示", json.message, 1500);
-                }
-            },
-            error: function () {
+        actionByConfirm1('',"${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",null,function(json){
+            if(json.success){
+                showTip("提示", json.message, 1500);
+                mlLoad();
+            }else{
                 showTip("提示", "出错了请联系管理员", 1500);
             }
-        });
+        },"卸载已加载的图片")
+        <%--$.ajax({--%>
+            <%--url: "${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",--%>
+            <%--type: "post",--%>
+            <%--data: {},--%>
+            <%--headers: {--%>
+                <%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
+            <%--},--%>
+            <%--dataType: "json",--%>
+            <%--success: function (json) {--%>
+                <%--if(json.success){--%>
+                    <%--mlLoad();--%>
+                    <%--showTip("提示", json.message, 1500);--%>
+                <%--}--%>
+            <%--},--%>
+            <%--error: function () {--%>
+                <%--showTip("提示", "出错了请联系管理员", 1500);--%>
+            <%--}--%>
+        <%--});--%>
     });
 
     $("#downloadButton").click(function(){

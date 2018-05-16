@@ -47,7 +47,7 @@
 
 <div class="portlet-title">
 	<div class="caption">姓名：${a0101}</div>
-	<div class="relationbetTop_but">
+	<div class="clearfix fr">
 		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
 		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库 </button>
 		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
@@ -67,7 +67,7 @@
 			<%--</ul>--%>
 		<%--</div>--%>
 		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
-		<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>&nbsp;
+		<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 			下载<i class="icon-angle-down"></i>

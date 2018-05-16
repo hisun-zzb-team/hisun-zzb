@@ -207,6 +207,9 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         List<E01Z1> e01Z1s = a38.getE01z1s();
         for (E01Z1 e01Z1 : e01Z1s) {
             this.deleteEImagesByE01ez1(e01Z1);
+            e01Z1.setYjztps(0);
+            e01Z1.setA38(a38);
+            this.e01Z1Dao.update(e01Z1);
         }
     }
 

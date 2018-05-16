@@ -65,10 +65,10 @@
 								</div>
 								<div class="span6 ">
 									<div id="e01Z114Group" class="control-group">
-										<label class="control-label">材料页数</label>
+										<label class="control-label"><span class="required">*</span>材料页数</label>
 										<div class="controls">
 
-											<input type="text" class="span10 m-wrap" name="e01Z114" number="true" maxlength="128" id="e01Z114" value="" />
+											<input type="text" class="span10 m-wrap" name="e01Z114" number="true" maxlength="128" id="e01Z114" value="" required/>
 
 										</div>
 									</div>
@@ -79,7 +79,7 @@
 									<div id="e01Z124Group" class="control-group">
 										<label class="control-label">材料份数</label>
 										<div class="controls">
-											<input type="text" class="span10 m-wrap" name="e01Z124" number="true" maxlength="128" id="e01Z124" value="" />
+											<input type="text" class="span10 m-wrap" name="e01Z124" number="true" maxlength="128" id="e01Z124" value="1" />
 										</div>
 									</div>
 								</div>

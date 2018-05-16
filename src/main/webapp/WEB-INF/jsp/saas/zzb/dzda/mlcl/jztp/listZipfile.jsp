@@ -76,6 +76,17 @@
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
     var myLoading = new MyLoading('${path}', {zindex: 999999});
+    $(function(){
+        changeZipFileDivHeight();
+        //当浏览器大小改变的时候,要重新计算
+        $(window).resize(function(){
+            changeZipFileDivHeight();
+        })
+    });
+    function changeZipFileDivHeight(){
+        var divHeight = $(window).height()-190;
+        $("#zipFileDiv").css('height',divHeight);
+    }
     $("#selectFile").click(function () {
         var currentNodeId = $("#currentNodeId").val();
         var currentNodeName = $("#currentNodeName").val();
@@ -256,7 +267,7 @@
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + fileJson.fileName + "] 为多余材料,请删除后再上传!"});
+                                $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
                             }
                         });
                     }

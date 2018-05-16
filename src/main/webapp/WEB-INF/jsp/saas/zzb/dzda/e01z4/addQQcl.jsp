@@ -81,7 +81,8 @@
 
 						<div class="control-group">
 							<div class="controls mt10">
-								<button id="submitbut" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
+
+								<button id="submitbut" style="margin-left:205px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
 
 								<a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 关闭</a>
 							</div>

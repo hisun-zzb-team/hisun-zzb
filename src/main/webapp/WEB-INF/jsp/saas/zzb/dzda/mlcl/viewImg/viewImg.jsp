@@ -5,7 +5,7 @@
 
 			<div id="viewDiv" style="overflow: auto;margin: 0px;">
 				<c:if test="${empty e01z1Id}">
-					<table style="width: 100%">
+					<table style="width: 100%;height: 100%;">
 						<tr>
 							<td style="text-align:center;width: 100%">
 								<font size="5"><b>请 点 击 左 侧 目 录 下 的 材 料 查 看 档 案 图 片 </b></font>
@@ -15,10 +15,10 @@
 				</c:if>
 				<c:if test="${not empty e01z1Id}">
 					<c:if test="${imagesSize==0}">
-						<table style="width: 100%">
-							<tr>
-								<td style="text-align:center;width: 100%">
-									<font size="5"><b>此 份 材 料 暂 时 未 加 载 图 片 </b></font>
+						<table style="width: 100%;height: 100%;">
+							<tr >
+								<td style="text-align:center;width: 100%;">
+									<font size="5"><b>此 份 材 料 未 加 载 图 片 </b></font>
 								</td>
 							</tr>
 						</table>

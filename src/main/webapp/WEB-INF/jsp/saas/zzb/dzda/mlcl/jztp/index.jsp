@@ -32,21 +32,22 @@
 				</div>
 			</div>
 		</div>
-		<div class="main_right" id="jztpList" ></div>
+		<div class="main_right" id="jztpList"></div>
 	</div>
 </div>
 <script type="text/javascript" src="${path}/js/common/est-validate-init.js"></script>
 <script type="text/javascript" src="${path}/js/common/validate-message.js"></script>
 <script type="text/javascript">
 	$(function(){
-		changeTreeDivHeight();
+		changezjtpTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
 		$(window).resize(function(){
-			changeTreeDivHeight();
+			changezjtpTreeDivHeight();
 		})
 	});
-	function changeTreeDivHeight(){
+	function changezjtpTreeDivHeight(){
 		var divHeight = $(window).height()-100;
+
 		$("#a38MlclTree_div").css('height',divHeight);
 	}
 

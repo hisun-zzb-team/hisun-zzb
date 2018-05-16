@@ -116,7 +116,7 @@ public class DatpDealController extends BaseController {
             for (E01Z1 e01Z1 : e01Z1s) {
                 String text = e01Z1.getE01Z111();
                 String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
-                int imagesCount = e01Z1.getE01Z114();
+                int imagesCount = e01Z1.getE01Z114()==null?0:e01Z1.getE01Z114();
                 String title = e01Z1.getE01Z111();
 
                 if (!e01z117.equals("")) {

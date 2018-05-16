@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <div class="portlet-body">
+        <div class="portlet-body"  style="overflow: auto;" id="zipFileDiv">
             <table class="table table-striped table-bordered table-hover dataTable table-set">
                 <thead>
                 <tr>
@@ -47,7 +47,7 @@
             </table>
         </div>
     </div>
-    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="800">
+    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="800" style="max-height: 300px;overflow: auto;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,7 +57,7 @@
                     </h3>
                 </div>
                 <div class="portlet-body">
-                    <table class="table table-striped table-bordered table-hover dataTable table-set">
+                    <table class="table table-striped table-bordered table-hover dataTable table-set" style="margin-right: 15px;margin-left: 15px;">
                         <thead>
                         <tr>
                             <th>序号</th>
@@ -76,6 +76,17 @@
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
     var myLoading = new MyLoading('${path}', {zindex: 999999});
+    $(function(){
+        changeZipFileDivHeight();
+        //当浏览器大小改变的时候,要重新计算
+        $(window).resize(function(){
+            changeZipFileDivHeight();
+        })
+    });
+    function changeZipFileDivHeight(){
+        var divHeight = $(window).height()-190;
+        $("#zipFileDiv").css('height',divHeight);
+    }
     $("#selectFile").click(function () {
         var currentNodeId = $("#currentNodeId").val();
         var currentNodeName = $("#currentNodeName").val();

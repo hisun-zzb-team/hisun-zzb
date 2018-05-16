@@ -34,7 +34,7 @@
                     <div id="e01Z204AGroup" class="control-group">
                         <label class="control-label"><span class="required">*</span>来件单位名称</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z204A" required maxlength="128" id="e01Z204A" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z204A" required maxlength="128" id="e01Z204A" value="" />
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div id="e01Z204BGroup" class="control-group">
                         <label class="control-label">来件单位代码</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z204B"  maxlength="128" id="e01Z204B" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z204B"  maxlength="128" id="e01Z204B" value="" />
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div id="e01Z201Group" class="control-group">
                     <label class="control-label">收件日期：</label>
                     <div class="controls">
-                        <input type="text" class="span8 m-wrap" name="e01Z201"  maxlength="128" id="e01Z201" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                        <input type="text" class="span10 m-wrap" name="e01Z201"  maxlength="128" id="e01Z201" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <div id="e01Z244Group" class="control-group">
                     <label class="control-label">是否已处理标识：</label>
                     <div class="controls">
-                        <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span8"
+                        <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10"
                                              radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div id="e01Z207Group" class="control-group">
                         <label class="control-label">接收人：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z207"  maxlength="128" id="e01Z207" value=""/>
+                            <input type="text" class="span10 m-wrap" name="e01Z207"  maxlength="128" id="e01Z207" value=""/>
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                         <label class="control-label">材料类号：</label>
                         <div class="controls" >
                         <Tree:tree id="parentId" valueName="e01Z211" treeUrl="${path}/sys/admin/dzda/catalogType/cljs/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                   submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span8 m-wrap"
+                                   submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span10 m-wrap"
                                     />
                             <%--<input type="hidden" id="currentNodeName" name="e01Z211" value="${currentNodeName}"/>--%>
                         </div>
@@ -92,7 +92,7 @@
                     <div id="e01Z217Group" class="control-group">
                         <label class="control-label">材料编号：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z217"  maxlength="128" id="e01Z217" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z217"  maxlength="128" id="e01Z217" value="" />
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                     <div id="e01Z221AGroup" class="control-group">
                         <label class="control-label">材料名称：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z221A"  maxlength="128" id="e01Z221A" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z221A"  maxlength="128" id="e01Z221A" value="" />
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                     <div id="e01Z221BGroup" class="control-group">
                         <label class="control-label">材料名称代码：</label>
                         <div class="controls">
-                            <input type="text"  class="span8 m-wrap" name="e01Z221B"  maxlength="128" id="e01Z221B" value="" />
+                            <input type="text"  class="span10 m-wrap" name="e01Z221B"  maxlength="128" id="e01Z221B" value="" />
                         </div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                     <div id="e01Z214Group" class="control-group">
                         <label class="control-label"><span class="required">*</span>材料接收顺序号</label>
                         <div class="controls">
-                            <input type="text" number="true"  required maxlength="3" class="span8 m-wrap" name="e01Z214"  maxlength="128" id="e01Z214" value="${sort}" />
+                            <input type="text" number="true"  required maxlength="3" class="span10 m-wrap" name="e01Z214"  maxlength="128" id="e01Z214" value="${sort}" />
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
                     <div id="e01Z224Group" class="control-group">
                         <label class="control-label">页数：</label>
                         <div class="controls">
-                            <input type="text" number="true" class="span8 m-wrap" name="e01Z224"  maxlength="128" id="e01Z224" value="" />
+                            <input type="text" number="true" class="span10 m-wrap" name="e01Z224"  maxlength="128" id="e01Z224" value="" />
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                     <div id="e01Z227Group" class="control-group">
                         <label class="control-label">材料制成日期：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z227"  maxlength="128" id="e01Z227" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                            <input type="text" class="span10 m-wrap" name="e01Z227"  maxlength="128" id="e01Z227" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                     <div id="e01Z231Group" class="control-group">
                         <label class="control-label">备注：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z231"  maxlength="128" id="e01Z231" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z231"  maxlength="128" id="e01Z231" value="" />
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                     <div id="e01Z234Group" class="control-group">
                         <label class="control-label">份数：</label>
                         <div class="controls">
-                            <input type="text" number="true"   class="span8 m-wrap" name="e01Z234"  maxlength="128" id="e01Z234" value="" />
+                            <input type="text" number="true"   class="span10 m-wrap" name="e01Z234"  maxlength="128" id="e01Z234" value="" />
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
                         <div id="e01Z237Group" class="control-group">
                             <label class="control-label">材料处理标识：</label>
                             <div class="controls">
-                                <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content" textClass="m-wrap span8" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
+                                <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content" textClass="m-wrap span10" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
                             </div>
                         </div>
                 </div>
@@ -172,7 +172,7 @@
                     <div id="e01Z241Group" class="control-group">
                         <label class="control-label">零散材料序号：</label>
                         <div class="controls">
-                            <input type="text" class="span8 m-wrap" name="e01Z241"  maxlength="128" id="e01Z241" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z241"  maxlength="128" id="e01Z241" value="" />
                         </div>
                     </div>
                 </div>

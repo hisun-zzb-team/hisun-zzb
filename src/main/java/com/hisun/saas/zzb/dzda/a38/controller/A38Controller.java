@@ -140,91 +140,33 @@ public class A38Controller extends BaseController {
         model.put("pager",pager);
         return new ModelAndView("saas/zzb/dzda/a38/shList",model);
     }
+    /**
+     *
+     * @param listType shList为审核档案
+     * @return
+     */
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/editManage")
-    public ModelAndView editManage(String id){
+    public ModelAndView editManage(String id,String listType){
         Map<String, Object> map = Maps.newHashMap();
         A38 a38 = a38Service.getByPK(id);
         map.put("id",id);
         map.put("a0101",a38.getA0101());
+        map.put("listType",listType);
         return new ModelAndView("saas/zzb/dzda/a38/manage",map);
     }
 
+    /**
+     *
+     * @param listType shList为审核档案
+     * @return
+     */
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/add")
-    public ModelAndView add(){
+    public ModelAndView add(String listType){
         Map<String, Object> map = Maps.newHashMap();
+        map.put("listType",listType);
         return new ModelAndView("saas/zzb/dzda/a38/add",map);
-    }
-
-    @RequiresPermissions("a38:*")
-    @RequestMapping(value = "/plAddMlcl")
-    public ModelAndView plAddMlcl(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
-        Map<String, Object> map = Maps.newHashMap();
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
-        Long total = a38Service.count(query);
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.desc("smxh"));
-        orderBy.add(CommonOrder.asc("a0101"));
-        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
-        map.put("pager",pager);
-
-        return new ModelAndView("saas/zzb/dzda/a38/plAddMlcl",map);
-    }
-
-    @RequiresPermissions("a38:*")
-    @RequestMapping(value = "/ajax/plGetA38List")
-    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
-        Map<String, Object> map = Maps.newHashMap();
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
-        Long total = a38Service.count(query);
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.desc("smxh"));
-        orderBy.add(CommonOrder.asc("a0101"));
-        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
-        map.put("pager",pager);
-        map.put("list",resultList);
-
-        return new ModelAndView("saas/zzb/dzda/a38/plAddMlclTable",map);
-    }
-
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "批量增加材料:${vo.a38Ids}")
-    @RequiresPermissions("a38:*")
-    @RequestMapping(value = "/plSaveMlcl", method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> plSaveMlcl(E01Z1Vo vo, HttpServletRequest request) throws GenericException {
-        Map<String, Object> map = new HashMap<String, Object>();
-        String a38IdStr = com.hisun.util.StringUtils.trimNull2Empty(request.getParameter("a38Ids"));
-        String[] a38Ids=a38IdStr.split(",");
-        StringBuffer errorId = new StringBuffer();
-
-        for(String a38Id : a38Ids){
-            try {
-                UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-                int sort = this.e01Z1Service.getMaxSort(a38Id,vo.getE01Z101B());
-                int smSort = this.e01Z1Service.getMaxSmSort(a38Id,vo.getE01Z101B());
-                vo.setE01Z104(sort);
-                vo.setE01Z107(smSort);
-                E01Z1 e01Z1 = new E01Z1();
-                org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1, vo);
-                if(com.hisun.util.StringUtils.isNotBlank(a38Id)){
-                    e01Z1.setA38(this.a38Service.getByPK(a38Id));
-                }
-                EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
-                e01Z1Service.save(e01Z1);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                logger.error(e);
-                errorId.append(a38Id).append(",");
-                throw new GenericException(e);
-            }
-        }
-        map.put("success", true);
-        return map;
     }
 
     @RequestMapping(value = "/smxh/check")
@@ -318,6 +260,38 @@ public class A38Controller extends BaseController {
             BeanUtils.copyProperties(vo, entity);
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             a38Service.update(entity);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+        }
+        return returnMap;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/update/Sjzt")
+    public @ResponseBody Map<String,Object> updateSjzt(String a38Ids,String sjzt) throws GenericException{
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        if(StringUtils.isBlank(a38Ids)){
+            returnMap.put("message","主键为空");
+            returnMap.put("code",-1);
+            return returnMap;
+        }
+        try{
+            String[] a38IdArr = a38Ids.split(",");
+            for(String id : a38IdArr) {
+                A38 entity = a38Service.getByPK(id);
+                if (entity == null) {
+                    returnMap.put("message", "数据不存在");
+                    returnMap.put("code", -1);
+                    return returnMap;
+                }
+
+                UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+                EntityWrapper.wrapperUpdateBaseProperties(entity, details);
+                entity.setSjzt(sjzt);
+                a38Service.update(entity);
+            }
             returnMap.put("code",1);
         }catch (Exception e){
             logger.error(e,e);

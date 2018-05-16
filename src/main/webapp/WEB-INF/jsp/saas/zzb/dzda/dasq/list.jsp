@@ -57,6 +57,7 @@
         </div>
     </div>
 </div>
+
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
@@ -113,7 +114,8 @@
                         <th width=70>查阅人</th>
                         <th  width=120>查阅时间</th>
                         <th width=120>申请内容</th>
-                        <th>查阅情况</th>
+                        <th width=250>查阅情况</th>
+                        <th  width=120>申请时间</th>
                         <th width=70>审核状态</th>
                         <th width="100">操作</th>
                     </thead>
@@ -124,7 +126,10 @@
                             <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.accreditDate}"></c:out> </TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out ></TD>
-                            <TD width="10%">查阅情况</TD>
+                            <TD width="10%"><a>查阅情况</a></TD>
+                            <TD width="10%">
+                                <fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>
+                             </TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
@@ -191,7 +196,6 @@
         document.searchForm.submit();
     }
     function shouhuiQx(id){
-        alert(id)
         actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id,null,function(json){
             if(json.success){
                 showTip("提示","操作成功");

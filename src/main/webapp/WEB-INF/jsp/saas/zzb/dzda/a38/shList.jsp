@@ -25,59 +25,19 @@
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
 				<div class="portlet-title">
-					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
+					<div class="caption">待审档案：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
-
-						<div class="btn-group" style="padding-bottom: 0px">
-							<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
-								添加<i class="icon-angle-down"></i>
-							</a>
-							<ul class="dropdown-menu">
-								<li >
-									<a href="${path}/zzb/dzda/a38/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">添加档案</a>
-								</li>
-								<li >
-									<a href="${path}/zzb/dzda/e01z1/plAddMlcl?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">批量添加材料</a>
-								</li>
-							</ul>
-						</div>
-
-						<a  class="btn green" href="#">
-							高级查询
+						<a id="sample_editable_1_new" class="btn green" href="${path}/zzb/dzda/a38/add?listType=shList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+							<i class="icon-plus"></i>添加
 						</a>
-						<div class="btn-group" style="padding-bottom: 0px">
-							<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
-								导入<i class="icon-angle-down"></i>
-							</a>
-							<ul class="dropdown-menu">
-								<li >
-									<a onclick="unloadFile()">导入excel</a>
-								</li>
-								<li >
-									<a onclick="unloadFile()">导入Lrmx</a>
-								</li>
-								<li >
-									<a onclick="unloadFile()">导入Lrm</a>
-								</li>
-								<li >
-									<a onclick="unloadFile()">导入HZB</a>
-								</li>
-								<li >
-									<a onclick="unloadFile()">导入7z</a>
-								</li>
-							</ul>
-						</div>
-						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
-						<a class="btn green" href="javascript:fileDown('list')">
-							输出
+						<a class="btn green" href="javascript:ruku()">
+							<i class="icon-ok"></i>入库
 						</a>
-
 					</div>
-
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/list" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/shList" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -116,6 +76,11 @@
 						<thead>
 
 						<TR height=28>
+							<th width=10>
+								<label class="checkbox">
+									<input type="checkbox" id="allCheck" onchange="dataAllcheckChange()"/>
+								</label>
+							</th>
 							<th width=60>档案编号</th>
 							<th width=60>扫描序号</th>
 							<th width=70>姓名</th>
@@ -131,9 +96,14 @@
 						<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
 								<tr style="text-overflow:ellipsis;">
+									<TD  style="text-align: center">
+										<label class="checkbox">
+											<input type="checkbox"  value="${vo.id }" name="dataIds"/>
+										</label>
+									</TD>
 									<TD  style="text-align: center"><c:out value="${vo.dabh}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.smxh}"></c:out></TD>
-									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }"><c:out value="${vo.a0101}"></c:out></a> </TD>
+									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList"><c:out value="${vo.a0101}"></c:out></a> </TD>
 									<TD  style="text-align: center"><c:out value="${vo.a0104Content}"></c:out></TD>
 									<TD ><c:out value="${vo.a0107}"></c:out></TD>
 									<TD><c:out value="${vo.a0157}"></c:out></TD>
@@ -160,22 +130,17 @@
 
 <%-- END PAGE CONTENT--%>
 </div>
-
+<script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
+
+	var myLoading = new MyLoading("${path}",{zindex : 11111});
 	(function(){
 		App.init();
 
-		$("#btn-browseTemplate").bind("change",function(evt){
-			if($(this).val()){
-				ajaxSubmit();
-			}
-			$(this).val('');
-		});
+
 
 	})();
-	function unloadFile(){
-		document.getElementById("btn-unloadFile").click();
-	}
+
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
@@ -187,42 +152,7 @@
 	}
 
 
-	var view = function(id){
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/view",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data:{
-				'id':id,
-				'b01Id':"${b01Id}"
-			},
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
-	}
-	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
-			if (data.success == true) {
-				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
-			}else{
-				showTip("提示", data.message, 2000);
-			}
-		});
-	};
-	function uploadFile(fileName){
-		document.getElementById("btn-"+fileName).click();
-	}
+
 	function clearData(){
 		$("#dabhQuery").val('');
 		$("#smxhQuery").val('');
@@ -233,32 +163,65 @@
 		$("#daztContentQuery").val('');
 		document.searchForm.submit();
 	}
-	function exportGbrmsp(){
-		$.cloudAjax({
-			path : '${path}',
-			url : "${path }/zzb/app/console/asetA01/ajax/exportGbrmsp",
-			type : "post",
-			data : $("#form1").serialize(),
-			dataType : "json",
-			success : function(data){
-				if(data.success == true){
-					showTip("提示","生成干部任免审批表成功!",2000);
-					//setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
+	function dataAllcheckChange(){
+		var allCheck = document.getElementById("allCheck");
+		var checks = document.getElementsByName("dataIds");
+		if(checks){
+			for(var i=0;i<checks.length;i++) {
+				checks[i].checked = allCheck.checked;
+				if (allCheck.checked == true) {
+					checks[i].parentNode.className = "checked";
 				}else{
-					showTip("提示", "生成干部任免审批表失败!", 2000);
+					checks[i].parentNode.className = "";
+				}
+			}
+		}
+	}
+	function ruku(){
+		var checks = document.getElementsByName("dataIds");
+		var checkedIds = "";
+		var checkedCount = 0;
+		for(var i=0;i<checks.length;i++){
+			if(checks[i].checked==true){
+				checkedCount ++;
+				if(checkedIds==""){
+					checkedIds = checks[i].value;
+				}
+			}
+		}
+		if(checkedCount == 0){
+			showTip("提示","请选择要入库的干部",2000);
+			return;
+		}
+		$.ajax({
+			url : "${path }/zzb/dzda/a38/update/Sjzt",
+			type : "post",
+			data : {
+				"a38Ids":checkedIds,
+				"sjzt":'1'
+			},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "json",
+			success : function(json){
+				if(json.code==1){
+					myLoading.hide();
+					showTip("提示", "成功入库", 1300);
+					setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1300);
+
+				}else{
+					myLoading.hide();
+					showTip("提示", json.message, 2000);
+					return false;
 				}
 			},
 			error : function(){
-				showTip("提示","出错了请联系管理员",2000);
+				showTip("提示","出错了,请检查网络!",2000);
+				myLoading.hide();
+				return false;
 			}
 		});
-	}
-	function openGzzzb(){
-		var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-		window.open(url);
-	}
-	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
 	}
 </script>
 </body>

@@ -126,21 +126,23 @@
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span6 ">
+				<div class="span11 ">
 					<div id="e01Z231Group" class="control-group">
 						<label class="control-label">备注</label>
 						<div class="controls">
-							<textarea id="e01Z231" name="e01Z231" class="span10 m-wrap">${vo.e01Z231}</textarea>
+							<textarea id="e01Z231" name="e01Z231" class="span12 m-wrap">${vo.e01Z231}</textarea>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="row-fluid">
-				<div class="span6"  style="text-align: center">
-					<button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
-					<a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
-				</div>
+				<center>
+					<div style="margin:auto;">
+						<button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
+						<a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
+					</div>
+				</center>
 			</div>
 			<%--<tr>
 				<td colspan="2" style="text-align: center">

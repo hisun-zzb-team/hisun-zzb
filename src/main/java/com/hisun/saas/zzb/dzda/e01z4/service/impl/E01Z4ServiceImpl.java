@@ -60,10 +60,10 @@ public class E01Z4ServiceImpl extends BaseServiceImpl<E01Z4,String>
         this.e01Z4Dao.update(e01z4);
     }
 
-    private void updateSort(E01Z4 e01z1, Integer oldSort)  {
+    private void updateSort(E01Z4 e01z4, Integer oldSort)  {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         CommonConditionQuery query = new CommonConditionQuery();
-        Integer newSort = e01z1.getPx();
+        Integer newSort = e01z4.getPx();
         String sql="update e01z4 t set ";
         if(newSort>oldSort){
             sql+="t.px=t.px-1";
@@ -71,8 +71,7 @@ public class E01Z4ServiceImpl extends BaseServiceImpl<E01Z4,String>
             sql+="t.px=t.px+1";
         }
 
-        sql +=" where t.tenant_id = '" + details.getTenantId() + "'"
-                + " and t.a38_id = '" + e01z1.getA38().getId() + "'";
+        sql +=" where t.a38_id = '" + e01z4.getA38().getId() + "'";
 
         if(newSort>oldSort){
             sql+=" and t.px<="+newSort+" and t.px >"+oldSort;
@@ -83,6 +82,19 @@ public class E01Z4ServiceImpl extends BaseServiceImpl<E01Z4,String>
                 sql+=" and t.px<"+oldSort+" and t.px>="+newSort;
             }
         }
+        this.e01Z4Dao.executeNativeBulk(sql,query);
+    }
+
+    public void updateSortBeforSave(E01Z4 e01z4, Integer oldSort)  {
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        CommonConditionQuery query = new CommonConditionQuery();
+        Integer newSort = e01z4.getPx();
+        String sql="update e01z4 t set ";
+            sql+="t.px=t.px+1";
+
+        sql +=" where t.a38_id = '" + e01z4.getA38().getId() + "'";
+
+        sql+=" and t.px<"+oldSort+" and t.px>="+newSort;
         this.e01Z4Dao.executeNativeBulk(sql,query);
     }
 }

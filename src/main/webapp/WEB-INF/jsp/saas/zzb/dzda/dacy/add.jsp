@@ -84,13 +84,13 @@
                             <label class="control-label">联系电话</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value=""
-                                       id="phone" name="phone" >
+                                       id="phone" name="phone" number="true">
                             </div>
                         </div>
                         <div id="applyRemarkGroup" class="control-group">
                             <label class="control-label">备注</label>
                             <div class="controls">
-                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" ></textarea>
+                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" style="resize: none;"></textarea>
                             </div>
                         </div>
                         <div  id="clFileGroup" class="control-group">

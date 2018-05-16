@@ -9,6 +9,7 @@ package com.hisun.saas.zzb.dzda.dacy.controller;
 import com.google.common.collect.Maps;
 import com.hisun.base.controller.BaseController;
 import com.hisun.base.dao.util.CommonConditionQuery;
+import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.vo.PagerVo;
@@ -19,8 +20,12 @@ import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
+import com.hisun.saas.zzb.dzda.dacy.entity.EPopedomE01Z1Relation;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
+import com.hisun.saas.zzb.dzda.dacy.service.EPopedomE01Z1RelationService;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
+import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -46,6 +51,10 @@ public class CyshouquanController extends BaseController {
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
     private A38Service a38Service;
+    @Resource
+    private E01Z1Service e01Z1Service;
+    @Resource
+    private EPopedomE01Z1RelationService ePopedomE01Z1RelationService;
 
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
@@ -72,7 +81,8 @@ public class CyshouquanController extends BaseController {
         }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
-        //  orderBy.add(CommonOrder.asc("px"));
+        orderBy.add(CommonOrder.asc("auditingState"));
+        orderBy.add(CommonOrder.asc("createDate"));
         List<EApplyE01Z8> resultList = eApplyE01Z8Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<EApplyE01Z8> pager = new PagerVo<EApplyE01Z8>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
@@ -103,6 +113,18 @@ public class CyshouquanController extends BaseController {
         }
         return new ModelAndView("saas/zzb/dzda/dasq/shouquan",model);
     }
+    @RequestMapping(value = "/ajax/tobfShouquan")
+    public ModelAndView tobfShouquan(String a38Id){
+        Map<String,Object> model = Maps.newHashMap();
+        try{
+            model.put("a38Id",a38Id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ModelAndView("saas/zzb/dzda/dasq/bfshouquan",model);
+    }
+
+
     @RequestMapping(value = "/shouhuiQx/{id}")
     public @ResponseBody  Map<String,Object> shouhuiQx(@PathVariable("id")String id){
         Map<String,Object> model = Maps.newHashMap();
@@ -122,6 +144,11 @@ public class CyshouquanController extends BaseController {
         return model;
     }
 
+    /**
+     * 授权或者拒绝
+     * @param vo
+     * @return
+     */
     @RequestMapping(value = "/shouquan")
     public @ResponseBody Map<String,Object> shouquanOrJujue(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -130,8 +157,40 @@ public class CyshouquanController extends BaseController {
             EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
             entity.setSqdwpzld(details.getUsername());
             BeanUtils.copyProperties(entity,vo);
+            //全部授权
+            if(vo.getAuditingState().equals("1")) entity.setPopedomStuffType("0");
+            entity.setSqdwpzld(details.getUsername());
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            eApplyE01Z8Service.update(entity);
+            model.put("success",true);
+        }catch (Exception e){
+            model.put("success",false);
+            e.printStackTrace();
+        }
+        return model;
+    }
+    @RequestMapping(value = "/bfshouquan")
+    public @ResponseBody Map<String,Object> bfShouquan(EApplyE01Z8Vo vo){
+        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            String e01z1IdContent = vo.getE01z1IdContent();
+            String[] e01z1Ids = e01z1IdContent.split(",");
+            EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
+            for (String id : e01z1Ids){
+                if(id.equals("")) continue;
+                EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
+                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
+                ep.setApplyE01Z8(entity);
+                ep.setE01z1(e01Z1);
+                ePopedomE01Z1RelationService.save(ep);
+            }
+            entity.setSqdwpzld(details.getUsername());
+            BeanUtils.copyProperties(entity,vo);
             //已审
-            //entity.setAuditingState("1");
+            entity.setAuditingState("1");
+            //部分授权
+            entity.setPopedomStuffType("1");
             entity.setSqdwpzld(details.getUsername());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             eApplyE01Z8Service.update(entity);

@@ -13,11 +13,15 @@ import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.tenant.tenant.entity.Tenant;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,8 @@ import java.util.Map;
 public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         implements E01Z1Service {
 
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
     private E01Z1Dao e01Z1Dao;
 
     @Resource
@@ -134,5 +140,15 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
 
         sql+=" and t.e01z104<"+oldSort+" and t.e01z104>="+newSort;
         this.e01Z1Dao.executeNativeBulk(sql,query);
+    }
+
+    @Override
+    public void delete(E01Z1 e01Z1){
+        List<EImages> eImages = e01Z1.getImages();
+        for(EImages eImage : eImages){
+            FileUtils.deleteQuietly(new File(uploadBasePath+eImage.getImgFilePath()));
+        }
+        this.e01Z1Dao.delete(e01Z1);
+
     }
 }

@@ -125,8 +125,12 @@
                                 $resultTR += "<td>" + (zipEntry._data.uncompressedSize / 1048576).toFixed(2) + "M</td>";
                                 $resultTR += "</tr>";
                                 $resultFilelist.append($resultTR);
+                                var dirCode = getDirCode(zipEntry.name);
+                                var nameCode = getFileNameCode(zipEntry.name).substring(0, 2);
                                 $fileJson.push({
                                     "fileIndex": index,
+                                    "dirCode": dirCode,
+                                    "nameCode": nameCode,
                                     "fileName": zipEntry.name,
                                     "fileModifyDate": zipEntry.date.Format('yyyy-MM-dd HH:mm:ss'),
                                     "fileSize": zipEntry._data.uncompressedSize
@@ -137,44 +141,38 @@
                         myLoading.hide();
                         //初始化$aggregateFilelist
                         for (var i = 0; i < $fileJson.length; i++) {
-                            var dirCode = getDirCode($fileJson[i].fileName);
-                            var nameCode = getFileNameCode($fileJson[i].fileName).substring(0, 2);
                             if ($aggregateFilelist.length == 0) {//如果没有,进行初始化
-                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
                             } else {
                                 var isAddDirCode = true;
                                 for (var j = 0; j < $aggregateFilelist.length; j++) {
-                                    if ($aggregateFilelist[j].dirCode == dirCode) {
+                                    if ($aggregateFilelist[j].dirCode == $fileJson[i].dirCode) {
                                         isAddDirCode = false
                                     }
                                 }
                                 if (isAddDirCode) {
-                                    $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                    $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
                                 }
                             }
                         }
 
                         for (var i = 0; i < $fileJson.length; i++) {
-                            var dirCode = getDirCode($fileJson[i].fileName);
-                            var nameCode = getFileNameCode($fileJson[i].fileName).substring(0, 2);
                             var isAddNameCode = true;
                             for (var j = 0; j < $aggregateFilelist.length; j++) {
-                                if ($aggregateFilelist[j].nameCode == nameCode) {
+                                if ($aggregateFilelist[j].nameCode == $fileJson[i].nameCode) {
                                     isAddNameCode = false
                                 }
                             }
                             if (isAddNameCode) {
-                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode":  $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
                             }
                         }
 
                         for (var i = 0; i < $aggregateFilelist.length; i++) {
                             var count = 0;
                             for (var j = 0; j < $fileJson.length; j++) {
-                                var dirCode = getDirCode($fileJson[j].fileName);
-                                var nameCode = getFileNameCode($fileJson[j].fileName).substring(0, 2);
-                                if ($aggregateFilelist[i].dirCode == dirCode
-                                        && $aggregateFilelist[i].nameCode == nameCode) {
+                                if ($aggregateFilelist[i].dirCode == $fileJson[j].dirCode
+                                        && $aggregateFilelist[i].nameCode ==  $fileJson[j].nameCode) {
                                     count++;
                                 }
                             }
@@ -250,17 +248,17 @@
                             }
                         });
                         //判断已上传的文件目录是否多余实际要求的目录
-                        $aggregateFilelist.forEach(function (aggregateFile) {
+                        $fileJson.forEach(function (fileJson) {
                             var isExist = false;
                             for (var i = 0; i < $mlclAggregateJson.length; i++) {
-                                if ($mlclAggregateJson[i].dirCode == aggregateFile.dirCode
-                                        && $mlclAggregateJson[i].nameCode == aggregateFile.nameCode) {
+                                if ($mlclAggregateJson[i].dirCode == fileJson.dirCode
+                                        && $mlclAggregateJson[i].nameCode == fileJson.nameCode) {
                                     isExist = true;
                                 }
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
+                                $checkResultJson.push({"message": "材料:[" + fileJson.fileName + "] 为多余材料,请删除后再上传!"});
                             }
                         });
 

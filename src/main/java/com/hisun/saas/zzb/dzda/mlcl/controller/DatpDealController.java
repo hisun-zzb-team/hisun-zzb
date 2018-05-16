@@ -23,6 +23,7 @@ import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclAggregateVo;
@@ -184,6 +185,33 @@ public class DatpDealController extends BaseController {
     }
 
 
+    @RequestMapping("/e01z1/mlclAggregate/{e01z1Id}")
+    public
+    @ResponseBody
+    Map<String, Object> mlclAggregate4E01z1(@PathVariable(value = "e01z1Id") String e01z1Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
+            List<MlclAggregateVo> mlclAggregateVos = new ArrayList<>();
+            MlclAggregateVo mlclAggregateVo = new MlclAggregateVo();
+            mlclAggregateVo.setDirCode(e01Z1.getE01Z101B());
+            DecimalFormat decimalFormat = new DecimalFormat("00");
+            mlclAggregateVo.setNameCode(decimalFormat.format(e01Z1.getE01Z107()));
+            mlclAggregateVo.setCount(e01Z1.getE01Z114());
+            mlclAggregateVo.setFileName(e01Z1.getE01Z111());
+            mlclAggregateVos.add(mlclAggregateVo);
+            map.put("success", true);
+            map.put("mlclAggregateJson", JacksonUtil.nonEmptyMapper().toJson(mlclAggregateVos));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e, e);
+            map.put("success", false);
+        }
+        return map;
+    }
+
+
     @RequestMapping("/ajax/list/{a38Id}")
     public ModelAndView list(@PathVariable(value = "a38Id") String a38Id, HttpServletRequest request) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
@@ -203,6 +231,26 @@ public class DatpDealController extends BaseController {
             throw new GenericException(e);
         }
         return new ModelAndView("saas/zzb/dzda/mlcl/jztp/listZipfile", map);
+    }
+
+    @RequestMapping("/ajax/list/e01z1/{e01z1Id}")
+    public ModelAndView list4E01ez1(@PathVariable(value = "e01z1Id") String e01z1Id, HttpServletRequest request) throws GenericException {
+        Map<String, Object> map = Maps.newHashMap();
+        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
+        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
+        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
+        try {
+
+            map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
+            map.put("currentNodeId", currentNodeId);
+            map.put("currentNodeName", currentNodeName);
+            map.put("currentNodeParentId", currentNodeParentId);
+            map.put("e01z1Id", e01z1Id);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return new ModelAndView("saas/zzb/dzda/mlcl/jztp/listZipfile4E01z1", map);
     }
 
 
@@ -283,9 +331,115 @@ public class DatpDealController extends BaseController {
             }
             logger.error(e);
             throw new GenericException(e);
+        }finally {
+
         }
         return map;
     }
+
+
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片")
+    @RequestMapping(value = "/e01z1/save/{e01z1Id}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Map<String, Object> saveE01z1Tp(@RequestParam(value = "zipfile", required = false) MultipartFile file,
+                                    @PathVariable(value = "e01z1Id") String e01z1Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
+        String storeTmpRealPath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + UUIDUtil.getUUID() + File.separator;//原文件临时目录
+        String storeZipRealPath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + UUIDUtil.getUUID() + File.separator;//上传zip文件临时目录
+        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getByPK(e01Z1.getECatalogTypeId());
+        String realStorePath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + eCatalogTypeInfo.getCatalogCode()
+                + "." + eCatalogTypeInfo.getCatalogValue() + File.separator;
+        try {
+            File storeZipRealPathFile = new File(storeZipRealPath);
+            storeZipRealPathFile.mkdirs();
+            File storeTmpRealPathFile = new File(storeTmpRealPath);
+            storeTmpRealPathFile.mkdirs();
+            File realStorePathFile = new File(realStorePath);
+            if(!realStorePathFile.exists()){
+                realStorePathFile.mkdirs();
+            }
+            //先将zip文件存入目录
+            String zipStoreRealPath = storeZipRealPath + UUIDUtil.getUUID() + ".zip";
+            File zipFile = new File(zipStoreRealPath);
+            FileOutputStream zipfos = new FileOutputStream(zipFile);
+            InputStream zipis = file.getInputStream();
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = zipis.read(buffer)) != -1) {
+                zipfos.write(buffer, 0, length);
+            }
+            zipfos.flush();
+            zipfos.close();
+            zipis.close();
+            //解压zip
+            CompressUtil.unzip(zipStoreRealPath, storeZipRealPath);
+            FileUtils.deleteQuietly(zipFile);
+            //将原有图片存放到临时目录
+            List<EImages> eImages = e01Z1.getImages();
+            if(eImages!=null){
+                for (EImages eImage : eImages) {
+                    File image = new File(uploadBasePath + eImage.getImgFilePath());
+                    FileUtils.moveFileToDirectory(image, storeTmpRealPathFile, false);
+                }
+            }
+            //写入新的Images
+            List<File> tpDirFiles = FileUtil.listFilesOrderByName(storeZipRealPathFile);
+            if (checkTpDirByCataolog(tpDirFiles)) {
+                eImagesService.saveEImagesByJztp(e01Z1, storeZipRealPathFile);
+                map.put("success", true);
+                map.put("message", "保存成功!");
+            } else {
+                //将临时文件还原至正式目录
+                if (storeTmpRealPathFile.exists()) {
+                    List<File> tmpFiles = FileUtil.listFilesOrderByName(storeTmpRealPathFile);
+                    for(File tmpFile :tmpFiles){
+                        if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tmpFile.getName())) {
+                            continue;
+                        }
+                        FileUtils.copyFileToDirectory(tmpFile,new File(realStorePath));
+                    }
+                }
+                map.put("success", false);
+                map.put("message", "目录结构错误!");
+            }
+        } catch (Exception e) {
+            try {
+                //将临时文件还原至正式目录
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if (storeTmpRealPathFile.exists()) {
+                    List<File> tmpFiles = FileUtil.listFilesOrderByName(storeTmpRealPathFile);
+                    for(File tmpFile :tmpFiles){
+                        if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tmpFile.getName())) {
+                            continue;
+                        }
+                        FileUtils.copyFileToDirectory(tmpFile,new File(realStorePath));
+                    }
+                }
+            } catch (Exception e1) {
+
+            }
+            logger.error(e);
+            throw new GenericException(e);
+        } finally {
+            try {
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if (storeTmpRealPathFile.exists()) {
+                    FileUtils.deleteDirectory(storeTmpRealPathFile);
+                }
+                File storeZipRealPathFile = new File (storeZipRealPath);
+                if (storeZipRealPathFile.exists()) {
+                    FileUtils.deleteDirectory(storeZipRealPathFile);
+                }
+            } catch (Exception ex) {
+
+            }
+        }
+        return map;
+    }
+
 
     private String getTpStorePath(String a38Id) {
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -351,56 +505,57 @@ public class DatpDealController extends BaseController {
 
     @RequestMapping(value = "/download/{a38Id}")
     public void zipDown(@PathVariable(value = "a38Id") String a38Id, HttpServletResponse resp) {
-        String srcPath = uploadBasePath+getTpStorePath(a38Id);
-        String destPath = uploadBasePath+getTpStoreTmpPath(a38Id);
+        String srcPath = uploadBasePath + getTpStorePath(a38Id);
+        String destPath = uploadBasePath + getTpStoreTmpPath(a38Id);
         String zipPath = uploadBasePath + getTpStoreTmpPath(a38Id);
-       try {
-           File tpStorePathFile = new File(srcPath);
-           A38 a38 = this.a38Service.getByPK(a38Id);
-           if (tpStorePathFile.exists()) {
-               File destPathFile = new File(destPath);
-               FileUtils.copyDirectory(tpStorePathFile, destPathFile);
-               List<File> files = FileUtil.listFilesOrderByName(destPathFile);
-               for (File file : files) {
-                   if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) {
-                       continue;
-                   }
-                   List<File> tpFiles = FileUtil.listFilesOrderByName(file);
-                   for (File tpFile : tpFiles) {
-                       if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
-                           continue;
-                       }
-                       File newDestFile = new File(tpFile.getPath() + ".jpg");
-                       DESUtil.getInstance(Constants.DATP_KEY).decrypt(tpFile, newDestFile);
-                       FileUtils.deleteQuietly(tpFile);
-                   }
-               }
-               new File(zipPath).mkdirs();
-               String zipRealStorePath = zipPath+UUIDUtil.getUUID() + ".zip";
-               CompressUtil.zip(zipRealStorePath, destPath,a38.getA0101());
-               resp.setContentType("multipart/form-data");
-               resp.setHeader("Content-Disposition", "attachment;fileName=" + encode(a38.getA0101() + ".zip"));
-               OutputStream output = resp.getOutputStream();
-               FileInputStream fileInputStream = new FileInputStream(new File(zipRealStorePath));
-               byte[] buffer = new byte[8192];
-               int length;
-               while ((length = fileInputStream.read(buffer)) != -1) {
-                   output.write(buffer, 0, length);
-               }
-               output.flush();
-               output.close();
-           }
-       }catch (Exception e){
-           logger.error(e);
-           throw new GenericException(e.getMessage());
-       }finally {
-           try{
-               File destPathFile = new File(destPath);
-               File zipPathFile = new File(zipPath);
-               if(destPathFile.exists()) FileUtils.deleteDirectory(destPathFile);
-               if(zipPathFile.exists()) FileUtils.deleteDirectory(zipPathFile);
-           }catch (Exception e){}
-       }
+        try {
+            File tpStorePathFile = new File(srcPath);
+            A38 a38 = this.a38Service.getByPK(a38Id);
+            if (tpStorePathFile.exists()) {
+                File destPathFile = new File(destPath);
+                FileUtils.copyDirectory(tpStorePathFile, destPathFile);
+                List<File> files = FileUtil.listFilesOrderByName(destPathFile);
+                for (File file : files) {
+                    if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) {
+                        continue;
+                    }
+                    List<File> tpFiles = FileUtil.listFilesOrderByName(file);
+                    for (File tpFile : tpFiles) {
+                        if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
+                            continue;
+                        }
+                        File newDestFile = new File(tpFile.getPath() + ".jpg");
+                        DESUtil.getInstance(Constants.DATP_KEY).decrypt(tpFile, newDestFile);
+                        FileUtils.deleteQuietly(tpFile);
+                    }
+                }
+                new File(zipPath).mkdirs();
+                String zipRealStorePath = zipPath + UUIDUtil.getUUID() + ".zip";
+                CompressUtil.zip(zipRealStorePath, destPath, a38.getA0101());
+                resp.setContentType("multipart/form-data");
+                resp.setHeader("Content-Disposition", "attachment;fileName=" + encode(a38.getA0101() + ".zip"));
+                OutputStream output = resp.getOutputStream();
+                FileInputStream fileInputStream = new FileInputStream(new File(zipRealStorePath));
+                byte[] buffer = new byte[8192];
+                int length;
+                while ((length = fileInputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, length);
+                }
+                output.flush();
+                output.close();
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e.getMessage());
+        } finally {
+            try {
+                File destPathFile = new File(destPath);
+                File zipPathFile = new File(zipPath);
+                if (destPathFile.exists()) FileUtils.deleteDirectory(destPathFile);
+                if (zipPathFile.exists()) FileUtils.deleteDirectory(zipPathFile);
+            } catch (Exception e) {
+            }
+        }
     }
 
     private String encode(String filename) throws UnsupportedEncodingException {

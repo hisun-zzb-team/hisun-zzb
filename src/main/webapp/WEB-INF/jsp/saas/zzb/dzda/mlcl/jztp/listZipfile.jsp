@@ -139,7 +139,7 @@
                             var dirCode = getDirCode($fileJson[i].fileName);
                             var nameCode = getFileNameCode($fileJson[i].fileName).substring(0, 2);
                             if ($aggregateFilelist.length == 0) {//如果没有,进行初始化
-                                $aggregateFilelist.push({"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
                             } else {
                                 var isAddDirCode = true;
                                 for (var j = 0; j < $aggregateFilelist.length; j++) {
@@ -148,7 +148,7 @@
                                     }
                                 }
                                 if (isAddDirCode) {
-                                    $aggregateFilelist.push({"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                    $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
                                 }
                             }
                         }
@@ -163,7 +163,7 @@
                                 }
                             }
                             if (isAddNameCode) {
-                                $aggregateFilelist.push({"dirCode": dirCode, "nameCode": nameCode, "count": 1});
+                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": dirCode, "nameCode": nameCode, "count": 1});
                             }
                         }
 
@@ -245,6 +245,20 @@
                             if (!isExist) {
                                 isPass = false
                                 $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传页数为:0"});
+                            }
+                        });
+                        //判断已上传的文件目录是否多余实际要求的目录
+                        $aggregateFilelist.forEach(function (aggregateFile) {
+                            var isExist = false;
+                            for (var i = 0; i < $mlclAggregateJson.length; i++) {
+                                if ($mlclAggregateJson[i].dirCode == aggregateFile.dirCode
+                                        && $mlclAggregateJson[i].nameCode == aggregateFile.nameCode) {
+                                    isExist = true;
+                                }
+                            }
+                            if (!isExist) {
+                                isPass = false
+                                $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
                             }
                         });
                     }

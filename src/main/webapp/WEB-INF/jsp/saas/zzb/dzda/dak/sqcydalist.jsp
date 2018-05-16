@@ -21,7 +21,7 @@
 
     <link href="${path }/css/style.css" rel="stylesheet" type="text/css">
     <!-- END PAGE LEVEL STYLES -->
-    <title>阅档申请</title>
+    <title>可查阅授权档案</title>
     <style type="text/css">
         form {
             margin: 0 0 0px;

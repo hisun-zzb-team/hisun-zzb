@@ -41,7 +41,7 @@
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
 				<div class="portlet-title">
-					<div class="caption">档案管理：共<font color="red"> ${pager.total } </font>人</div>
+					<div class="caption">本单位档案：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
 
 						<a  class="btn green" href="#">

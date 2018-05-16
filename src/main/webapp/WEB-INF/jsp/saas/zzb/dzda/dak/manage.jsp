@@ -17,12 +17,11 @@
 </head>
 <body>
 
-
 <!--BEGIN TABS-->
 <div class="tabbable tabbable-custom">
 	<ul class="nav nav-tabs" style="font-size: 14px;font-weight: bold;" id="tabs">
-		<li ><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">申请查阅档案</a></li>
-		<li class="active"><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">本单位档案</a></li>
+		<li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">本单位档案</a></li>
+		<li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">申请查阅档案</a></li>
 	</ul>
 	<div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:10px 0;">
 		<div class="tab-pane active" id="tab_show">
@@ -40,10 +39,10 @@
 
 			if($(e.target).attr('id')=="#tab_1_1") {
 //					$("[id='#tab_1_1']").tab('show');
-				sqcyLoad();
+				bdwdaLoad();
 			}else if($(e.target).attr('id')=="#tab_1_2"){
 //					$("[id='#tab_1_2']").tab('show');
-				bdwdaLoad();
+				sqcyLoad();
 			}
 			tabIndex = $(e.target).attr('id');
 		});

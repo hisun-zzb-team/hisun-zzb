@@ -37,6 +37,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +164,8 @@ public class CyshouquanController extends BaseController {
             entity.setSqdwpzld(details.getUsername());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            entity.setAccreditDate(sdf.format(new Date()));
             eApplyE01Z8Service.update(entity);
             model.put("success",true);
         }catch (Exception e){
@@ -195,6 +199,8 @@ public class CyshouquanController extends BaseController {
             entity.setSqdwpzld(details.getUsername());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            entity.setAccreditDate(sdf.format(new Date()));
             eApplyE01Z8Service.update(entity);
             model.put("success",true);
         }catch (Exception e){

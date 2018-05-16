@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.dacy.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "e_a38_log_detail")
-public class EA38LogDetail  extends TombstoneEntity implements Serializable {
+public class EA38LogDetail  extends TenantEntity implements Serializable {
     private String id;
     private EA38Log a38Log;
     private String e01Z1Id;

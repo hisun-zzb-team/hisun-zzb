@@ -430,7 +430,7 @@
             }else{
                 showTip("提示", "出错了请联系管理员", 1500);
             }
-        },"卸载已加载")
+        },"卸载已加载的图片")
         <%--$.ajax({--%>
             <%--url: "${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",--%>
             <%--type: "post",--%>

@@ -97,7 +97,7 @@
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
                             <TD width="20%"><a href="#">详情</a></TD>
-                            <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+                            <TD width="10%"><c:out value="${vo.createDate}"></c:out></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">

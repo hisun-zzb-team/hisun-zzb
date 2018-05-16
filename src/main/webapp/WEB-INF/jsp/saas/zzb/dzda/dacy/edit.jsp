@@ -14,6 +14,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>档案阅档申请</title>
+    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css" />
+    <script src="${path}/js/bootstrap-fileupload.js"  type="text/javascript"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -31,6 +33,10 @@
 
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="${entity.id}" id="id">
+                        <input type="hidden" name="auditingState" value="${entity.auditingState}" >
+                        <input type="hidden" name="accreditType" value="${entity.accreditType}" >
+                        <input type="hidden" name="e01Z807Name" value="${entity.e01Z807Name}">
+
                         <div class="control-group" id="a0101Group">
                             <label class="control-label">查阅何人档案</label>
                             <div class="controls">
@@ -94,19 +100,44 @@
                         </div>
 
                         <div class="control-group" id="applyFileNameGroup">
-                            <label class="control-label"></label>
+                            <label class="control-label">&nbsp;&nbsp;&nbsp;</label>
                             <div class="controls">
+                                <a class="btn blue" href="javascript:downloadFile('${entity.id}')"><i
+                                        class="icon-circle-arrow-down"></i>${entity.applyFileName }</a>
+                                <a href="javascript:deleteFile('${entity.id}')" class="btn blue">删除</a>
+                            </div>
+                            <input type="hidden" name="applyFileName" value="${applyFileName}"/>
+                            <input type="hidden" name="applyFilePath" value="${applyFilePath}"/>
+                            <%--<div class="controls">
                                 <input size="16" type="text"  class="span8 m-wrap" value="${entity.applyFileName}" readonly="readonly"
                                        id="applyFileName" name="applyFileName" ><a href="javascript:downloadFile('${entity.id}')">下载</a>&nbsp;<a href="javascript:deleteFile('${entity.id}')">删除</a>
-                            </div>
+                            </div>--%>
                         </div>
                         <div  id="clFileGroup" class="control-group">
                             <label id="clFilelb" class="control-label">上传材料</label>
                             <div class="controls">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input border_radius_none heig20">
+                                            <i class="icon-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+													<span class="btn btn-file border_radius_none">
+													<span class="fileupload-new ">选择文件</span>
+													<span class="fileupload-exists">修改文件</span>
+													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
+													</span>
+                                        <p class="textprompt">附件支持的格式有：'doc','docx'</p>
+                                        <p class="Errorred" id="attachFileError"></p>
+                                        <a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <%--<div class="controls">
                                 <input type="file" class="default"  name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
                                 <p class="textprompt">附件支持的格式有：'doc','docx'</p>
                                 <p class="Errorred" id="attachFileError"></p>
-                            </div>
+                            </div>--%>
                         </div>
                         <div class="control-group">
                             <div class="controls mt10">
@@ -225,7 +256,8 @@
     function deleteFile(id){
         actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
             if(json.code == 1){
-                $("#applyFileName").val("");
+               // $("#applyFileName").val("");
+                $("#applyFileNameGroup").hide();
                 showTip("提示","操作成功");
             }else{
                 showTip("提示", json.message, 2000);

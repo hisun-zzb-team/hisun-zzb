@@ -10,12 +10,12 @@
 
 <c:set var="path" value="${pageContext.request.contextPath}"></c:set>
 <title></title>
-
+                <div style="max-height:400px;overflow:auto;">
                     <input type="hidden" id="currentNodeId"  name="currentNodeId" value="" />
                     <input type="hidden" id="currentNodeName"  name="currentNodeName" value="" />
                     <input type="hidden" id="currentNodeParentId"  name="currentNodeParentId" value="" />
                     <Tree:tree id="a38MlclTree" treeUrl="${path}/zzb/dzda/mlcl/tpcl/ajax/tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
-                               onClick="onClickByTreeByTpsc" submitType="post" dataType="json" isSearch="false" radioOrCheckbox="checkbox" chkboxType=' "Y" : "s", "N" : "s" '/>
+                            height="200px"   onClick="onClickByTreeByTpsc" submitType="post" dataType="json" isSearch="false" radioOrCheckbox="checkbox" chkboxType=' "Y" : "s", "N" : "" '/>
 
                 </div>
                 <center>
@@ -27,19 +27,27 @@
                 </center>
 <script type="text/javascript">
     $(function(){
-        changeTreeDivHeight();
+        changebfzsqTreeDivHeight();
         //当浏览器大小改变的时候,要重新计算
         $(window).resize(function(){
-            changeTreeDivHeight();
+            changebfzsqTreeDivHeight();
         })
     });
+    function changebfzsqTreeDivHeight(){
+        var divHeight = 355;
+        $("#a38MlclTree_div").css('height',divHeight);
+    }
     function bfsqSubmit(){
         var treeObj = $.fn.zTree.getZTreeObj("a38MlclTree");
         var nodes = treeObj.getCheckedNodes(true);
+        if(nodes.length<1){
+            showTip("提示","请选择要授权的材料",2000);
+            return
+        }
         var idString="";
         for(var i=0;i<nodes.length;i++){
             if(nodes[i].nodeType=="dir"){
-                showTip("提示","不能选择材料目录");
+                showTip("提示","不能选择材料目录",2000);
                 return
             }
             idString =  idString + ","+ nodes[i].id;
@@ -66,10 +74,7 @@
             });
         }
     }
-    function changeTreeDivHeight(){
-        var divHeight = $(window).height()-100;
-        $("#a38MlclTree_div").css('height',divHeight);
-    }
+
 
     function onClickByTreeByTpsc (event, treeId, treeNode){
         $("#currentNodeId").val(treeNode.id);//赋值

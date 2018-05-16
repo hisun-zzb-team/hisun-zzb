@@ -137,8 +137,8 @@
                 <div id="applyFileNameGroup" class="control-group">
                     <label class="control-label">上传材料</label>
                     <div class="controls">
-                        <input type="text" class="span8 m-wrap" name="applyFileName"  maxlength="128" readonly id="applyFileName" value="${entity.applyFileName }"/>
-                        <a href="javascript:downloadFile('${entity.id}')">下载</a>
+                        <a class="btn blue" href="javascript:downloadFile('${entity.id}')"><i
+                                class="icon-circle-arrow-down"></i>${entity.applyFileName }</a>
                     </div>
                 </div>
             </div>
@@ -212,28 +212,29 @@
     </center>
 </div>
 
-<div id="bfsqModal" class="modal container hide fade" tabindex="-1" data-width="600">
+<div id="bfsqModal" class="modal container hide fade" tabindex="-1" data-width="600" style="max-height:550px;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
                 <h3 class="modal-title" id="bufsqTitle" >
-                    档案阅档申请
+                    选择部分授权材料
                 </h3>
             </div>
-            <div class="modal-body" id="bfsqDiv">
+            <div class="modal-body" id="bfsqDiv" >
 
             </div>
-            </div>
+        </div>
     </div>
 </div>
 
 
 <script type="text/javascript">
+
     function bfsq(){
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
-            showTip("提示","请选择要查阅和人档案");
+            showTip("提示","请选择要查阅和人档案",2000);
             return;
         }
         $.ajax({
@@ -264,15 +265,29 @@
     }
     var form1 = new EstValidate("form1");
     function formSubmit(status){
+        debugger
         $("#auditingState").val(status);
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
-            showTip("提示","请选择要查阅和人档案");
+            showTip("提示","请选择要查阅和人档案",2000);
             return;
         }
         var bool = form1.form();
         if(bool){
-            $.ajax({
+            var msg = ""
+            if(status ==1){
+                msg= "授权吗";
+            }else if(status ==2){
+                msg= "拒绝授权吗";
+            }
+            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/shouquan",$("#form1").serialize(),function(json){
+                if(json.success){
+                    window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+                }else {
+                    showTip("提示","请求失败",2000);
+                }
+            },msg)
+           /* $.ajax({
                 url : "${path }/zzb/dzda/cyshouquan/shouquan",
                 type : "post",
                 data : $("#form1").serialize(),
@@ -288,7 +303,7 @@
                 error : function(){
                     showTip("提示","出错了,请检查网络!",2000);
                 }
-            });
+            });*/
         }
     }
     function queryA0101(a0101){

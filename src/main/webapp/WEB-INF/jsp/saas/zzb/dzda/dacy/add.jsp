@@ -14,6 +14,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>档案阅档申请</title>
+    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css" />
+    <script src="${path}/js/bootstrap-fileupload.js"  type="text/javascript"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -96,10 +98,28 @@
                         <div  id="clFileGroup" class="control-group">
                             <label id="clFilelb" class="control-label">上传材料</label>
                             <div class="controls">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input border_radius_none heig20">
+                                            <i class="icon-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"></span>
+                                        </div>
+													<span class="btn btn-file border_radius_none">
+													<span class="fileupload-new ">选择文件</span>
+													<span class="fileupload-exists">修改文件</span>
+													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
+													</span>
+                                        <p class="textprompt">附件支持的格式有：'doc','docx'</p>
+                                        <p class="Errorred" id="attachFileError"></p>
+                                        <a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <%--<div class="controls">
                                 <input type="file" class="default"  name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
                                 <p class="textprompt">附件支持的格式有：'doc','docx'</p>
                                 <p class="Errorred" id="attachFileError"></p>
-                            </div>
+                            </div>--%>
                         </div>
                         <div class="control-group">
                             <div class="controls mt10">
@@ -123,7 +143,7 @@
     function queryUser(){
         var value = $("#a0101").val();
         if(value == "" || value == null){
-            showTip("提示","请输入查阅人信息");
+            showTip("提示","请输入查阅人信息",1000);
             return;
         }else {
             $.ajax({
@@ -146,7 +166,7 @@
                         var value = $("#a0101").val("");
                         view.show();
                     }else {
-                        showTip("提示","不存在此档案");
+                        showTip("提示","不存在此档案",1500);
                     }
 
                 },
@@ -182,7 +202,7 @@
         var a0101 = $("#a0101").val();
         var a0101Content = $("#a0101Content").val();
         if(a0101Content == "" || a0101Content==null){
-            showTip("提示","请添加查阅何人档案");
+            showTip("提示","请添加查阅何人档案",1500);
             return;
         }
         var bool = myVld.form();

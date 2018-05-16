@@ -32,6 +32,7 @@
                 </div>
             </div>
         </div>
+
         <div class="portlet-body">
             <table class="table table-striped table-bordered table-hover dataTable table-set">
                 <thead>
@@ -220,7 +221,7 @@
             //检查每类材料份数
             $.ajax({
                 async: false,
-                url: "${path}/zzb/dzda/mlcl/tpcl/mlclAggregate/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/e01z1/mlclAggregate/${e01z1Id}",
                 type: "get",
                 data: {},
                 dataType: "json",
@@ -230,6 +231,7 @@
                 success: function (json) {
                     if (json.success == true) {
                         var $mlclAggregateJson = jQuery.parseJSON(json.mlclAggregateJson);
+                        //根据实际要求的目录结构判断已上传的文件目录是否存在问题
                         $mlclAggregateJson.forEach(function (mlclAggregate) {
                             var isExist = false;
                             for (var i = 0; i < $aggregateFilelist.length; i++) {
@@ -261,6 +263,7 @@
                                 $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
                             }
                         });
+
                     }
                 },
                 error: function () {
@@ -345,7 +348,7 @@
     $("#uploadAndSaveFile").click(function () {
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/tpcl/save/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/e01z1/save/${e01z1Id}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

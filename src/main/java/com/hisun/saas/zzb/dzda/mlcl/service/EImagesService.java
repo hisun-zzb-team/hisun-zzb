@@ -8,6 +8,7 @@ package com.hisun.saas.zzb.dzda.mlcl.service;
 
 import com.hisun.base.service.BaseService;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 
 import java.io.File;
@@ -18,6 +19,7 @@ import java.io.File;
 public interface EImagesService extends BaseService<EImages,String>{
 
     void saveEImagesByJztp(A38 a38, File storePathFile)throws Exception;
+    void saveEImagesByJztp(E01Z1 e01Z1,File storePathFile)throws Exception;
     void deleteEImagesByA38(A38 a38);
     void deleteEImagesAndFileByA38(A38 a38) throws Exception;
 

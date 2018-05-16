@@ -128,7 +128,7 @@
                             <td>${vo.e01Z117} </td>
                             <td style="text-align: center">${vo.e01Z114}</td>
                             <td style="text-align: center">${vo.yjztps}</td>
-                            <td style="text-align: center"> <a href="javascript:uploadImg()" class="">加载</a></td>
+                            <td style="text-align: center"> <a href="javascript:jztp('${vo.id}')" class="">加载</a></td>
                             <td style="text-align: center"><a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}')" class="">浏览</a></td>
                             <td style="text-align: center">${vo.e01Z107}</td>
                             <td>
@@ -400,6 +400,32 @@
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
     });
+
+
+    function jztp(id){
+        var divHeight = $(window).height()-300;
+        var divWidth = 800;
+        $('#jztpModal').attr("data-width",divWidth);
+        $('#jztpModal').attr("data-height",divHeight);
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/tpcl/ajax/list/e01z1/"+id,
+            type: "post",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#jztpPage').html(html);
+                $('#jztpModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    }
 
 </script>
 </body>

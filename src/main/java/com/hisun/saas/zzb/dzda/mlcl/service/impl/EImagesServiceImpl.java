@@ -12,9 +12,10 @@ import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
+import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.auth.session.mgt.quartz.QuartzSessionValidationScheduler;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
@@ -25,14 +26,12 @@ import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.util.DESUtil;
 import com.hisun.util.FileUtil;
-import com.hisun.util.UUIDUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,6 +47,8 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
 
     @Resource
     private E01Z1Service e01Z1Service;
+    @Resource
+    private ECatalogTypeService eCatalogTypeService;
     @Resource
     private E01Z1Dao e01Z1Dao;
     @Value("${sys.upload.absolute.path}")
@@ -90,7 +91,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                         String nameCode = decimalFormat.format(e01Z1.getE01Z107());//当前材料对应文件编号
 
                         String tpNameCode = "";
-                        if(tpFile.getName().lastIndexOf(".")!=-1) {
+                        if (tpFile.getName().lastIndexOf(".") != -1) {
                             tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
                         }
                         if (tpNameCode.equals(nameCode)) {
@@ -138,6 +139,62 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         }
     }
 
+
+    public void saveEImagesByJztp(E01Z1 e01Z1, File storePathFile) throws Exception {
+        this.deleteEImagesByE01ez1(e01Z1);
+        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getByPK(e01Z1.getECatalogTypeId());
+        String realStorePath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + eCatalogTypeInfo.getCatalogCode()
+                + "." + eCatalogTypeInfo.getCatalogValue() + File.separator;
+        File realStorePathFile = new File(realStorePath);
+        if (!realStorePathFile.exists()) {
+            realStorePathFile.mkdirs();
+        }
+        List<File> files = FileUtil.listFilesOrderByName(storePathFile);
+        int yjz = 0;
+        for (File file : files) {
+            if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(file.getName())) continue;
+            List<File> tpFiles = FileUtil.listFilesOrderByName(file);
+            for (File tpFile : tpFiles) {
+                boolean isNeedDelete = true;
+                if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
+                    continue;
+                }
+
+                DecimalFormat decimalFormat = new DecimalFormat("00");
+                String nameCode = decimalFormat.format(e01Z1.getE01Z107());//当前材料对应文件编号
+                String tpNameCode = "";
+                if (tpFile.getName().lastIndexOf(".") != -1) {
+                    tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                }
+                if (tpNameCode.equals(nameCode)) {
+                    isNeedDelete = false;
+                    EImages eImages = new EImages();
+                    eImages.setE01z1(e01Z1);
+                    String encryptFilePath = tpFile.getPath().substring(0, tpFile.getPath().lastIndexOf("."));
+                    File encryptFile = new File(encryptFilePath);
+                    DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile, encryptFile);
+                    FileUtils.moveFileToDirectory(encryptFile, realStorePathFile,false);
+                    eImages.setImgFilePath(realStorePath.substring(uploadBasePath.length(), realStorePath.length()) + encryptFile.getName());
+                    FileUtils.deleteQuietly(tpFile);
+                    eImages.setImgNo(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2));
+                    this.save(eImages);
+                    yjz++;
+                }
+                //如果没有对应的材料则删除已上传的图片
+                if (isNeedDelete) {
+                    if (tpFile.isDirectory()) {
+                        FileUtils.deleteDirectory(tpFile);
+                    } else {
+                        FileUtils.deleteQuietly(tpFile);
+                    }
+                }
+            }
+        }
+        e01Z1.setYjztps(yjz);
+        this.e01Z1Service.update(e01Z1);
+
+    }
+
     public String getTpStorePath(String a38Id) {
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         return Constants.DATP_STORE_PATH
@@ -147,25 +204,24 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
     }
 
     public void deleteEImagesByA38(A38 a38) {
-        StringBuffer deleteEImages = new StringBuffer();
-        deleteEImages.append(" delete from EImages EImages where EImages.e01z1.id = :id");
         List<E01Z1> e01Z1s = a38.getE01z1s();
         for (E01Z1 e01Z1 : e01Z1s) {
-            CommonConditionQuery query = new CommonConditionQuery();
-            query.add(CommonRestrictions.and("", "id", e01Z1.getId()));
-            this.eImagesDao.executeBulk(deleteEImages.toString(), query);
+            this.deleteEImagesByE01ez1(e01Z1);
         }
-        StringBuffer updateE01z1 = new StringBuffer();
-        updateE01z1.append(" update E01Z1 e01Z1 set e01Z1.yjztps = 0 where e01Z1.a38.id =:id");
+    }
+
+    public void deleteEImagesByE01ez1(E01Z1 e01Z1) {
+        StringBuffer deleteEImages = new StringBuffer();
+        deleteEImages.append(" delete from EImages EImages where EImages.e01z1.id = :id");
         CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and("", "id", a38.getId()));
-        this.e01Z1Dao.executeBulk(updateE01z1.toString(), query);
+        query.add(CommonRestrictions.and("", "id", e01Z1.getId()));
+        this.eImagesDao.executeBulk(deleteEImages.toString(), query);
     }
 
 
     public void deleteEImagesAndFileByA38(A38 a38) throws Exception {
         this.deleteEImagesByA38(a38);
-        File tpStorePathFile = new File(uploadBasePath+getTpStorePath(a38.getId()));
+        File tpStorePathFile = new File(uploadBasePath + getTpStorePath(a38.getId()));
         if (tpStorePathFile.exists()) {
             FileUtils.deleteDirectory(tpStorePathFile);
         }

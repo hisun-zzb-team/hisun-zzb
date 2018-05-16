@@ -47,7 +47,7 @@
             </table>
         </div>
     </div>
-    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="800" style="max-height: 300px;overflow: auto;">
+    <div id="checkResultModal" class="modal container hide fade" tabindex="-1" data-width="800" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -56,8 +56,8 @@
                         检查结果
                     </h3>
                 </div>
-                <div class="portlet-body">
-                    <table class="table table-striped table-bordered table-hover dataTable table-set" style="margin-right: 15px;margin-left: 15px;">
+                <div class="portlet-body" style="margin-right: 15px;margin-left: 15px;max-height: 300px;overflow: auto;">
+                    <table class="table table-striped table-bordered table-hover dataTable table-set" >
                         <thead>
                         <tr>
                             <th>序号</th>
@@ -269,7 +269,7 @@
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + aggregateFile.fileName + "] 为多余材料,请删除后再上传!"});
+                                $checkResultJson.push({"message": "上传图片:[" + aggregateFile.fileName + "] 为多余图片,请删除后再上传!"});
                             }
                         });
                     }
@@ -367,6 +367,7 @@
                 success: function (json) {
                     if (json.success == true) {
                         $('#jztpModal').modal('hide');
+                        $('#jztpE01z1Modal').modal('hide');
                         mlLoad();
                         showTip("提示", json.message, 2000);
                     } else {

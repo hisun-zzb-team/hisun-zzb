@@ -27,7 +27,7 @@
                         <input type="hidden" id="currentNodeParentId" name="currentNodeParentId" value=""/>
                         <input type="hidden" id="isPass" name="isPass" value="false"/>
                         <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}">
-                        <input type="file" name="zipfile" id="zipfile">
+                        <input type="file" name="zipfile" id="zipfile" accept = 'application/x-zip-compressed'>
                     </form>
                 </div>
             </div>

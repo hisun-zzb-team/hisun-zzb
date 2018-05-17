@@ -126,7 +126,7 @@
                                         <a href="javascript:editCysq('${vo.id}')">修改</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
-                                        <a href="javascript:viewImageMain('${vo.a38.id}')">浏览</a>
+                                        <a href="javascript:viewImageMain('${vo.a38.id}','${vo.a0101}','${vo.id}')">浏览</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 2}">
                                         <a href="javascript:editCysq('${vo.id}')">查看</a>
@@ -194,18 +194,32 @@
         $('#viewImgModal').modal('hide');
         $('#viewImgDiv').html("");
     }
-    var viewImageMain = function (a38Id) {
+    var viewImageMain = function (a38Id,a0101,id) {
         var divHeight = $(window).height() -60;
         var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
         $('#viewImgModal').attr("data-width", divWidth);
-
+        $.ajax({
+            url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
+            type: "post",
+            data: {
+                "a0101":a0101,
+                "id":id,
+                "a38Id":a38Id
+            },
+            dataType: "html",
+            success: function (json) {
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
         var myDirName = $("#myDirName").val();
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+a38Id,
             type: "post",
             data: {
-
+                "a0101":a0101
             },
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -213,6 +227,7 @@
             dataType: "html",
             success: function (html) {
                 $('#viewImgDiv').html(html);
+                $('#title').text(a0101+" 的档案图片")
                 $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },
             error: function () {
@@ -231,7 +246,6 @@
             dataType: "html",
             success: function (html) {
                 $('#addDiv').html(html);
-
                 $('#addModal').modal({
                     keyboard: true
                 });

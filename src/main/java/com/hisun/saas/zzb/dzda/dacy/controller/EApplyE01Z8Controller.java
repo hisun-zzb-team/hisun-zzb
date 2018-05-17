@@ -23,8 +23,10 @@ import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
+import com.hisun.saas.zzb.dzda.dacy.entity.EA38LogViewTime;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
-import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
+import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
 import com.hisun.util.*;
 import org.apache.commons.beanutils.BeanUtils;
@@ -47,6 +49,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +65,14 @@ public class EApplyE01Z8Controller extends BaseController {
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
     private A38Service a38Service;
+    @Resource
+    private EA38LogService eA38LogService;
+    @Resource
+    private EA38LogViewTimeService eA38LogViewTimeService;
+    @Resource
+    private EA38LogDetailService eA38LogDetailService;
+    @Resource
+    private ELogDetailViewTimeService eLogDetailViewTimeService;
 
     @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
@@ -314,6 +326,72 @@ public class EApplyE01Z8Controller extends BaseController {
         }
         return returnMap;
     }
+
+    /**
+     * 浏览时记录日志
+     * @param a38Id
+     * @param id
+     * @param a0101
+     * @return
+     */
+    @RequestMapping(value="/ajax/liulanLog")
+    public @ResponseBody Map<String,Object> liulanLog(@RequestParam(value = "a38Id",required = true) String a38Id,
+                                                      @RequestParam(value = "id",required = true) String id,
+                                                      @RequestParam(value = "a0101",required = true) String a0101){
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String nowMinDate =DateUtil.formatDefaultDate(new Date())+" 00:00:00";
+        String nowMaxDate =DateUtil.formatDefaultDate(new Date())+" 23:59:59";
+        try{
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("a38.id = :a38Id ", "a38Id", a38Id));
+            query.add(CommonRestrictions.and("cysj >= :nowMinDate ", "nowMinDate", sdf.parse(nowMinDate)));
+            query.add(CommonRestrictions.and("cysj <= :nowMaxDate ", "nowMaxDate", sdf.parse(nowMaxDate)));
+            List<EA38Log> eA38Logs = eA38LogService.list(query,new CommonOrderBy());
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(id);
+            String eA38LogPK;
+            EA38Log ea38Log = new EA38Log();
+            if(eA38Logs ==null || eA38Logs.isEmpty()){
+                ea38Log.setApplyE01Z8(eApplyE01Z8);
+                ea38Log.setCyrId(details.getUserid());
+                ea38Log.setCyrName(details.getUsername());
+                ea38Log.setA38(a38Service.getByPK(a38Id));
+                ea38Log.setA0101(a0101);
+                ea38Log.setReadTenantId(details.getTenantId());
+                ea38Log.setCysj(new Date());
+                ea38Log.setReadTenantName(details.getTenantName());
+                BeanUtils.copyProperties(ea38Log,details);
+                eA38LogPK = eA38LogService.save(ea38Log);
+            }else {
+                eA38LogPK = eA38Logs.get(0).getId();
+            }
+            EA38LogViewTime ea38LogViewTime = new EA38LogViewTime();
+            ea38LogViewTime.setA38Log(eA38LogService.getByPK(eA38LogPK));
+            ea38LogViewTime.setStareTime(new Date());
+            BeanUtils.copyProperties(ea38LogViewTime,details);
+            eA38LogViewTimeService.save(ea38LogViewTime);
+            //可阅读时间
+            String readTime= eApplyE01Z8.getReadTime();
+            //已阅读时间
+            String alreadyReadTime = eApplyE01Z8.getReadTime();
+            //剩余可阅读时间
+            String syReadTime = "syReadTime";
+            if(alreadyReadTime == null || alreadyReadTime.equals("")){
+                returnMap.put(syReadTime,readTime);
+            }else {
+                returnMap.put(syReadTime,((Integer.valueOf(readTime) * 60) - Integer.valueOf(alreadyReadTime)));
+            }
+            returnMap.put("code",1);
+        }catch (Exception e){
+            returnMap.put("code",0);
+            logger.error(e,e);
+            throw new GenericException(e.getMessage());
+        }
+        return returnMap;
+    }
+
+
     @RequestMapping(value="/ajax/down")
     @RequiresPermissions("cysq:*")
     public void templateDown(String id,HttpServletRequest req, HttpServletResponse resp) throws Exception{

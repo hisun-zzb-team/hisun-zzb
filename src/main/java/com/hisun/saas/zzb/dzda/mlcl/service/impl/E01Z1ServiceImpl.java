@@ -162,8 +162,16 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
     }
 
 
-    @Override
-    public void delete(E01Z1 e01Z1){
+    public void deleteE01Z1(E01Z1 e01Z1) throws Exception{
+        int maxSort = this.getMaxSort(e01Z1.getA38().getId(),e01Z1.getE01Z101B());
+        Integer oldSort = e01Z1.getE01Z104();//以前的排序号
+        if(oldSort < maxSort){//如果新的排序号比以前的排序号小
+            e01Z1.setE01Z104(maxSort);
+            List<E01Z1> e01Z1s = this.getNeedUpdateSortE01z1(e01Z1,oldSort);
+            if(e01Z1s!=null && e01Z1s.size()>0){
+                this.updateImagesSort(e01Z1s,oldSort,e01Z1.getA38().getId(),e01Z1);
+            }
+        }
         List<EImages> eImages = e01Z1.getImages();
         for(EImages eImage : eImages){
             FileUtils.deleteQuietly(new File(uploadBasePath+eImage.getImgFilePath()));

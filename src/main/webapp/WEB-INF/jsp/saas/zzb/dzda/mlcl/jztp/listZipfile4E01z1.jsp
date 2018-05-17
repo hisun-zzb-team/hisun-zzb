@@ -369,8 +369,9 @@
                 success: function (json) {
                     if (json.success == true) {
                         $('#jztpModal').modal('hide');
-                        mlLoad();
+                        $('#jztpE01z1Modal').modal('hide');
                         showTip("提示", json.message, 2000);
+                        mlLoad();
                     } else {
                         showTip("提示", json.message, 2000);
                     }

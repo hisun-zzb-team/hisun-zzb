@@ -17,4 +17,5 @@ public interface E01Z1Service extends BaseService<E01Z1,String>{
 //    Integer getMaxSmSort(String ad8Id, String e01Z101B);
     void updateE01Z1(E01Z1 e01z1, Integer oldSort)  throws Exception;
     void updateSortBeforSave(E01Z1 e01z1, Integer oldSort)  throws Exception;
+    void deleteE01Z1(E01Z1 e01Z1) throws Exception;
 }

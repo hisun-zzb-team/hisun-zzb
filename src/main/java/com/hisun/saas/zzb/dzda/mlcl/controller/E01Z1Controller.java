@@ -290,7 +290,8 @@ public class E01Z1Controller extends BaseController {
             @PathVariable("id") String id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            this.e01Z1Service.deleteByPK(id);
+            E01Z1 e01z1 = this.e01Z1Service.getByPK(id);
+            this.e01Z1Service.deleteE01Z1(e01z1);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e);

@@ -2,6 +2,11 @@
 <%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
 <%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <c:set var="path" value="${pageContext.request.contextPath}"></c:set>
+<script type="text/javascript">
+	window.PATH = "${path}";
+</script>
+<link href="${path}/css/images-view/images-grid.css" rel="stylesheet" type="text/css"/>
+
 
 			<div id="viewDiv" style="overflow: auto;margin: 0px;">
 				<c:if test="${empty e01z1Id}">
@@ -24,28 +29,41 @@
 						</table>
 					</c:if>
 					<c:if test="${imagesSize>=0}">
-						<table  id="jsonDataFormTable" width="100%">
+						<div id="gallery1"></div>
+						<%--<table  id="jsonDataFormTable" width="100%">--%>
 
-							<c:forEach items="${images}" var="image">
-							<tr >
-								<td style="width:100%;text-align: center">
-									<img src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgPath=${image}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
-								</td>
-							</tr>
-							</c:forEach>
-						</table>
+							<%--<c:forEach items="${eImages}" var="image">--%>
+							<%--<tr >--%>
+								<%--<td style="width:100%;text-align: center">--%>
+									<%--<img src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">--%>
+								<%--</td>--%>
+							<%--</tr>--%>
+							<%--</c:forEach>--%>
+						<%--</table>--%>
 					</c:if>
 				</c:if>
 			</div>
 
-
+<script src="${contextPath}/js/images-view/images-grid.js" charset=“utf-8”></script>
 <script type="text/javascript">
+	var imgs = [];
 	$(function(){
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
+		var images = "${images}";
+		if(images!=null && images!="") {
+			var imgList = images.replace('[','').replace(']','').split(',');
+			for (var i = 0; i < imgList.length; i++) {  //循环LIST
+				var imgId = imgList[i];
+				imgs[i] ="/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+			}
+		}
+		$('#gallery1').imagesGrid({
+			images:imgs
+		});
 	});
 
 	function changeTreeDivHeight(){
@@ -55,4 +73,6 @@
 //			$(".main_left").height(mainHeight);
 
 	}
+
+
 </script>

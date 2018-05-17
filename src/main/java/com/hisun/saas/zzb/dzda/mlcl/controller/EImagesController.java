@@ -113,15 +113,16 @@ public class EImagesController extends BaseController {
         String storePath = getTpStorePath(a38Id);
         List<String> images = new ArrayList<String>();
         int imagesSize = 0;
+        List<EImages> eImages = new ArrayList<EImages>();
         if(!e01z1Id.equals("")){
             E01Z1 e01z1 = new E01Z1();
             e01z1 = this.e01Z1Service.getByPK(e01z1Id);
 
-            List<EImages> eImages = new ArrayList<EImages>();
+
             eImages = e01z1.getImages();
 
             for(EImages image : eImages){
-                String jiamfilePath = image.getImgFilePath();//加密的图片路径
+//                String jiamfilePath = image.getImgFilePath();//加密的图片路径
 //                String jianmfilePath = "";//解密的图片路径
 //                String dirPath = uploadBasePath +storePath+myDirName;
 //                File storeDir = new File(dirPath);
@@ -143,9 +144,9 @@ public class EImagesController extends BaseController {
 //                if(jianmfile.exists()== false){
 //                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
 //                }
-                images.add(jiamfilePath);
+                images.add(image.getId());
             }
-         imagesSize = images.size();
+         imagesSize = eImages.size();
         }
 
         map.put("imagesSize", imagesSize);
@@ -272,8 +273,12 @@ public class EImagesController extends BaseController {
     }
 
     @RequestMapping("/showImages")
-    public HttpEntity<byte[]> showImages(String imgPath,String a38Id,
+    public HttpEntity<byte[]> showImages(String imgId,String a38Id,
                                        HttpServletRequest request, HttpServletResponse response) throws Exception {
+        imgId = StringUtils.trim(imgId);
+
+        EImages img = this.eImagesService.getByPK(imgId);
+        String imgPath = img.getImgFilePath();
         if (StringUtils.isEmpty(imgPath)==false) {
             String zpRealPath = uploadBasePath +imgPath;
             File file = new File(zpRealPath);

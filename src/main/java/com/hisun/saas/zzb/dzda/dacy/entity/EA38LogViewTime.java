@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -22,6 +23,8 @@ public class EA38LogViewTime  extends TenantEntity implements Serializable {
     private String id;
     private EA38Log a38Log;
     private String viewTime;
+    private Date stareTime;
+    private Date endTime;
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -54,6 +57,25 @@ public class EA38LogViewTime  extends TenantEntity implements Serializable {
 
     public void setViewTime(String viewTime) {
         this.viewTime = viewTime;
+    }
+    @Basic
+    @Column(name = "stare_time")
+    public Date getStareTime() {
+        return stareTime;
+    }
+
+    public void setStareTime(Date stareTime) {
+        this.stareTime = stareTime;
+    }
+
+    @Basic
+    @Column(name = "end_time")
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     @Override

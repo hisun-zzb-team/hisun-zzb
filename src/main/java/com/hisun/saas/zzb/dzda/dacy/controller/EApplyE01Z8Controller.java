@@ -69,7 +69,8 @@ public class EApplyE01Z8Controller extends BaseController {
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
                              @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
                              @RequestParam(value = "userName",required = false)String userName,
-                             @RequestParam(value = "readContent",required = false)String readContent
+                             @RequestParam(value = "readContent",required = false)String readContent,
+                             @RequestParam(value = "auditingState",required = false)String auditingState
         ) throws UnsupportedEncodingException {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String,Object> model = new HashMap<String,Object>();
@@ -81,6 +82,9 @@ public class EApplyE01Z8Controller extends BaseController {
         if(StringUtils.isNotBlank(readContent)){
             query.add(CommonRestrictions.and("readContent like :readContent ", "readContent", "%"+readContent+"%"));
         }
+        if(StringUtils.isNotBlank(auditingState)){
+            query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState", auditingState));
+        }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("createDate"));
@@ -89,6 +93,7 @@ public class EApplyE01Z8Controller extends BaseController {
         model.put("pager",pager);
         model.put("userName",userName);
         model.put("readContent",readContent);
+        model.put("auditingState",auditingState);
         return new ModelAndView("saas/zzb/dzda/dacy/list",model);
     }
     @RequestMapping(value = "/ajax/add")

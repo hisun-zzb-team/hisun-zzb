@@ -108,7 +108,6 @@
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
-
                     <TR height=28>
                         <th width=70>档案名称</th>
                         <th width=70>查阅人</th>
@@ -124,7 +123,7 @@
                         <tr style="text-overflow:ellipsis;">
                             <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.accreditDate}"></c:out> </TD>
+                            <TD width="10%"><c:out value="${vo.readDate}"></c:out> </TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out ></TD>
                             <TD width="10%"><a>查阅情况</a></TD>
                             <TD width="10%">
@@ -157,7 +156,8 @@
                                         <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">再次授权</a>
                                     </c:when>
                                 </c:choose>
-                                  <a href="javascript:deleteSq('${vo.id}')">删除 </a>
+                                <c:if test="${vo.auditingState == 1}">删除 </c:if>
+                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}')">删除 </a></c:if>
                             </TD>
                         </tr>
                     </c:forEach>
@@ -179,7 +179,7 @@
 </div>
 
 <script type="text/javascript">
-    (function(){
+/*    (function(){
         App.init();
 
         $("#btn-browseTemplate").bind("change",function(evt){
@@ -189,7 +189,7 @@
             $(this).val('');
         });
 
-    })();
+    })();*/
     function pagehref (pageNum ,pageSize){
         $("#pageNum").val(pageNum);
         $("#pageSize").val(pageSize);

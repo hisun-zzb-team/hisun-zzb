@@ -24,12 +24,13 @@ import java.util.List;
 public class EA38LogDetail  extends TenantEntity implements Serializable {
     private String id;
     private EA38Log a38Log;
-    private String e01Z1Id;
-    private String e01Z111;
-    private Date cyTime;
-    private String e01Z101A;
-    private String e01Z101B;
-    private String cysj;
+    private String e01Z1Id;//材料主键
+    private String e01Z111;//材料名称
+    private Date cyTime;//查阅时间
+    private String e01Z101A;//材料类别字典内容
+    private String e01Z101B;//材料类别字典代码
+    private String cysj;//查阅时长
+    private String jscysj;// 结束查阅时间
     private List<ELogDetailViewTime> logDetailViewTimes;
 
     @Id
@@ -52,6 +53,7 @@ public class EA38LogDetail  extends TenantEntity implements Serializable {
     public void setA38Log(EA38Log a38Log) {
         this.a38Log = a38Log;
     }
+
     @OneToMany(mappedBy = "a38LogDetails", fetch = FetchType.LAZY)
     @Cascade({org.hibernate.annotations.CascadeType.ALL})
     public List<ELogDetailViewTime> getLogDetailViewTimes() {
@@ -120,6 +122,16 @@ public class EA38LogDetail  extends TenantEntity implements Serializable {
 
     public void setCysj(String cysj) {
         this.cysj = cysj;
+    }
+
+    @Basic
+    @Column(name = "jscysj")
+    public String getJscysj() {
+        return jscysj;
+    }
+
+    public void setJscysj(String cysj) {
+        this.jscysj = jscysj;
     }
 
     @Override

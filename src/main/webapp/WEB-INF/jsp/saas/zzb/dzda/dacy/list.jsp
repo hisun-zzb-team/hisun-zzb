@@ -69,6 +69,13 @@
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
                             姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
                             查阅申请内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="${readContent}" style="width: 80px;" />
+                             <select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
+                                    <option value="" >全部</option>
+                                    <option value="0" >待审</option>
+                                    <option value="1" >已审</option>
+                                    <option value="2" >拒绝授权</option>
+                                    <option value="3" >收回权限</option>
+                             </select>
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -129,7 +136,8 @@
                                     </c:when>
                                  </c:choose></TD>
                             <TD width="10%">
-                                <a href="javascript:deleteYdsq('${vo.id}')">删除 </a>
+                                <c:if test="${vo.auditingState == 1}">删除 </c:if>
+                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}')">删除 </a></c:if>
                             </TD>
                         </tr>
                         </c:forEach>
@@ -178,6 +186,10 @@
         });
 
     })();
+    $(function(){
+        $("#auditingState option[value='${auditingState}']").attr("selected",
+                true);
+    })
     function hiddenViewImgModal() {//隐藏图片查看时 删除临时的解密图片
         $('#viewImgModal').modal('hide');
         $('#viewImgDiv').html("");
@@ -200,7 +212,6 @@
             },
             dataType: "html",
             success: function (html) {
-                debugger
                 $('#viewImgDiv').html(html);
                 $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },

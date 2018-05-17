@@ -24,17 +24,17 @@ import java.util.List;
 @Table(name = "e_a38_log")
 public class EA38Log extends TenantEntity implements Serializable {
     private String id;
-    private A38 a38;
-    private Date cysj;
-    private String cyrId;
-    private String cyrName;
-    private String a0101;
-    private EApplyE01Z8 applyE01Z8;
-    private String readTenantId;
-    private String readTenantName;
-    private String viewTime;
-    private Integer ydzt;
-    private Date zzcysj;
+    private A38 a38;//档案id
+    private Date cysj;//查阅时间
+    private String cyrId;//查阅人id
+    private String cyrName;//查阅人姓名
+    private String a0101;//档案所属人姓名
+    private EApplyE01Z8 applyE01Z8;//查阅记录id
+    private String readTenantId;//查阅单位id
+    private String readTenantName;//查阅单位
+    private String viewTime;//查阅时长
+    private Integer ydzt;//是否在阅档中 1表示阅档中 0或空表示不在阅档中
+    private Date zzcysj;//如果为正在阅档 则需要记录其在阅档的时间 由查阅页面不停写入查阅的时间，用于计算剩余的查阅时长
     private List<EA38LogDetail> a38LogDetails;
     private List<EA38LogViewTime> a38LogViewTimes;
     @Id

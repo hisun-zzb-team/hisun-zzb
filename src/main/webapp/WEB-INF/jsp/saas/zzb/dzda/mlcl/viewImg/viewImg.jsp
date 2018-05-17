@@ -83,6 +83,15 @@
 				$(this).find('.dropdownMob').hide();
 			}
 		});
+		if($("#showTpWidth").val()!=""){
+			$(".imgs-grid-image").css("width",$("#showTpWidth").val()+"%");
+
+			if($("#showTpWidth").val()=="100"){
+				$(".imgs-grid").css("text-align","center");
+			}else{
+				$(".imgs-grid").css("text-align","left");
+			}
+		}
 	});
 
 	function changeTreeDivHeight(){
@@ -94,6 +103,7 @@
 	}
 
 	function changeViewType(width){
+		$("#showTpWidth").val(width);
 		$(".imgs-grid-image").css("width",width+"%");
 
 		if(width=="100"){

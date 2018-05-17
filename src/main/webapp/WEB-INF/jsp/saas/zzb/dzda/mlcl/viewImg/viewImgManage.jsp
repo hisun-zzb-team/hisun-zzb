@@ -20,10 +20,9 @@
 <body >
 <div class="container-fluid" >
 	<!-- 脚本目录 -->
-
+	<input id="showTpWidth" type="hidden"/>
 	<div class="span6" style="width: 20%; margin: 0px;padding: 0px;background: #f1f3f6;border-right:1px solid #d8d8d8">
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
-
 				<div style="margin: 0px;padding: 0px">
 					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="viewImages" submitType="post" dataType="json" isSearch="false"/>

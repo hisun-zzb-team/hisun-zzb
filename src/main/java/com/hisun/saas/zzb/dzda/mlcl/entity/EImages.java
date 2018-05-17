@@ -22,7 +22,7 @@ import java.util.List;
 public class EImages  extends TombstoneEntity implements Serializable {
     private String id;
     private E01Z1 e01z1;
-    private String imgNo;
+    private Integer imgNo;
     private String imgFilePath;
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -51,11 +51,11 @@ public class EImages  extends TombstoneEntity implements Serializable {
 
     @Basic
     @Column(name = "img_no")
-    public String getImgNo() {
+    public Integer getImgNo() {
         return imgNo;
     }
 
-    public void setImgNo(String imgNo) {
+    public void setImgNo(Integer imgNo) {
         this.imgNo = imgNo;
     }
 

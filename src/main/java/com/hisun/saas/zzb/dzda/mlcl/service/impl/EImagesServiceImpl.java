@@ -32,11 +32,11 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author zhout {605144321@qq.com}
@@ -102,7 +102,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                             DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile, new File(encryptFilePath));
                             eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
                             FileUtils.deleteQuietly(tpFile);
-                            eImages.setImgNo(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2));
+                            eImages.setImgNo(Integer.getInteger(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2)));
                             this.save(eImages);
                             //记录已加载图片数
                             if (yjzTpMaps.get(e01Z1) != null) {
@@ -176,7 +176,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                     FileUtils.moveFileToDirectory(encryptFile, realStorePathFile,false);
                     eImages.setImgFilePath(realStorePath.substring(uploadBasePath.length(), realStorePath.length()) + encryptFile.getName());
                     FileUtils.deleteQuietly(tpFile);
-                    eImages.setImgNo(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2));
+                    eImages.setImgNo(Integer.getInteger(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2)));
                     this.save(eImages);
                     yjz++;
                 }
@@ -230,4 +230,186 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         }
     }
 
+    /**
+     * 调整图片顺序
+     * @param eImages
+     * @param oldImgNo
+     * @throws Exception
+     */
+    public void updateEImagesImgNo(EImages eImages,int oldImgNo)throws Exception{
+        if(eImages.getImgNo()!=oldImgNo) {
+            List<EImages> images = this.getNeedUpdateEImages(eImages,oldImgNo);
+            if(images!=null && images.size()>0){
+                this.updateImagesSort(images,eImages.getE01z1().getA38().getId(),oldImgNo,eImages);
+            }
+            this.eImagesDao.update(eImages);
+        }
+    }
+
+    /**
+     * 调整图片排序及调整存储服务图片的名称
+     * @param eImages 需要调整的图片集合
+     * @param oldSort  修改材料的旧排序
+     */
+    private void updateImagesSort(List<EImages> eImages,String a38Id,int oldSort,EImages updateImage) throws Exception{
+        java.util.Date date = new java.util.Date();
+        SimpleDateFormat sdf=new   SimpleDateFormat("yyyyMMddHHmmss");//定义日期格式
+        String nowDate = sdf.format(date);//系统当前日期
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        String myDirName = details.getUserid()+nowDate+"TMP";
+        String path = "";//文件存放路径
+
+        String dirPath = uploadBasePath+this.getTpStorePath(a38Id)+myDirName;//	取得临时存放图片的路径
+        File storeDir = new File(dirPath);
+        if (storeDir.exists() == false) {
+            storeDir.mkdirs();
+        }
+        String newE01z104 ="";
+        int newSort = updateImage.getImgNo();
+        //如果有需要重新按照材料序号修改的图片则先按照材料序号修改名字后移动到临时文件
+        if (eImages != null && eImages.size() > 0) {
+            for (EImages image : eImages) {
+                int imgNo = image.getImgNo();//图片序号
+                int e01z104 = image.getE01z1().getE01Z104();
+
+                if (image.getId() != updateImage.getId()) {
+                    if (imgNo < oldSort) {
+                        imgNo = imgNo + 1;
+                    } else {
+                        imgNo = imgNo - 1;
+                    }
+                }
+                if (path.equals("")) {
+                    int lastIndex = 0;
+                    if (image.getImgFilePath().lastIndexOf("/") != -1) {
+                        lastIndex = image.getImgFilePath().lastIndexOf("/");
+                    } else {
+                        lastIndex = image.getImgFilePath().lastIndexOf("\\");
+                    }
+                    path = image.getImgFilePath().substring(0, lastIndex);
+                }
+                String imgPath = uploadBasePath + image.getImgFilePath();
+                File file = new File(imgPath);
+                FileInputStream fileinputstream = null;
+                FileOutputStream fileoutputStream = null;
+                if (e01z104 < 10) {
+                    newE01z104 = "0" + e01z104;
+                } else {
+                    newE01z104 = e01z104 + "";
+                }
+                String newFileName = newE01z104 + imgNo;
+                if (file.exists()) {
+                    fileinputstream = new FileInputStream(file);
+                    long len = file.length();
+                    String newFilePath = dirPath + File.separator + newFileName;
+                    byte abyte0[] = new byte[Integer.parseInt(Long.toString(len))];
+                    File newFile = new File(newFilePath);
+                    if (!newFile.exists()) {
+                        newFile.createNewFile();
+                    }
+                    fileoutputStream = new FileOutputStream(newFile);
+                    fileinputstream.read(abyte0, 0, Integer.parseInt(Long.toString(len)));
+                    fileoutputStream.write(abyte0);
+                    if (fileinputstream != null) {
+                        fileinputstream.close();
+                    }
+                    if (fileoutputStream != null) {
+                        fileoutputStream.close();
+                    }
+                    file.delete();
+                }
+                image.setImgFilePath(path + File.separator + newFileName);
+                image.setImgNo(imgNo);
+                if (image.getId() != updateImage.getId()) {
+                    this.eImagesDao.update(image);
+                }
+            }
+        }
+
+        if(!dirPath.equals("")){
+            File desfile = new File(dirPath);
+            if(desfile.exists()){
+                File[] files = desfile.listFiles();
+                for(int i=0;i<files.length;i++){
+                    String fileName = files[i].getName();
+                    File file =  files[i];
+                    FileInputStream fileinputstream = null;
+                    FileOutputStream fileoutputStream = null;
+                    fileinputstream = new FileInputStream(file);
+                    long len = file.length();
+                    String newFilePath = uploadBasePath+path+File.separator+fileName;
+                    byte abyte0[] = new byte[Integer.parseInt(Long.toString(len))];
+                    File newFile = new File(newFilePath);
+                    if(!newFile.exists()){
+                        newFile.createNewFile();
+                    }
+
+                    fileoutputStream = new FileOutputStream(newFile);
+
+                    fileinputstream.read(abyte0, 0, Integer.parseInt(Long.toString(len)));
+
+                    fileoutputStream.write(abyte0);
+
+                    if(fileinputstream != null ){
+                        fileinputstream.close();
+                    }
+                    if(fileoutputStream != null ){
+                        fileoutputStream.close();
+                    }
+                    file.delete();
+                }
+                desfile.delete();
+            }
+        }
+    }
+
+    //得到在刷新排序时 需要调整排序的图片
+    private List<EImages> getNeedUpdateEImages(EImages images, Integer oldSort){
+        Integer newSort = images.getImgNo();
+        List<EImages> eImages = new ArrayList<EImages>();
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" e01z1.id = :id ", "id", images.getE01z1().getId()));
+        if(newSort>oldSort){
+            query.add(CommonRestrictions.and(" imgNo <= :newSort ", "newSort", newSort));
+            query.add(CommonRestrictions.and(" imgNo > :oldSort ", "oldSort", oldSort));
+        }else{
+            query.add(CommonRestrictions.and(" imgNo < :oldSort ", "oldSort", oldSort));
+            query.add(CommonRestrictions.and(" imgNo >= :newSort ", "newSort", newSort));
+        }
+
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("imgNo"));
+        eImages = this.eImagesDao.list(query,orderBy);
+        return eImages;
+    }
+    //删除单张图片
+    public void deleteEImages(EImages images)throws Exception{
+        int maxSort = this.getMaxImgNo(images.getE01z1().getId());
+        Integer oldSort = images.getImgNo();//以前的排序号
+        if(oldSort < maxSort){//如果新的排序号比以前的排序号小
+            images.setImgNo(maxSort);
+            List<EImages> eImages = this.getNeedUpdateEImages(images,oldSort);
+            if(eImages!=null && eImages.size()>0){
+                this.updateImagesSort(eImages,images.getE01z1().getA38().getId(),oldSort,images);
+            }
+        }
+        FileUtils.deleteQuietly(new File(uploadBasePath+images.getImgFilePath()));
+        this.eImagesDao.delete(images);
+    }
+
+    public Integer getMaxImgNo(String e01z1Id) {
+        Map<String, Object> map=new HashMap<String, Object>();
+        String hql = "select max(e.imgNo)+1 as imgNo from EImages e ";
+        if(e01z1Id!=null && !e01z1Id.equals("")) {
+            hql = hql+"where e.e01z1.id =:e01z1Id";
+            map.put("e01z1Id", e01z1Id);
+        }
+        List<Map> maxSorts = this.e01Z1Dao.list(hql, map);
+        if(maxSorts.get(0).get("imgNo")==null){
+            return 0;
+        }else{
+            Integer maxSort = ((Number) maxSorts.get(0).get("imgNo")).intValue();
+            return maxSort;
+        }
+    }
 }

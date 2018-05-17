@@ -77,13 +77,14 @@ public class EImagesController extends BaseController {
      * @param archiveId 档案材料字典ID
      * @param e01z1Id 档案材料ID
      * @param showType  浏览的位置  如果为refer则是   如果是viewApply则为查阅列表进入
+     * @param isManage  是否进入管理图片 true为进入管理界面
      * @return
      * @throws GenericException
      */
     @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
     @RequestMapping("/ajax/viewMain/{a38Id}")
     public
-    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName) throws GenericException {
+    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName,String isManage) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -98,6 +99,7 @@ public class EImagesController extends BaseController {
         map.put("e01z1Id", e01z1Id);
         map.put("myDirName", myDirName);
         map.put("a0101", a0101);
+        map.put("isManage", isManage);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
     }
     private String getTpStorePath(String a38Id) {
@@ -108,7 +110,7 @@ public class EImagesController extends BaseController {
                 + a38Id + File.separator;
     }
     @RequestMapping(value = "/ajax/viewImg")
-    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName) throws Exception {
+    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName,String isManage) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         String storePath = getTpStorePath(a38Id);
         List<String> images = new ArrayList<String>();
@@ -144,7 +146,7 @@ public class EImagesController extends BaseController {
 //                if(jianmfile.exists()== false){
 //                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
 //                }
-                images.add(image.getId());
+                images.add(image.getId()+";"+image.getImgNo());
             }
          imagesSize = eImages.size();
         }
@@ -154,6 +156,7 @@ public class EImagesController extends BaseController {
         map.put("a38Id", a38Id);
         map.put("e01z1Id", e01z1Id);
         map.put("myDirName", myDirName);
+        map.put("isManage", isManage);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
     }
 
@@ -303,4 +306,91 @@ public class EImagesController extends BaseController {
             return new HttpEntity(HttpStatus.OK);
         }
     }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除图片:${id}")
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/delete/{id}")
+    public @ResponseBody Map<String, Object> delete(
+            @PathVariable("id") String id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            EImages eImages = this.eImagesService.getByPK(id);
+            this.eImagesService.deleteEImages(eImages);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "调整图片顺序:${id}")
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/updateImgNo")
+    public @ResponseBody Map<String, Object> updateImgNo(
+            @PathVariable("id") String id,String newImgNo) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            EImages eImages = this.eImagesService.getByPK(id);
+            eImages.setImgNo(Integer.parseInt(newImgNo));
+            this.eImagesService.deleteEImages(eImages);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "上传单张图片:${id}")
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/uploadImg")
+    public @ResponseBody Map<String, Object> uploadImg(
+            String e01z1Id,@RequestParam(value="tpFile",required = false) MultipartFile tpFile) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            int maxImgNo = this.eImagesService.getMaxImgNo(e01z1Id)+1;
+            E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
+            String a38Id = e01Z1.getA38().getId();
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            String storeRealPath = uploadBasePath + getTpStorePath(a38Id);//正式目录
+            File storeRealPathFile = new File(storeRealPath);
+            if (storeRealPathFile.exists() == false) {
+                storeRealPathFile.mkdirs();
+            }
+            int  e01z104 = e01Z1.getE01Z104();
+            String newE01z104 ="";
+            if (e01z104 < 10) {
+                newE01z104 = "0" + e01z104;
+            } else {
+                newE01z104 = e01z104 + "";
+            }
+            String imgFilePath = "";
+            if (tpFile != null && !tpFile.isEmpty()) {
+                imgFilePath = storeRealPath+newE01z104+maxImgNo+tpFile.getOriginalFilename().toLowerCase();
+                String encryptFilePath = storeRealPath+newE01z104+maxImgNo;
+                File imgFile = new File(imgFilePath);
+                FileOutputStream fosGbrmspbZip = new FileOutputStream(imgFile);
+                fosGbrmspbZip.write(tpFile.getBytes());
+                fosGbrmspbZip.flush();
+                fosGbrmspbZip.close();
+
+                DESUtil.getInstance(Constants.DATP_KEY).encrypt(imgFile, new File(encryptFilePath));
+
+                FileUtils.deleteQuietly(imgFile);
+                EImages eImages = new EImages();
+                eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
+                eImages.setE01z1(e01Z1);
+                eImages.setImgNo(maxImgNo);
+                this.eImagesService.save(eImages);
+            }
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
+
+
 }

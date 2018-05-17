@@ -247,7 +247,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                         File file = new File(imgPath);
                         FileInputStream fileinputstream = null;
                         FileOutputStream fileoutputStream = null;
-                        String imgNo = image.getImgNo();
+                        int imgNo = image.getImgNo();
                         if (e01z104 < 10) {
                             newE01z104 = "0" + e01z104;
                         } else {

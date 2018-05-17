@@ -27,6 +27,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
+                    <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+                        显示方式<i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li >
+                            <a onclick="changeViewType('20')">小图(一行5张图)</a>
+                        </li>
+                        <li >
+                            <a onclick="changeViewType('33.3333333336')">中图(一行3张图)</a>
+                        </li>
+                        <li>
+                            <a onclick="changeViewType('50')">大图(一行2张图)</a>
+                        </li>
+                        <li>
+                            <a onclick="changeViewType('100')">原始图(一行1张图)</a>
+                        </li>
+                    </ul>
+                </div>
                 <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                 <h3 class="modal-title" id="title">
                     “${a0101}”档案图片
@@ -76,6 +95,9 @@
                                     <a href="#" id="jztpButton">加载图片</a>
                                 </li>
                                 <li>
+                                    <a href="javascript:viewImageMain('','','true')" >图片调整</a>
+                                </li>
+                                <li>
                                     <a href="#" id="xztpButton">卸载图片</a>
                                 </li>
                                 <li>
@@ -118,7 +140,7 @@
                         <th width="30">加载<br>图片</th>
                         <th width="40">浏览</th>
                         <%--<th width="30">扫描<br>排序</th>--%>
-                        <th width="70">操作</th>
+                        <th width="130">操作</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
@@ -133,6 +155,7 @@
                             <%--<td style="text-align: center">${vo.e01Z107}</td>--%>
                             <td>
                                 <a href="javascript:edit('${vo.id}')" class="">修改</a>|
+                                <a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}','true')" class="">图片调整</a>|
                                 <a href="javascript:del('${vo.id}','${vo.e01Z111}')" voname="${vo.e01Z111}"
                                    class="">删除</a>
                             </td>
@@ -270,7 +293,7 @@
             }
         });
     }
-    var viewImageMain = function (e01z1Id,e01Z101B) {
+    var viewImageMain = function (e01z1Id,e01Z101B,isManage) {
         var divHeight = $(window).height() -60;
         var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
@@ -281,7 +304,8 @@
             data: {
                 "a0101":"${a0101}",
                 "archiveId":e01Z101B,
-                "e01z1Id":e01z1Id
+                "e01z1Id":e01z1Id,
+                "isManage":isManage
             },
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

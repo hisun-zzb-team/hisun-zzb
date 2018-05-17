@@ -5,6 +5,12 @@
 <script type="text/javascript">
 	window.PATH = "${path}";
 </script>
+<style>
+	.dropdownMob{ position:absolute; top:10px; right:10px; display:none;}
+	.dropdownMob .dropdown-menu{ left:-53px; min-width: 80px;}
+	.btn.downMobBtn{ padding:3px 6px; background-color:#FFFFFF; border:solid 1px #e5e5e5;}
+	.btn.downMobBtn:hover{ background-color:#FFFFFF !important;}
+</style>
 <link href="${path}/css/images-view/images-grid.css" rel="stylesheet" type="text/css"/>
 
 
@@ -47,6 +53,8 @@
 <script src="${contextPath}/js/images-view/images-grid.js" charset=“utf-8”></script>
 <script type="text/javascript">
 	var imgs = [];
+	var isManage = "false";
+
 	$(function(){
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
@@ -57,12 +65,23 @@
 		if(images!=null && images!="") {
 			var imgList = images.replace('[','').replace(']','').split(',');
 			for (var i = 0; i < imgList.length; i++) {  //循环LIST
-				var imgId = imgList[i];
-				imgs[i] ="/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+				var imgId = imgList[i].split(";")[0];
+				var imgNo  = imgList[i].split(";")[1];
+				imgs[i] ={ src: "/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", alt:imgNo+"/${imagesSize}", title:'排序:'+imgNo };
 			}
 		}
 		$('#gallery1').imagesGrid({
 			images:imgs
+		});
+		isManage = "${isManage}";
+		$(".image-wrap").hover(function(){
+			if(isManage=="true"){
+				$(this).find('.dropdownMob').show();
+			}
+		},function(){
+			if(isManage=="true") {
+				$(this).find('.dropdownMob').hide();
+			}
 		});
 	});
 
@@ -74,5 +93,14 @@
 
 	}
 
+	function changeViewType(width){
+		$(".imgs-grid-image").css("width",width+"%");
+
+		if(width=="100"){
+			$(".imgs-grid").css("text-align","center");
+		}else{
+			$(".imgs-grid").css("text-align","left");
+		}
+	}
 
 </script>

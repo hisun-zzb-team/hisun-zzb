@@ -20,6 +20,8 @@
 	</style>
 </head>
 <body>
+
+
 <div id="viewImgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -44,7 +46,7 @@
 					<div class="caption">本单位档案：共<font color="red"> ${pager.total } </font>人</div>
 					<div class="clearfix fr">
 
-						<a  class="btn green" href="#">
+						<a  class="btn green" href="javascript:gjcx()">
 							高级查询
 						</a>
 						<a class="btn green" href="javascript:fileDown('list')">
@@ -220,9 +222,7 @@
 			dataType: "html",
 			success: function (html) {
 				$('#viewImgDiv').html(html);
-				$('#viewImgModal').modal({
-					keyboard: true
-				});
+				$('#viewImgModal').modal({backdrop: 'static', keyboard: false});
 			},
 			error: function () {
 				showTip("提示", "出错了请联系管理员", 1500);
@@ -321,6 +321,25 @@
 	}
 	function fileDown(type) {
 		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
+	}
+
+	var gjcx = function(){
+		$.ajax({
+			url:"${path}/zzb/dzda/dak/ajax/gjcx",
+			type : "post",
+			data: {},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "html",
+			success : function(html){
+				$('#gjcxModal').modal({backdrop: 'static', keyboard: false});
+				$('#gjcxDiv').html(html);
+			},
+			error : function(){
+				showTip("提示","出错了请联系管理员", 1500);
+			}
+		});
 	}
 </script>
 </body>

@@ -10,9 +10,12 @@ import com.hisun.base.dao.BaseDao;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author liuzj {279421824@qq.com}
  */
 public interface A38Dao extends BaseDao<A38,String> {
-
+    List<A38> gjcxList(String sql, Map<String,Object> paramMap);
 }

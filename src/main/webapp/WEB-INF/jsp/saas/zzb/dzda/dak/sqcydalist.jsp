@@ -181,9 +181,7 @@
             dataType: "html",
             success: function (html) {
                 $('#viewImgDiv').html(html);
-                $('#viewImgModal').modal({
-                    keyboard: true
-                });
+                $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },
             error: function () {
                 showTip("提示", "出错了请联系管理员", 1500);
@@ -208,9 +206,7 @@
             success : function(html){
                 $('#addDiv').html(html);
 
-                $('#addModal').modal({
-                    keyboard: true
-                });
+                $('#addModal').modal({backdrop: 'static', keyboard: false});
             },
             error : function(){
                 showTip("提示","出错了请联系管理员", 1500);

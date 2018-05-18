@@ -326,14 +326,15 @@ public class EImagesController extends BaseController {
 
     @RequiresLog(operateType = LogOperateType.DELETE,description = "调整图片顺序:${id}")
     @RequiresPermissions("a38:*")
-    @RequestMapping(value = "/updateImgNo")
+    @RequestMapping(value = "/updateImgNo/{id}")
     public @ResponseBody Map<String, Object> updateImgNo(
             @PathVariable("id") String id,String newImgNo) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             EImages eImages = this.eImagesService.getByPK(id);
+            int oldImgNo = eImages.getImgNo();
             eImages.setImgNo(Integer.parseInt(newImgNo));
-            this.eImagesService.deleteEImages(eImages);
+            this.eImagesService.updateEImagesImgNo(eImages,oldImgNo);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e);

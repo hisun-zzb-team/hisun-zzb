@@ -19,15 +19,20 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a32.Constants;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
+import com.hisun.saas.zzb.dzda.a32.exchange.GzbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.util.UUIDUtil;
+import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +41,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +62,12 @@ public class A32Controller extends BaseController {
     private A32Service a32Service;
     @Resource
     private A38Service a38Service;
+    @Resource
+    GzbdExcelExchange gzbdExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
+
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
@@ -158,5 +175,51 @@ public class A32Controller extends BaseController {
         }
 
         return returnMap;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download/{a38Id}")
+    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
+        //CommonOrderBy orderBy = new CommonOrderBy();
+        //orderBy.add(CommonOrder.asc("px"));
+        List<A32> resultList = a32Service.list(query,null);
+        A32Vo vo;
+        List<A32Vo> a32Vos=new ArrayList<>();
+        try {
+            for(A32 a32:resultList){
+                vo = new A32Vo();
+                BeanUtils.copyProperties(vo,a32);
+                a32Vos.add(vo);
+            }
+            File storePathFile = new File(Constants.GZBD_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            String fielePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            gzbdExcelExchange.toOneExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,fielePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("AA.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(fielePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "GBK");
+        }
+        return filename;
     }
 }

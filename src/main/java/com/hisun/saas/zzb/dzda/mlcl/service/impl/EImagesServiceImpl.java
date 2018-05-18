@@ -408,7 +408,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
     }
     //删除单张图片
     public void deleteEImages(EImages images)throws Exception{
-        int maxSort = this.getMaxImgNo(images.getE01z1().getId());
+        int maxSort = this.getMaxImgNo(images.getE01z1().getId())+1;
         Integer oldSort = images.getImgNo();//以前的排序号
         if(oldSort < maxSort){//如果新的排序号比以前的排序号小
             images.setImgNo(maxSort);

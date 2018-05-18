@@ -18,6 +18,38 @@
 	<input type="hidden" id="curImgNo" name="curImgNo" value="">
 	<input type="hidden" id="uploadType" name="uploadType" value="">
 </form>
+<div id="updateImgNoModal" class="modal container hide fade" tabindex="-1" data-width="400">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close"  type="button"></button>
+				<h3 class="modal-title" id="title" >
+					图片顺序调整
+				</h3>
+			</div>
+			<div class="modal-body form-horizontal" data-height="150" id="updateImgNoDiv">
+					<input type="hidden" name="imgId" id="imgId"/>
+					<div class="control-group">
+						<label class="control-label" style=" width: 70px;">当前排序：</label>
+						<div class="controls" style="margin-left: 80px;">
+							<input class="m-wrap" type="text" id="cuaImgNo" name="cuaImgNo"  maxlength="2" readonly value=""/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"  style=" width: 70px;"><span class="required">*</span>调整排序</label>
+						<div class="controls" style="margin-left: 80px;">
+							<input class="m-wrap" type="text" id="newImgNo" name="newImgNo"  maxlength="2" number="true"  value=""/>
+						</div>
+					</div>
+					<div id="ErrMsg" name="ErrMsg" style="color: red;margin-left: 80px;"></div>
+					<div class="control-group mybutton-group" style="text-align: center;">
+						<button type="button" class="btn green" onclick="updateImgNoSubmit()"><i class="icon-ok"></i> 确定</button>
+						<button type="button" class="btn btn-default"  data-dismiss="modal"><i class="icon-remove-sign"></i> 取消</button>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
 	<div id="viewDiv" style="overflow: auto;margin: 0px;">
 		<c:if test="${empty e01z1Id}">
 			<table style="width: 100%;height: 100%;">
@@ -70,6 +102,7 @@
 			var imgList = images.replace('[','').replace(']','').split(',');
 			for (var i = 0; i < imgList.length; i++) {  //循环LIST
 				var imgId = imgList[i].split(";")[0];
+				imgId = imgId.replace(/(^\s*)|(\s*$)/g, "")
 				var imgNo  = imgList[i].split(";")[1];
 				imgs[i] ={ src: "/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",imgId:imgId,alt:imgNo+"/${imagesSize}", title:imgNo};
 			}
@@ -172,10 +205,95 @@
 
 	//调整图片顺序
 	function updateImgNo(imgId,imgNo){
+		$('#cuaImgNo').val(imgNo);
+		$('#imgId').val(imgId);
+		$('#updateImgNoDiv').css("height","150");
 
+		$('#updateImgNoModal').modal({
+			keyboard: false,
+			backdrop: 'static'
+		});
+	}
+	//调整图片顺序
+	function updateImgNoSubmit(){
+		var newImgNo = $('#newImgNo').val();
+		var imgId = $('#imgId').val();
+		if(newImgNo==""){
+			showTip("提示","调整排序不能为空",2000);
+			return false;
+		}else{
+			if(isNumberTmp(newImgNo)==false){
+				showTip("提示","调整排序必须为正整数",2000);
+				return false;
+			}else{
+				if(newImgNo<0||newImgNo==0){
+					showTip("提示","调整排序必须为正整数",2000);
+					return false;
+				}
+			}
+		}
+		$.ajax({
+			url : "${path }/zzb/dzda/mlcl/images/updateImgNo/"+imgId,
+			type : "post",
+			data : {
+				"newImgNo":newImgNo
+			},
+			dataType : "json",
+			headers: {
+				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			beforeSend:function(XHR){
+				myLoading.show();
+			},
+			success : function(json){
+				if(json.success){
+					$('#updateImgNoModal').modal('hide');
+					myLoading.hide();
+					showTip("提示","图片排序调整成功",2000);
+					setTimeout(function(){
+						loadRight("${e01z1Id}")
+					},2000)
+				}else{
+					showTip("提示", "调整图片顺序失败", 2000);
+				}
+			},
+			error : function(arg1, arg2, arg3){
+				showTip("提示","出错了请联系管理员",2000);
+			},
+			complete : function(XHR, TS){
+				myLoading.hide();
+			}
+		});
 	}
 	//删除图片
 	function deleteImg(imgId,imgNo){
+		actionByConfirm1("第“"+imgNo+"”张图片", "${path}/zzb/dzda/mlcl/images/delete/" + imgId, {}, function (data, status) {
+			if (data.success == true) {
+				showTip("提示","图片成功删除",2000);
+				setTimeout(function(){
+					loadRight("${e01z1Id}")
+				},2000)
+			} else {
+				showTip("提示", data.msg, 2000);
+			}
+		});
+	}
+	function isNumberTmp(str) {
+		var Letters = "0123456789";
+		var Letters2 = "-0123456789";
+		if(str.length==0)
+			return false;
 
+		//对首位进行附加判断
+		if(Letters2.indexOf(str.charAt(0)) == -1){
+			return false;
+		}else{
+			for (i = 1; i < str.length; i++) {
+				var checkChar = str.charAt(i);
+				if (Letters.indexOf(checkChar) == -1)
+					return false;
+			}
+			return true;
+		}
 	}
 </script>

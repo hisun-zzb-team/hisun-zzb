@@ -14,12 +14,17 @@ import com.hisun.saas.zzb.dzda.a38.dao.A38Dao;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author liuzj {279421824@qq.com}
  */
 @Repository
 public class A38DaoImpl extends TenantBaseDaoImpl<A38,String>
        implements A38Dao {
-
+    public List<A38> gjcxList(String sql, Map<String,Object> paramMap){
+        return nativeList(A38.class, sql.toString(), paramMap);
+    }
 
 }

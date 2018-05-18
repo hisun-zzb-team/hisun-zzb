@@ -18,6 +18,8 @@
 
 
 <body >
+
+
 <div class="container-fluid" >
 	<!-- 脚本目录 -->
 	<input id="showTpWidth" type="hidden"/>
@@ -84,7 +86,6 @@
 				$("#viewList").html(html);
 			},
 			error: function () {
-				myLoading.hide();
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});
@@ -131,6 +132,35 @@
 		if(treeNode!=null && nodeType == "cl") {
 			loadRight(treeNode.id);
 		}
+	}
+	function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
+		$('#viewImgModal').modal('hide');
+		$('#viewImgDiv').html("");
+		<%--var a38Id = $("#a38Id").val();--%>
+		<%--var myDirName = $("#myDirName").val();--%>
+		<%--$.ajax({--%>
+		<%--url: "${path}/zzb/dzda/mlcl/images/delete/jmImages",--%>
+		<%--type: "post",--%>
+		<%--data: {--%>
+		<%--"a38Id":a38Id,--%>
+		<%--"myDirName":myDirName--%>
+		<%--},--%>
+		<%--headers: {--%>
+		<%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
+		<%--},--%>
+		<%--dataType: "json",--%>
+		<%--success: function (data) {--%>
+		<%--if (data.success == "true" || data.success == true) {--%>
+
+		<%--}else{--%>
+		<%--showTip("提示", "删除解密图片失败，请联系管理员!", 1300);--%>
+		<%--}--%>
+		<%--},--%>
+		<%--error: function () {--%>
+		<%--showTip("提示", "出错了请联系管理员!", 1300);--%>
+
+		<%--}--%>
+		<%--});--%>
 	}
 
 

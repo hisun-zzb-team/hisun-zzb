@@ -22,6 +22,7 @@ public interface EImagesService extends BaseService<EImages,String>{
     void saveEImagesByJztp(E01Z1 e01Z1,File storePathFile)throws Exception;
     void deleteEImagesByA38(A38 a38);
     void deleteEImagesAndFileByA38(A38 a38) throws Exception;
+    void saveEImages(EImages eImages,String uploadType,int oldImgNo,File imgFile,String encryptFilePath)throws Exception;
     void updateEImagesImgNo(EImages eImages,int oldImgNo)throws Exception;
     void deleteEImages(EImages images)throws Exception;
     Integer getMaxImgNo(String e01z1Id);

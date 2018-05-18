@@ -47,7 +47,7 @@
                         <div id="sqcydazwGroup" class="control-group">
                             <label class="control-label">单位职务</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="${sqcydazw }"
                                        id="sqcydazw" name="sqcydazw" >
 
                                 <!--<input type="text" class="span10 m-wrap"  name="pcsj" formatter="yyyymmdd"   maxlength="8" id="pcsj" type="date"/>-->

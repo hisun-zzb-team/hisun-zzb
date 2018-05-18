@@ -14,33 +14,32 @@ import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
+import com.hisun.saas.sys.admin.dictionary.entity.DictionaryItem;
+import com.hisun.saas.sys.admin.dictionary.entity.DictionaryType;
+import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
+import com.hisun.saas.sys.admin.dictionary.service.DictionaryTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
-import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.sys.taglib.selectTag.SelectNode;
+import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
-import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
-import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
-import com.hisun.util.ValidateUtil;
+import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
+import org.antlr.stringtemplate.CommonGroupLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author liuzj {279421824@qq.com}
@@ -55,9 +54,18 @@ public class DakController extends BaseController {
     @Resource
     private EApplyE01Z8Service eApplyE01Z8Service;
 
+    @Resource
+    private DictionaryItemService dictionaryItemService;
+
+    @Resource
+    private DictionaryTypeService dictionaryTypeService;
+
+    private DakVo dakVos;
+
     @RequiresPermissions("a38:dakList ")
     @RequestMapping(value = "/manage")
     public ModelAndView manage(String id,String listType){
+        dakVos = new DakVo();
         return new ModelAndView("saas/zzb/dzda/dak/manage");
     }
 
@@ -165,6 +173,70 @@ public class DakController extends BaseController {
 
     @RequestMapping(value = "/ajax/sqcydaAdd")
     public ModelAndView add(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("sqcydazw","sqcydazw");
         return new ModelAndView("saas/zzb/dzda/dak/sqcydaAdd");
+    }
+
+    @RequiresPermissions("a38:dakList ")
+    @RequestMapping(value = "/ajax/gjcx")
+    public ModelAndView gjcx(String id,String listType){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("vo",dakVos);
+        return new ModelAndView("saas/zzb/dzda/dak/gjcxPage",map);
+    }
+
+    @RequiresPermissions("a38:dakList ")
+    @RequestMapping("/ajax/gjcxBdwdalist")
+    public ModelAndView GjcxBdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+                                      @ModelAttribute DakVo vo) throws UnsupportedEncodingException {
+        Map<String,Object> model = new HashMap<String,Object>();
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        List<A38> resultList = a38Service.gjcxList(vo,userLoginDetails);
+        int total =  resultList.size();
+        PagerVo<A38> pager = new PagerVo<A38>(resultList, total, pageNum, pageSize);
+        model.put("pager",pager);
+        dakVos=vo;
+        return new ModelAndView("saas/zzb/dzda/dak/bdwdalist",model);
+    }
+
+    @RequestMapping(value = "/select")
+    public @ResponseBody Map<String,Object> getSelectNodes(String typeCode,String tenant2ResourceId,String privilegeId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String typeId = "";
+        try {
+            CommonConditionQuery dictionaryTypeQuery = new CommonConditionQuery();
+            dictionaryTypeQuery.add(CommonRestrictions.and("(code like :searchName)", "searchName", "%" + "SFBS" + "%"));
+            CommonOrderBy dictionaryTypeOrderBy = new CommonOrderBy();
+            List<DictionaryType> queryList = this.dictionaryTypeService.list(dictionaryTypeQuery, dictionaryTypeOrderBy);
+            if(queryList!=null && queryList.size()>0){
+                typeId=queryList.get(0).getId();
+            }
+
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" dictionaryType.id=:typeId ", "typeId", typeId));
+            CommonOrderBy orderBy = new CommonOrderBy();
+//            orderBy.add(CommonOrder.asc("sort"));
+//            orderBy.add(CommonOrder.asc("code"));
+            List<DictionaryItem> dictionaryItems = this.dictionaryItemService.list(query, orderBy);
+            List<SelectNode> nodes = new ArrayList<>();
+            SelectNode node=null;
+            node = new SelectNode();
+            node.setOptionKey("");
+            node.setOptionValue("");
+            nodes.add(node);
+            for (DictionaryItem dictionaryItem : dictionaryItems) {
+                node = new SelectNode();
+                node.setOptionKey(dictionaryItem.getCode());
+                node.setOptionValue(dictionaryItem.getName());
+                nodes.add(node);
+            }
+            map.put("success", true);
+            map.put("data", nodes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("success", false);
+        }
+        return map;
     }
 }

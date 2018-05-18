@@ -7,12 +7,16 @@
 package com.hisun.saas.zzb.dzda.a38.service;
 
 import com.hisun.base.service.BaseService;
+import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
+
+import java.util.List;
 
 /**
  * @author liuzj {279421824@qq.com}
  */
 public interface A38Service extends BaseService<A38,String>{
-
+    List<A38> gjcxList(DakVo dakVo,UserLoginDetails userLoginDetails);
 }

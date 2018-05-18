@@ -28,6 +28,7 @@
 							   onClick="viewImages" submitType="post" dataType="json" isSearch="false"/>
 				</div>
 		</div>
+		<input type="hidden" name="lsE01z1Id" id="lsE01z1Id">
 	</div>
 	<div>
 		<%--<div style="margin-bottom: 5px;text-align: right;margin-top: 10px">--%>
@@ -91,6 +92,34 @@
 
 	// 点击事件
 	function viewImages(event, treeId, treeNode){
+		var  eApplyE01Z8Id = $("#eApplyE01Z8Id").val();
+		var a38LogId = $("#a38LogId").val();
+		if(eApplyE01Z8Id == undefined || eApplyE01Z8Id == "" || eApplyE01Z8Id == null){
+			return;
+		}
+		//记录阅档日志
+		if(treeNode.nodeType != "dir"){
+			$.ajax({
+				type: "POST",
+				url:"${path}/zzb/dzda/cysq/ajax/detailViewTime",
+				dataType: "html",
+				data: {
+					"a38LogId": a38LogId,
+					"eApplyE01Z8Id": eApplyE01Z8Id,
+					"e01z1Id": treeNode.id,
+					"e01z111":treeNode.name
+				},
+
+				success: function (html) {
+					$("#lsE01z1Id").val()
+				},
+				error: function () {
+					//myLoading.hide();
+					showTip("提示", "出错了,请检查网络!", 2000);
+				}
+			});
+		}
+
 		var nodeType = "0";
 		var treeObj = zViewTree;
 		var selectNodes = treeObj.getSelectedNodes();

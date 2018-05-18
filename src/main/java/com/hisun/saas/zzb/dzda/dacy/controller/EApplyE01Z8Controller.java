@@ -23,13 +23,14 @@ import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
-import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
-import com.hisun.saas.zzb.dzda.dacy.entity.EA38LogViewTime;
-import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
+import com.hisun.saas.zzb.dzda.dacy.entity.*;
 import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
+import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.*;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,6 +74,8 @@ public class EApplyE01Z8Controller extends BaseController {
     private EA38LogDetailService eA38LogDetailService;
     @Resource
     private ELogDetailViewTimeService eLogDetailViewTimeService;
+    @Resource
+    private E01Z1Service e01Z1Service;
 
     @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
@@ -350,9 +353,14 @@ public class EApplyE01Z8Controller extends BaseController {
             List<EA38Log> eA38Logs = eA38LogService.list(query,new CommonOrderBy());
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(id);
+            if(eApplyE01Z8.getReadDate() == null || "".equals(eApplyE01Z8.getReadDate())){
+                eApplyE01Z8.setReadDate(sdf.format(new Date()));
+                eApplyE01Z8.setReadState("1");
+                eApplyE01Z8Service.update(eApplyE01Z8);
+            }
             String eA38LogPK;
-            EA38Log ea38Log = new EA38Log();
             if(eA38Logs ==null || eA38Logs.isEmpty()){
+                EA38Log ea38Log = new EA38Log();
                 ea38Log.setApplyE01Z8(eApplyE01Z8);
                 ea38Log.setCyrId(details.getUserid());
                 ea38Log.setCyrName(details.getUsername());
@@ -361,6 +369,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 ea38Log.setReadTenantId(details.getTenantId());
                 ea38Log.setCysj(new Date());
                 ea38Log.setReadTenantName(details.getTenantName());
+                ea38Log.setYdzt(1);
                 BeanUtils.copyProperties(ea38Log,details);
                 eA38LogPK = eA38LogService.save(ea38Log);
             }else {
@@ -374,14 +383,16 @@ public class EApplyE01Z8Controller extends BaseController {
             //可阅读时间
             String readTime= eApplyE01Z8.getReadTime();
             //已阅读时间
-            String alreadyReadTime = eApplyE01Z8.getReadTime();
+            String alreadyReadTime = eApplyE01Z8.getAlreadyReadTime();
             //剩余可阅读时间
             String syReadTime = "syReadTime";
             if(alreadyReadTime == null || alreadyReadTime.equals("")){
-                returnMap.put(syReadTime,readTime);
+                returnMap.put(syReadTime,Integer.valueOf(readTime) * 60);
             }else {
                 returnMap.put(syReadTime,((Integer.valueOf(readTime) * 60) - Integer.valueOf(alreadyReadTime)));
             }
+            returnMap.put("eApplyE01Z8Id",id);
+            returnMap.put("a38LogId",eA38LogPK);
             returnMap.put("code",1);
         }catch (Exception e){
             returnMap.put("code",0);
@@ -391,6 +402,74 @@ public class EApplyE01Z8Controller extends BaseController {
         return returnMap;
     }
 
+    /**
+     * 浏览材料详细日志
+     * @param a38LogId
+     * @param e01z1Id
+     * @param e01z111
+     */
+    @RequestMapping(value="/ajax/detailViewTime")
+    public @ResponseBody Map<String,Object> detailViewTime(@RequestParam(value = "a38LogId",required = true) String a38LogId,
+                                @RequestParam(value = "e01z1Id",required = true) String e01z1Id,
+                                @RequestParam(value = "lsE01z1Id",required = false) String lseLogDetailViewTimeId,//上次浏览的id
+                                @RequestParam(value = "lsE01z1Id",required = false) String lse01z1Id,//上次浏览的材料id
+                                @RequestParam(value = "eApplyE01Z8Id",required = true) String eApplyE01Z8Id,
+                                @RequestParam(value = "e01z111",required = true) String e01z111){
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String nowMinDate =DateUtil.formatDefaultDate(new Date())+" 00:00:00";
+        String nowMaxDate =DateUtil.formatDefaultDate(new Date())+" 23:59:59";
+        try {
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("a38Log.id = :a38Id ", "a38Id", a38LogId));
+            query.add(CommonRestrictions.and("e01Z1Id = :e01z1Id ", "e01z1Id", e01z1Id));
+            query.add(CommonRestrictions.and("cyTime >= :nowMinDate ", "nowMinDate", sdf.parse(nowMinDate)));
+            query.add(CommonRestrictions.and("cyTime <= :nowMaxDate ", "nowMaxDate", sdf.parse(nowMaxDate)));
+            if(StringUtils.isNotBlank(lseLogDetailViewTimeId)){
+                ELogDetailViewTime eLogDetailViewTime =  eLogDetailViewTimeService.getByPK(lseLogDetailViewTimeId);
+                eLogDetailViewTime.setEndTime(new Date());
+                Long viewTime = (new Date()).getTime() - eLogDetailViewTime.getStareTime().getTime();
+                eLogDetailViewTime.setViewTime(String.valueOf(viewTime/1000));
+                eLogDetailViewTimeService.update(eLogDetailViewTime);
+
+            }
+
+
+            List<EA38LogDetail> logDetails= eA38LogDetailService.list(query,null);
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
+            //阅档申请信息
+            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
+            //档案材料信息
+            E01Z1 e01Z1 = e01Z1Service.getByPK(e01z1Id);
+            List<EA38LogDetail> ea38LogDetails = eA38LogDetailService.list(query,null);
+            String ea38LogDetailId;
+            if(ea38LogDetails == null || ea38LogDetails.isEmpty()){
+                EA38LogDetail ea38LogDetail = new EA38LogDetail();
+                ea38LogDetail.setA38Log(ea38Log);
+                ea38LogDetail.setCyTime(new Date());
+                ea38LogDetail.setE01Z1Id(e01z1Id);
+                ea38LogDetail.setE01Z101A(e01Z1.getE01Z101A());
+                ea38LogDetail.setE01Z101B(e01Z1.getE01Z101B());
+                ea38LogDetail.setE01Z111(e01z111);
+                BeanUtils.copyProperties(ea38LogDetail,details);
+                ea38LogDetailId = eA38LogDetailService.save(ea38LogDetail);
+            }else {
+                ea38LogDetailId = ea38LogDetails.get(0).getId();
+            }
+            ELogDetailViewTime eLogDetailViewTime = new ELogDetailViewTime();
+            eLogDetailViewTime.setA38LogDetails(eA38LogDetailService.getByPK(ea38LogDetailId));
+            eLogDetailViewTime.setStareTime(new Date());
+            String eLogDetailViewTimeId = eLogDetailViewTimeService.save(eLogDetailViewTime);
+            returnMap.put("eLogDetailViewTimeId",eLogDetailViewTimeId);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            returnMap.put("code",0);
+            logger.error(e,e);
+            throw new GenericException(e.getMessage());
+        }
+        return returnMap;
+    }
 
     @RequestMapping(value="/ajax/down")
     @RequiresPermissions("cysq:*")

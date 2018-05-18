@@ -159,10 +159,14 @@
                 <div class="modal-header">
                     <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
+                   <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>
+                    <input type="hidden" name="a38LogId" id = "a38LogId"/>
+                    <input type="hidden" name="syReadTime" id = "syReadTime"/>
+                    <input type="hidden" name="yuedushijian" id = "yuedushijian"/>
                     <h3 class="modal-title" id="title">
-                        “${a0101}”档案图片
+                        “${a0101}”档案图片 &nbsp;&nbsp;&nbsp;&nbsp;
                     </h3>
-
+                    剩余阅档时间<span id="timespan"></span>
                 </div>
                 <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
                 </div>
@@ -207,8 +211,23 @@
                 "id":id,
                 "a38Id":a38Id
             },
-            dataType: "html",
+            dataType: "json",
             success: function (json) {
+                var  eApplyE01Z8Id = json.eApplyE01Z8Id;
+                $("#eApplyE01Z8Id").val(eApplyE01Z8Id);
+                $("#a38LogId").val(json.a38LogId);
+                $("#syReadTime").val(json.syReadTime);
+                var starttime = new Date("2017/11/20");
+                var time = json.syReadTime;
+                var yuedushijian = 0;
+                setInterval(function () {
+                    yuedushijian =  yuedushijian++;
+                    $("#yuedushijian").val(yuedushijian);
+                    time = time-1;
+                    var minute = parseInt((time  /60));
+                    var seconds = parseInt(time % 60);
+                    $('#timespan').html( minute + "分钟" + seconds + "秒");
+                }, 1000);
             },
             error: function () {
                 showTip("提示", "出错了请联系管理员", 1500);

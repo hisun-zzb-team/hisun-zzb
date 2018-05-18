@@ -32,7 +32,7 @@
                     <a  class="btn green" href="#">
                         工资变动导入
                     </a>
-                    <a  class="btn green" href="#">
+                    <a  class="btn green" href="javascript:download()">
                         打印工资变动
                     </a>
                 </div>
@@ -185,6 +185,10 @@
                   showTip("提示","出错了,请检查网络!",2000);
               }
           });
+      }
+
+      function download() {
+          window.open("${path}/zzb/dzda/a32/download/${a38Id}");
       }
 
   </script>

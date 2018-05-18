@@ -533,7 +533,7 @@ public class DatpDealController extends BaseController {
                 String zipRealStorePath = zipPath + UUIDUtil.getUUID() + ".zip";
                 CompressUtil.zip(zipRealStorePath, destPath, a38.getA0101());
                 resp.setContentType("multipart/form-data");
-                resp.setHeader("Content-Disposition", "attachment;fileName=" + encode(a38.getA0101() + ".zip"));
+                resp.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoderUtil.encode(a38.getA0101() + ".zip"));
                 OutputStream output = resp.getOutputStream();
                 FileInputStream fileInputStream = new FileInputStream(new File(zipRealStorePath));
                 byte[] buffer = new byte[8192];
@@ -558,12 +558,4 @@ public class DatpDealController extends BaseController {
         }
     }
 
-    private String encode(String filename) throws UnsupportedEncodingException {
-        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        return filename;
-    }
 }

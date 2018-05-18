@@ -28,9 +28,11 @@ import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -182,9 +184,9 @@ public class A32Controller extends BaseController {
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
-        //CommonOrderBy orderBy = new CommonOrderBy();
-        //orderBy.add(CommonOrder.asc("px"));
-        List<A32> resultList = a32Service.list(query,null);
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("px"));
+        List<A32> resultList = a32Service.list(query,orderBy);
         A32Vo vo;
         List<A32Vo> a32Vos=new ArrayList<>();
         try {
@@ -195,12 +197,12 @@ public class A32Controller extends BaseController {
             }
             File storePathFile = new File(Constants.GZBD_STORE_PATH);
             if(!storePathFile.exists()) storePathFile.mkdirs();
-            String fielePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
-            gzbdExcelExchange.toOneExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,fielePath);
+            String filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            gzbdExcelExchange.toExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("AA.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("工资变动登记表.xlsx"));
             OutputStream output = resp.getOutputStream();
-            FileInputStream fileInputStream = new FileInputStream(new File(fielePath));
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
             int length;
             while ((length = fileInputStream.read(buffer)) != -1) {
@@ -208,18 +210,9 @@ public class A32Controller extends BaseController {
             }
             output.flush();
             output.close();
+            FileUtils.deleteQuietly(new File(filePath));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    private String encode(String filename) throws UnsupportedEncodingException {
-        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "GBK");
-        }
-        return filename;
     }
 }

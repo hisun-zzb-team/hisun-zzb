@@ -15,6 +15,20 @@
 	<title>电子档案系统</title>
 </head>
 <body>
+<div id="gjcxModal" class="modal container hide fade" tabindex="-1" data-width="85%">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close"  type="button"></button>
+				<h3 class="modal-title" id="gjcxTitle" >
+					高级查询条件设置
+				</h3>
+			</div>
+			<div class="modal-body" id="gjcxDiv">
+			</div>
+		</div>
+	</div>
+</div>
 <div id="viewA01Modal" class="modal container hide fade" tabindex="-1" data-width="600">
 	<div class="modal-dialog">
 		<div class="modal-content">

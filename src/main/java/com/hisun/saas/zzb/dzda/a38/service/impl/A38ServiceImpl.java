@@ -42,7 +42,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
     public List<A38> gjcxList(DakVo dakVo,UserLoginDetails userLoginDetails){
         StringBuffer sql = new StringBuffer();
         sql.append("select * from ( select a38.* from A38 a38 ")
-                .append(" inner join e01z1 e on a38.id = e.a38_id ")
+                .append(" left join e01z1 e on a38.id = e.a38_id ")
                 .append(" where sjzt = 1 and a38.tenant_id = '" + userLoginDetails.getTenantId() + "'");
         if(StringUtils.isNotEmpty(dakVo.getA0101())){//姓名
             sql.append(" and a38.a0101 like '%" + dakVo.getA0101() + "%'");
@@ -144,8 +144,8 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
                 sql.append(" and ( e.yjztps <=0 or e.yjztps is null )");
             }
         }
-        sql.append(" order by a38.smxh desc , a38.a0101 asc ) a38");
-        sql.append(" group by a38.id ");
+        sql.append(" group by a38.id ) a38");
+        sql.append(" order by a38.smxh desc , a38.a0101 asc ");
 
         Map<String,Object> paramMap = new HashMap<>();
         List<A38> a38List = a38Dao.gjcxList(sql.toString(),paramMap);

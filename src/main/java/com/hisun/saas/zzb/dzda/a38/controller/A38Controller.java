@@ -26,6 +26,7 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
@@ -55,11 +56,16 @@ public class A38Controller extends BaseController {
     @Resource
     private E01Z1Service e01Z1Service;
 
+    private DakVo dakVos;
+
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery) throws UnsupportedEncodingException {
+    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,String isMenu) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
+        if(StringUtils.isNotEmpty(isMenu)){
+            dakVos=new DakVo();
+        }
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
         if(StringUtils.isNotEmpty(dabhQuery)){
@@ -318,5 +324,27 @@ public class A38Controller extends BaseController {
         }
 
         return returnMap;
+    }
+
+    @RequiresPermissions("a38:dakList ")
+    @RequestMapping(value = "/ajax/gjcx")
+    public ModelAndView gjcx(String id,String listType){
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("vo",dakVos);
+        return new ModelAndView("saas/zzb/dzda/a38/gjcxPage",map);
+    }
+
+    @RequiresPermissions("a38:dakList ")
+    @RequestMapping("/gjcxBdwdalist")
+    public ModelAndView GjcxBdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+                                      @ModelAttribute DakVo vo) throws UnsupportedEncodingException {
+        Map<String,Object> model = new HashMap<String,Object>();
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        List<A38> resultList = a38Service.gjcxList(vo,userLoginDetails);
+        int total =  resultList.size();
+        PagerVo<A38> pager = new PagerVo<A38>(resultList, total, pageNum, pageSize);
+        model.put("pager",pager);
+        dakVos=vo;
+        return new ModelAndView("saas/zzb/dzda/a38/list",model);
     }
 }

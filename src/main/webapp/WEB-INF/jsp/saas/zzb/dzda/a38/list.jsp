@@ -20,6 +20,20 @@
 	</style>
 </head>
 <body>
+<div id="gjcxModal" class="modal container hide fade" tabindex="-1" data-width="85%">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close"  type="button"></button>
+				<h3 class="modal-title" id="gjcxTitle" >
+					高级查询条件设置
+				</h3>
+			</div>
+			<div class="modal-body" id="gjcxDiv">
+			</div>
+		</div>
+	</div>
+</div>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 responsive">
@@ -42,7 +56,7 @@
 							</ul>
 						</div>
 
-						<a  class="btn green" href="#">
+						<a  class="btn green" href="javascript:gjcx()">
 							高级查询
 						</a>
 						<div class="btn-group" style="padding-bottom: 0px">
@@ -259,6 +273,25 @@
 	}
 	function fileDown(type) {
 		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
+	}
+
+	var gjcx = function(){
+		$.ajax({
+			url:"${path}/zzb/dzda/a38/ajax/gjcx",
+			type : "post",
+			data: {},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "html",
+			success : function(html){
+				$('#gjcxModal').modal({backdrop: 'static', keyboard: false});
+				$('#gjcxDiv').html(html);
+			},
+			error : function(){
+				showTip("提示","出错了请联系管理员", 1500);
+			}
+		});
 	}
 </script>
 </body>

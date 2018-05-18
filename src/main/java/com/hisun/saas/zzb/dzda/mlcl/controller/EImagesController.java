@@ -342,14 +342,34 @@ public class EImagesController extends BaseController {
         return map;
     }
 
+    /**
+     * uploadType 上传方式 frist表示插入首页，up表示插入上一页 down表示下一页 end表示尾页
+     * @param e01z1Id
+     * @param curImgNo 操作的图片排序
+     * @param uploadType uploadType 上传方式 frist表示插入首页，up表示插入上一页 down表示下一页 end表示尾页
+     * @param tpFile
+     * @return
+     * @throws GenericException
+     */
     @RequiresLog(operateType = LogOperateType.DELETE,description = "上传单张图片:${id}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/uploadImg")
     public @ResponseBody Map<String, Object> uploadImg(
-            String e01z1Id,@RequestParam(value="tpFile",required = false) MultipartFile tpFile) throws GenericException {
+            String e01z1Id,String curImgNo,String uploadType,@RequestParam(value="tpFile",required = false) MultipartFile tpFile) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+
             int maxImgNo = this.eImagesService.getMaxImgNo(e01z1Id)+1;
+            int insertImgNo = maxImgNo;
+            if(uploadType.equals("frist")){
+                insertImgNo = 1;
+            }else if(uploadType.equals("up")){
+                insertImgNo = Integer.parseInt(curImgNo);
+            }else if(uploadType.equals("down")){
+                insertImgNo = Integer.parseInt(curImgNo)+1;
+            }else if(uploadType.equals("end")){
+                insertImgNo =maxImgNo;
+            }
             E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
             String a38Id = e01Z1.getA38().getId();
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -367,22 +387,19 @@ public class EImagesController extends BaseController {
             }
             String imgFilePath = "";
             if (tpFile != null && !tpFile.isEmpty()) {
-                imgFilePath = storeRealPath+newE01z104+maxImgNo+tpFile.getOriginalFilename().toLowerCase();
-                String encryptFilePath = storeRealPath+newE01z104+maxImgNo;
+                imgFilePath = storeRealPath+e01Z1.getE01Z101B()+"."+e01Z1.getE01Z101A()+File.separator+newE01z104+maxImgNo+tpFile.getOriginalFilename().toLowerCase();
+                String encryptFilePath = storeRealPath+e01Z1.getE01Z101B()+"."+e01Z1.getE01Z101A()+File.separator+newE01z104+insertImgNo;
                 File imgFile = new File(imgFilePath);
                 FileOutputStream fosGbrmspbZip = new FileOutputStream(imgFile);
                 fosGbrmspbZip.write(tpFile.getBytes());
                 fosGbrmspbZip.flush();
                 fosGbrmspbZip.close();
 
-                DESUtil.getInstance(Constants.DATP_KEY).encrypt(imgFile, new File(encryptFilePath));
-
-                FileUtils.deleteQuietly(imgFile);
                 EImages eImages = new EImages();
                 eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
                 eImages.setE01z1(e01Z1);
-                eImages.setImgNo(maxImgNo);
-                this.eImagesService.save(eImages);
+                eImages.setImgNo(insertImgNo);
+                this.eImagesService.saveEImages(eImages,uploadType,maxImgNo,imgFile,encryptFilePath);
             }
             map.put("success", true);
         } catch (Exception e) {

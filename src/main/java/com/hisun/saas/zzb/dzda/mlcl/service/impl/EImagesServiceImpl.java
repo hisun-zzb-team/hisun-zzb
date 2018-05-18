@@ -247,6 +247,30 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
     }
 
     /**
+     *
+     * @param eImages
+     * @param uploadType 上传方式 frist表示插入首页，up表示插入上一页 down表示下一页 end表示尾页
+     * @throws Exception
+     */
+    public void saveEImages(EImages eImages,String uploadType,int oldImgNo,File imgFile,String encryptFilePath)throws Exception{
+
+        if(!uploadType.equals("end")) {
+            List<EImages> images = this.getNeedUpdateEImages(eImages, oldImgNo);
+            if (images != null && images.size() > 0) {
+                this.updateImagesSort(images, eImages.getE01z1().getA38().getId(), oldImgNo, eImages);
+            }
+        }
+        DESUtil.getInstance(Constants.DATP_KEY).encrypt(imgFile, new File(encryptFilePath));
+
+        FileUtils.deleteQuietly(imgFile);
+        this.eImagesDao.save(eImages);
+
+        E01Z1 e01Z1 = eImages.getE01z1();
+        e01Z1.setYjztps(e01Z1.getYjztps()+1);
+        this.e01Z1Dao.update(e01Z1);
+    }
+
+    /**
      * 调整图片排序及调整存储服务图片的名称
      * @param eImages 需要调整的图片集合
      * @param oldSort  修改材料的旧排序
@@ -395,6 +419,10 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         }
         FileUtils.deleteQuietly(new File(uploadBasePath+images.getImgFilePath()));
         this.eImagesDao.delete(images);
+
+        E01Z1 e01Z1 = images.getE01z1();
+        e01Z1.setYjztps(e01Z1.getYjztps()-1);
+        this.e01Z1Dao.update(e01Z1);
     }
 
     public Integer getMaxImgNo(String e01z1Id) {

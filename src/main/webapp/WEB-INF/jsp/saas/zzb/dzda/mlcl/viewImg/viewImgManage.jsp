@@ -83,7 +83,6 @@
 				$("#viewList").html(html);
 			},
 			error: function () {
-				myLoading.hide();
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});

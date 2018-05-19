@@ -119,6 +119,9 @@
                                     <c:when test="${vo.auditingState == 3}">
                                         已收回
                                     </c:when>
+                                    <c:when test="${vo.auditingState == 4}">
+                                        已结束
+                                    </c:when>
                                 </c:choose></TD>
                             <TD width="10%">
                                 <c:choose>
@@ -131,7 +134,7 @@
                                     <c:when test="${vo.auditingState == 2}">
                                         <a href="javascript:editCysq('${vo.id}')">查看</a>
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 3}">
+                                    <c:when test="${vo.auditingState == 3 || vo.auditingState == 4}">
                                         <a href="javascript:editCysq('${vo.id}')">查看</a>
                                     </c:when>
                                  </c:choose></TD>
@@ -158,11 +161,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                    <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>
-                    <input type="hidden" name="a38LogId" id = "a38LogId"/>
+                    <%--<input type="hidden" name="a38LogId" id = "a38LogId"/>--%>
                     <input type="hidden" name="syReadTime" id = "syReadTime"/>
-                    <input type="hidden" name="yuedushijian" id = "yuedushijian"/>
                     <h3 class="modal-title" id="title">
                         “${a0101}”档案图片 &nbsp;&nbsp;&nbsp;&nbsp;
                     </h3>
@@ -194,45 +197,16 @@
         $("#auditingState option[value='${auditingState}']").attr("selected",
                 true);
     })
-    function hiddenViewImgModal() {//隐藏图片查看时 删除临时的解密图片
+/*    function hiddenViewImgModal() {//隐藏图片查看时 删除临时的解密图片
         $('#viewImgModal').modal('hide');
         $('#viewImgDiv').html("");
-    }
+    }*/
     var viewImageMain = function (a38Id,a0101,id) {
         var divHeight = $(window).height() -60;
         var divWidth = $(window).width() - 100;
         $('#viewImgModal').attr("data-height", divHeight);
         $('#viewImgModal').attr("data-width", divWidth);
-        $.ajax({
-            url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
-            type: "post",
-            data: {
-                "a0101":a0101,
-                "id":id,
-                "a38Id":a38Id
-            },
-            dataType: "json",
-            success: function (json) {
-                var  eApplyE01Z8Id = json.eApplyE01Z8Id;
-                $("#eApplyE01Z8Id").val(eApplyE01Z8Id);
-                $("#a38LogId").val(json.a38LogId);
-                $("#syReadTime").val(json.syReadTime);
-                var starttime = new Date("2017/11/20");
-                var time = json.syReadTime;
-                var yuedushijian = 0;
-                setInterval(function () {
-                    yuedushijian =  yuedushijian++;
-                    $("#yuedushijian").val(yuedushijian);
-                    time = time-1;
-                    var minute = parseInt((time  /60));
-                    var seconds = parseInt(time % 60);
-                    $('#timespan').html( minute + "分钟" + seconds + "秒");
-                }, 1000);
-            },
-            error: function () {
-                showTip("提示", "出错了请联系管理员", 1500);
-            }
-        });
+        $("#eApplyE01Z8Id").val(id);
         var myDirName = $("#myDirName").val();
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+a38Id,

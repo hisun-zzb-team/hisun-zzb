@@ -143,6 +143,9 @@
                                     <c:when test="${vo.auditingState == 3}">
                                         已收回
                                     </c:when>
+                                    <c:when test="${vo.auditingState == 4}">
+                                        已结束
+                                    </c:when>
                                 </c:choose></TD>
                             <TD width="10%">
                                 <c:choose>
@@ -152,7 +155,7 @@
                                     <c:when test="${vo.auditingState == 1}">
                                         <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 3 || vo.auditingState == 2}">
+                                    <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
                                         <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">再次授权</a>
                                     </c:when>
                                 </c:choose>

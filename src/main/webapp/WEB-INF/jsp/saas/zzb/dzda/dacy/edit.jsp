@@ -165,9 +165,8 @@
            $("#applyFileNameGroup").hide();
         }
         var auditingState= "${entity.auditingState}";
-        if(auditingState != "2" && auditingState !="3"){
+        if(auditingState != "2" && auditingState !="3" && auditingState !="4"){
             $("#cxsq").hide();
-          //  $("#chexiaosq").hide();
         }else {
             $("#queding").hide();
             $("#chexiaosq").hide();

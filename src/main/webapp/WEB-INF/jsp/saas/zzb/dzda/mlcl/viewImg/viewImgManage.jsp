@@ -14,6 +14,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!-- END PAGE LEVEL STYLES -->
 	<title>档案浏览</title>
+	<script src="${path}/js/common/loading.js" type="text/javascript"></script>
 </head>
 
 
@@ -24,13 +25,16 @@
 	<!-- 脚本目录 -->
 	<input id="showTpWidth" type="hidden"/>
 	<div class="span6" style="width: 20%; margin: 0px;padding: 0px;background: #f1f3f6;border-right:1px solid #d8d8d8">
+		<input type="hidden" name="ea38LogDetailId" id="ea38LogDetailId">
+		<input type="hidden" name="eLogDetailViewTimeId" id="eLogDetailViewTimeId">
+		<input type="hidden" name="a38LogViewTimeId" id="a38LogViewTimeId">
+		<input type="hidden" name="a38LogId" id="a38LogId">
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
 				<div style="margin: 0px;padding: 0px">
 					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="viewImages" submitType="post" dataType="json" isSearch="false"/>
 				</div>
 		</div>
-		<input type="hidden" name="lsE01z1Id" id="lsE01z1Id">
 	</div>
 	<div>
 		<%--<div style="margin-bottom: 5px;text-align: right;margin-top: 10px">--%>
@@ -42,6 +46,8 @@
 	</div>
 </div>
 <script type="text/javascript">
+	var timer1;
+	var timer2;
 	$(function(){
 		$("#myDirName").val("${myDirName}");
 		changeTreeDivHeight();
@@ -49,8 +55,86 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
-	});
+		$.ajax({
+			url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
+			type: "post",
+			data: {
+				"eApplyE01Z8Id":$("#eApplyE01Z8Id").val(),
+				"a38Id":"${a38Id}",
+				"isManage":"${isManage}"
+			},
+			dataType: "json",
+			success: function (json) {
+				var  eApplyE01Z8Id = json.eApplyE01Z8Id;
+				$("#eApplyE01Z8Id").val(eApplyE01Z8Id);
+				$("#a38LogId").val(json.a38LogId);
+				$("#a38LogViewTimeId").val(json.a38LogViewTimeId);
+			//	$("#syReadTime").val(json.syReadTime);
+				var time = json.syReadTime;
+				if(time!=null && time!="" && time!=undefined){
+					timer1 = setInterval(function () {
+						time = time-1;
+						var minute = parseInt((time  /60));
+						var seconds = parseInt(time % 60);
+						$('#timespan').html( minute + "分钟" + seconds + "秒");
+					}, 1000);
+				}
+			},
+			error: function () {
+				showTip("提示", "出错了请联系管理员", 1500);
+			}
+		});
+		var time = 5000;
+		//更新阅档日志时间
+		timer2 = setInterval(function () {
+			var a38LogId = $("#a38LogId").val();
+			$.ajax({
+				type: "POST",
+				url:"${path}/zzb/dzda/cysq/ajax/updateViewTime",
+				dataType: "json",
+				data: {
+					"a38LogId": a38LogId,
+					"time":time/1000,
+					"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
+				},
+				success: function (json) {
+				},
+				error: function () {
+					//myLoading.hide();
+					showTip("提示", "出错了,请检查网络!", 2000);
+				}
+			});
+		}, time);
 
+
+	});
+	function  jieshuyuedang(){
+		$('#viewImgModal').modal('hide');
+		$('#viewImgDiv').html("");
+		$("#timespan").html("");
+		var a38LogId = $("#a38LogId").val();
+		$.ajax({
+			type: "POST",
+			url:"${path}/zzb/dzda/cysq/ajax/guanbiOrjieshu",
+			dataType: "json",
+			data: {
+				"a38LogId": a38LogId,
+				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
+				"ea38LogDetailId":$("#ea38LogDetailId").val(),
+				"a38LogViewTimeId":$("#a38LogViewTimeId").val(),
+				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
+			},
+			success: function (json) {
+			},
+			error: function () {
+				//myLoading.hide();
+				showTip("提示", "出错了,请检查网络!", 2000);
+			}
+		});
+		window.clearInterval(timer1);
+		window.clearInterval(timer2);
+		window.location.href ="${path }/zzb/dzda/cysq/list";
+	}
 	function changeTreeDivHeight(){
 		var divHeight = $(window).height()-65;
 		$("#viewImagesTree_div").css('height',divHeight);
@@ -93,33 +177,35 @@
 
 	// 点击事件
 	function viewImages(event, treeId, treeNode){
-		var  eApplyE01Z8Id = $("#eApplyE01Z8Id").val();
+		//var  eApplyE01Z8Id = $("#eApplyE01Z8Id").val();
 		var a38LogId = $("#a38LogId").val();
-		if(eApplyE01Z8Id == undefined || eApplyE01Z8Id == "" || eApplyE01Z8Id == null){
-			return;
-		}
-		//记录阅档日志
-		if(treeNode.nodeType != "dir"){
-			$.ajax({
-				type: "POST",
-				url:"${path}/zzb/dzda/cysq/ajax/detailViewTime",
-				dataType: "html",
-				data: {
-					"a38LogId": a38LogId,
-					"eApplyE01Z8Id": eApplyE01Z8Id,
-					"e01z1Id": treeNode.id,
-					"e01z111":treeNode.name
-				},
+		if(a38LogId != undefined && a38LogId != "" && a38LogId != null){
+			//记录阅档日志
+			if(treeNode.nodeType != "dir"){
+				$.ajax({
+					type: "POST",
+					url:"${path}/zzb/dzda/cysq/ajax/detailViewTime",
+					dataType: "json",
+					data: {
+						"a38LogId": a38LogId,
+						"e01z1Id": treeNode.id,
+						"e01z111":treeNode.name,
+						"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
+						"ea38LogDetailId":$("#ea38LogDetailId").val()
+					},
+					success: function (json) {
 
-				success: function (html) {
-					$("#lsE01z1Id").val()
-				},
-				error: function () {
-					//myLoading.hide();
-					showTip("提示", "出错了,请检查网络!", 2000);
-				}
-			});
+						$("#eLogDetailViewTimeId").val(json.eLogDetailViewTimeId);
+						$("#ea38LogDetailId").val(json.ea38LogDetailId);
+					},
+					error: function () {
+						//myLoading.hide();
+						showTip("提示", "出错了,请检查网络!", 2000);
+					}
+				});
+			}
 		}
+
 
 		var nodeType = "0";
 		var treeObj = zViewTree;
@@ -136,31 +222,27 @@
 	function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
 		$('#viewImgModal').modal('hide');
 		$('#viewImgDiv').html("");
-		<%--var a38Id = $("#a38Id").val();--%>
-		<%--var myDirName = $("#myDirName").val();--%>
-		<%--$.ajax({--%>
-		<%--url: "${path}/zzb/dzda/mlcl/images/delete/jmImages",--%>
-		<%--type: "post",--%>
-		<%--data: {--%>
-		<%--"a38Id":a38Id,--%>
-		<%--"myDirName":myDirName--%>
-		<%--},--%>
-		<%--headers: {--%>
-		<%--OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"--%>
-		<%--},--%>
-		<%--dataType: "json",--%>
-		<%--success: function (data) {--%>
-		<%--if (data.success == "true" || data.success == true) {--%>
-
-		<%--}else{--%>
-		<%--showTip("提示", "删除解密图片失败，请联系管理员!", 1300);--%>
-		<%--}--%>
-		<%--},--%>
-		<%--error: function () {--%>
-		<%--showTip("提示", "出错了请联系管理员!", 1300);--%>
-
-		<%--}--%>
-		<%--});--%>
+		$("#timespan").html("");
+		$.ajax({
+			type: "POST",
+			url:"${path}/zzb/dzda/cysq/ajax/guanbiOrjieshu",
+			dataType: "json",
+			data: {
+				"a38LogId": a38LogId,
+				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
+				"ea38LogDetailId":$("#ea38LogDetailId").val(),
+				"a38LogViewTimeId":$("#a38LogViewTimeId").val()
+			},
+			success: function (json) {
+			},
+			error: function () {
+				//myLoading.hide();
+				showTip("提示", "出错了,请检查网络!", 2000);
+			}
+		});
+		window.clearInterval(timer1);
+		window.clearInterval(timer2);
+		window.location.href ="${path }/zzb/dzda/cysq/list";
 	}
 
 

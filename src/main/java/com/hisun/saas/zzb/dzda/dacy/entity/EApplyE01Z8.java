@@ -39,7 +39,7 @@ import java.util.List;
     private String readDate;//开始查阅时间
     private String accreditDate;//授权查阅时间
     private String endReadDate;//结束查阅时间
-    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限
+    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限 4:结束阅档
     private String refuseReason;//拒绝原因
     private String readState;//查阅状态。0：未查阅；1：已查阅。审核通过后提醒用户查阅档案，查阅后即不再提醒
     private String accreditType;//授权类型。0：申请查阅授权；1：管理员主动授权查看记录

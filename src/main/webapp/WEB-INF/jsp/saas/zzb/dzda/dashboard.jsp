@@ -46,7 +46,7 @@
             </div>
             <ul class="ulCadreSuperlist">
                 <li>
-                    <a href="${path}/zzb/app/console/daDemo/catalogTypeManage">
+                    <a href="${path}/zzb/dzda/dak/manage">
                         <img src="${path}/images/templateImage/dagl05.png">
                         <p>档案库</p>
                     </a>

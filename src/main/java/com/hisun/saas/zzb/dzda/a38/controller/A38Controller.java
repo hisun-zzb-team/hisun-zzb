@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -56,43 +57,61 @@ public class A38Controller extends BaseController {
     @Resource
     private E01Z1Service e01Z1Service;
 
-    private DakVo dakVos;
-
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
-    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,String isMenu) throws UnsupportedEncodingException {
+    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
+    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,@ModelAttribute DakVo queryVo,String queryType) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
-        if(StringUtils.isNotEmpty(isMenu)){
-            dakVos=new DakVo();
+        HttpSession session = request.getSession();
+        
+        if(queryType!=null && queryType.equals("gaojichaxun")){//高级查询
+            a0101Query =  queryVo.getA0101();
+            gbztCodeQuery = queryVo.getGbztCodes();
+            gbztContentQuery =  queryVo.getGbztContents();
+            daztCodeQuery= queryVo.getDaztCodes();
+            daztContentQuery = queryVo.getDaztContents();
+            session.setAttribute("queryA38Vo",queryVo);
+        } else if(queryType!=null && queryType.equals("listQuery")){//listQuery
+            DakVo queryA38Vo = (DakVo)session.getAttribute("queryA38Vo");
+            if(queryA38Vo ==null){
+                queryA38Vo = new DakVo();
+            }
+            queryA38Vo.setDabh(dabhQuery);
+            queryA38Vo.setSmxh(smxhQuery);
+            queryA38Vo.setA0101(a0101Query);
+            queryA38Vo.setGbztCodes(gbztCodeQuery);
+            queryA38Vo.setGbztContents(gbztContentQuery);
+            queryA38Vo.setDaztCodes(daztCodeQuery);
+            queryA38Vo.setDaztContents(daztContentQuery);
+            queryVo = queryA38Vo;
+            session.setAttribute("queryA38Vo",queryVo);
+        }else{
+            DakVo queryA38Vo = (DakVo)session.getAttribute("queryA38Vo");
+            if(queryA38Vo!=null) {
+                dabhQuery = queryA38Vo.getDabh();
+                smxhQuery =queryA38Vo.getSmxh();
+                a0101Query =queryA38Vo.getA0101();
+                gbztCodeQuery =queryA38Vo.getGbztCodes();
+                gbztContentQuery =queryA38Vo.getGbztContents();
+                daztCodeQuery = queryA38Vo.getDaztCodes();
+                daztContentQuery =queryA38Vo.getDaztContents();
+            }
+            queryVo = queryA38Vo;
         }
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
-        if(StringUtils.isNotEmpty(dabhQuery)){
-            query.add(CommonRestrictions.and(" dabh like :dabhQuery ", "dabhQuery","%"+dabhQuery+"%"));
+
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        List<A38> resultList = a38Service.gjcxList(queryVo,userLoginDetails);
+        int total =  resultList.size();
+        List<A38Vo> a38Vos = new ArrayList<A38Vo>();
+        A38Vo vo = new A38Vo();
+        for(A38 entity : resultList){
+            vo = new A38Vo();
+            BeanUtils.copyProperties(entity,vo);
+            vo.setUpdateDateByShow(entity.getUpdateDate());
+            vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            a38Vos.add(vo);
         }
-        if(StringUtils.isNotEmpty(smxhQuery)){
-            query.add(CommonRestrictions.and(" smxh like :smxhQuery ", "smxhQuery","%"+smxhQuery+"%"));
-        }
-        if(StringUtils.isNotEmpty(a0101Query)){
-            query.add(CommonRestrictions.and(" a0101 like :a0101Query ", "a0101Query","%"+a0101Query+"%"));
-        }
-        if(StringUtils.isNotEmpty(gbztCodeQuery)){
-            String str[] = gbztCodeQuery.split(",");
-            List gbztCodeList =  Arrays.asList(str);
-            query.add(CommonRestrictions.and(" gbztCode in (:gbztCodeList)", "gbztCodeList",gbztCodeList));
-        }
-        if(StringUtils.isNotEmpty(daztCodeQuery)){
-            String str[] = daztCodeQuery.split(",");
-            List daztCodeList =  Arrays.asList(str);
-            query.add(CommonRestrictions.and(" daztCode in (:daztCodeList) ", "daztCodeList",daztCodeList));
-        }
-        Long total = a38Service.count(query);
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.desc("smxh"));
-        orderBy.add(CommonOrder.asc("a0101"));
-        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);
         model.put("dabhQuery",dabhQuery);
         model.put("smxhQuery",smxhQuery);
         model.put("a0101Query",a0101Query);
@@ -135,7 +154,16 @@ public class A38Controller extends BaseController {
         orderBy.add(CommonOrder.desc("smxh"));
         orderBy.add(CommonOrder.asc("a0101"));
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        List<A38Vo> a38Vos = new ArrayList<A38Vo>();
+        A38Vo vo = new A38Vo();
+        for(A38 entity : resultList){
+            vo = new A38Vo();
+            BeanUtils.copyProperties(entity,vo);
+            vo.setUpdateDateByShow(entity.getUpdateDate());
+            vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            a38Vos.add(vo);
+        }
+        PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total.intValue(), pageNum, pageSize);
         model.put("dabhQuery",dabhQuery);
         model.put("smxhQuery",smxhQuery);
         model.put("a0101Query",a0101Query);
@@ -328,23 +356,13 @@ public class A38Controller extends BaseController {
 
     @RequiresPermissions("a38:dakList ")
     @RequestMapping(value = "/ajax/gjcx")
-    public ModelAndView gjcx(String id,String listType){
+    public ModelAndView gjcx(HttpServletRequest request,String id,String listType){
+        HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("vo",dakVos);
-        return new ModelAndView("saas/zzb/dzda/a38/gjcxPage",map);
+        DakVo queryA38Vo = (DakVo)session.getAttribute("queryA38Vo");
+        map.put("vo",queryA38Vo);
+        map.put("queryType","a38List");
+        return new ModelAndView("saas/zzb/dzda/dak/gjcxPage",map);
     }
 
-    @RequiresPermissions("a38:dakList ")
-    @RequestMapping("/gjcxBdwdalist")
-    public ModelAndView GjcxBdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                                      @ModelAttribute DakVo vo) throws UnsupportedEncodingException {
-        Map<String,Object> model = new HashMap<String,Object>();
-        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-        List<A38> resultList = a38Service.gjcxList(vo,userLoginDetails);
-        int total =  resultList.size();
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total, pageNum, pageSize);
-        model.put("pager",pager);
-        dakVos=vo;
-        return new ModelAndView("saas/zzb/dzda/a38/list",model);
-    }
 }

@@ -26,12 +26,17 @@
                 <div class="portlet box grey">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-
-                        <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="" id="id">
-                            <input type="hidden" name="filePath" value="" id="filePath">
+                        <!-- 用于清除 -->
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form2" method="post" >
+                        </form>
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form1" method="post" >
                             <div class="portlet-title">
                                 <div class="caption">基本信息</div>
+                                <div class="clearfix fr">
+                                    <button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >查询</button>
+                                    <button id="clearData" class="btn green" type="button" style="padding:7px 20px;" >清空</button>
+                                    <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
+                                 </div>
                             </div>
                             
                             <div class="row-fluid">
@@ -100,7 +105,8 @@
                                     <div id="dutyLevelValueGroup" class="control-group">
                                         <label class="control-label">现职级</label>
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="dutyLevelValue" maxlength="128" id="dutyLevelValue" value="${vo.dutyLevelValue}" />
+                                            <Tree:tree id="dutyLevelCode" valueName="dutyLevelValue"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB09-2006/ZWJB" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="true" radioOrCheckbox="checkbox" isSelectTree="true" defaultkeys="${vo.dutyLevelCode}" defaultvalues="${vo.dutyLevelValue}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +148,7 @@
                                         <label class="control-label">接收时间</label>
                                         <div class="controls">
                                             <input type="text" class="span5 m-wrap" placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd" value="${vo.a3801Start}" name="a3801" id="a3801Start"/>
-                                            <input type="text" class="span5 m-wrap" placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd" value="${vo.a3801Start}" name="a3801" id="a3801End"/>
+                                            <input type="text" class="span5 m-wrap" placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd" value="${vo.a3801End}" name="a3801" id="a3801End"/>
                                         </div>
                                     </div>
                                 </div>
@@ -238,19 +244,12 @@
                                         <label class="control-label">加载图片</label>
                                         <div class="controls">
                                             <SelectTag:SelectTag id="yjztps" valueName="yjztpsName" defaultkeys="${vo.yjztps}" defaultvalues="${vo.yjztpsName}"
-                                                 textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/dak/select"/>
+                                                 textClass="m-wrap span10" radioOrCheckbox="radio" needNullValue="true" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row-fluid">
-                                <center>
-                                    <div style="margin:auto;">
-                                        <button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
-                                        <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
-                                    </div>
-                                </center>
-                            </div>
+
                         </form>
                     </div>
 
@@ -272,13 +271,45 @@
         var form1 = new EstValidate("form1");
 
         $(function(){
+
             $("#submitbut").on("click",function(){
+                var queryType = "${queryType}";
+
                 var bool = form1.form();
                 if(bool){
+                    if(queryType=="a38List"){
+                        $("#form1").submit();
+//                        document.form1.submit();
+                    }else{
+                        $.ajax({
+                            url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=gaojichaxun",
+                            type : "post",
+                            data : $("#form1").serialize(),
+                            dataType : "html",
+                            success : function(html){
+                                $('#gjcxModal').modal('hide');
+                                $('#gjcxDiv').html("");
+                                var view = $("#tab_show");
+                                view.html("");
+                                view.html(html);
+                            },
+                            error : function(arg1, arg2, arg3){
+                                showTip("提示","查询失败");
+                            }
+                        });
+                    }
+                }
+            });
+            $("#clearData").on("click",function(){
+                var queryType = "${queryType}";
+                if(queryType=="a38List"){
+                    $("#form2").submit();
+//                        document.form1.submit();
+                }else{
                     $.ajax({
-                        url : "${path }/zzb/dzda/dak/ajax/gjcxBdwdalist",
+                        url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=gaojichaxun",
                         type : "post",
-                        data : $("#form1").serialize(),
+                        data : $("#form2").serialize(),
                         dataType : "html",
                         success : function(html){
                             $('#gjcxModal').modal('hide');

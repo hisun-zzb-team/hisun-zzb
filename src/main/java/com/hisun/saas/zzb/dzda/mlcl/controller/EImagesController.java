@@ -279,7 +279,9 @@ public class EImagesController extends BaseController {
     public HttpEntity<byte[]> showImages(String imgId,String a38Id,
                                        HttpServletRequest request, HttpServletResponse response) throws Exception {
         imgId = StringUtils.trim(imgId);
-
+        if(imgId==null || imgId.equals("")){
+            return null;
+        }
         EImages img = this.eImagesService.getByPK(imgId);
         String imgPath = img.getImgFilePath();
         if (StringUtils.isEmpty(imgPath)==false) {

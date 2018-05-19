@@ -19,6 +19,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +70,8 @@ public class A38Vo  {
     private String dutyLevelCode;//职务级别code
     private String dutyLevelValue;//职务级别
     private String dutyLevelTimeBase;//职级时间
+    private String updateUserNameByShow;
+    private Date updateDateByShow;
 
     public String getId() {
         return id;
@@ -420,5 +423,21 @@ public class A38Vo  {
 
     public void setDutyLevelTimeBase(String dutyLevelTimeBase) {
         this.dutyLevelTimeBase = dutyLevelTimeBase;
+    }
+
+    public String getUpdateUserNameByShow() {
+        return updateUserNameByShow;
+    }
+
+    public void setUpdateUserNameByShow(String updateUserNameByShow) {
+        this.updateUserNameByShow = updateUserNameByShow;
+    }
+
+    public Date getUpdateDateByShow() {
+        return updateDateByShow;
+    }
+
+    public void setUpdateDateByShow(Date updateDateByShow) {
+        this.updateDateByShow = updateDateByShow;
     }
 }

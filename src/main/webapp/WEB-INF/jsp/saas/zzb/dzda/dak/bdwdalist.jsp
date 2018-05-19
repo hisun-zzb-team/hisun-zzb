@@ -77,7 +77,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/list" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
@@ -165,7 +165,7 @@
 		var daztCodeQuery = $("#daztCodeQuery").val();
 		var daztContentQuery = $("#daztContentQuery").val();
 		$.ajax({
-			url : "${path }/zzb/dzda/dak/ajax/bdwdalist",
+			url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=listQuery",
 			type : "post",
 			data : {
 				"a0101Query":a0101Query,
@@ -196,7 +196,7 @@
 		var daztContentQuery = $("#daztContentQuery").val();
 		var data = $("#form1").serialize();
 		$.ajax({
-			url : "${path }/zzb/dzda/dak/ajax/bdwdalist",
+			url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=listQuery",
 			type : "post",
 			data :{
 				"data":data,
@@ -261,7 +261,7 @@
 		$("#gbztContentQuery").val('');
 		$("#daztContentQuery").val('');
 		$.ajax({
-			url : "${path }/zzb/dzda/dak/ajax/bdwdalist",
+			url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=listQuery",
 			type : "post",
 			data : {
 			},

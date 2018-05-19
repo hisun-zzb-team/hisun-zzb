@@ -47,23 +47,16 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
         a38Hql.append(" where a38.sjzt = 1 and a38.tenant.id = '" + userLoginDetails.getTenantId() + "'");
         if(StringUtils.isNotEmpty(dakVo.getDabh())){
-            a38Hql.append(CommonRestrictions.and(" dabh like :dabhQuery ", "dabhQuery","%"+dakVo.getDabh()+"%"));
+            a38Hql.append(" and a38.dabh like '%"+dakVo.getDabh()+"%'");
         }
         if(StringUtils.isNotEmpty(dakVo.getSmxh())){
-            a38Hql.append(CommonRestrictions.and(" smxh like :smxhQuery ", "smxhQuery","%"+dakVo.getSmxh()+"%"));
+            a38Hql.append(" and a38.smxh like '%"+dakVo.getSmxh()+"%'");
         }
         if(StringUtils.isNotEmpty(dakVo.getA0101())){//姓名
             a38Hql.append(" and a38.a0101 like '%" + dakVo.getA0101() + "%'");
         }
         if(StringUtils.isNotEmpty(dakVo.getA0157())){//单位职务
             a38Hql.append(" and a38.a0157 like '%" + dakVo.getA0157() + "%'");
-        }
-
-        if(StringUtils.isNotEmpty(dakVo.getDabh())){//档案编号
-            a38Hql.append(" and a38.dabh =  '" + dakVo.getDabh() + "'");
-        }
-        if(StringUtils.isNotEmpty(dakVo.getSmxh())){//扫描序号
-            a38Hql.append(" and a38.smxh =  '" + dakVo.getSmxh() + "'");
         }
 
         if(StringUtils.isNotEmpty(dakVo.getGbztCodes())){//干部状态
@@ -258,6 +251,6 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         Map<String,Object> paramMap = new HashMap<>();
         List<A38> a38List = a38Dao.list(queryHql.toString(),null,null);
         return a38List;
-}
+    }
 
 }

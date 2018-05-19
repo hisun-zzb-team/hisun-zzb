@@ -26,9 +26,17 @@
                 <div class="portlet box grey">
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
-                        <form action="${path }/zzb/dzda/a38/list?gaojichaxun=true" class="form-horizontal" id="form1" method="post" >
+                        <!-- 用于清除 -->
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form2" method="post" >
+                        </form>
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form1" method="post" >
                             <div class="portlet-title">
                                 <div class="caption">基本信息</div>
+                                <div class="clearfix fr">
+                                    <button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >查询</button>
+                                    <button id="clearData" class="btn green" type="button" style="padding:7px 20px;" >清空</button>
+                                    <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
+                                 </div>
                             </div>
                             
                             <div class="row-fluid">
@@ -241,14 +249,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row-fluid">
-                                <center>
-                                    <div style="margin:auto;">
-                                        <button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >确定</button>
-                                        <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
-                                    </div>
-                                </center>
-                            </div>
+
                         </form>
                     </div>
 
@@ -270,6 +271,7 @@
         var form1 = new EstValidate("form1");
 
         $(function(){
+
             $("#submitbut").on("click",function(){
                 var queryType = "${queryType}";
 
@@ -280,7 +282,7 @@
 //                        document.form1.submit();
                     }else{
                         $.ajax({
-                            url : "${path }/zzb/dzda/dak/ajax/bdwdalist?gaojichaxun=true",
+                            url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=gaojichaxun",
                             type : "post",
                             data : $("#form1").serialize(),
                             dataType : "html",
@@ -296,6 +298,30 @@
                             }
                         });
                     }
+                }
+            });
+            $("#clearData").on("click",function(){
+                var queryType = "${queryType}";
+                if(queryType=="a38List"){
+                    $("#form2").submit();
+//                        document.form1.submit();
+                }else{
+                    $.ajax({
+                        url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=gaojichaxun",
+                        type : "post",
+                        data : $("#form2").serialize(),
+                        dataType : "html",
+                        success : function(html){
+                            $('#gjcxModal').modal('hide');
+                            $('#gjcxDiv').html("");
+                            var view = $("#tab_show");
+                            view.html("");
+                            view.html(html);
+                        },
+                        error : function(arg1, arg2, arg3){
+                            showTip("提示","查询失败");
+                        }
+                    });
                 }
             });
             //		document.searchForm.submit();

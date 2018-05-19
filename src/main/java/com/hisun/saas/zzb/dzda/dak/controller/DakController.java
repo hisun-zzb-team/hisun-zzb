@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,35 +64,49 @@ public class DakController extends BaseController {
     @Resource
     private DictionaryTypeService dictionaryTypeService;
 
-    private DakVo dakVos;
-
     @RequiresPermissions("a38:dakList ")
     @RequestMapping(value = "/manage")
     public ModelAndView manage(String id,String listType){
-        dakVos = new DakVo();
         return new ModelAndView("saas/zzb/dzda/dak/manage");
     }
 
     @RequiresPermissions("a38:dakList ")
     @RequestMapping("/ajax/bdwdalist")
-    public ModelAndView bdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                                  String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,
-                                  String daztContentQuery,@ModelAttribute DakVo queryVo,String gaojichaxun) throws UnsupportedEncodingException {
+    public ModelAndView bdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+             HttpServletRequest request, String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
+                                  String daztContentQuery, @ModelAttribute DakVo queryVo, String queryType) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
-        if(gaojichaxun!=null && gaojichaxun.equals("true")){//高级查询
+        HttpSession session = request.getSession();
+        if(queryType!=null && queryType.equals("gaojichaxun")){//高级查询
             a0101Query =  queryVo.getA0101();
             gbztCodeQuery = queryVo.getGbztCodes();
             gbztContentQuery =  queryVo.getGbztContents();
             daztCodeQuery= queryVo.getDaztCodes();
             daztContentQuery = queryVo.getDaztContents();
-            dakVos = queryVo;
-        }else {
-            queryVo = dakVos;
-            queryVo.setA0101(a0101Query);
-            queryVo.setGbztCodes(gbztCodeQuery);
-            queryVo.setGbztContents(gbztContentQuery);
-            queryVo.setDaztCodes(daztCodeQuery);
-            queryVo.setDaztContents(daztContentQuery);
+            session.setAttribute("queryDakVo",queryVo);
+        } else if(queryType!=null && queryType.equals("listQuery")){//listQuery
+            DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
+            if(queryDakVo ==null){
+                queryDakVo = new DakVo();
+            }
+            queryDakVo.setA0101(a0101Query);
+            queryDakVo.setGbztCodes(gbztCodeQuery);
+            queryDakVo.setGbztContents(gbztContentQuery);
+            queryDakVo.setDaztCodes(daztCodeQuery);
+            queryDakVo.setDaztContents(daztContentQuery);
+            queryVo = queryDakVo;
+            session.setAttribute("queryDakVo",queryVo);
+        }else{
+            DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
+            if(queryDakVo ==null){
+                queryDakVo = new DakVo();
+            }
+            a0101Query =queryDakVo.getA0101();
+            gbztCodeQuery =queryDakVo.getGbztCodes();
+            gbztContentQuery =queryDakVo.getGbztContents();
+            daztCodeQuery = queryDakVo.getDaztCodes();
+            daztContentQuery =queryDakVo.getDaztContents();
+            queryVo = queryDakVo;
         }
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -154,9 +170,11 @@ public class DakController extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/gjcx")
-    public ModelAndView loadGjcx(){
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("vo",dakVos);
+        DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
+        map.put("vo",queryDakVo);
         return new ModelAndView("saas/zzb/dzda/dak/gjcxPage",map);
     }
 

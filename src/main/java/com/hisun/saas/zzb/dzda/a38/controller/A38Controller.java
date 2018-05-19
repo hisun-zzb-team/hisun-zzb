@@ -61,38 +61,42 @@ public class A38Controller extends BaseController {
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,String isMenu) throws UnsupportedEncodingException {
+    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,@ModelAttribute DakVo queryVo,String gaojichaxun) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
-        if(StringUtils.isNotEmpty(isMenu)){
-            dakVos=new DakVo();
+        if(gaojichaxun!=null && gaojichaxun.equals("true")){//高级查询
+            a0101Query =  queryVo.getA0101();
+            gbztCodeQuery = queryVo.getGbztCodes();
+            gbztContentQuery =  queryVo.getGbztContents();
+            daztCodeQuery= queryVo.getDaztCodes();
+            daztContentQuery = queryVo.getDaztContents();
+            dakVos = queryVo;
+        }else {
+            queryVo = dakVos;
+            if(queryVo ==null){
+                queryVo = new DakVo();
+            }
+            queryVo.setDabh(dabhQuery);
+            queryVo.setSmxh(smxhQuery);
+            queryVo.setA0101(a0101Query);
+            queryVo.setGbztCodes(gbztCodeQuery);
+            queryVo.setGbztContents(gbztContentQuery);
+            queryVo.setDaztCodes(daztCodeQuery);
+            queryVo.setDaztContents(daztContentQuery);
         }
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
-        if(StringUtils.isNotEmpty(dabhQuery)){
-            query.add(CommonRestrictions.and(" dabh like :dabhQuery ", "dabhQuery","%"+dabhQuery+"%"));
+
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        List<A38> resultList = a38Service.gjcxList(queryVo,userLoginDetails);
+        int total =  resultList.size();
+        List<A38Vo> a38Vos = new ArrayList<A38Vo>();
+        A38Vo vo = new A38Vo();
+        for(A38 entity : resultList){
+            vo = new A38Vo();
+            BeanUtils.copyProperties(entity,vo);
+            vo.setUpdateDateByShow(entity.getUpdateDate());
+            vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            a38Vos.add(vo);
         }
-        if(StringUtils.isNotEmpty(smxhQuery)){
-            query.add(CommonRestrictions.and(" smxh like :smxhQuery ", "smxhQuery","%"+smxhQuery+"%"));
-        }
-        if(StringUtils.isNotEmpty(a0101Query)){
-            query.add(CommonRestrictions.and(" a0101 like :a0101Query ", "a0101Query","%"+a0101Query+"%"));
-        }
-        if(StringUtils.isNotEmpty(gbztCodeQuery)){
-            String str[] = gbztCodeQuery.split(",");
-            List gbztCodeList =  Arrays.asList(str);
-            query.add(CommonRestrictions.and(" gbztCode in (:gbztCodeList)", "gbztCodeList",gbztCodeList));
-        }
-        if(StringUtils.isNotEmpty(daztCodeQuery)){
-            String str[] = daztCodeQuery.split(",");
-            List daztCodeList =  Arrays.asList(str);
-            query.add(CommonRestrictions.and(" daztCode in (:daztCodeList) ", "daztCodeList",daztCodeList));
-        }
-        Long total = a38Service.count(query);
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.desc("smxh"));
-        orderBy.add(CommonOrder.asc("a0101"));
-        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);
         model.put("dabhQuery",dabhQuery);
         model.put("smxhQuery",smxhQuery);
         model.put("a0101Query",a0101Query);
@@ -135,7 +139,16 @@ public class A38Controller extends BaseController {
         orderBy.add(CommonOrder.desc("smxh"));
         orderBy.add(CommonOrder.asc("a0101"));
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        List<A38Vo> a38Vos = new ArrayList<A38Vo>();
+        A38Vo vo = new A38Vo();
+        for(A38 entity : resultList){
+            vo = new A38Vo();
+            BeanUtils.copyProperties(entity,vo);
+            vo.setUpdateDateByShow(entity.getUpdateDate());
+            vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            a38Vos.add(vo);
+        }
+        PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total.intValue(), pageNum, pageSize);
         model.put("dabhQuery",dabhQuery);
         model.put("smxhQuery",smxhQuery);
         model.put("a0101Query",a0101Query);
@@ -331,20 +344,8 @@ public class A38Controller extends BaseController {
     public ModelAndView gjcx(String id,String listType){
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("vo",dakVos);
-        return new ModelAndView("saas/zzb/dzda/a38/gjcxPage",map);
+        map.put("queryType","a38List");
+        return new ModelAndView("saas/zzb/dzda/dak/gjcxPage",map);
     }
 
-    @RequiresPermissions("a38:dakList ")
-    @RequestMapping("/gjcxBdwdalist")
-    public ModelAndView GjcxBdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                                      @ModelAttribute DakVo vo) throws UnsupportedEncodingException {
-        Map<String,Object> model = new HashMap<String,Object>();
-        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-        List<A38> resultList = a38Service.gjcxList(vo,userLoginDetails);
-        int total =  resultList.size();
-        PagerVo<A38> pager = new PagerVo<A38>(resultList, total, pageNum, pageSize);
-        model.put("pager",pager);
-        dakVos=vo;
-        return new ModelAndView("saas/zzb/dzda/a38/list",model);
-    }
 }

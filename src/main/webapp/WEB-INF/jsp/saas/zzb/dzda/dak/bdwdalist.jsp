@@ -27,9 +27,28 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+				<div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
+					<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+						显示方式<i class="icon-angle-down"></i>
+					</a>
+					<ul class="dropdown-menu">
+						<li >
+							<a onclick="changeViewType('20')">小图(一行5张图)</a>
+						</li>
+						<li >
+							<a onclick="changeViewType('33.3333333336')">中图(一行3张图)</a>
+						</li>
+						<li>
+							<a onclick="changeViewType('50')">大图(一行2张图)</a>
+						</li>
+						<li>
+							<a onclick="changeViewType('100')">原始图(一行1张图)</a>
+						</li>
+					</ul>
+				</div>
 				<%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
 				<h3 class="modal-title" id="title">
-
+					“${a0101}”档案图片
 				</h3>
 
 			</div>
@@ -109,8 +128,8 @@
 									<TD  style="text-align: center"><c:out value="${vo.a3801}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
 									<TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
-									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
-									<TD ><fmt:formatDate value="${vo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+									<TD  width=40><c:out value="${vo.updateUserNameByShow}"></c:out></TD>
+									<TD ><fmt:formatDate value="${vo.updateDateByShow}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
 								</TR>
 							</c:forEach>
 						</tbody>
@@ -133,17 +152,10 @@
 <script type="text/javascript">
 	(function(){
 
-		$("#btn-browseTemplate").bind("change",function(evt){
-			if($(this).val()){
-				ajaxSubmit();
-			}
-			$(this).val('');
-		});
+		App.init();
 
 	})();
-	function unloadFile(){
-		document.getElementById("btn-unloadFile").click();
-	}
+	
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
@@ -170,7 +182,7 @@
 				view.html(html);
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","目录材料加载失败");
+				showTip("提示","档案库列表加载失败");
 			}
 		});
 //		$("#searchForm").submit();
@@ -182,10 +194,12 @@
 		var gbztContentQuery = $("#gbztContentQuery").val();
 		var daztCodeQuery = $("#daztCodeQuery").val();
 		var daztContentQuery = $("#daztContentQuery").val();
+		var data = $("#form1").serialize();
 		$.ajax({
 			url : "${path }/zzb/dzda/dak/ajax/bdwdalist",
 			type : "post",
-			data : {
+			data :{
+				"data":data,
 				"a0101Query":a0101Query,
 				"gbztCodeQuery":gbztCodeQuery,
 				"gbztContentQuery":gbztContentQuery,
@@ -198,7 +212,7 @@
 				view.html(html);
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","目录材料加载失败");
+				showTip("提示","档案库列表加载失败");
 			}
 		});
 		//		document.searchForm.submit();
@@ -211,7 +225,7 @@
 		$('#viewImgModal').attr("data-height", divHeight);
 		$('#viewImgModal').attr("data-width", divWidth);
 		$.ajax({
-			url: "${path}/zzb/dzda/dak/ajax/viewMain/"+a38Id,
+			url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+a38Id,
 			type: "post",
 			data: {
 				"a0101":a0101,
@@ -235,39 +249,6 @@
 		$('#viewImgDiv').html("");
 	}
 
-	var view = function(id){
-		$.ajax({
-			async:false,
-			type:"POST",
-			url:"${path}/zzb/app/console/asetA01/ajax/view",
-			dataType : "html",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			data:{
-				'id':id,
-				'b01Id':"${b01Id}"
-			},
-			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","出错了,请检查网络!",2000);
-			}
-		});
-	}
-	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
-			if (data.success == true) {
-				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
-			}else{
-				showTip("提示", data.message, 2000);
-			}
-		});
-	};
 	function uploadFile(fileName){
 		document.getElementById("btn-"+fileName).click();
 	}
@@ -290,31 +271,12 @@
 				view.html(html);
 			},
 			error : function(arg1, arg2, arg3){
-				showTip("提示","目录材料加载失败");
+				showTip("提示","档案库列表加载失败");
 			}
 		});
 //		document.searchForm.submit();
 	}
-	function exportGbrmsp(){
-		$.cloudAjax({
-			path : '${path}',
-			url : "${path }/zzb/app/console/asetA01/ajax/exportGbrmsp",
-			type : "post",
-			data : $("#form1").serialize(),
-			dataType : "json",
-			success : function(data){
-				if(data.success == true){
-					showTip("提示","生成干部任免审批表成功!",2000);
-					//setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
-				}else{
-					showTip("提示", "生成干部任免审批表失败!", 2000);
-				}
-			},
-			error : function(){
-				showTip("提示","出错了请联系管理员",2000);
-			}
-		});
-	}
+
 	function openGzzzb(){
 		var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
 		window.open(url);
@@ -333,7 +295,9 @@
 			},
 			dataType : "html",
 			success : function(html){
-				$('#gjcxModal').modal({backdrop: 'static', keyboard: false});
+				$('#gjcxModal').modal({
+					keyboard: true
+				});
 				$('#gjcxDiv').html(html);
 			},
 			error : function(){

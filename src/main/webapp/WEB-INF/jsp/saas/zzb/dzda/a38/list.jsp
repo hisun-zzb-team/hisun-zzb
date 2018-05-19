@@ -91,7 +91,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/list" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -154,8 +154,8 @@
 									<TD  style="text-align: center"><c:out value="${vo.a3801}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
 									<TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
-									<TD  width=40><c:out value="${vo.updateUserName}"></c:out></TD>
-									<TD ><fmt:formatDate value="${vo.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+									<TD  width=40><c:out value="${vo.updateUserNameByShow}"></c:out></TD>
+									<TD ><fmt:formatDate value="${vo.updateDateByShow}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
 								</TR>
 							</c:forEach>
 						</tbody>

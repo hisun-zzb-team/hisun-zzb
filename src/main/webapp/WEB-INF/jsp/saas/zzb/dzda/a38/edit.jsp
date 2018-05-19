@@ -60,8 +60,9 @@
 					<div id="a0111BGroup" class="control-group">
 						<label class="control-label">籍贯</label>
 						<div class="controls">
-							<Tree:tree id="a0111B" valueName="a0111A"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB01-2006/GQMC" token="${sessionScope.OWASP_CSRFTOKEN}"
-									   submitType="get" dataType="json" isSearch="true" isSelectTree="true" defaultkeys="${vo.a0111B}" defaultvalues="${vo.a0111A}"/>
+							<input type="text" class="span10 m-wrap" name="a0111A" maxlength="128" id="a0111A" value="${vo.a0111A}" />
+							<%--<Tree:tree id="a0111B" valueName="a0111A"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=ZB01-2006/GQMC" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+									   <%--submitType="get" dataType="json" isSearch="true" isSelectTree="true" defaultkeys="${vo.a0111B}" defaultvalues="${vo.a0111A}"/>--%>
 						</div>
 					</div>
 				</div>

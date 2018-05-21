@@ -84,7 +84,7 @@ public class EImagesController extends BaseController {
     @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
     @RequestMapping("/ajax/viewMain/{a38Id}")
     public
-    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName,String isManage) throws GenericException {
+    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName,String isManage,String isAddLog) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -100,6 +100,7 @@ public class EImagesController extends BaseController {
         map.put("myDirName", myDirName);
         map.put("a0101", a0101);
         map.put("isManage", isManage);
+        map.put("isAddLog",isAddLog);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
     }
     private String getTpStorePath(String a38Id) {

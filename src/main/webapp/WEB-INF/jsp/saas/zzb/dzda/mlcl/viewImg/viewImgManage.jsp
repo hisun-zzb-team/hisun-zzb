@@ -18,9 +18,13 @@
 </head>
 
 
-<body >
+<body onunload="testGuanbi()">
 
-
+<script type="text/javascript">
+		function testGuanbi(){
+			alert("哈哈哈");
+		}
+</script>
 <div class="container-fluid" >
 	<!-- 脚本目录 -->
 	<input id="showTpWidth" type="hidden"/>
@@ -55,68 +59,72 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
-		$.ajax({
-			url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
-			type: "post",
-			data: {
-				"eApplyE01Z8Id":$("#eApplyE01Z8Id").val(),
-				"a38Id":"${a38Id}",
-				"isManage":"${isManage}"
-			},
-			dataType: "json",
-			success: function (json) {
-				var  eApplyE01Z8Id = json.eApplyE01Z8Id;
-				$("#eApplyE01Z8Id").val(eApplyE01Z8Id);
-				$("#a38LogId").val(json.a38LogId);
-				$("#a38LogViewTimeId").val(json.a38LogViewTimeId);
-			//	$("#syReadTime").val(json.syReadTime);
-				var time = json.syReadTime;
-				if(time!=null && time!="" && time!=undefined){
-					timer1 = setInterval(function () {
-						if(time <=0){
-							//阅档时间到期
-							jieshuyuedang(1);
-						}
-						time = time-1;
-						var minute = parseInt((time  /60));
-						var seconds = parseInt(time % 60);
-						$('#timespan').html( minute + "分钟" + seconds + "秒");
-					}, 1000);
-				}
-			},
-			error: function () {
-				showTip("提示", "出错了请联系管理员", 1500);
-			}
-		});
-		var time = 5000;
-		//更新阅档日志时间
-		timer2 = setInterval(function () {
-			var a38LogId = $("#a38LogId").val();
+		debugger
+		if("${isAddLog}" != "false"){
 			$.ajax({
-				type: "POST",
-				url:"${path}/zzb/dzda/cysq/ajax/updateViewTime",
-				dataType: "json",
+				url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
+				type: "post",
 				data: {
-					"a38LogId": a38LogId,
-					"time":time/1000,
-					"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
+					"eApplyE01Z8Id":$("#eApplyE01Z8Id").val(),
+					"a38Id":"${a38Id}",
+					"isManage":"${isManage}"
 				},
+				dataType: "json",
 				success: function (json) {
-					if(json.code == 2){
-						showTip("提示", "您的阅档权限已被收回或阅档时间已结束", 2000);
-						$('#viewImgModal').modal('hide');
-						$('#viewImgDiv').html("");
-						$("#timespan").html("");
-						location.reload();
+					var  eApplyE01Z8Id = json.eApplyE01Z8Id;
+					$("#eApplyE01Z8Id").val(eApplyE01Z8Id);
+					$("#a38LogId").val(json.a38LogId);
+					$("#a38LogViewTimeId").val(json.a38LogViewTimeId);
+					//	$("#syReadTime").val(json.syReadTime);
+					var time = json.syReadTime;
+					if(time!=null && time!="" && time!=undefined){
+						timer1 = setInterval(function () {
+							if(time <=0){
+								//阅档时间到期
+								jieshuyuedang(1);
+							}
+							time = time-1;
+							var minute = parseInt((time  /60));
+							var seconds = parseInt(time % 60);
+							$('#timespan').html( minute + "分钟" + seconds + "秒");
+						}, 1000);
 					}
 				},
 				error: function () {
-					//myLoading.hide();
-					console.log("我这里出错了")
-					showTip("提示", "出错了,请检查网络!", 2000);
+					showTip("提示", "出错了请联系管理员", 1500);
 				}
 			});
-		}, time);
+			var time = 5000;
+			//更新阅档日志时间
+			timer2 = setInterval(function () {
+				var a38LogId = $("#a38LogId").val();
+				$.ajax({
+					type: "POST",
+					url:"${path}/zzb/dzda/cysq/ajax/updateViewTime",
+					dataType: "json",
+					data: {
+						"a38LogId": a38LogId,
+						"time":time/1000,
+						"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
+					},
+					success: function (json) {
+						if(json.code == 2){
+							showTip("提示", "您的阅档权限已被收回或阅档时间已结束", 2000);
+							$('#viewImgModal').modal('hide');
+							$('#viewImgDiv').html("");
+							$("#timespan").html("");
+							location.reload();
+						}
+					},
+					error: function () {
+						//myLoading.hide();
+						console.log("我这里出错了")
+						showTip("提示", "出错了,请检查网络!", 2000);
+					}
+				});
+			}, time);
+		}
+
 
 
 	});

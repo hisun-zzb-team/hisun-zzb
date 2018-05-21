@@ -32,8 +32,8 @@
                     <a  class="btn green" href="#">
                         职务变动导入
                     </a>
-                    <a  class="btn green" href="#">
-                        打印职务变动
+                    <a  class="btn green" href="javascript:download()">
+                        职务变动导出
                     </a>
                 </div>
 
@@ -184,6 +184,9 @@
           });
       }
 
+      function download() {
+          window.open("${path}/zzb/dzda/a52/download/${a38Id}");
+      }
   </script>
 </body>
 </html>

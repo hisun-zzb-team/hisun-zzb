@@ -32,7 +32,7 @@
             <a  class="btn green" href="#">
                 材料接收导入
             </a>
-            <a  class="btn green" href="#">
+            <a  class="btn green" href="javascript:download()">
                 打印材料接收
             </a>
         </div>
@@ -189,6 +189,10 @@
                     showTip("提示","出错了,请检查网络!",2000);
                 }
             });
+        }
+
+        function download() {
+            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}");
         }
 
     </script>

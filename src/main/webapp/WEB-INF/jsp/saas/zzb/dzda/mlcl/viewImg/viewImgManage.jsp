@@ -102,6 +102,13 @@
 					"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
 				},
 				success: function (json) {
+					if(json.code == 2){
+						showTip("提示", "您的阅档权限已被收回或阅档时间已结束", 2000);
+						$('#viewImgModal').modal('hide');
+						$('#viewImgDiv').html("");
+						$("#timespan").html("");
+						location.reload();
+					}
 				},
 				error: function () {
 					//myLoading.hide();
@@ -230,7 +237,6 @@
 		}
 	}
 	function hiddenViewImgModalForLiulan(){//隐藏图片查看时 删除临时的解密图片
-		debugger
 		clearInterval(timer1);
 		clearInterval(timer2);
 		$.ajax({

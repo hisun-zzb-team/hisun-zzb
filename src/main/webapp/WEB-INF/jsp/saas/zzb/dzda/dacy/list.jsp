@@ -104,7 +104,7 @@
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
                             <TD width="20%"><a href="#">详情</a></TD>
-                            <TD width="10%"><c:out value="${vo.createDate}"></c:out></TD>
+                            <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
@@ -160,7 +160,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
                     <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                    <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>

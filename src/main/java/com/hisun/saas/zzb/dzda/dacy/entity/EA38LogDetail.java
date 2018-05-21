@@ -30,7 +30,7 @@ public class EA38LogDetail  extends TenantEntity implements Serializable {
     private String e01Z101A;//材料类别字典内容
     private String e01Z101B;//材料类别字典代码
     private String cysj;//查阅时长
-    private String jscysj;// 结束查阅时间
+    private Date jscysj;// 结束查阅时间
     private List<ELogDetailViewTime> logDetailViewTimes;
 
     @Id
@@ -126,11 +126,11 @@ public class EA38LogDetail  extends TenantEntity implements Serializable {
 
     @Basic
     @Column(name = "jscysj")
-    public String getJscysj() {
+    public Date getJscysj() {
         return jscysj;
     }
 
-    public void setJscysj(String cysj) {
+    public void setJscysj(Date jscysj) {
         this.jscysj = jscysj;
     }
 

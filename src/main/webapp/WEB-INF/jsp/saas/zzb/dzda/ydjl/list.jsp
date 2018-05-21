@@ -29,7 +29,7 @@
           href="${path}/css/select2_metro.css" />
     <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="${path}/css/DT_bootstrap.css" />
-<%--    <script type="text/javascript" src="${path}/js/select2.min.js"></script>
+   <script type="text/javascript" src="${path}/js/select2.min.js"></script>
     <script type="text/javascript"
             src="${path}/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="${path}/js/jquery.form.js"></script>
@@ -37,7 +37,7 @@
     <script type="text/javascript" src="${path}/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="${path}/js/bootstrap-datepicker.zh-CN.js"></script>
     <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>--%>
+    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>
 </head>
 <body>
 <div id="viewTimeModal" class="modal container hide fade" tabindex="-1" data-width="600">
@@ -141,7 +141,7 @@
 
 
 <script type="text/javascript">
-  /*(function(){
+  (function(){
         App.init();
 
         $("#btn-browseTemplate").bind("change",function(evt){
@@ -151,7 +151,7 @@
             $(this).val('');
         });
 
-    })();*/
+    })();
     $(function(){
         $('#starttime').datepicker({
             format : 'yyyy-mm-dd',

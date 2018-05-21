@@ -105,6 +105,7 @@
 				},
 				error: function () {
 					//myLoading.hide();
+					console.log("我这里出错了")
 					showTip("提示", "出错了,请检查网络!", 2000);
 				}
 			});
@@ -112,10 +113,10 @@
 
 
 	});
-	function  jieshuyuedang(ydsjzt){
-		$('#viewImgModal').modal('hide');
-		$('#viewImgDiv').html("");
-		$("#timespan").html("");
+	function  jieshuyuedang(){
+		debugger
+		window.clearInterval(timer1);
+		window.clearInterval(timer2);
 		var a38LogId = $("#a38LogId").val();
 		$.ajax({
 			type: "POST",
@@ -127,7 +128,7 @@
 				"ea38LogDetailId":$("#ea38LogDetailId").val(),
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val(),
 				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val(),
-				"ydsjzt":ydsjzt
+				"ydsjzt":"1"
 			},
 			success: function (json) {
 				if(json.code == 5){
@@ -139,9 +140,10 @@
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});
-		window.clearInterval(timer1);
-		window.clearInterval(timer2);
-		window.location.href ="${path }/zzb/dzda/cysq/list";
+		$('#viewImgModal').modal('hide');
+		$('#viewImgDiv').html("");
+		$("#timespan").html("");
+		location.reload();
 	}
 	function changeTreeDivHeight(){
 		var divHeight = $(window).height()-65;
@@ -199,7 +201,7 @@
 						"e01z1Id": treeNode.id,
 						"e01z111":treeNode.name,
 						"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
-						"ea38LogDetailId":$("#ea38LogDetailId").val()
+						"lsEa38LogDetailId":$("#ea38LogDetailId").val()
 					},
 					success: function (json) {
 
@@ -227,16 +229,16 @@
 			loadRight(treeNode.id);
 		}
 	}
-	function hiddenViewImgModal(){//隐藏图片查看时 删除临时的解密图片
-		$('#viewImgModal').modal('hide');
-		$('#viewImgDiv').html("");
-		$("#timespan").html("");
+	function hiddenViewImgModalForLiulan(){//隐藏图片查看时 删除临时的解密图片
+		debugger
+		clearInterval(timer1);
+		clearInterval(timer2);
 		$.ajax({
 			type: "POST",
 			url:"${path}/zzb/dzda/cysq/ajax/guanbiOrjieshu",
 			dataType: "json",
 			data: {
-				"a38LogId": a38LogId,
+				"a38LogId": $("#a38LogId").val(),
 				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 				"ea38LogDetailId":$("#ea38LogDetailId").val(),
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val()
@@ -248,9 +250,11 @@
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});
-		window.clearInterval(timer1);
-		window.clearInterval(timer2);
-		window.location.href ="${path }/zzb/dzda/cysq/list";
+		$('#viewImgModal').modal('hide');
+		$('#viewImgDiv').html("");
+		$("#timespan").html("");
+		//window.location.href ="${path }/zzb/dzda/cysq/list";
+	    location.reload();
 	}
 
 

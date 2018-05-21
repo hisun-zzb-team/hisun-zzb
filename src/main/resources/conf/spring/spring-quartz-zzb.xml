@@ -10,4 +10,12 @@
 		http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
+    <bean id="readA38LogTask" class="com.hisun.saas.zzb.dzda.dacy.task.ReadA38LogTask"/>
+    <task:scheduled-tasks>
+        <task:scheduled ref="readA38LogTask" method="updateReadStatus" cron="0/60 * * * * ?"/>
+    </task:scheduled-tasks>
+
+    <task:scheduled-tasks>
+        <task:scheduled ref="readA38LogTask" method="updateLogViewTime" cron="0/2 * * * * ?"/>
+    </task:scheduled-tasks>
 </beans>

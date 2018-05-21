@@ -410,6 +410,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 ea38Log.setA0101(a38Service.getByPK(a38Id).getA0101());
                 ea38Log.setReadTenantId(details.getTenantId());
                 ea38Log.setCysj(new Date());
+                ea38Log.setZzcysj(new Date());
                 ea38Log.setReadTenantName(details.getTenantName());
                 ea38Log.setYdzt(1);
                 BeanUtils.copyProperties(ea38Log, details);
@@ -444,9 +445,12 @@ public class EApplyE01Z8Controller extends BaseController {
      * @param time
      */
     @RequestMapping(value = "/ajax/updateViewTime")
-    public void updateViewTime(@RequestParam(value = "a38LogId", required = true) String a38LogId,
-                               @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id,
-                               @RequestParam(value = "time", required = true) Integer time) {
+    public
+    @ResponseBody
+    Map<String, Object> updateViewTime(@RequestParam(value = "a38LogId", required = true) String a38LogId,
+                                       @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id,
+                                       @RequestParam(value = "time", required = true) Integer time) {
+        Map<String, Object> returnMap = new HashMap<String, Object>();
         if (StringUtils.isNotBlank(eApplyE01Z8Id)) {
             EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
             if (eApplyE01Z8.getAlreadyReadTime() == null || "".equals(eApplyE01Z8.getAlreadyReadTime())) {
@@ -457,7 +461,7 @@ public class EApplyE01Z8Controller extends BaseController {
             }
             eApplyE01Z8Service.update(eApplyE01Z8);
         }
-        EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
+       /* EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
         if (ea38Log.getViewTime() == null || "".equals(ea38Log.getViewTime())) {
             ea38Log.setViewTime(String.valueOf(time));
         } else {
@@ -465,7 +469,8 @@ public class EApplyE01Z8Controller extends BaseController {
             ea38Log.setViewTime(String.valueOf(viewTime + time));
         }
         ea38Log.setZzcysj(new Date());
-        eA38LogService.update(ea38Log);
+        eA38LogService.update(ea38Log);*/
+        return returnMap;
     }
 
     /**
@@ -482,6 +487,7 @@ public class EApplyE01Z8Controller extends BaseController {
                                        @RequestParam(value = "e01z1Id", required = true) String e01z1Id,
                                        @RequestParam(value = "lseLogDetailViewTimeId", required = false) String lseLogDetailViewTimeId,//上次浏览的id
                                        @RequestParam(value = "e01z111", required = true) String e01z111,
+                                       @RequestParam(value = "lsEa38LogDetailId", required = false) String lsEa38LogDetailId,
                                        @RequestParam(value = "isManage", required = false) String isManage) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -492,6 +498,9 @@ public class EApplyE01Z8Controller extends BaseController {
                 if ("true".equals(isManage)) {
                     return returnMap;
                 }
+            }
+            if (StringUtils.isNotBlank(lsEa38LogDetailId)) {
+
             }
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and("a38Log.id = :a38Id ", "a38Id", a38LogId));
@@ -506,16 +515,17 @@ public class EApplyE01Z8Controller extends BaseController {
                 Long viewTime = (new Date()).getTime() - eLogDetailViewTime.getStareTime().getTime();
                 eLogDetailViewTime.setViewTime(String.valueOf(viewTime / 1000));
                 eLogDetailViewTimeService.update(eLogDetailViewTime);
-                String ea38LogViewTime = ea38Log.getViewTime();
+                String ea38LogViewTime = ea38LogDetail.getCysj();
                 if (ea38LogViewTime == null || "".equals(ea38LogViewTime)) {
                     ea38LogDetail.setCysj(String.valueOf(viewTime / 1000));
                 } else {
                     ea38LogDetail.setCysj(String.valueOf(Integer.valueOf(ea38Log.getViewTime()) + (viewTime / 1000)));
                 }
+                ea38LogDetail.setJscysj(new Date());
                 eA38LogDetailService.update(ea38LogDetail);
             }
 
-            List<EA38LogDetail> logDetails = eA38LogDetailService.list(query, null);
+            //  List<EA38LogDetail> logDetails = eA38LogDetailService.list(query, null);
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             //阅档申请信息
             //EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
@@ -552,6 +562,13 @@ public class EApplyE01Z8Controller extends BaseController {
         return returnMap;
     }
 
+    /**
+     * 关闭或者结束阅档  时间处理
+     * @param a38LogId
+     * @param a38LogViewTimeId
+     * @param ea38LogDetailId
+     * @param lseLogDetailViewTimeId
+     */
     private void dealEndTime(String a38LogId, String a38LogViewTimeId, String ea38LogDetailId, String lseLogDetailViewTimeId) {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
 
@@ -560,6 +577,17 @@ public class EApplyE01Z8Controller extends BaseController {
             eLogDetailViewTime.setEndTime(new Date());
             eLogDetailViewTime.setViewTime(String.valueOf((new Date().getTime() - eLogDetailViewTime.getStareTime().getTime()) / 1000));
             eLogDetailViewTimeService.update(eLogDetailViewTime);
+
+            EA38LogDetail ea38LogDetail = eA38LogDetailService.getByPK(ea38LogDetailId);
+            ea38LogDetail.setJscysj(new Date());
+            if (ea38LogDetail.getCysj() == null || "".equals(ea38LogDetail.getCysj())) {
+                ea38LogDetail.setCysj(String.valueOf((new Date().getTime() - eLogDetailViewTime.getStareTime().getTime()) / 1000));
+            } else {
+                Long viewtTiem = Long.valueOf(ea38LogDetail.getCysj());
+                viewtTiem = viewtTiem + ((new Date().getTime() - eLogDetailViewTime.getStareTime().getTime()) / 1000);
+                ea38LogDetail.setCysj(String.valueOf(viewtTiem));
+            }
+            eA38LogDetailService.update(ea38LogDetail);
         }
 
         EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
@@ -567,18 +595,9 @@ public class EApplyE01Z8Controller extends BaseController {
         ea38LogViewTime.setEndTime(new Date());
         ea38LogViewTime.setViewTime(String.valueOf((new Date().getTime() - ea38LogViewTime.getStareTime().getTime()) / 1000));
         eA38LogViewTimeService.update(ea38LogViewTime);
-        if (StringUtils.isNotBlank(ea38LogDetailId)) {
-            EA38LogDetail ea38LogDetail = eA38LogDetailService.getByPK(ea38LogDetailId);
-            ea38LogDetail.setJscysj(DateUtil.formatTimesTampDate(new Date()));
-            if (ea38LogDetail.getCysj() == null || "".equals(ea38LogDetail.getCysj())) {
-                ea38LogDetail.setCysj(String.valueOf((new Date().getTime() - ea38LogViewTime.getStareTime().getTime()) / 1000));
-            } else {
-                Long viewtTiem = Long.valueOf(ea38LogDetail.getCysj());
-                viewtTiem = viewtTiem + ((new Date().getTime() - ea38LogViewTime.getStareTime().getTime()) / 1000);
-                ea38LogDetail.setCysj(String.valueOf(viewtTiem));
-            }
-            eA38LogDetailService.update(ea38LogDetail);
-        }
+       /* if (StringUtils.isNotBlank(ea38LogDetailId)) {
+
+        }*/
         if (ea38Log.getViewTime() == null || "".equals(ea38Log.getViewTime())) {
             ea38Log.setViewTime(String.valueOf((new Date().getTime() - ea38LogViewTime.getStareTime().getTime()) / 1000));
         } else {
@@ -591,16 +610,8 @@ public class EApplyE01Z8Controller extends BaseController {
         eA38LogService.update(ea38Log);
     }
 
-    @RequestMapping("/ajax/jieshuYd")
-    public void jieshuYd(@RequestParam(value = "a38LogId", required = true) String a38LogId,
-                         @RequestParam(value = "a38LogViewTimeId", required = true) String a38LogViewTimeId,
-                         @RequestParam(value = "ea38LogDetailId", required = false) String ea38LogDetailId,
-                         @RequestParam(value = "lseLogDetailViewTimeId", required = false) String lseLogDetailViewTimeId,
-                         @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id) {
-    }
-
     /**
-     * 关闭按钮
+     * 关闭按钮 结束阅档
      *
      * @param a38LogId
      * @param a38LogViewTimeId
@@ -617,8 +628,8 @@ public class EApplyE01Z8Controller extends BaseController {
                                @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id,
                                @RequestParam(value = "ydsjzt", required = false) String ydsjzt) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
-        if (StringUtils.isNotBlank(eApplyE01Z8Id) || StringUtils.isNotBlank(ydsjzt)) {
-            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(ea38LogDetailId);
+        if (StringUtils.isNotBlank(eApplyE01Z8Id) && StringUtils.isNotBlank(ydsjzt)) {
+            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
             //结束阅档
             eApplyE01Z8.setAuditingState("4");
             eApplyE01Z8.setEndReadDate(DateUtil.formatTimesTampDate(new Date()));

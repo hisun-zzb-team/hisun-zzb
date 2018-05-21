@@ -265,7 +265,6 @@
     }
     var form1 = new EstValidate("form1");
     function formSubmit(status){
-        debugger
         $("#auditingState").val(status);
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){

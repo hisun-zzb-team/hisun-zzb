@@ -121,7 +121,7 @@
                             </ul>
                         </div>
 
-                        <a class="controllerClass btn green file_but" href="javascript:fileDown('daochumilu')">
+                        <a class="controllerClass btn green file_but" href="javascript:download()">
                             <i class="icon-circle-arrow-down"></i>打印目录
                         </a>
                     </div>
@@ -420,6 +420,9 @@
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
     });
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}");
+    };
 
 
     function jztp(id,e01Z111){

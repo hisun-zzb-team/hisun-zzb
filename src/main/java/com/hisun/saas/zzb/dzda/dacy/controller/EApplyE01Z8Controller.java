@@ -614,16 +614,17 @@ public class EApplyE01Z8Controller extends BaseController {
                                @RequestParam(value = "a38LogViewTimeId", required = true) String a38LogViewTimeId,
                                @RequestParam(value = "ea38LogDetailId", required = false) String ea38LogDetailId,
                                @RequestParam(value = "lseLogDetailViewTimeId", required = false) String lseLogDetailViewTimeId,
-                               @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id) {
+                               @RequestParam(value = "eApplyE01Z8Id", required = false) String eApplyE01Z8Id,
+                               @RequestParam(value = "ydsjzt", required = false) String ydsjzt) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
-        if (StringUtils.isNotBlank(eApplyE01Z8Id)) {
+        if (StringUtils.isNotBlank(eApplyE01Z8Id) || StringUtils.isNotBlank(ydsjzt)) {
             EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(ea38LogDetailId);
             //结束阅档
             eApplyE01Z8.setAuditingState("4");
             eApplyE01Z8.setEndReadDate(DateUtil.formatTimesTampDate(new Date()));
             eApplyE01Z8Service.update(eApplyE01Z8);
-            //结束阅档标识
-            returnMap.put("code", "4");
+            //时间到期
+            returnMap.put("code", "5");
         }
         this.dealEndTime(a38LogId, a38LogViewTimeId, ea38LogDetailId, lseLogDetailViewTimeId);
         return returnMap;

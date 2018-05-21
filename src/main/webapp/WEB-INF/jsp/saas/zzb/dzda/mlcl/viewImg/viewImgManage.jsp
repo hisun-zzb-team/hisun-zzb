@@ -73,6 +73,10 @@
 				var time = json.syReadTime;
 				if(time!=null && time!="" && time!=undefined){
 					timer1 = setInterval(function () {
+						if(time <=0){
+							//阅档时间到期
+							jieshuyuedang(1);
+						}
 						time = time-1;
 						var minute = parseInt((time  /60));
 						var seconds = parseInt(time % 60);
@@ -108,7 +112,7 @@
 
 
 	});
-	function  jieshuyuedang(){
+	function  jieshuyuedang(ydsjzt){
 		$('#viewImgModal').modal('hide');
 		$('#viewImgDiv').html("");
 		$("#timespan").html("");
@@ -122,9 +126,13 @@
 				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 				"ea38LogDetailId":$("#ea38LogDetailId").val(),
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val(),
-				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
+				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val(),
+				"ydsjzt":ydsjzt
 			},
 			success: function (json) {
+				if(json.code == 5){
+					showTip("提示", "阅档时间已结束", 2000);
+				}
 			},
 			error: function () {
 				//myLoading.hide();

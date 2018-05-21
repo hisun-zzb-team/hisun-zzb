@@ -12,6 +12,7 @@ import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
 import com.hisun.saas.zzb.dzda.dacy.service.EA38LogService;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
 import com.hisun.util.DateUtil;
+import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -25,8 +26,12 @@ public class ReadA38LogTask {
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
     private EA38LogService ea38LogService;
+    protected final Logger logger = Logger.getLogger(getClass());
 
-    private void updateReadStatus(){
+    public void updateReadStatus(){
+        if(logger.isDebugEnabled()){
+            logger.debug("开始执行 updateReadStatus 》》》》》");
+        }
         CommonConditionQuery query = new CommonConditionQuery();
         //已审
         query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState","1" ));
@@ -52,6 +57,9 @@ public class ReadA38LogTask {
                     }
                 }
             }
+        }
+        if(logger.isDebugEnabled()){
+            logger.debug("结束执行 updateReadStatus 》》》》》");
         }
     }
 }

@@ -87,15 +87,16 @@ public class A38Controller extends BaseController {
             session.setAttribute("queryA38Vo",queryVo);
         }else{
             DakVo queryA38Vo = (DakVo)session.getAttribute("queryA38Vo");
-            if(queryA38Vo!=null) {
-                dabhQuery = queryA38Vo.getDabh();
-                smxhQuery =queryA38Vo.getSmxh();
-                a0101Query =queryA38Vo.getA0101();
-                gbztCodeQuery =queryA38Vo.getGbztCodes();
-                gbztContentQuery =queryA38Vo.getGbztContents();
-                daztCodeQuery = queryA38Vo.getDaztCodes();
-                daztContentQuery =queryA38Vo.getDaztContents();
+            if(queryA38Vo ==null){
+                queryA38Vo = new DakVo();
             }
+            dabhQuery = queryA38Vo.getDabh();
+            smxhQuery =queryA38Vo.getSmxh();
+            a0101Query =queryA38Vo.getA0101();
+            gbztCodeQuery =queryA38Vo.getGbztCodes();
+            gbztContentQuery =queryA38Vo.getGbztContents();
+            daztCodeQuery = queryA38Vo.getDaztCodes();
+            daztContentQuery =queryA38Vo.getDaztContents();
             queryVo = queryA38Vo;
         }
 

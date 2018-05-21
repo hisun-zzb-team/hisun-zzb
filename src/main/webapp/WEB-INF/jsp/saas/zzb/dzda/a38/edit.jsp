@@ -57,7 +57,7 @@
 					</div>
 				</div>
 				<div class="span6 ">
-					<div id="a0111BGroup" class="control-group">
+					<div id="a0111AGroup" class="control-group">
 						<label class="control-label">籍贯</label>
 						<div class="controls">
 							<input type="text" class="span10 m-wrap" name="a0111A" maxlength="128" id="a0111A" value="${vo.a0111A}" />

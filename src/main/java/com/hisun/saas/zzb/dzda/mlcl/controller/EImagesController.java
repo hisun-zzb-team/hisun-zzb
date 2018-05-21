@@ -147,11 +147,13 @@ public class EImagesController extends BaseController {
 //                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
 //                }
                 images.add(image.getId()+";"+image.getImgNo());
+                images.add(image.getId());
             }
          imagesSize = eImages.size();
         }
 
         map.put("imagesSize", imagesSize);
+        map.put("eImages", eImages);
         map.put("images", images);
         map.put("a38Id", a38Id);
         map.put("e01z1Id", e01z1Id);

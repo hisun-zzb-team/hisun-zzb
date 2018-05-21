@@ -33,16 +33,16 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li >
-                            <a onclick="changeViewType('20')">小图(一行5张图)</a>
+                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
                         </li>
                         <li >
-                            <a onclick="changeViewType('33.3333333336')">中图(一行3张图)</a>
+                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
                         </li>
+                        <%--<li>--%>
+                        <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                        <%--</li>--%>
                         <li>
-                            <a onclick="changeViewType('50')">大图(一行2张图)</a>
-                        </li>
-                        <li>
-                            <a onclick="changeViewType('100')">原始图(一行1张图)</a>
+                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
                         </li>
                     </ul>
                 </div>

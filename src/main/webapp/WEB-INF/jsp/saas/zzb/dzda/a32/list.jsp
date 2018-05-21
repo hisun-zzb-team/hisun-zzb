@@ -83,7 +83,6 @@
                 </jsp:include>
             </div>
         </div>
-    <div class="main_right" id="catalogList" >
 <%-- 表格结束 --%>
 <%-- END PAGE CONTENT--%>
   <script type="text/javascript">
@@ -128,8 +127,8 @@
                   'id':id
               },
               success:function(html){
-                  $("#a32Table").hide();
-                  $("#catalogList").html(html);
+                  var view = $("#tab_show");
+                  view.html(html);
               },
               error : function(){
                   myLoading.hide();
@@ -177,8 +176,8 @@
                    'a38Id':"${a38Id}"
               },
               success:function(html){
-                  $("#a32Table").hide();
-                  $("#catalogList").html(html);
+                  var view = $("#tab_show");
+                  view.html(html);
               },
               error : function(){
                   myLoading.hide();

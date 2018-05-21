@@ -34,7 +34,7 @@
                     <div id="gzbmGroup" class="control-group">
                         <label class="control-label"><span class="required">*</span>工作部门</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="gzbm" required maxlength="128" id="gzbm" value="" />
+                            <input type="text" class="span10 m-wrap" name="gzbm" required maxlength="128" id="gzbm" value="" />
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div id="zwmcGroup" class="control-group">
                         <label class="control-label">职务名称</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="zwmc"  maxlength="128" id="zwmc" value="" />
+                            <input type="text" class="span10 m-wrap" name="zwmc"  maxlength="128" id="zwmc" value="" />
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                     <div id="a3224Group" class="control-group">
                         <label class="control-label">执行职务工资标准：</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="a3224"  maxlength="128" id="a3224" value=""/>
+                            <input type="text" class="span10 m-wrap" name="a3224"  maxlength="128" id="a3224" value=""/>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                     <div id="a3234Group" class="control-group">
                         <label class="control-label">职务工资额：</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="a3234"  maxlength="128" id="a3234" value=""/>
+                            <input type="text" class="span10 m-wrap" name="a3234"  maxlength="128" id="a3234" value=""/>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div id="a3207Group" class="control-group">
                         <label class="control-label">批准日期：</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="a3207"  maxlength="128" id="a3207" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                            <input type="text" class="span10 m-wrap" name="a3207"  maxlength="128" id="a3207" value="" placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <div id="a3204Group" class="control-group">
                         <label class="control-label">批准机关：</label>
                         <div class="controls">
-                            <input type="text" class="span810 m-wrap" name="a3204"  maxlength="128" id="a3204" value="" />
+                            <input type="text" class="span10 m-wrap" name="a3204"  maxlength="128" id="a3204" value="" />
                         </div>
                     </div>
                 </div>
@@ -87,9 +87,9 @@
             <div class="row-fluid">
                 <div class="span6 ">
                     <div id="a3211Group" class="control-group">
-                        <label class="control-label"><span class="required">*</span>批准文号：</label>
+                        <label class="control-label">批准文号：</label>
                         <div class="controls">
-                            <input type="text"  class="span810 m-wrap" name="a3211"  maxlength="128" id="a3211" value="" />
+                            <input type="text"  class="span10 m-wrap" name="a3211"  maxlength="128" id="a3211" value="" />
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     <div id="pxGroup" class="control-group">
                         <label class="control-label"><span class="required">*</span>工资变动顺序号</label>
                         <div class="controls">
-                            <input type="text" number="true"  required maxlength="3" class="span810 m-wrap" name="px"  maxlength="128" id="px" value="${sort}" />
+                            <input type="text" number="true"  required maxlength="3" class="span10 m-wrap" name="px"  maxlength="128" id="px" value="${sort}" />
                         </div>
                     </div>
                 </div>
@@ -117,8 +117,20 @@
 
     <script type="text/javascript">
         function cencal(){
-            $("#catalogList").html("");
-            $("#a32Table").show();
+            $.ajax({
+                url : "${path }/zzb/dzda/a32/ajax/list",
+                type : "get",
+                data : {"a38Id":"${a38Id}"},
+                dataType : "html",
+                success : function(html){
+                    console.log(111);
+                    var view = $("#tab_show");
+                    view.html(html);
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","工资变动加载失败");
+                }
+            });
         }
         $(function(){
             $("#gzbm").val("${a32.gzbm}");
@@ -155,7 +167,7 @@
                                     view.html(html);
                                 },
                                 error : function(arg1, arg2, arg3){
-                                    showTip("提示","职务变动加载失败");
+                                    showTip("提示","工资变动加载失败");
                                 }
                             });
                         }else{

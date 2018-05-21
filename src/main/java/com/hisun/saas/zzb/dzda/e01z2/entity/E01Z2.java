@@ -25,7 +25,8 @@ public class E01Z2 extends TenantEntity implements Serializable {
     private String e01Z204A;//来件单位名称
     private String e01Z204B;//来件单位代码
     private String e01Z207;//接收人
-    private String e01Z211;//材料类号
+    private String e01Z211B;//材料类号
+    private String e01Z211A;//材料类别名称
     private String e01Z217;//材料编号
     private String e01Z221A;//材料名称
     private String e01Z221B;//材料名称代码
@@ -129,17 +130,25 @@ public class E01Z2 extends TenantEntity implements Serializable {
 
 
 
+
     @Basic
-    @Column(name = "e01z211", nullable = true, length = 8)
-    public String getE01Z211() {
-        return e01Z211;
+    @Column(name = "e01z211a", nullable = true, length = 256)
+    public String getE01Z211A() {
+        return e01Z211A;
     }
 
-    public void setE01Z211(String e01Z211) {
-        this.e01Z211 = e01Z211;
+    public void setE01Z211A(String e01Z211A) {
+        this.e01Z211A = e01Z211A;
+    }
+    @Basic
+    @Column(name = "e01z211b", nullable = true, length =32)
+    public String getE01Z211B() {
+        return e01Z211B;
     }
 
-
+    public void setE01Z211B(String e01Z211B) {
+        this.e01Z211B = e01Z211B;
+    }
 
     @Basic
     @Column(name = "e01z217", nullable = true, length = 8)
@@ -285,7 +294,6 @@ public class E01Z2 extends TenantEntity implements Serializable {
         if (e01Z204A != null ? !e01Z204A.equals(e01Z2.e01Z204A) : e01Z2.e01Z204A != null) return false;
         if (e01Z204B != null ? !e01Z204B.equals(e01Z2.e01Z204B) : e01Z2.e01Z204B != null) return false;
         if (e01Z207 != null ? !e01Z207.equals(e01Z2.e01Z207) : e01Z2.e01Z207 != null) return false;
-        if (e01Z211 != null ? !e01Z211.equals(e01Z2.e01Z211) : e01Z2.e01Z211 != null) return false;
         if (e01Z217 != null ? !e01Z217.equals(e01Z2.e01Z217) : e01Z2.e01Z217 != null) return false;
         if (e01Z221A != null ? !e01Z221A.equals(e01Z2.e01Z221A) : e01Z2.e01Z221A != null) return false;
         if (e01Z221B != null ? !e01Z221B.equals(e01Z2.e01Z221B) : e01Z2.e01Z221B != null) return false;
@@ -309,7 +317,6 @@ public class E01Z2 extends TenantEntity implements Serializable {
         result = 31 * result + (e01Z204A != null ? e01Z204A.hashCode() : 0);
         result = 31 * result + (e01Z204B != null ? e01Z204B.hashCode() : 0);
         result = 31 * result + (e01Z207 != null ? e01Z207.hashCode() : 0);
-        result = 31 * result + (e01Z211 != null ? e01Z211.hashCode() : 0);
         result = 31 * result + (e01Z217 != null ? e01Z217.hashCode() : 0);
         result = 31 * result + (e01Z221A != null ? e01Z221A.hashCode() : 0);
         result = 31 * result + (e01Z221B != null ? e01Z221B.hashCode() : 0);

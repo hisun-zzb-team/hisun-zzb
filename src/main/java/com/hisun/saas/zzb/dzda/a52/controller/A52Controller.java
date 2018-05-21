@@ -14,8 +14,11 @@ import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
+import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
+import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
@@ -84,6 +87,7 @@ public class A52Controller extends BaseController {
     public @ResponseBody Map<String, Object> update(A52Vo vo){
         Map<String,Object> map = Maps.newHashMap();
         try {
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             A52 a52 = a52Service.getByPK(vo.getId());
             int newPx = vo.getPx();
             int oldPx = a52.getPx();
@@ -93,6 +97,7 @@ public class A52Controller extends BaseController {
             A38 a38 = this.a38Service.getByPK(vo.getA38Id());
             a52.setA38(a38);
             BeanUtils.copyProperties(a52,vo);
+            EntityWrapper.wrapperUpdateBaseProperties(a52,details);
             a52Service.update(a52);
             map.put("success", true);
         } catch (Exception e) {
@@ -108,6 +113,7 @@ public class A52Controller extends BaseController {
     public @ResponseBody Map<String, Object> save(A52Vo vo){
         Map<String,Object> map = Maps.newHashMap();
         try {
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             int newPx = vo.getPx();
             int oldPx=0;
             Integer oldPxInteger=a52Service.getMaxSort(vo.getA38Id());
@@ -123,6 +129,7 @@ public class A52Controller extends BaseController {
             A38 a38 = this.a38Service.getByPK(vo.getA38Id());
             a52.setA38(a38);
             BeanUtils.copyProperties(a52,vo);
+            EntityWrapper.wrapperSaveBaseProperties(a52,details);
             a52Service.save(a52);
             map.put("success", true);
         } catch (Exception e) {

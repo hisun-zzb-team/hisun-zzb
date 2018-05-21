@@ -37,7 +37,7 @@
 					<div class="clearfix fr">
 
 						<a id="sample_editable_1_new" class="btn green" href="javascript:addQQcl()">
-							添加
+							<i class="icon-plus"></i>增加欠缺材料
 						</a>
 
 					</div>

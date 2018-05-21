@@ -22,8 +22,8 @@
 <link href="${path}/css/images-view/viewer-image.css" rel="stylesheet" type="text/css"/>
 <link href="${path}/css/images-view/main-image.css" rel="stylesheet" type="text/css"/>
 
-<form action="" class="form-horizontal" id="importTpForm" method="post" enctype="multipart/form-data">
-	<input class="file_progress" type="file" name="tpFile" id="tpFile" accept = 'image/*'>
+<form action="" id="importTpForm" method="post" enctype="multipart/form-data">
+	<input style="display: none" type="file" name="tpFile" id="tpFile" accept = 'image/*'>
 	<input type="hidden" id="curImgNo" name="curImgNo" value="">
 	<input type="hidden" id="uploadType" name="uploadType" value="">
 </form>
@@ -184,6 +184,7 @@
 				showTip("提示","请选择上传图片",2000);
 				return;
 			}
+			myLoading.show();
 			$("#importTpForm").ajaxSubmit({
 				url : "${path }/zzb/dzda/mlcl/images/uploadImg?e01z1Id=${e01z1Id}",
 				type : "post",

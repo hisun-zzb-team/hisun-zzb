@@ -18,7 +18,8 @@ public class E01z2Vo implements Serializable {
     private String e01Z204A;//来件单位名称
     private String e01Z204B;//来件单位代码
     private String e01Z207;//接收人
-    private String e01Z211;//材料类号
+    private String e01Z211B;//材料类号
+    private String e01Z211A;//材料类别名称
     private String e01Z217;//材料编号
     private String e01Z221A;//材料名称
     private String e01Z221B;//材料名称代码
@@ -89,12 +90,20 @@ public class E01z2Vo implements Serializable {
         this.e01Z207 = e01Z207;
     }
 
-    public String getE01Z211() {
-        return e01Z211;
+    public String getE01Z211B() {
+        return e01Z211B;
     }
 
-    public void setE01Z211(String e01Z211) {
-        this.e01Z211 = e01Z211;
+    public void setE01Z211B(String e01Z211B) {
+        this.e01Z211B = e01Z211B;
+    }
+
+    public String getE01Z211A() {
+        return e01Z211A;
+    }
+
+    public void setE01Z211A(String e01Z211A) {
+        this.e01Z211A = e01Z211A;
     }
 
     public Integer getE01Z214() {

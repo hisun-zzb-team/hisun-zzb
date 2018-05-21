@@ -39,31 +39,13 @@
                     </div>
                 </div>
                 <div class="span6 ">
-                    <div id="e01Z204BGroup" class="control-group">
-                        <label class="control-label">来件单位代码</label>
-                        <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z204B"  maxlength="128" id="e01Z204B" value="${e01z2.e01Z204B}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <div class="span6 ">
                     <div id="e01Z221AGroup" class="control-group">
-                        <label class="control-label">材料名称：</label>
+                        <label class="control-label"><span class="required">*</span>材料名称：</label>
                         <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z221A"  maxlength="128" id="e01Z221A" value="${e01z2.e01Z221A}" />
+                            <input type="text" class="span10 m-wrap" name="e01Z221A"  maxlength="128" required id="e01Z221A" value="${e01z2.e01Z221A}" />
                         </div>
                     </div>
-                </div>
-                <div class="span6 ">
-                    <div id="e01Z221BGroup" class="control-group">
-                        <label class="control-label">材料名称代码：</label>
-                        <div class="controls">
-                            <input type="text"  class="span10 m-wrap" name="e01Z221B"  maxlength="128" id="e01Z221B" value="${e01z2.e01Z221B}" />
-                        </div>
-                    </div>
-                </div>
+                 </div>
             </div>
             <div class="row-fluid">
                 <div class="span6 ">
@@ -75,11 +57,11 @@
                     </div>
                 </div>
                 <div class="span6 ">
-                    <div id="e01Z211Group" class="control-group">
+                    <div id="e01Z211AGroup" class="control-group">
                         <label class="control-label">材料类号：</label>
                         <div class="controls">
-                            <Tree:tree id="parentId" valueName="e01Z211" treeUrl="${path}/sys/admin/dzda/catalogType/cljs/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       defaultkeys="${e01z2.e01Z211}" defaultvalues="${e01z2.e01Z211}" submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span10 m-wrap"
+                            <Tree:tree id="e01Z211B" valueName="e01Z211A" treeUrl="${path}/sys/admin/dzda/catalogType/cljs/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                       defaultkeys="${e01z2.e01Z211B}" defaultvalues="${e01z2.e01Z211A}" submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span10 m-wrap"
                             />
                             <%--<input type="hidden" id="currentNodeName" name="e01Z211" value="${currentNodeName}"/>--%>
                         </div>
@@ -123,27 +105,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row-fluid">
-                <div class="span6 ">
-                    <div id="e01Z237Group" class="control-group">
-                        <label class="control-label">材料处理状态：</label>
-                        <div class="controls">
-                            <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content"  defaultkeys="${e01z2.e01Z237}" defaultvalues="${e01z2.e01Z237Content}"
-                                                 textClass="m-wrap span10" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="span6 ">
-                    <div id="e01Z244Group" class="control-group">
-                        <label class="control-label">是否已处理：</label>
-                        <div class="controls">
-                            <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" defaultkeys="${e01z2.e01Z244}" defaultvalues="${e01z2.e01Z244Content}"
-                                                 radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
 
 
             <div class="row-fluid">
@@ -163,6 +125,27 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6 ">
+                    <div id="e01Z237Group" class="control-group">
+                        <label class="control-label">材料处理状态：</label>
+                        <div class="controls">
+                            <SelectTag:SelectTag id="e01Z237" needNullValue="true" valueName="e01Z237Content"  defaultkeys="${e01z2.e01Z237}" defaultvalues="${e01z2.e01Z237Content}"
+                                                 textClass="m-wrap span10" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 ">
+                    <div id="e01Z244Group" class="control-group">
+                        <label class="control-label">是否已处理：</label>
+                        <div class="controls">
+                            <SelectTag:SelectTag id="e01Z244" needNullValue="true" valueName="e01Z244Content" textClass="m-wrap span10" defaultkeys="${e01z2.e01Z244}" defaultvalues="${e01z2.e01Z244Content}"
+                                                 radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="row-fluid">
                 <div class="span6 ">
@@ -200,8 +183,20 @@
 
     <script type="text/javascript">
         function cencal(){
-            $("#catalogList").html("");
-            $("#e01z2Table").show();
+            $.ajax({
+                url : "${path }/zzb/dzda/e01z2/ajax/list",
+                type : "get",
+                data : {"a38Id":"${a38Id}"},
+                dataType : "html",
+                success : function(html){
+                    console.log(111);
+                    var view = $("#tab_show");
+                    view.html(html);
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","职务变动加载失败");
+                }
+            });
         }
         function onClickByTree1 (event, treeId, treeNode){
             // $("#currentNodeId").val(treeNode.id);//赋值

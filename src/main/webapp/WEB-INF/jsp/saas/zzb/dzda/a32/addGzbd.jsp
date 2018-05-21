@@ -116,8 +116,20 @@
 
     <script type="text/javascript">
         function cencal(){
-            $("#catalogList").html("");
-            $("#a32Table").show();
+            $.ajax({
+                url : "${path }/zzb/dzda/a32/ajax/list",
+                type : "get",
+                data : {"a38Id":"${a38Id}"},
+                dataType : "html",
+                success : function(html){
+                    console.log(111);
+                    var view = $("#tab_show");
+                    view.html(html);
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","工资变动加载失败");
+                }
+            });
         }
         var addForm = new EstValidate("form1");
         function submita32(){
@@ -144,7 +156,7 @@
                                     view.html(html);
                                 },
                                 error : function(arg1, arg2, arg3){
-                                    showTip("提示","职务变动加载失败");
+                                    showTip("提示","工资变动加载失败");
                                 }
                             });
                         }else{

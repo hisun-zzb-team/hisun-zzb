@@ -43,7 +43,7 @@
 
 							<label class="control-label">材料时间</label>
 							<div class="controls">
-								<input type="text" class="span6 m-wrap" name="fileTime" placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd" maxlength="200" id="fileTime" value=""/>
+								<input type="text" class="span6 m-wrap" name="fileTime"  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd" maxlength="200" id="fileTime" value=""/>
 
 							</div>
 
@@ -60,14 +60,14 @@
 						<div id="fileTypeNameGroup" class="control-group" >
 							<label class="control-label">材料类型 <span class="required">*</span></label>
 							<div class="controls">
-								<SelectTag:SelectTag id="fileTypeCode" valueName="fileTypeName" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select"/>
+								<SelectTag:SelectTag id="fileTypeCode" valueName="fileTypeName" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select" needNullValue="true"/>
 							</div>
 						</div>
 
 						<div id="pxGroup" class="control-group">
 							<label class="control-label">材料顺序号<span class="required">*</span></label>
 							<div class="controls">
-								<input size="16" type="text" required class="span6 m-wrap" value="${px }" id="px" name="px" >
+								<input size="16" type="text" required class="span6 m-wrap" value="${px }" id="px" name="px" number="true">
 							</div>
 
 						</div>
@@ -99,13 +99,6 @@
 	<%-- END PAGE CONTENT--%>
 </div>
 
-<script type="text/javascript" src="${path }/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="${path }/js/common/est-validate-init.js"></script>
-<script type="text/javascript" src="${path }/js/common/validate-message.js"></script>
-<script type="text/javascript" src="${path }/js/common/30CloudAjax.js"></script>
-<script type="text/javascript" src="${path }/js/common/DataValidate.js"></script>
-<script type="text/javascript" src="<%=path%>/js/bootstrap-datepicker.js"></script>
-<script type="text/javascript" src="<%=path%>/js/bootstrap-datepicker.zh-CN.js"></script>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <!— 引入确认框模块 —>
 <%@ include file="/WEB-INF/jsp/inc/confirmModal.jsp"%>

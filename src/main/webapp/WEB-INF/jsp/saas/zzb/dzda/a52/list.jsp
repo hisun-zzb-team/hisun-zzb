@@ -32,8 +32,8 @@
                     <a  class="btn green" href="#">
                         职务变动导入
                     </a>
-                    <a  class="btn green" href="#">
-                        打印职务变动
+                    <a  class="btn green" href="javascript:download()">
+                        职务变动导出
                     </a>
                 </div>
 
@@ -81,7 +81,6 @@
                 </jsp:include>
             </div>
         </div>
-    <div class="main_right" id="catalogList" >
 <%-- 表格结束 --%>
 <%-- END PAGE CONTENT--%>
   <script type="text/javascript">
@@ -126,8 +125,8 @@
                   'id':id
               },
               success:function(html){
-                  $("#a52Table").hide();
-                  $("#catalogList").html(html);
+                  var view = $("#tab_show");
+                  view.html(html);
               },
               error : function(){
                   myLoading.hide();
@@ -175,8 +174,8 @@
                    'a38Id':"${a38Id}"
               },
               success:function(html){
-                  $("#a52Table").hide();
-                  $("#catalogList").html(html);
+                  var view = $("#tab_show");
+                  view.html(html);
               },
               error : function(){
                   myLoading.hide();
@@ -185,6 +184,9 @@
           });
       }
 
+      function download() {
+          window.open("${path}/zzb/dzda/a52/download/${a38Id}");
+      }
   </script>
 </body>
 </html>

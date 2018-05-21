@@ -40,14 +40,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,9 +76,9 @@ public class A32Controller extends BaseController {
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         Long total = a32Service.count(query);
-        //CommonOrderBy orderBy = new CommonOrderBy();
-        //orderBy.add(CommonOrder.asc("px"));
-        List<A32> resultList = a32Service.list(query,null,pageNum,pageSize);
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("px"));
+        List<A32> resultList = a32Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A32> pager = new PagerVo<A32>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
         model.put("a38Id",a38Id);
@@ -189,6 +187,7 @@ public class A32Controller extends BaseController {
         List<A32> resultList = a32Service.list(query,orderBy);
         A32Vo vo;
         List<A32Vo> a32Vos=new ArrayList<>();
+        String filePath = "";
         try {
             for(A32 a32:resultList){
                 vo = new A32Vo();
@@ -197,7 +196,7 @@ public class A32Controller extends BaseController {
             }
             File storePathFile = new File(Constants.GZBD_STORE_PATH);
             if(!storePathFile.exists()) storePathFile.mkdirs();
-            String filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             gzbdExcelExchange.toExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
             resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("工资变动登记表.xlsx"));
@@ -210,9 +209,72 @@ public class A32Controller extends BaseController {
             }
             output.flush();
             output.close();
+            fileInputStream.close();
             FileUtils.deleteQuietly(new File(filePath));
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
         }
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/uploadFile")
+    public void uploadFile (String a38Id ,@RequestParam(value="gzbdFile",required = false) MultipartFile gzbdFile , HttpServletResponse resp) throws IOException {
+        String filePath = "";
+        File storePathFile = new File(Constants.GZBD_STORE_PATH);
+        if(!storePathFile.exists()) storePathFile.mkdirs();
+        filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        File file = new File(filePath);
+        InputStream inputStream = null;
+        OutputStream output = null;
+        try {
+            inputStream = gzbdFile.getInputStream();
+            output = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            if(output!=null){
+                output.close();
+            }
+        }
+        String tempFile = uploadBasePath+Constants.GZBDMB_STORE_PATH;
+        List<Object> a32Vos=new ArrayList<>();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        try {
+            a32Vos = gzbdExcelExchange.fromExcel2ManyPojo(A32Vo.class,tempFile,filePath);
+            Integer oldPxInteger=a32Service.getMaxSort(a38Id);
+            if(a32Vos.size()>0){
+                for(int i=0;i<a32Vos.size();i++){
+                    A32 a32 = new A32();
+                    A32Vo a32Vo = (A32Vo) a32Vos.get(i);
+                    BeanUtils.copyProperties(a32,a32Vo);
+                    A38 a38 = this.a38Service.getByPK(a38Id);
+                    a32.setA38(a38);
+                    a32.setPx(oldPxInteger+i);
+                    EntityWrapper.wrapperSaveBaseProperties(a32,details);
+                    a32Service.save(a32);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            file.delete();
+        }
+
     }
 }

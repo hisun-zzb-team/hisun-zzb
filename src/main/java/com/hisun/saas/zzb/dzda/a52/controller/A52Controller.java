@@ -14,21 +14,36 @@ import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
+import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
+import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
+import com.hisun.saas.zzb.dzda.a52.exchange.ZwbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
+import com.hisun.saas.zzb.dzda.a52.Constants;
+import com.hisun.util.UUIDUtil;
+import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +58,13 @@ public class A52Controller extends BaseController {
     private A52Service a52Service;
     @Resource
     private A38Service a38Service;
+
+    @Resource
+    ZwbdExcelExchange zwbdExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
+
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
@@ -84,6 +106,7 @@ public class A52Controller extends BaseController {
     public @ResponseBody Map<String, Object> update(A52Vo vo){
         Map<String,Object> map = Maps.newHashMap();
         try {
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             A52 a52 = a52Service.getByPK(vo.getId());
             int newPx = vo.getPx();
             int oldPx = a52.getPx();
@@ -93,6 +116,7 @@ public class A52Controller extends BaseController {
             A38 a38 = this.a38Service.getByPK(vo.getA38Id());
             a52.setA38(a38);
             BeanUtils.copyProperties(a52,vo);
+            EntityWrapper.wrapperUpdateBaseProperties(a52,details);
             a52Service.update(a52);
             map.put("success", true);
         } catch (Exception e) {
@@ -108,6 +132,7 @@ public class A52Controller extends BaseController {
     public @ResponseBody Map<String, Object> save(A52Vo vo){
         Map<String,Object> map = Maps.newHashMap();
         try {
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             int newPx = vo.getPx();
             int oldPx=0;
             Integer oldPxInteger=a52Service.getMaxSort(vo.getA38Id());
@@ -123,6 +148,7 @@ public class A52Controller extends BaseController {
             A38 a38 = this.a38Service.getByPK(vo.getA38Id());
             a52.setA38(a38);
             BeanUtils.copyProperties(a52,vo);
+            EntityWrapper.wrapperSaveBaseProperties(a52,details);
             a52Service.save(a52);
             map.put("success", true);
         } catch (Exception e) {
@@ -145,5 +171,70 @@ public class A52Controller extends BaseController {
         }
 
         return returnMap;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download/{a38Id}")
+    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
+        List<A52> resultList = a52Service.list(query,null);
+        A52Vo vo;
+        A38Vo a38Vo = new A38Vo();
+        List<A52Vo> a52Vos=new ArrayList<>();
+        String filePath="";
+        try {
+
+            for(A52 a52:resultList){
+                vo = new A52Vo();
+                BeanUtils.copyProperties(vo,a52);
+                a52Vos.add(vo);
+            }
+            if(resultList!=null && resultList.size()>0){
+                A52 a52=resultList.get(0);
+                a38Vo.setA0101(a52.getA38().getA0101());
+                a38Vo.setA0104Content(a52.getA38().getA0104Content());
+                a38Vo.setA0107(a52.getA38().getA0107());
+                a38Vo.setA0111A(a52.getA38().getA0111A());
+                a38Vo.setA52Vos(a52Vos);
+            }
+
+            File storePathFile = new File(Constants.ZWBD_STORE_PATH);
+            if(!storePathFile.exists()){
+                storePathFile.mkdirs();
+            }
+
+            filePath = uploadBasePath+Constants.ZWBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            zwbdExcelExchange.toExcel(a38Vo, uploadBasePath+Constants.ZWBDMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("zwbd.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
+    }
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "GBK");
+        }
+        return filename;
     }
 }

@@ -6,15 +6,24 @@
 	window.PATH = "${path}";
 </script>
 <style>
+	.image-wrap {
+		position: relative;
+		display: inline-block;
+		overflow: hidden;
+		vertical-align: middle;
+	}
 	.dropdownMob{ position:absolute; top:5px; right:5px; display:none;}
 	.dropdownMob .dropdown-menu{ left:-93px; min-width: 120px;}
+	.dropdownMob .dropdown-menu li{left:-93px; min-width: 120px;}
 	.btn.downMobBtn{ padding:3px 6px; background-color:#FFFFFF; border:solid 1px #e5e5e5;}
 	.btn.downMobBtn:hover{ background-color:#FFFFFF !important;}
 </style>
-<link href="${path}/css/images-view/images-grid.css" rel="stylesheet" type="text/css"/>
+<%--<link href="${path}/css/images-view/images-grid.css" rel="stylesheet" type="text/css"/>--%>
+<link href="${path}/css/images-view/viewer-image.css" rel="stylesheet" type="text/css"/>
+<link href="${path}/css/images-view/main-image.css" rel="stylesheet" type="text/css"/>
 
-<form action="" class="form-horizontal" id="importTpForm" method="post" enctype="multipart/form-data">
-	<input class="file_progress" type="file" name="tpFile" id="tpFile" accept = 'image/*'>
+<form action="" id="importTpForm" method="post" enctype="multipart/form-data">
+	<input style="display: none" type="file" name="tpFile" id="tpFile" accept = 'image/*'>
 	<input type="hidden" id="curImgNo" name="curImgNo" value="">
 	<input type="hidden" id="uploadType" name="uploadType" value="">
 </form>
@@ -71,7 +80,33 @@
 				</table>
 			</c:if>
 			<c:if test="${imagesSize>=0}">
-				<div id="gallery1"></div>
+				<div class="docs-galley">
+					<ul class="docs-pictures clearfix">
+						<c:forEach items="${eImages}" var="image">
+							<li>
+								<div class="image-wrap">
+									<img data-original="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+										 src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" title="${image.imgNo}" alt="${image.imgNo}/${imagesSize}">
+									<span style="display: block; width: 40px; height: 20px; top: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; color: aliceblue">${image.imgNo}/${imagesSize}</span>
+									<div class="dropdownMob">
+										<div class="btn-group">
+											<a class="btn downMobBtn" href="#" data-toggle="dropdown"><i class="icon-angle-down"></i></a>
+											<ul class="dropdown-menu">
+												<li><a href="javascript:uploadImageByOne('1','frist')"><i class="icon-plus"></i> 插入首页</a></li>
+												<li><a href="javascript:uploadImageByOne('${image.imgNo}','up')"><i class="icon-plus"></i> 插入上一页</a></li>
+												<li><a href="javascript:uploadImageByOne('${image.imgNo}','down')"><i class="icon-plus"></i> 插入下一页</a></li>
+												<li><a href="javascript:uploadImageByOne('','end')"><i class="icon-plus"></i> 插入尾页</a></li>
+												<li><a href="javascript:updateImgNo('${image.id}','${image.imgNo}')"><i class="icon-sort-by-alphabet-alt"></i> 排序</a></li>
+												<li><a href="javascript:deleteImg('${image.id}','${image.imgNo}')"><i class="icon-remove-sign"></i> 删除</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</li>
+						</c:forEach>
+					</ul>
+				</div>
+				<%--<div id="gallery1"></div>--%>
 				<%--<table  id="jsonDataFormTable" width="100%">--%>
 
 					<%--<c:forEach items="${eImages}" var="image">--%>
@@ -85,8 +120,9 @@
 			</c:if>
 		</c:if>
 	</div>
-
-<script src="${contextPath}/js/images-view/images-grid.js" charset=“utf-8”></script>
+<%--<script  type="text/javascript" src="${path }/js/images-view/images-grid.js"></script>--%>
+<script  type="text/javascript" src="${path }/js/images-view/viewer-image.js"></script>
+<script  type="text/javascript" src="${path }/js/images-view/main-image.js"></script>
 <script type="text/javascript">
 	var imgs = [];
 	var isManage = "false";
@@ -97,39 +133,42 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
-		var images = "${images}";
-		if(images!=null && images!="") {
-			var imgList = images.replace('[','').replace(']','').split(',');
-			for (var i = 0; i < imgList.length; i++) {  //循环LIST
-				var imgId = imgList[i].split(";")[0];
-				imgId = imgId.replace(/(^\s*)|(\s*$)/g, "")
-				var imgNo  = imgList[i].split(";")[1];
-				imgs[i] ={ src: "/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",imgId:imgId,alt:imgNo+"/${imagesSize}", title:imgNo};
-			}
-		}
-		$('#gallery1').imagesGrid({
-			images:imgs
-		});
+
+
+		<%--var images = "${images}";--%>
+		<%--if(images!=null && images!="") {--%>
+			<%--var imgList = images.replace('[','').replace(']','').split(',');--%>
+			<%--for (var i = 0; i < imgList.length; i++) {  //循环LIST--%>
+				<%--var imgId = imgList[i].split(";")[0];--%>
+				<%--imgId = imgId.replace(/(^\s*)|(\s*$)/g, "")--%>
+				<%--var imgNo  = imgList[i].split(";")[1];--%>
+				<%--imgs[i] ={ src: "/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",imgId:imgId,alt:imgNo+"/${imagesSize}", title:imgNo};--%>
+			<%--}--%>
+		<%--}--%>
+		<%--$('#gallery1').imagesGrid({--%>
+			<%--images:imgs--%>
+		<%--});--%>
+
 		isManage = "${isManage}";
-		$(".image-wrap").hover(function(){
-			if(isManage=="true"){
+		$(".image-wrap").hover(function () {
+			if (isManage == "true") {
 				$(this).find('.dropdownMob').show();
 			}
-		},function(){
-			if(isManage=="true") {
+		}, function () {
+			if (isManage == "true") {
 				$(this).find('.dropdownMob').hide();
 			}
 		});
 
-		if($("#showTpWidth").val()!=""){
-			$(".imgs-grid-image").css("width",$("#showTpWidth").val()+"%");
-
-			if($("#showTpWidth").val()=="100"){
-				$(".imgs-grid").css("text-align","center");
-			}else{
-				$(".imgs-grid").css("text-align","left");
-			}
-		}
+//		if($("#showTpWidth").val()!=""){
+//			$(".imgs-grid-image").css("width",$("#showTpWidth").val()+"%");
+//
+//			if($("#showTpWidth").val()=="100"){
+//				$(".imgs-grid").css("text-align","center");
+//			}else{
+//				$(".imgs-grid").css("text-align","left");
+//			}
+//		}
 		$("#tpFile").bind("change",function(evt){
 			if($(this).val()){
 				tpscSubmit();
@@ -145,6 +184,7 @@
 				showTip("提示","请选择上传图片",2000);
 				return;
 			}
+			myLoading.show();
 			$("#importTpForm").ajaxSubmit({
 				url : "${path }/zzb/dzda/mlcl/images/uploadImg?e01z1Id=${e01z1Id}",
 				type : "post",
@@ -174,7 +214,15 @@
 				}
 			});
 		}
+
+
+//		$("img").bind("mousewheel", function() {
+//			alert("aaaa");
+//			zoomImg(this);
+//			return false;
+//		});
 	});
+
 
 	function changeTreeDivHeight(){
 		var listHeight = $(window).height()-65;
@@ -185,13 +233,20 @@
 	}
 
 	function changeViewType(width){
-		$("#showTpWidth").val(width);
-		$(".imgs-grid-image").css("width",width+"%");
+		if(isManage==true) {
+			$("#showTpWidth").val(width);
+			$(".imgs-grid-image").css("width", width + "%");
 
-		if(width=="100"){
-			$(".imgs-grid").css("text-align","center");
+			if (width == "100") {
+				$(".imgs-grid").css("text-align", "center");
+			} else {
+				$(".imgs-grid").css("text-align", "left");
+			}
 		}else{
-			$(".imgs-grid").css("text-align","left");
+			$(".viewer-toggle").css("height", width + "%");
+			$(".docs-pictures li").css("width", width + "%");
+			$(".docs-pictures li").css("width", width + "%");
+
 		}
 	}
 	//uploadType 上传方式 frist表示插入首页，up表示插入上一页 down表示下一页 end表示尾页
@@ -232,6 +287,7 @@
 				}
 			}
 		}
+
 		$.ajax({
 			url : "${path }/zzb/dzda/mlcl/images/updateImgNo/"+imgId,
 			type : "post",

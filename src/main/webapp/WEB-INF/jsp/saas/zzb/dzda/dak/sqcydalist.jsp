@@ -34,7 +34,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
-                <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
+                <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
+                    <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+                        显示方式<i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li >
+                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
+                        </li>
+                        <li >
+                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
+                        </li>
+                        <%--<li>--%>
+                        <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                        <%--</li>--%>
+                        <li>
+                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
+                        </li>
+                    </ul>
+                </div>
                 <h3 class="modal-title" id="title">
 
                 </h3>
@@ -170,7 +188,7 @@
         $('#viewImgModal').attr("data-height", divHeight);
         $('#viewImgModal').attr("data-width", divWidth);
         $.ajax({
-            url: "${path}/zzb/dzda/dak/ajax/viewMain/"+a38Id,
+            url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+a38Id,
             type: "post",
             data: {
                 "a0101":a0101,

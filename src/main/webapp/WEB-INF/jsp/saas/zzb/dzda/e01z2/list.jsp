@@ -32,7 +32,7 @@
             <a  class="btn green" href="#">
                 材料接收导入
             </a>
-            <a  class="btn green" href="#">
+            <a  class="btn green" href="javascript:download()">
                 打印材料接收
             </a>
         </div>
@@ -46,28 +46,30 @@
             <thead>
 
             <TR height=28>
-                <th width="5%">序号</th>
-                <th width=10%>来件单位名称</th>
-                <th width=5%>收件日期</th>
-                <th width=5%>接收人</th>
-                <th width=10%>材料类号</th>
-                <th width=10%>材料名称</th>
-                <th width=5%>页数</th>
-                <th width=5%>制成日期</th>
-                <th width=5%>份数</th>
-                <th width=5%>处理状态</th>
-                <th width=5%>受理状态</th>
-                <th width=8%>操作</th>
+                <th width="30">序号</th>
+                <th width="100">来件单位名称</th>
+                <th>材料名称</th>
+                <th width="60">收件日期</th>
+                <th width="60">接收人</th>
+                <th width="120">材料类号</th>
+
+                <th width="30">页数</th>
+                <th width="60">制成日期</th>
+                <th width="30">份数</th>
+                <th width="60">处理状态</th>
+                <th width="60">受理状态</th>
+                <th width="70">操作</th>
             </thead>
             <tbody>
             <c:forEach items="${pager.datas}" var="vo">
                 <tr style="text-overflow:ellipsis;">
                     <TD><c:out value="${vo.e01Z214}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z204A}"></c:out></TD>
+                    <TD ><c:out value="${vo.e01Z221A}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z201}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z207}"></c:out></TD>
-                    <TD><c:out value="${vo.e01Z211}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z221A}"></c:out></TD>
+                    <TD><c:out value="${vo.e01Z211A}"></c:out></TD>
+
                     <TD><c:out value="${vo.e01Z224}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z227}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z234}"></c:out></TD>
@@ -89,7 +91,6 @@
         </jsp:include>
     </div>
 </div>
-<div class="main_right" id="catalogList" >
     <%-- 表格结束 --%>
     <%-- END PAGE CONTENT--%>
     <script type="text/javascript">
@@ -134,8 +135,8 @@
                     'id':id
                 },
                 success:function(html){
-                    $("#e01z2Table").hide();
-                    $("#catalogList").html(html);
+                    var view = $("#tab_show");
+                    view.html(html);
                 },
                 error : function(){
                     myLoading.hide();
@@ -144,10 +145,9 @@
             });
         }
         function deletee01z2(id){
-            console.log(id);
             actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id,null,function(json){
-                if(json.code == 1){
-                    showTip("提示","操作成功");
+                if(json.code == "1"){
+                    showTip("提示","删除成功",1500);
                     setTimeout(function(){
                         $.ajax({
                             url : "${path }/zzb/dzda/e01z2/ajax/list",
@@ -155,16 +155,14 @@
                             data : {"a38Id":"${a38Id}"},
                             dataType : "html",
                             success : function(html){
-                                console.log(111);
                                 var view = $("#tab_show");
                                 view.html(html);
                             },
                             error : function(arg1, arg2, arg3){
-                                showTip("提示","职务变动加载失败");
+                                showTip("提示","材料接收列表加载失败");
                             }
                         });
                     },1500);
-
                 }else{
                     showTip("提示", json.message, 2000);
                 }
@@ -183,14 +181,18 @@
                     'a38Id':"${a38Id}"
                 },
                 success:function(html){
-                    $("#e01z2Table").hide();
-                    $("#catalogList").html(html);
+                    var view = $("#tab_show");
+                    view.html(html);
                 },
                 error : function(){
                     myLoading.hide();
                     showTip("提示","出错了,请检查网络!",2000);
                 }
             });
+        }
+
+        function download() {
+            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}");
         }
 
     </script>

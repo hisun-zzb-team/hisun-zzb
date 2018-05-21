@@ -33,16 +33,16 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li >
-                            <a onclick="changeViewType('20')">小图(一行5张图)</a>
+                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
                         </li>
                         <li >
-                            <a onclick="changeViewType('33.3333333336')">中图(一行3张图)</a>
+                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
                         </li>
+                        <%--<li>--%>
+                        <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                        <%--</li>--%>
                         <li>
-                            <a onclick="changeViewType('50')">大图(一行2张图)</a>
-                        </li>
-                        <li>
-                            <a onclick="changeViewType('100')">原始图(一行1张图)</a>
+                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
                         </li>
                     </ul>
                 </div>
@@ -126,7 +126,7 @@
                             </ul>
                         </div>
 
-                        <a class="controllerClass btn green file_but" href="javascript:fileDown('daochumilu')">
+                        <a class="controllerClass btn green file_but" href="javascript:download()">
                             <i class="icon-circle-arrow-down"></i>打印目录
                         </a>
                     </div>
@@ -328,6 +328,10 @@
     function fileDown(type) {
         window.open("${path }/zzb/app/console/daDemo/ajax/down?type=" + type);
     }
+
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}");
+    };
 
     function del(id, voname) {
         var a38Id = $("#a38Id").val();

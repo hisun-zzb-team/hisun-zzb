@@ -33,16 +33,16 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li >
-                            <a onclick="changeViewType('20')">小图(一行5张图)</a>
+                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
                         </li>
                         <li >
-                            <a onclick="changeViewType('33.3333333336')">中图(一行3张图)</a>
+                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
                         </li>
+                        <%--<li>--%>
+                            <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                        <%--</li>--%>
                         <li>
-                            <a onclick="changeViewType('50')">大图(一行2张图)</a>
-                        </li>
-                        <li>
-                            <a onclick="changeViewType('100')">原始图(一行1张图)</a>
+                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
                         </li>
                     </ul>
                 </div>
@@ -121,7 +121,7 @@
                             </ul>
                         </div>
 
-                        <a class="controllerClass btn green file_but" href="javascript:fileDown('daochumilu')">
+                        <a class="controllerClass btn green file_but" href="javascript:download()">
                             <i class="icon-circle-arrow-down"></i>打印目录
                         </a>
                     </div>
@@ -313,9 +313,7 @@
             dataType: "html",
             success: function (html) {
                 $('#viewImgDiv').html(html);
-                $('#viewImgModal').modal({
-                    keyboard: true
-                });
+                $('#viewImgModal').modal({backdrop: 'static', keyboard: false});
             },
             error: function () {
                 showTip("提示", "出错了请联系管理员", 1500);
@@ -422,6 +420,9 @@
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
     });
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}");
+    };
 
 
     function jztp(id,e01Z111){

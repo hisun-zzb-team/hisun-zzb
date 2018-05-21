@@ -9,6 +9,7 @@ package com.hisun.saas.zzb.dzda.a38.vo;
 import com.hisun.base.entity.TombstoneEntity;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
+import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
 import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
@@ -72,6 +73,8 @@ public class A38Vo  {
     private String dutyLevelTimeBase;//职级时间
     private String updateUserNameByShow;
     private Date updateDateByShow;
+
+    private List<A52Vo> a52Vos;
 
     public String getId() {
         return id;
@@ -439,5 +442,13 @@ public class A38Vo  {
 
     public void setUpdateDateByShow(Date updateDateByShow) {
         this.updateDateByShow = updateDateByShow;
+    }
+
+    public List<A52Vo> getA52Vos() {
+        return a52Vos;
+    }
+
+    public void setA52Vos(List<A52Vo> a52Vos) {
+        this.a52Vos = a52Vos;
     }
 }

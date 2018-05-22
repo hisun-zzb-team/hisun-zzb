@@ -185,9 +185,9 @@ public class CyshouquanController extends BaseController {
             for (String id : e01z1Ids){
                 if(id.equals("")) continue;
                 EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
-                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
+//                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
                 ep.setApplyE01Z8(entity);
-                ep.setE01z1(e01Z1);
+                ep.setE01z1Id(id);
                 ePopedomE01Z1RelationService.save(ep);
             }
             entity.setSqdwpzld(details.getRealname());

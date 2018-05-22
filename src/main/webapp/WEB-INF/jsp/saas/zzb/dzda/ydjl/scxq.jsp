@@ -22,7 +22,7 @@
         <div class="span12">
             <%-- 表格开始 --%>
 
-            <div class="portlet-body" >
+            <div class="portlet-body" style="max-height: 550px;overflow: auto;margin: 0px;">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>

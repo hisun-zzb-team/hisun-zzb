@@ -21,6 +21,9 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
+import com.hisun.saas.zzb.dzda.dacy.entity.EPopedomE01Z1Relation;
+import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
@@ -69,6 +72,9 @@ public class EImagesController extends BaseController {
     @Resource
     private EImagesService eImagesService;
 
+    @Resource
+    private EApplyE01Z8Service eApplyE01Z8Service;
+
     private final static String DEFAULT_PHOTO = "/WEB-INF/images/tempNoPic.bmp";
     /**
      *
@@ -84,7 +90,7 @@ public class EImagesController extends BaseController {
     @RequiresLog(operateType = LogOperateType.QUERY,description = "查看档案:${a0101}")
     @RequestMapping("/ajax/viewMain/{a38Id}")
     public
-    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName,String isManage,String isAddLog) throws GenericException {
+    @ResponseBody ModelAndView viewMain(@PathVariable(value = "a38Id") String a38Id,String a0101,String archiveId,String e01z1Id,String showType,String myDirName,String isManage,String isAddLog,String eApplyE01Z8Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -101,6 +107,7 @@ public class EImagesController extends BaseController {
         map.put("a0101", a0101);
         map.put("isManage", isManage);
         map.put("isAddLog",isAddLog);
+        map.put("eApplyE01Z8Id",eApplyE01Z8Id);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
     }
     private String getTpStorePath(String a38Id) {
@@ -212,9 +219,18 @@ public class EImagesController extends BaseController {
     @RequestMapping("/ajax/typeAndE01z1Tree/{a38Id}")
     public
     @ResponseBody
-    Map<String, Object> typeAndE01z1Tree(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+    Map<String, Object> typeAndE01z1Tree(@PathVariable(value = "a38Id") String a38Id,String eApplyE01Z8Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            boolean isFilter = false;
+            List<EPopedomE01Z1Relation> popedomE01Z1Relations = null;
+            if(eApplyE01Z8Id!=null && !eApplyE01Z8Id.equals("")){
+                EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
+                if(entity.getPopedomStuffType().equals("1")){
+                    isFilter = true;
+                    popedomE01Z1Relations = entity.getPopedomE01Z1Relations();
+                }
+            }
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             CommonConditionQuery query = new CommonConditionQuery();
             CommonOrderBy orderBy = new CommonOrderBy();
@@ -244,29 +260,44 @@ public class EImagesController extends BaseController {
             }
 
             for (E01Z1 e01Z1 : e01Z1s) {
-                String text = e01Z1.getE01Z111();
-                String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
-                int imagesCount = e01Z1.getYjztps();
-                String title=e01Z1.getE01Z111();
-
-                if(!e01z117.equals("")){
-                    text = text +","+ e01z117;
-                    title =title+"  制成时间："+e01z117;
+                boolean isAdd = false;
+                if(isFilter == true){
+                    if(popedomE01Z1Relations!=null && popedomE01Z1Relations.size()>0){
+                        boo:for(EPopedomE01Z1Relation popedomE01Z1Relation : popedomE01Z1Relations){
+                            if(popedomE01Z1Relation.getE01z1Id().equals(e01Z1.getId())){
+                                isAdd = true;
+                                break boo;
+                            }
+                        }
+                    }
+                }else{
+                    isAdd = true;
                 }
-                if(imagesCount != 0){
-                    text = text +","+ imagesCount;
-                    title =title+"  图片数："+imagesCount;
-                }
-                childTreeNode = new MlclTreeNode();
-                childTreeNode.setId(e01Z1.getId());
-                childTreeNode.setName(text);
-                childTreeNode.setDescription(title);
-                DecimalFormat decimalFormat = new DecimalFormat("00");
-                childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z104()));
-                childTreeNode.setpId(e01Z1.getECatalogTypeId());
-                childTreeNode.setNodeType("cl");
+                if(isAdd == true) {
+                    String text = e01Z1.getE01Z111();
+                    String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
+                    int imagesCount = e01Z1.getYjztps();
+                    String title = e01Z1.getE01Z111();
 
-                treeNodes.add(childTreeNode);
+                    if (!e01z117.equals("")) {
+                        text = text + "," + e01z117;
+                        title = title + "  制成时间：" + e01z117;
+                    }
+                    if (imagesCount != 0) {
+                        text = text + "," + imagesCount;
+                        title = title + "  图片数：" + imagesCount;
+                    }
+                    childTreeNode = new MlclTreeNode();
+                    childTreeNode.setId(e01Z1.getId());
+                    childTreeNode.setName(text);
+                    childTreeNode.setDescription(title);
+                    DecimalFormat decimalFormat = new DecimalFormat("00");
+                    childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z104()));
+                    childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                    childTreeNode.setNodeType("cl");
+
+                    treeNodes.add(childTreeNode);
+                }
             }
             map.put("success", true);
             map.put("data", treeNodes);

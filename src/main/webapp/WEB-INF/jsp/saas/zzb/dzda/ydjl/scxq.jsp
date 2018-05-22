@@ -58,7 +58,6 @@
                         <th width=140>起始时间</th>
                         <th width=140 >结束时间</th>
                         <th  width=80>时长</th>
-                        <th width=120>查阅场景</th>
                     </TR>
                     </thead>
                     <tbody>
@@ -66,8 +65,7 @@
                         <tr style="text-overflow:ellipsis;">
                             <TD width="10%"><fmt:formatDate value="${vo.stareTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%"><fmt:formatDate value="${vo.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
-                            <TD width="10%"> <c:out value="${vo.viewTime}"></c:out></TD>
-                            <TD width="10%"><a>查看</a> </TD>
+                            <TD width="10%"> <c:out value="${vo.viewTime}"></c:out>秒</TD>
                         </tr>
                     </c:forEach>
                     </tbody>

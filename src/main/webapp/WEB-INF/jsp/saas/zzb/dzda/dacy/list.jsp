@@ -103,7 +103,7 @@
                             <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
-                            <TD width="20%"><a href="#">详情</a></TD>
+                            <TD width="20%"><a href="javascript:ydxiangqing('${vo.id}')">详情</a></TD>
                             <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%">
                                 <c:choose>
@@ -167,9 +167,9 @@
                     <%--<input type="hidden" name="a38LogId" id = "a38LogId"/>--%>
                     <input type="hidden" name="syReadTime" id = "syReadTime"/>
                     <h3 class="modal-title" id="title">
-                        “${a0101}”档案图片 &nbsp;&nbsp;&nbsp;&nbsp;
-                    </h3>
-                    剩余阅档时间<span id="timespan"></span>
+                        “${a0101}”档案图片
+                    </h3><nobr/><span id="daojishi" style="display: none">剩余阅档时间<span id="timespan"></span></span>
+
                 </div>
                 <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
                 </div>
@@ -177,7 +177,19 @@
         </div>
     </div>
 </div>
-
+<div id="viewNeiRongModal" class="modal container hide fade" tabindex="-1" data-width="650">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="addTitle1" >
+                </h3>
+            </div>
+            <div class="modal-body" id="viewNeiRongDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <%-- END PAGE CONTENT--%>
 </div>
 
@@ -197,6 +209,28 @@
         $("#auditingState option[value='${auditingState}']").attr("selected",
                 true);
     })
+    var ydxiangqing = function(id){
+        $.ajax({
+            url:"${path}/zzb/dzda/cysq/ajax/cyqkList",
+            type : "post",
+            data: {"eApplyE01Z8Id":id},
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "html",
+            success : function(html){
+                $('#viewNeiRongDiv').html(html);
+
+                $('#viewNeiRongModal').modal({
+                    keyboard: true
+                });
+            },
+            error : function(){
+                showTip("提示","出错了请联系管理员", 1500);
+            }
+        });
+    }
+
 /*    function hiddenViewImgModal() {//隐藏图片查看时 删除临时的解密图片
         $('#viewImgModal').modal('hide');
         $('#viewImgDiv').html("");

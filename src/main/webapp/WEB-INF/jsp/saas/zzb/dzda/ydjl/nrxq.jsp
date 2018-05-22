@@ -77,7 +77,7 @@
                                 <p><fmt:formatDate value="${vo2.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></p>
                             </c:forEach>
                             </TD>
-                            <TD >  <c:out value="${vo.cysj}"></c:out><a href="javascript:xiangxi('${vo.id}')">【详细】</a></TD>
+                            <TD >  <c:out value="${vo.cysj}"></c:out><a href="javascript:xiangxi('${vo.id}')">秒 &nbsp;【详细】</a></TD>
                         </tr>
                     </c:forEach>
                     </tbody>

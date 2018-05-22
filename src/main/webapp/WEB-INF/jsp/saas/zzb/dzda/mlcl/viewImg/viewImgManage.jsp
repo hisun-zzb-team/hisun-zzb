@@ -59,7 +59,6 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
-		debugger
 		if("${isAddLog}" != "false"){
 			$.ajax({
 				url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
@@ -78,6 +77,7 @@
 					//	$("#syReadTime").val(json.syReadTime);
 					var time = json.syReadTime;
 					if(time!=null && time!="" && time!=undefined){
+						$("#daojishi").css('display','block');
 						timer1 = setInterval(function () {
 							if(time <=0){
 								//阅档时间到期
@@ -129,7 +129,6 @@
 
 	});
 	function  jieshuyuedang(){
-		debugger
 		window.clearInterval(timer1);
 		window.clearInterval(timer2);
 		var a38LogId = $("#a38LogId").val();

@@ -104,9 +104,9 @@ public class ReadA38LogTask {
                         eApplyE01Z8Service.update(eApplyE01Z8);
                     }
                     CommonConditionQuery query1 = new CommonConditionQuery();
-                    query.add(CommonRestrictions.and("a38Log.id = :a38LogId ", "a38LogId",ea38Log.getId()));
-                    query.add(CommonRestrictions.and("endTime is :endTime ", "endTime","null"));
-                    List<EA38LogViewTime> ea38LogViewTimes = ea38LogViewTimeService.list(query,null);
+                    query1.add(CommonRestrictions.and("a38Log.id = :a38LogId ", "a38LogId",ea38Log.getId()));
+                    query1.add(CommonRestrictions.and("endTime is :endTime ", "endTime",null));
+                    List<EA38LogViewTime> ea38LogViewTimes = ea38LogViewTimeService.list(query1,null);
                     Long eA38LogCYSJ = avgViewTime.longValue();
                     if(ea38LogViewTimes != null && !ea38LogViewTimes.isEmpty()){
                         EA38LogViewTime eA38LogViewTime = ea38LogViewTimes.get(0);
@@ -124,9 +124,9 @@ public class ReadA38LogTask {
                     ea38LogService.update(ea38Log);
 
                     CommonConditionQuery query2 = new CommonConditionQuery();
-                    query.add(CommonRestrictions.and("endTime is :endTime ", "endTime","null"));
-                    query.add(CommonRestrictions.and("a38LogDetails.a38Log.id = :a38LogId ", "a38LogId",ea38Log.getId()));
-                    List<ELogDetailViewTime> eLogDetailViewTimes = eLogDetailViewTimeService.list(query,null);
+                    query2.add(CommonRestrictions.and("endTime is :endTime ", "endTime",null));
+                    query2.add(CommonRestrictions.and("a38LogDetails.a38Log.id = :a38LogId ", "a38LogId",ea38Log.getId()));
+                    List<ELogDetailViewTime> eLogDetailViewTimes = eLogDetailViewTimeService.list(query2,null);
                     if(eLogDetailViewTimes !=null && !eLogDetailViewTimes.isEmpty()){
                         ELogDetailViewTime eLogDetailViewTime = eLogDetailViewTimes.get(0);
                         eLogDetailViewTime.setEndTime(new Date());

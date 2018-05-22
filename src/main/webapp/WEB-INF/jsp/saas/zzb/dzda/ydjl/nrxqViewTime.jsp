@@ -65,7 +65,7 @@
                         <tr style="text-overflow:ellipsis;">
                             <TD width="10%"><fmt:formatDate value="${vo.stareTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%"><fmt:formatDate value="${vo.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
-                            <TD width="10%"> <c:out value="${vo.viewTime}"></c:out></TD>
+                            <TD width="10%"> <c:out value="${vo.viewTime}"></c:out>秒</TD>
                         </tr>
                     </c:forEach>
                     </tbody>

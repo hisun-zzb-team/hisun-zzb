@@ -118,11 +118,19 @@
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.cyrName}"></c:out></TD>
-                            <TD width="10%"> <fmt:formatDate value="${vo.cysj}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
-                            <TD width="10%"><c:out value="${vo.viewTime}"></c:out><a href="javascript:scxq('${vo.id}')">【详情】</a> </TD>
-                            <TD width="10%"><c:out value="${vo.applyE01Z8.readContent}"></c:out><a href="javascript:viewNeiRong('${vo.id}')">【详情】</a></TD>
+                            <TD width><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD width><c:out value="${vo.cyrName}"></c:out></TD>
+                            <TD width> <fmt:formatDate value="${vo.cysj}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+                            <TD width><c:out value="${vo.viewTime}"></c:out>秒 &nbsp;<a href="javascript:scxq('${vo.id}')">【详情】</a> </TD>
+                            <TD width>
+                            <div style="width: 180px;;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                                <c:forEach items="${vo.a38LogDetails}" var="vo1">
+                                    <c:out value="${vo1.e01Z111}"></c:out>
+                                </c:forEach>
+                            </div>
+
+
+                         <a href="javascript:viewNeiRong('${vo.id}')">【详情】</a></TD>
                         </tr>
                     </c:forEach>
                     </tbody>

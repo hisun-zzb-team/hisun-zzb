@@ -125,7 +125,7 @@
                             <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readDate}"></c:out> </TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out ></TD>
-                            <TD width="10%"><a>查阅情况</a></TD>
+                            <TD width="10%"><a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a></TD>
                             <TD width="10%">
                                 <fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>
                              </TD>
@@ -177,12 +177,24 @@
         <%-- 表格结束 --%>
     </div>
 </div>
-
+<div id="viewNeiRongModal" class="modal container hide fade" tabindex="-1" data-width="650">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="addTitle1" >
+                </h3>
+            </div>
+            <div class="modal-body" id="viewNeiRongDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <%-- END PAGE CONTENT--%>
 </div>
 
 <script type="text/javascript">
-/*    (function(){
+   (function(){
         App.init();
 
         $("#btn-browseTemplate").bind("change",function(evt){
@@ -192,7 +204,29 @@
             $(this).val('');
         });
 
-    })();*/
+    })();
+   var ydxiangqing = function(id){
+       $.ajax({
+           url:"${path}/zzb/dzda/cysq/ajax/cyqkList",
+           type : "post",
+           data: {"eApplyE01Z8Id":id},
+           headers:{
+               OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+           },
+           dataType : "html",
+           success : function(html){
+               $('#viewNeiRongDiv').html(html);
+
+               $('#viewNeiRongModal').modal({
+                   keyboard: true
+               });
+           },
+           error : function(){
+               showTip("提示","出错了请联系管理员", 1500);
+           }
+       });
+   }
+
     function pagehref (pageNum ,pageSize){
         $("#pageNum").val(pageNum);
         $("#pageSize").val(pageSize);

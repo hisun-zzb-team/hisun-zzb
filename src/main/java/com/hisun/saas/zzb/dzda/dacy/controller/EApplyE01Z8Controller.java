@@ -460,6 +460,9 @@ public class EApplyE01Z8Controller extends BaseController {
                 eApplyE01Z8.setAlreadyReadTime(String.valueOf(viewTime + time));
             }
             eApplyE01Z8Service.update(eApplyE01Z8);
+            if(!eApplyE01Z8.getAuditingState().equals("1")){
+                returnMap.put("code","2");//权限被收回等
+            }
         }
        /* EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
         if (ea38Log.getViewTime() == null || "".equals(ea38Log.getViewTime())) {

@@ -309,7 +309,8 @@
 				"archiveId":e01Z101B,
 				"e01z1Id":e01z1Id,
                 "myDirName":myDirName,
-                "isManage":isManage
+                "isManage":isManage,
+                "isAddLog":"false"
 			},
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

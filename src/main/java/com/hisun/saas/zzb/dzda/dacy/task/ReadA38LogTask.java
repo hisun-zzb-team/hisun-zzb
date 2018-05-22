@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -93,7 +94,8 @@ public class ReadA38LogTask {
                     //申请阅档浏览处理
                     if(ea38Log.getApplyE01Z8()!=null ){
                         EApplyE01Z8 eApplyE01Z8 = ea38Log.getApplyE01Z8();
-                        eApplyE01Z8.setEndReadDate(DateUtil.formatTimesTampDate(new Date()));
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        eApplyE01Z8.setEndReadDate(sdf.format(new Date()));
                         if(StringUtils.isNotBlank(eApplyE01Z8.getAlreadyReadTime())){
                             Integer viewTime = Integer.valueOf(eApplyE01Z8.getAlreadyReadTime());
                             viewTime = viewTime+avgViewTime;

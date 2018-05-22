@@ -27,6 +27,7 @@ import com.hisun.saas.zzb.dzda.a52.exchange.ZwbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.a52.Constants;
+import com.hisun.util.StringUtils;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -34,14 +35,12 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -236,5 +235,64 @@ public class A52Controller extends BaseController {
             filename = new String(filename.getBytes("UTF-8"), "GBK");
         }
         return filename;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/uploadFile")
+    public void uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+        String filePath = "";
+        File storePathFile = new File(Constants.ZWBD_STORE_PATH);
+        if(!storePathFile.exists()) storePathFile.mkdirs();
+        filePath = uploadBasePath+Constants.ZWBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        File file = new File(filePath);
+        InputStream inputStream = null;
+        OutputStream output = null;
+        try {
+            inputStream = zwbdFile.getInputStream();
+            output = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            if(output!=null){
+                output.close();
+            }
+        }
+        String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
+        A38Vo a32Vo = new A38Vo();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        try {
+            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+            Integer oldPxInteger=a52Service.getMaxSort(a38Id);
+            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
+                List<A52Vo> a52Vos = a32Vo.getA52Vos();
+                for(int i=0;i<a52Vos.size();i++){
+                    A52 a52 = new A52();
+                    A52Vo a52Vo = a52Vos.get(i);
+                    if(StringUtils.isEmpty(a52Vo.getA5204())){
+                        continue;
+                    }
+                    BeanUtils.copyProperties(a52,a52Vo);
+                    A38 a38 = this.a38Service.getByPK(a38Id);
+                    a52.setA38(a38);
+                    a52.setPx(oldPxInteger+i);
+                    EntityWrapper.wrapperSaveBaseProperties(a52,details);
+                    a52Service.save(a52);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            file.delete();
+        }
     }
 }

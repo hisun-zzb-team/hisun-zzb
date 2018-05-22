@@ -91,7 +91,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -148,7 +148,7 @@
 									<TD  style="text-align: center"><c:out value="${vo.dabh}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.smxh}"></c:out></TD>
 									<TD >
-										<a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }"><c:out value="${vo.a0101}"></c:out></a>
+										<a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.a0101}"></c:out></a>
 									</TD>
 									<TD  style="text-align: center"><c:out value="${vo.a0104Content}"></c:out></TD>
 									<TD ><c:out value="${vo.a0107}"></c:out></TD>
@@ -226,16 +226,7 @@
 			}
 		});
 	}
-	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
-			if (data.success == true) {
-				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
-			}else{
-				showTip("提示", data.message, 2000);
-			}
-		});
-	};
+
 	function uploadFile(fileName){
 		document.getElementById("btn-"+fileName).click();
 	}
@@ -248,33 +239,6 @@
 		$("#gbztContentQuery").val('');
 		$("#daztContentQuery").val('');
 		document.searchForm.submit();
-	}
-	function exportGbrmsp(){
-		$.cloudAjax({
-			path : '${path}',
-			url : "${path }/zzb/app/console/asetA01/ajax/exportGbrmsp",
-			type : "post",
-			data : $("#form1").serialize(),
-			dataType : "json",
-			success : function(data){
-				if(data.success == true){
-					showTip("提示","生成干部任免审批表成功!",2000);
-					//setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
-				}else{
-					showTip("提示", "生成干部任免审批表失败!", 2000);
-				}
-			},
-			error : function(){
-				showTip("提示","出错了请联系管理员",2000);
-			}
-		});
-	}
-	function openGzzzb(){
-		var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-		window.open(url);
-	}
-	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
 	}
 
 	var gjcx = function(){

@@ -151,6 +151,9 @@
                 type : "get",
                 data : {"param":value},
                 dataType : "json",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(json){
                     if(json.success){
                         var view = $("#a0101ContentGroup");
@@ -230,7 +233,7 @@
             success : function(data){
                // myLoading.hide();
                 if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", json.message, 2000);
                 }

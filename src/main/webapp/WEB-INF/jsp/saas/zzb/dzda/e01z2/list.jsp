@@ -145,7 +145,7 @@
             });
         }
         function deletee01z2(id){
-            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id,null,function(json){
+            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
                 if(json.code == "1"){
                     showTip("提示","删除成功",1500);
                     setTimeout(function(){
@@ -154,6 +154,9 @@
                             type : "get",
                             data : {"a38Id":"${a38Id}"},
                             dataType : "html",
+                            headers:{
+                                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                            },
                             success : function(html){
                                 var view = $("#tab_show");
                                 view.html(html);
@@ -192,7 +195,7 @@
         }
 
         function download() {
-            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}");
+            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
         }
 
     </script>

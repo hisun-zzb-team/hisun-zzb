@@ -150,6 +150,9 @@
                           type : "get",
                           data : {"a38Id":"${a38Id}"},
                           dataType : "html",
+                          headers:{
+                              OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                          },
                           success : function(html){
                               console.log(111);
                               var view = $("#tab_show");
@@ -190,7 +193,7 @@
       }
 
       function download() {
-          window.open("${path}/zzb/dzda/a52/download/${a38Id}");
+          window.open("${path}/zzb/dzda/a52/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
       }
 
       function uploadFile(){

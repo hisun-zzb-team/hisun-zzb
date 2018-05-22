@@ -295,11 +295,11 @@
 
     function deleteYdsq(id){
         console.log(id);
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");
                 setTimeout(function(){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 },1500);
 
             }else{
@@ -366,30 +366,7 @@
         $("#readContent").val('');
 
     }
-    function exportGbrmsp(){
-        $.cloudAjax({
-            path : '${path}',
-            url : "${path }/zzb/app/console/asetA01/ajax/exportGbrmsp",
-            type : "post",
-            data : $("#form1").serialize(),
-            dataType : "json",
-            success : function(data){
-                if(data.success == true){
-                    showTip("提示","生成干部任免审批表成功!",2000);
-                    //setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
-                }else{
-                    showTip("提示", "生成干部任免审批表失败!", 2000);
-                }
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员",2000);
-            }
-        });
-    }
-    function openGzzzb(){
-        var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-        window.open(url);
-    }
+
 </script>
 </body>
 </html>

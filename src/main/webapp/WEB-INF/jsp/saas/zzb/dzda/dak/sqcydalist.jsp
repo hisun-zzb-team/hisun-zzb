@@ -170,6 +170,9 @@
                 "pageSize":pageSize
             },
             dataType : "html",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(html){
                 var view = $("#tab_show");
                 view.html(html);
@@ -239,6 +242,9 @@
             type : "post",
             data : {"userName":userName},
             dataType : "html",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(html){
                 var view = $("#tab_show");
                 view.html(html);
@@ -253,10 +259,7 @@
     function clearData(){
         $("#userName").val('');
     }
-    function openGzzzb(){
-        var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-        window.open(url);
-    }
+
 </script>
 </body>
 </html>

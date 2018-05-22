@@ -74,7 +74,7 @@
 									<div id="a0104Group" class="control-group">
 										<label class="control-label">性别</label>
 										<div class="controls">
-											<SelectTag:SelectTag id="a0104" valueName="a0104Content" needNullValue="true" textClass="m-wrap span10" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=GB/T2261.1-2003"/>
+											<SelectTag:SelectTag id="a0104" valueName="a0104Content" needNullValue="true" textClass="m-wrap span10" token="${sessionScope.OWASP_CSRFTOKEN}" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=GB/T2261.1-2003"/>
 										</div>
 									</div>
 								</div>
@@ -279,9 +279,9 @@
 				success : function(data){
 					if(data.code=="1"){
 						if(sjzt=="0"){
-							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList"},2000);
+							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 						}else{
-							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list"},2000);
+							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 						}
 						showTip("提示","保存成功", 1500);
 						//setTimeout(process.list,2000);
@@ -318,9 +318,9 @@
 
 	function cancel(){
 		if("${listType}"=="shList"){
-			window.location.href = "${path}/zzb/dzda/a38/shList";
+			window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
 		}else{
-			window.location.href = "${path}/zzb/dzda/a38/list";
+			window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
 		}
 	}
 </script>

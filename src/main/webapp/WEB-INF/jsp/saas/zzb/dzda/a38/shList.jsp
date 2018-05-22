@@ -37,7 +37,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/shList" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -103,7 +103,7 @@
 									</TD>
 									<TD  style="text-align: center"><c:out value="${vo.dabh}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.smxh}"></c:out></TD>
-									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList"><c:out value="${vo.a0101}"></c:out></a> </TD>
+									<TD ><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.a0101}"></c:out></a> </TD>
 									<TD  style="text-align: center"><c:out value="${vo.a0104Content}"></c:out></TD>
 									<TD ><c:out value="${vo.a0107}"></c:out></TD>
 									<TD><c:out value="${vo.a0157}"></c:out></TD>

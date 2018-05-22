@@ -28,20 +28,6 @@
     </style>
 </head>
 <body>
-<div id="jgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="title" >
-                    “红叶专”档案图片
-                </h3>
-            </div>
-            <div class="modal-body" id="jgAddDiv" style="background-color: #f1f3f6;">
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
     <div class="modal-dialog">
@@ -233,20 +219,20 @@
         document.searchForm.submit();
     }
     function shouhuiQx(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.success){
                 showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cyshouquan/list";
+                window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
         },"收回权限")
     }
     function deleteSq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cyshouquan/list";
+                window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
@@ -298,29 +284,7 @@
         });
     }
 
-    var view = function(){
-        var divHeight = $(window).height()-100;
-        $('#jgModal').attr("data-height",divHeight);
-        $.ajax({
-            url:"${path}/zzb/app/console/daDemo/ajax/viewImgManage",
-            type : "post",
-            data: {},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "html",
-            success : function(html){
-                $('#jgAddDiv').html(html);
 
-                $('#jgModal').modal({
-                    keyboard: true
-                });
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
-            }
-        });
-    }
 
 
 
@@ -331,10 +295,10 @@
 
 
     var del = function(id,itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 2000);
-                setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
+                setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
             }else{
                 showTip("提示", data.message, 2000);
             }

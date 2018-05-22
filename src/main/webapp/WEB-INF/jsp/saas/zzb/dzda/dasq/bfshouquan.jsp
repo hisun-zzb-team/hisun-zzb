@@ -65,7 +65,7 @@
                 dataType : "json",
                 success : function(data){
                     if(data.success){
-                        window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+                        window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     }
                 },
                 error : function(){

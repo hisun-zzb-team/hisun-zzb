@@ -279,9 +279,9 @@
             }else if(status ==2){
                 msg= "拒绝授权吗";
             }
-            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/shouquan",$("#form1").serialize(),function(json){
+            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/shouquan?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",$("#form1").serialize(),function(json){
                 if(json.success){
-                    window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+                    window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else {
                     showTip("提示","请求失败",2000);
                 }
@@ -320,9 +320,9 @@
         $("#table1 input").eq(0).checked = true;
     })
     function downloadFile(id){
-        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
+        window.open("${path }/zzb/dzda/cysq/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
     }
     function cancel(){
-        window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+        window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 </script>

@@ -243,7 +243,7 @@
                                     <div id="yjztpsGroup" class="control-group">
                                         <label class="control-label">加载图片</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="yjztps" valueName="yjztpsName" defaultkeys="${vo.yjztps}" defaultvalues="${vo.yjztpsName}"
+                                            <SelectTag:SelectTag id="yjztps" valueName="yjztpsName" defaultkeys="${vo.yjztps}" defaultvalues="${vo.yjztpsName}" token="${sessionScope.OWASP_CSRFTOKEN}"
                                                  textClass="m-wrap span10" radioOrCheckbox="radio" needNullValue="true" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
                                         </div>
                                     </div>
@@ -286,6 +286,9 @@
                             type : "post",
                             data : $("#form1").serialize(),
                             dataType : "html",
+                            headers:{
+                                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                            },
                             success : function(html){
                                 $('#gjcxModal').modal('hide');
                                 $('#gjcxDiv').html("");
@@ -311,6 +314,9 @@
                         type : "post",
                         data : $("#form2").serialize(),
                         dataType : "html",
+                        headers:{
+                            OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                        },
                         success : function(html){
                             $('#gjcxModal').modal('hide');
                             $('#gjcxDiv').html("");

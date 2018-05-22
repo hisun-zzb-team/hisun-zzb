@@ -121,6 +121,9 @@
                 type : "get",
                 data : {"a38Id":"${a38Id}"},
                 dataType : "html",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(html){
                     console.log(111);
                     var view = $("#tab_show");
@@ -150,6 +153,9 @@
                                 type : "get",
                                 data : {"a38Id":"${a38Id}"},
                                 dataType : "html",
+                                headers:{
+                                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                                },
                                 success : function(html){
                                     console.log(111);
                                     var view = $("#tab_show");

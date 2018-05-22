@@ -166,7 +166,7 @@
 
 	function del(id, voname) {
 		var a38Id = $("#a38Id").val();
-		actionByConfirm1(voname, "${path}/zzb/dzda/e01z4/delete/" + id, {}, function (data, status) {
+		actionByConfirm1(voname, "${path}/zzb/dzda/e01z4/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
 			if (data.success == true) {
 				showTip("提示", "成功删除！", 2000);
 				$.ajax({

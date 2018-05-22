@@ -189,6 +189,9 @@
             type : "get",
             data : {"param":value},
             dataType : "json",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(json){
                 if(json.success){
                     flag = true;
@@ -228,7 +231,7 @@
             success : function(data){
                 // myLoading.hide();
                 if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", data.message, 2000);
                 }
@@ -240,20 +243,20 @@
         });
     }
     function downloadFile(id){
-        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
+        window.open("${path }/zzb/dzda/cysq/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
     }
     function deleteSq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cysq/list";
+                window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
         },"撤销申请")
     }
     function deleteFile(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                // $("#applyFileName").val("");
                 $("#applyFileNameGroup").hide();
@@ -278,6 +281,9 @@
                 type : "get",
                 data : {"param":value},
                 dataType : "json",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(json){
                     if(json.success){
                        flag = true;
@@ -317,7 +323,7 @@
             success : function(data){
                 // myLoading.hide();
                 if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", data.message, 2000);
                 }

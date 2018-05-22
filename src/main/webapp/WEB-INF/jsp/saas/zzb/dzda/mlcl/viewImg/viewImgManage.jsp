@@ -70,6 +70,9 @@
 					"isManage":"${isManage}"
 				},
 				dataType: "json",
+				headers:{
+					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+				},
 				success: function (json) {
 					var  eApplyE01Z8Id = json.eApplyE01Z8Id;
 					$("#eApplyE01Z8Id").val(eApplyE01Z8Id);
@@ -108,6 +111,9 @@
 						"time":time/1000,
 						"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
 					},
+					headers:{
+						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+					},
 					success: function (json) {
 						if(json.code == 2){
 							showTip("提示", "您的阅档权限已被收回或阅档时间已结束", 2000);
@@ -144,6 +150,9 @@
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val(),
 				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val(),
 				"ydsjzt":"1"
+			},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			success: function (json) {
 				if(json.code == 5){
@@ -218,6 +227,9 @@
 						"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 						"lsEa38LogDetailId":$("#ea38LogDetailId").val()
 					},
+					headers:{
+						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+					},
 					success: function (json) {
 
 						$("#eLogDetailViewTimeId").val(json.eLogDetailViewTimeId);
@@ -256,6 +268,9 @@
 				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 				"ea38LogDetailId":$("#ea38LogDetailId").val(),
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val()
+			},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			success: function (json) {
 			},

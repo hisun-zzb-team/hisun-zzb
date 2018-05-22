@@ -131,7 +131,7 @@
                     <div id="e01Z237Group" class="control-group">
                         <label class="control-label">材料处理状态：</label>
                         <div class="controls">
-                            <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content" textClass="m-wrap span10" needNullValue="true" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
+                            <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content" textClass="m-wrap span10" token="${sessionScope.OWASP_CSRFTOKEN}" needNullValue="true" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                         <label class="control-label">是否已处理：</label>
                         <div class="controls">
                             <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" needNullValue="true"
-                                                 radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+                                                 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
                         </div>
                     </div>
                 </div>
@@ -186,6 +186,9 @@
                 type : "get",
                 data : {"a38Id":"${a38Id}"},
                 dataType : "html",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(html){
                     console.log(111);
                     var view = $("#tab_show");
@@ -239,6 +242,9 @@
                                 type : "get",
                                 data : {"a38Id":"${a38Id}"},
                                 dataType : "html",
+                                headers:{
+                                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                                },
                                 success : function(html){
                                     console.log(111);
                                     var view = $("#tab_show");

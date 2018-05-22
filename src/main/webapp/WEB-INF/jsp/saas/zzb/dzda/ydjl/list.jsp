@@ -81,7 +81,7 @@
                 <div class="clearfix">
                     <div class="control-group">
                         <div id="query" style="float: left;">
-                        <form action="${path }/zzb/dzda/dacyjl/list" method="POST" id="searchForm" name="searchForm">
+                        <form action="${path }/zzb/dzda/dacyjl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
                           <%--  <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>--%>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">

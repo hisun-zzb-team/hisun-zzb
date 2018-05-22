@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.zrzc.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,20 +20,20 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "e01z7")
-public class E01Z7  extends TombstoneEntity implements Serializable {
+public class E01Z7  extends TenantEntity implements Serializable {
     private String id;
     private A38 a38;
-    private String name;
-    private Date e01Z701;
-    private String e01Z704A;
-    private String e01Z704B;
-    private Integer e01Z711;
-    private Integer e01Z714;
-    private String e01Z717;
-    private String e01Z721;
-    private String e01Z724;
-    private Date e01Z727;
-    private String e01Z731;
+    private String name;//'档案名称'
+    private Date e01Z701;//'转递日期'
+    private String e01Z704A;//'转往单位名称'
+    private String e01Z704B;//'转往单位Id'
+    private Integer e01Z711;//'转出正本数'
+    private Integer e01Z714;//'转出副本数'
+    private String e01Z717;//'经办人'
+    private String e01Z721;//'转递原因'
+    private String e01Z724;//'回执人'
+    private Date e01Z727;//'回执日期'
+    private String e01Z731;//'备注'
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")

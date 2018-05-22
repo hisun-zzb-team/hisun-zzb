@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.zrzc.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,24 +20,24 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "e01z5")
-public class E01Z5  extends TombstoneEntity implements Serializable {
+public class E01Z5  extends TenantEntity implements Serializable {
     private String id;
     private A38 a38;
-    private String name;
-    private Date e01Z501;
-    private String e01Z507A;
-    private String e01Z507B;
-    private Integer e01Z511;
-    private Integer e01Z514;
-    private String e01Z517;
-    private String e01Z521;
-    private Date e01Z524;
-    private String e01Z527;
-    private Date e01Z531;
-    private Date e01Z534;
-    private String e01Z537;
-    private String e01Z541;
-    private String e01Z544;
+    private String name;//档案名称
+    private Date e01Z501;//接收日期
+    private String e01Z507A;//来件单位名称
+    private String e01Z507B;//来件单位ID
+    private Integer e01Z511;//正本卷数
+    private Integer e01Z514;//副本卷数'
+    private String e01Z517;//经办人'
+    private String e01Z521;//审核人'
+    private Date e01Z524;//审核日期'
+    private String e01Z527;//案卷质量 0-不合格；1-合格；2-优秀
+    private Date e01Z531;//回执日期
+    private Date e01Z534;//入库日期
+    private String e01Z537;//入库审批人
+    private String e01Z541;//档案位置
+    private String e01Z544;//备注
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")

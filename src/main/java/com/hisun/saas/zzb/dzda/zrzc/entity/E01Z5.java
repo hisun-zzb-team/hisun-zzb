@@ -38,6 +38,8 @@ public class E01Z5  extends TenantEntity implements Serializable {
     private String e01Z537;//入库审批人
     private String e01Z541;//档案位置
     private String e01Z544;//备注
+    private String filePath;//上传文件路径
+    private String fileName; //上传文件名称
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -69,6 +71,26 @@ public class E01Z5  extends TenantEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Basic
+    @Column(name = "fileName")
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Basic
+    @Column(name = "filePath")
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     @Basic

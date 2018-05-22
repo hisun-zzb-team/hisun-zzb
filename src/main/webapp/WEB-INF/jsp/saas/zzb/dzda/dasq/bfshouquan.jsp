@@ -59,10 +59,17 @@
             return
         }
         $("#e01z1IdContent").val(idString);
+        var sfzasq = "${sfzasq}";
+        var  sqUrl;
+        if(sfzasq == "true"){
+            sqUrl="zcbfshouquan"
+        }else {
+            sqUrl="bfshouquan"
+        }
         var bool = form1.form();
         if(bool){
             $.ajax({
-                url : "${path }/zzb/dzda/cyshouquan/bfshouquan",
+                url : "${path }/zzb/dzda/cyshouquan/"+sqUrl,
                 type : "post",
                 data : $("#form1").serialize(),
                 headers:{

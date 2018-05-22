@@ -12,29 +12,28 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author liuzj {279421824@qq.com}
  */
-public class E01Z5Vo {
+public class E01Z5Vo implements Serializable{
     private String id;
     private String a38Id;
-    private String name;
-    private Date e01Z501;
-    private String e01Z507A;
-    private String e01Z507B;
-    private Integer e01Z511;
-    private Integer e01Z514;
-    private String e01Z517;
-    private String e01Z521;
-    private Date e01Z524;
-    private String e01Z527;
-    private Date e01Z531;
-    private Date e01Z534;
-    private String e01Z537;
-    private String e01Z541;
-    private String e01Z544;
+    private String name;//档案名称
+    private String e01Z501;//接收日期
+    private String e01Z507A;//来件单位名称
+    private String e01Z507B;//来件单位ID
+    private Integer e01Z511;//正本卷数
+    private Integer e01Z514;//副本卷数'
+    private String e01Z517;//经办人'
+    private String e01Z521;//审核人'
+    private String e01Z524;//审核日期'
+    private String e01Z527;//案卷质量 0-不合格；1-合格；2-优秀
+    private String e01Z531;//回执日期
+    private String e01Z534;//入库日期
+    private String e01Z537;//入库审批人
+    private String e01Z541;//档案位置
+    private String e01Z544;//备注
 
     public String getId() {
         return id;
@@ -60,11 +59,11 @@ public class E01Z5Vo {
         this.name = name;
     }
 
-    public Date getE01Z501() {
+    public String getE01Z501() {
         return e01Z501;
     }
 
-    public void setE01Z501(Date e01Z501) {
+    public void setE01Z501(String e01Z501) {
         this.e01Z501 = e01Z501;
     }
 
@@ -116,11 +115,11 @@ public class E01Z5Vo {
         this.e01Z521 = e01Z521;
     }
 
-    public Date getE01Z524() {
+    public String getE01Z524() {
         return e01Z524;
     }
 
-    public void setE01Z524(Date e01Z524) {
+    public void setE01Z524(String e01Z524) {
         this.e01Z524 = e01Z524;
     }
 
@@ -132,19 +131,19 @@ public class E01Z5Vo {
         this.e01Z527 = e01Z527;
     }
 
-    public Date getE01Z531() {
+    public String getE01Z531() {
         return e01Z531;
     }
 
-    public void setE01Z531(Date e01Z531) {
+    public void setE01Z531(String e01Z531) {
         this.e01Z531 = e01Z531;
     }
 
-    public Date getE01Z534() {
+    public String getE01Z534() {
         return e01Z534;
     }
 
-    public void setE01Z534(Date e01Z534) {
+    public void setE01Z534(String e01Z534) {
         this.e01Z534 = e01Z534;
     }
 

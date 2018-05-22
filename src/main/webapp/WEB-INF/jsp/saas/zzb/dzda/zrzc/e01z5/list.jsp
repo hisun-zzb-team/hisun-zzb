@@ -12,12 +12,30 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
+	<!-- BEGIN PAGE LEVEL STYLES -->
+	<link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
+
+	<link href="${path }/css/style.css" rel="stylesheet" type="text/css">
+	<!-- END PAGE LEVEL STYLES -->
 	<title>档案接收</title>
 	<style type="text/css">
-		form {
-			margin: 0 0 0px;
-		}
 	</style>
+	<link rel="stylesheet" type="text/css"
+		  href="${path}/css/select2_metro.css" />
+	<link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="${path}/css/DT_bootstrap.css" />
+	<script type="text/javascript" src="${path}/js/select2.min.js"></script>
+	<script type="text/javascript"
+			src="${path}/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="${path}/js/jquery.form.js"></script>
+	<script type="text/javascript" src="${path}/js/DT_bootstrap.js"></script>
+	<script type="text/javascript" src="${path}/js/bootstrap-datepicker.js"></script>
+	<script type="text/javascript" src="${path}/js/bootstrap-datepicker.zh-CN.js"></script>
+	<script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -27,8 +45,7 @@
 				<div class="portlet-title">
 					<div class="caption">档案接收</div>
 					<div class="clearfix fr">
-
-						<a class="btn green" href="javascript:ruku()">
+						<a class="btn green" href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-ok"></i>接收
 						</a>
 					</div>
@@ -36,28 +53,31 @@
 				<div class="clearfix">
 					<div class="control-group">
 							<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm">
+								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}" id="OWASP_CSRFTOKEN">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">档案名称:</div>
 								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
+									<input type="text" class="m-wrap" name="name" id="name" value="${name}" style="width: 80px;" />
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;来件单位:</div>
 								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
+									<input type="text" class="m-wrap" name="e01Z507A" id="e01Z507A" value="${e01Z507A}" style="width: 80px;" />
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;接收日期:</div>
 								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
+									<input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
+										   id="e01Z501" readonly
+										   value=""/>
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;经办人:</div>
 								<div style="float:left;width: 160px;">
-									<input type="text" class="m-wrap" name="e01Z517Query" id="e01Z517Query" value="${e01Z517Query}" style="width:80px;" />
+									<input type="text" class="m-wrap" name="e01Z517" id="e01Z517" value="${e01Z517}" style="width:80px;" />
 								</div>
 								<div style=" float:left;margin-top:4px">&nbsp;案卷质量:</div>
 								<div style="float:left;width: 160px;">
-									<Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-											   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
+									<SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" needNullValue="true" defaultkeys="${e01Z527}"
+														 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
 
 								</div>
 								<div style="float:left">
@@ -127,15 +147,12 @@
 	function searchSubmit(){
 		document.searchForm.submit();
 	}
-
-
-
 	function clearData(){
-		$("#dabhQuery").val('');
-		$("#smxhQuery").val('');
-		$("#a0101Query").val('');
-		$("#gbztCodeQuery").val('');
-		$("#daztCodeQuery").val('');
+		$("#name").val('');
+		$("#e01Z507A").val('');
+		$("#e01Z517").val('');
+		$("#e01Z501").val('');
+		$("#e01Z527").val('');
 		$("#gbztContentQuery").val('');
 		$("#daztContentQuery").val('');
 		document.searchForm.submit();
@@ -154,52 +171,15 @@
 			}
 		}
 	}
-	function ruku(){
-		var checks = document.getElementsByName("dataIds");
-		var checkedIds = "";
-		var checkedCount = 0;
-		for(var i=0;i<checks.length;i++){
-			if(checks[i].checked==true){
-				checkedCount ++;
-				if(checkedIds==""){
-					checkedIds = checks[i].value;
-				}
-			}
-		}
-		if(checkedCount == 0){
-			showTip("提示","请选择要入库的干部",2000);
-			return;
-		}
-		$.ajax({
-			url : "${path }/zzb/dzda/a38/update/Sjzt",
-			type : "post",
-			data : {
-				"a38Ids":checkedIds,
-				"sjzt":'1'
-			},
-			headers:{
-				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-			},
-			dataType : "json",
-			success : function(json){
-				if(json.code==1){
-					myLoading.hide();
-					showTip("提示", "成功入库", 1300);
-					setTimeout(function(){window.location.href = "${path}/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1300);
-
-				}else{
-					myLoading.hide();
-					showTip("提示", json.message, 2000);
-					return false;
-				}
-			},
-			error : function(){
-				showTip("提示","出错了,请检查网络!",2000);
-				myLoading.hide();
-				return false;
-			}
+	$(function(){
+		$('#e01Z501').datepicker({
+			format: 'yyyy-mm-dd',
+			weekStart: 1,
+			autoclose: true,
+			todayBtn: 'linked',
+			language: 'zh-CN'
 		});
-	}
+	})
 </script>
 </body>
 </html>

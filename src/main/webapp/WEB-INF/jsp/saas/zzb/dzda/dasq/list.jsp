@@ -142,7 +142,7 @@
                                         <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&zcsqbs=true&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>

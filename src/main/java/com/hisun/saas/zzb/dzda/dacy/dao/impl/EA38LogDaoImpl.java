@@ -7,13 +7,20 @@
 package com.hisun.saas.zzb.dzda.dacy.dao.impl;
 
 import com.hisun.saas.sys.tenant.base.dao.imp.TenantBaseDaoImpl;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.dacy.dao.EA38LogDao;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marco {854476391@qq.com}
  */
 @Repository
 public class EA38LogDaoImpl extends TenantBaseDaoImpl<EA38Log,String> implements EA38LogDao {
+    public List<EA38Log> getA38LogListBySql(String sql, Map<String,Object> paramMap){
+        return nativeList(EA38Log.class, sql.toString(), paramMap);
+    }
 }

@@ -14,6 +14,8 @@ import com.hisun.saas.zzb.dzda.dacy.service.EA38LogService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marco {854476391@qq.com}
@@ -26,5 +28,8 @@ public class EA38LogServiceImpl extends BaseServiceImpl<EA38Log,String>implement
     public void setBaseDao(BaseDao<EA38Log, String> baseDao) {
         this.baseDao = baseDao;
         this.eA38LogDao = (EA38LogDao)baseDao;
+    }
+    public List<EA38Log> getA38LogListBySql(String sql, Map<String,Object> paramMap){
+        return this.eA38LogDao.getA38LogListBySql(sql,paramMap);
     }
 }

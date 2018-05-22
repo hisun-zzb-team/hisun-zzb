@@ -59,6 +59,7 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
+
 		if("${isAddLog}" != "false"){
 			$.ajax({
 				url: "${path}/zzb/dzda/cysq/ajax/liulanLog",

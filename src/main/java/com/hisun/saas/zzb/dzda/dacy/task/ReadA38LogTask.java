@@ -19,12 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marco {854476391@qq.com}
  */
-public class ReadA38LogTask extends AbsTask {
+public class ReadA38LogTask  extends AbsTask {
     @Resource
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
@@ -40,11 +42,12 @@ public class ReadA38LogTask extends AbsTask {
     private Integer avgViewTime = new Integer(5);
     protected final Logger logger = Logger.getLogger(getClass());
 
-    public void updateReadStatus() {
+    public void updateReadStatus(){
         if (isStart()) {
             if (logger.isDebugEnabled()) {
                 logger.debug("开始执行 updateReadStatus 》》》》》");
             }
+
             CommonConditionQuery query = new CommonConditionQuery();
             //已审
             query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState", "1"));
@@ -83,76 +86,74 @@ public class ReadA38LogTask extends AbsTask {
         }
     }
 
-    public void updateLogViewTime() {
+    public void updateLogViewTime(){
         if (isStart()) {
-            if (logger.isDebugEnabled())
+            if(logger.isDebugEnabled())
                 logger.debug("updateLogViewTime is star >>>>>>>>>");
-            CommonConditionQuery query = new CommonConditionQuery();
-            query.add(CommonRestrictions.and("ydzt = :ydzt ", "ydzt", 1));
-            List<EA38Log> ea38Logs = ea38LogService.list(query, null);
-            if (ea38Logs != null && !ea38Logs.isEmpty()) {
-                for (EA38Log ea38Log : ea38Logs) {
-                    if (DateUtil.diffDateTime(new Date(), ea38Log.getZzcysj()) > 10) {
-                        if (logger.isDebugEnabled())
-                            logger.debug("阅档时浏览器异常关闭等特殊情况处理 >>>>>>>>>");
-                        //申请阅档浏览处理
-                        if (ea38Log.getApplyE01Z8() != null) {
-                            EApplyE01Z8 eApplyE01Z8 = ea38Log.getApplyE01Z8();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                            eApplyE01Z8.setEndReadDate(sdf.format(new Date()));
-                            if (StringUtils.isNotBlank(eApplyE01Z8.getAlreadyReadTime())) {
-                                Integer viewTime = Integer.valueOf(eApplyE01Z8.getAlreadyReadTime());
-                                viewTime = viewTime + avgViewTime;
-                                eApplyE01Z8.setAlreadyReadTime(String.valueOf(viewTime));
-                            }
-                            eApplyE01Z8Service.update(eApplyE01Z8);
+            String sql = "select t.* from e_a38_log t where t.ydzt = 1 and t.zzcysj < date_sub(sysdate(),interval 10 second)";
+            List<EA38Log> ea38Logs = ea38LogService.getA38LogListBySql(sql,null);
+            if(ea38Logs !=null && !ea38Logs.isEmpty()){
+                for(EA38Log ea38Log:ea38Logs) {
+//                if(DateUtil.diffDateTime(new Date(),ea38Log.getZzcysj())>15){
+                    if (logger.isDebugEnabled())
+                        logger.debug("阅档时浏览器异常关闭等特殊情况处理 >>>>>>>>>");
+                    //申请阅档浏览处理
+                    if (ea38Log.getApplyE01Z8() != null) {
+                        EApplyE01Z8 eApplyE01Z8 = ea38Log.getApplyE01Z8();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        eApplyE01Z8.setEndReadDate(sdf.format(new Date()));
+                        if (StringUtils.isNotBlank(eApplyE01Z8.getAlreadyReadTime())) {
+                            Integer viewTime = Integer.valueOf(eApplyE01Z8.getAlreadyReadTime());
+                            viewTime = viewTime + avgViewTime;
+                            eApplyE01Z8.setAlreadyReadTime(String.valueOf(viewTime));
                         }
-                        CommonConditionQuery query1 = new CommonConditionQuery();
-                        query1.add(CommonRestrictions.and("a38Log.id = :a38LogId ", "a38LogId", ea38Log.getId()));
-                        query1.add(CommonRestrictions.and("endTime is :endTime ", "endTime", null));
-                        List<EA38LogViewTime> ea38LogViewTimes = ea38LogViewTimeService.list(query1, null);
-                        Long eA38LogCYSJ = avgViewTime.longValue();
-                        if (ea38LogViewTimes != null && !ea38LogViewTimes.isEmpty()) {
-                            EA38LogViewTime eA38LogViewTime = ea38LogViewTimes.get(0);
-                            eA38LogViewTime.setEndTime(new Date());
-                            eA38LogCYSJ = DateUtil.diffDateTime(new Date(), eA38LogViewTime.getStareTime());
-                            eA38LogViewTime.setViewTime(String.valueOf(eA38LogCYSJ));
-                            ea38LogViewTimeService.update(eA38LogViewTime);
-                        }
-                        if (StringUtils.isNotBlank(ea38Log.getViewTime())) {
-                            ea38Log.setViewTime(String.valueOf(Integer.valueOf(ea38Log.getViewTime()) + eA38LogCYSJ));
-                        } else {
-                            ea38Log.setViewTime(String.valueOf(eA38LogCYSJ));
-                        }
-                        ea38Log.setYdzt(0);
-                        ea38LogService.update(ea38Log);
+                        eApplyE01Z8Service.update(eApplyE01Z8);
+                    }
+                    CommonConditionQuery query1 = new CommonConditionQuery();
+                    query1.add(CommonRestrictions.and("a38Log.id = :a38LogId ", "a38LogId", ea38Log.getId()));
+                    query1.add(CommonRestrictions.and("endTime is :endTime ", "endTime", null));
+                    List<EA38LogViewTime> ea38LogViewTimes = ea38LogViewTimeService.list(query1, null);
+                    Long eA38LogCYSJ = avgViewTime.longValue();
+                    if (ea38LogViewTimes != null && !ea38LogViewTimes.isEmpty()) {
+                        EA38LogViewTime eA38LogViewTime = ea38LogViewTimes.get(0);
+                        eA38LogViewTime.setEndTime(new Date());
+                        eA38LogCYSJ = DateUtil.diffDateTime(new Date(), eA38LogViewTime.getStareTime());
+                        eA38LogViewTime.setViewTime(String.valueOf(eA38LogCYSJ));
+                        ea38LogViewTimeService.update(eA38LogViewTime);
+                    }
+                    if (StringUtils.isNotBlank(ea38Log.getViewTime())) {
+                        ea38Log.setViewTime(String.valueOf(Integer.valueOf(ea38Log.getViewTime()) + eA38LogCYSJ));
+                    } else {
+                        ea38Log.setViewTime(String.valueOf(eA38LogCYSJ));
+                    }
+                    ea38Log.setYdzt(0);
+                    ea38LogService.update(ea38Log);
 
-                        CommonConditionQuery query2 = new CommonConditionQuery();
-                        query2.add(CommonRestrictions.and("endTime is :endTime ", "endTime", null));
-                        query2.add(CommonRestrictions.and("a38LogDetails.a38Log.id = :a38LogId ", "a38LogId", ea38Log.getId()));
-                        List<ELogDetailViewTime> eLogDetailViewTimes = eLogDetailViewTimeService.list(query2, null);
-                        if (eLogDetailViewTimes != null && !eLogDetailViewTimes.isEmpty()) {
-                            ELogDetailViewTime eLogDetailViewTime = eLogDetailViewTimes.get(0);
-                            eLogDetailViewTime.setEndTime(new Date());
-                            Long viewTime = DateUtil.diffDateTime(new Date(), eLogDetailViewTime.getStareTime());
-                            eLogDetailViewTime.setViewTime(viewTime.toString());
-                            eLogDetailViewTimeService.update(eLogDetailViewTime);
-                            //
-                            EA38LogDetail ea38LogDetail = eLogDetailViewTime.getA38LogDetails();
-                            if (StringUtils.isNotBlank(ea38LogDetail.getCysj())) {
-                                ea38LogDetail.setCysj(String.valueOf(Integer.valueOf(ea38LogDetail.getCysj()) + viewTime));
-                            } else {
-                                ea38LogDetail.setCysj(viewTime.toString());
-                            }
-                            ea38LogDetail.setJscysj(new Date());
-                            ea38LogDetailService.update(ea38LogDetail);
+                    CommonConditionQuery query2 = new CommonConditionQuery();
+                    query2.add(CommonRestrictions.and("endTime is :endTime ", "endTime", null));
+                    query2.add(CommonRestrictions.and("a38LogDetails.a38Log.id = :a38LogId ", "a38LogId", ea38Log.getId()));
+                    List<ELogDetailViewTime> eLogDetailViewTimes = eLogDetailViewTimeService.list(query2, null);
+                    if (eLogDetailViewTimes != null && !eLogDetailViewTimes.isEmpty()) {
+                        ELogDetailViewTime eLogDetailViewTime = eLogDetailViewTimes.get(0);
+                        eLogDetailViewTime.setEndTime(new Date());
+                        Long viewTime = DateUtil.diffDateTime(new Date(), eLogDetailViewTime.getStareTime());
+                        eLogDetailViewTime.setViewTime(viewTime.toString());
+                        eLogDetailViewTimeService.update(eLogDetailViewTime);
+                        //
+                        EA38LogDetail ea38LogDetail = eLogDetailViewTime.getA38LogDetails();
+                        if (StringUtils.isNotBlank(ea38LogDetail.getCysj())) {
+                            ea38LogDetail.setCysj(String.valueOf(Integer.valueOf(ea38LogDetail.getCysj()) + viewTime));
+                        } else {
+                            ea38LogDetail.setCysj(viewTime.toString());
                         }
+                        ea38LogDetail.setJscysj(new Date());
+                        ea38LogDetailService.update(ea38LogDetail);
                     }
                 }
-            }
-            if (logger.isDebugEnabled())
-                logger.debug("updateLogViewTime is end >>>>>>>>>");
+            //                }
         }
     }
-
+    if(logger.isDebugEnabled())
+            logger.debug("updateLogViewTime is end >>>>>>>>>");
+    }
 }

@@ -9,8 +9,12 @@ package com.hisun.saas.zzb.dzda.dacy.service;
 import com.hisun.base.service.BaseService;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Marco {854476391@qq.com}
  */
 public interface EA38LogService extends BaseService<EA38Log,String> {
+    List<EA38Log> getA38LogListBySql(String sql, Map<String,Object> paramMap);
 }

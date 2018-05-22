@@ -21,6 +21,7 @@ import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.StringUtils;
 import org.joda.time.DateTime;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,11 +101,11 @@ public class CyjlControllelr extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
            // orderBy.add(CommonOrder.desc("cysj"));
             List<EA38LogViewTime> resultList = eA38LogViewTimeService.list(query,orderBy);
-            PagerVo<EA38LogViewTime> pager = new PagerVo<EA38LogViewTime>(resultList, total.intValue(), 1, 100);
             EA38Log ea38Log = eA38LogService.getByPK(a38LogId);
             model.put("cyrName",ea38Log.getCyrName());
             model.put("a0101",ea38Log.getA0101());
-            model.put("pager",pager);
+            model.put("resultList",resultList);
+            model.put("total",total);
             model.put("success",true);
 
         }catch (Exception e){

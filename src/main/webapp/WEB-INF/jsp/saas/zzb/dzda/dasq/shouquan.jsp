@@ -21,9 +21,14 @@
 
         </div>
         <div class="portlet-title" style="text-align: right">
-
-            <button type="button" class="btn green" onclick="formSubmit(1)">授权查阅全部档案</button>
-            <button type="button" class="btn green" onclick="bfsq()">授权查阅指定目录</button>
+            <span id="sqbs">
+                <button type="button" class="btn green" onclick="formSubmit(1)">授权查阅全部档案</button>
+                <button type="button" class="btn green" onclick="bfsq('false')">授权查阅指定目录</button>
+            </span>
+            <span id="zcsqbs">
+                <button type="button" class="btn green" onclick="zcformSubmit()">再次授权查阅全部档案</button>
+                <button type="button" class="btn green" onclick="bfsq('true')">再次授权查阅指定目录</button>
+            </span>
             <button type="button" class="btn green" onclick="formSubmit(2)">拒绝</button>
             <a class="btn" href="javascript:cancel()"><i class="icon-undo"></i>返回</a>
 
@@ -231,7 +236,8 @@
 
 <script type="text/javascript">
 
-    function bfsq(){
+    function bfsq(sfzasq){
+
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
             showTip("提示","请选择要查阅和人档案",2000);
@@ -240,7 +246,7 @@
         $.ajax({
             url : "${path }/zzb/dzda/cyshouquan/ajax/tobfShouquan",
             type : "post",
-            data : {"a38Id":a38},
+            data : {"a38Id":a38,"sfzasq":sfzasq},
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
             },
@@ -279,9 +285,9 @@
             }else if(status ==2){
                 msg= "拒绝授权吗";
             }
-            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/shouquan",$("#form1").serialize(),function(json){
+            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/shouquan?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",$("#form1").serialize(),function(json){
                 if(json.success){
-                    window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+                    window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else {
                     showTip("提示","请求失败",2000);
                 }
@@ -305,6 +311,23 @@
             });*/
         }
     }
+    function zcformSubmit(){
+        var a38 = $("#a38Id").val();
+        if(a38 == "" || a38 == null){
+            showTip("提示","请选择要查阅和人档案",2000);
+            return;
+        }
+        var bool = form1.form();
+        if(bool){
+            actionByConfirm1('',"${path }/zzb/dzda/cyshouquan/zcshouquan?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",$("#form1").serialize(),function(json){
+                if(json.success){
+                    window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                }else {
+                    showTip("提示","请求失败",2000);
+                }
+            },"再次授权")
+        }
+    }
     function queryA0101(a0101){
         $('#addDiv').show();
 
@@ -318,11 +341,17 @@
             $("#applyFileNameId").hide();
         }
         $("#table1 input").eq(0).checked = true;
+        var zcsqbs = "${zcsqbs}"
+        if(zcsqbs=="true"){
+            $("#sqbs").hide();
+        }else {
+            $("#zcsqbs").hide();
+        }
     })
     function downloadFile(id){
-        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
+        window.open("${path }/zzb/dzda/cysq/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
     }
     function cancel(){
-        window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+        window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 </script>

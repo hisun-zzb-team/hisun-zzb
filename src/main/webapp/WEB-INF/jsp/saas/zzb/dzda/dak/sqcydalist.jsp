@@ -33,7 +33,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
                 <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
                     <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                         显示方式<i class="icon-angle-down"></i>
@@ -146,7 +146,7 @@
 
 <script type="text/javascript">
     (function(){
-        App.init();
+//        App.init();
 
         $("#btn-browseTemplate").bind("change",function(evt){
             if($(this).val()){
@@ -170,6 +170,9 @@
                 "pageSize":pageSize
             },
             dataType : "html",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(html){
                 var view = $("#tab_show");
                 view.html(html);
@@ -239,6 +242,9 @@
             type : "post",
             data : {"userName":userName},
             dataType : "html",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(html){
                 var view = $("#tab_show");
                 view.html(html);
@@ -253,10 +259,7 @@
     function clearData(){
         $("#userName").val('');
     }
-    function openGzzzb(){
-        var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-        window.open(url);
-    }
+
 </script>
 </body>
 </html>

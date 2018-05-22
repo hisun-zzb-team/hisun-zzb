@@ -95,7 +95,7 @@ public class CyshouquanController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dasq/list",model);
     }
     @RequestMapping(value = "/toShouquan")
-    public ModelAndView toShouquan(String id){
+    public ModelAndView toShouquan(String id,String zcsqbs){
         Map<String,Object> model = Maps.newHashMap();
         try{
             EApplyE01Z8 entity  = eApplyE01Z8Service.getByPK(id);
@@ -107,6 +107,7 @@ public class CyshouquanController extends BaseController {
             if(a38s.size()==1){
                 a38Id = a38s.get(0).getId();
             }
+            model.put("zcsqbs",zcsqbs);
             model.put("entity",entity);
             model.put("a38s",a38s);
             model.put("a38Id",a38Id);
@@ -116,10 +117,11 @@ public class CyshouquanController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dasq/shouquan",model);
     }
     @RequestMapping(value = "/ajax/tobfShouquan")
-    public ModelAndView tobfShouquan(String a38Id){
+    public ModelAndView tobfShouquan(String a38Id,String sfzasq){
         Map<String,Object> model = Maps.newHashMap();
         try{
             model.put("a38Id",a38Id);
+            model.put("sfzasq",sfzasq);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -157,11 +159,11 @@ public class CyshouquanController extends BaseController {
         try{
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             BeanUtils.copyProperties(entity,vo);
             //全部授权
             if(vo.getAuditingState().equals("1")) entity.setPopedomStuffType("0");
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -174,6 +176,79 @@ public class CyshouquanController extends BaseController {
         }
         return model;
     }
+    /**
+     * 再次授权
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "/zcshouquan")
+    public @ResponseBody Map<String,Object> zaicishouquan(EApplyE01Z8Vo vo){
+        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            EApplyE01Z8 entity =  new EApplyE01Z8();
+            entity.setSqdwpzld(details.getRealname());
+            BeanUtils.copyProperties(entity,vo);
+            entity.setParentApplyE01Z8Id(vo.getId());
+            entity.setId(null);
+            //全部授权
+            entity.setAuditingState("1");
+            entity.setPopedomStuffType("0");
+            entity.setIsShowToA0101("0");
+            entity.setSqdwpzld(details.getRealname());
+            EntityWrapper.wrapperSaveBaseProperties(entity,details);
+            entity.setA38(a38Service.getByPK(vo.getA38Id()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            entity.setAccreditDate(sdf.format(new Date()));
+            eApplyE01Z8Service.save(entity);
+            model.put("success",true);
+        }catch (Exception e){
+            model.put("success",false);
+            e.printStackTrace();
+        }
+        return model;
+    }
+    @RequestMapping(value = "/zcbfshouquan")
+    public @ResponseBody Map<String,Object> zcbfShouquan(EApplyE01Z8Vo vo){
+        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
+        try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            String e01z1IdContent = vo.getE01z1IdContent();
+            String[] e01z1Ids = e01z1IdContent.split(",");
+            EApplyE01Z8 entity =  new EApplyE01Z8();
+            BeanUtils.copyProperties(entity,vo);
+            entity.setSqdwpzld(details.getRealname());
+            //已审
+            entity.setAuditingState("1");
+            //部分授权
+            entity.setPopedomStuffType("1");
+            entity.setSqdwpzld(details.getRealname());
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            entity.setA38(a38Service.getByPK(vo.getA38Id()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            entity.setAccreditDate(sdf.format(new Date()));
+            entity.setId(null);
+            entity.setParentApplyE01Z8Id(vo.getId());
+            entity.setIsShowToA0101("0");
+            EntityWrapper.wrapperSaveBaseProperties(entity,details);
+            String pk = eApplyE01Z8Service.save(entity);
+            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(pk);
+            for (String id : e01z1Ids){
+                if(id.equals("")) continue;
+                EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
+                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
+                ep.setApplyE01Z8(eApplyE01Z8);
+                ep.setE01z1Id(id);
+                ePopedomE01Z1RelationService.save(ep);
+            }
+            model.put("success",true);
+        }catch (Exception e){
+            model.put("success",false);
+            e.printStackTrace();
+        }
+        return model;
+    }
+
     @RequestMapping(value = "/bfshouquan")
     public @ResponseBody Map<String,Object> bfShouquan(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -185,18 +260,18 @@ public class CyshouquanController extends BaseController {
             for (String id : e01z1Ids){
                 if(id.equals("")) continue;
                 EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
-                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
+//                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
                 ep.setApplyE01Z8(entity);
-                ep.setE01z1(e01Z1);
+                ep.setE01z1Id(id);
                 ePopedomE01Z1RelationService.save(ep);
             }
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             BeanUtils.copyProperties(entity,vo);
             //已审
             entity.setAuditingState("1");
             //部分授权
             entity.setPopedomStuffType("1");
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

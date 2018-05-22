@@ -44,14 +44,8 @@
     <div class="row-fluid">
         <div class="span12 responsive">
             <%-- 表格开始 --%>
-            <form class=""id="importForm" enctype="multipart/form-data">
-                <div class="portlet-title">
-                    <div class="caption">  阅档详细时间 共"${pager.total}"条</div>
-                    <div class="clearfix fr">
-                    </div>
-                </div>
-            </form>
-            <div class="portlet-body">
+
+            <div class="portlet-body" style="max-height: 550px;overflow: auto;margin: 0px;">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>

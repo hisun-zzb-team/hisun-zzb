@@ -17,19 +17,26 @@ import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.service.E01Z5Service;
 import com.hisun.saas.zzb.dzda.zrzc.vo.E01Z5Vo;
+import com.hisun.util.FileUtil;
+import com.hisun.util.UUIDUtil;
 import com.hisun.util.ValidateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,11 +52,15 @@ public class E01Z5Controller extends BaseController {
 
     @Resource
     private E01Z5Service e01z5Service;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadAbsolutePath;
    
 
     @RequiresPermissions("dajs:*")
     @RequestMapping("/list")
-    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "15")int pageSize) throws UnsupportedEncodingException {
+    public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
+                             @RequestParam(value = "pageSize",defaultValue = "15")int pageSize) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
 //        query.add(CommonRestrictions.and(" pId = :pId ", "pId", pId));
@@ -73,12 +84,14 @@ public class E01Z5Controller extends BaseController {
     @RequestMapping("/add")
     public ModelAndView add(){
         Map<String,Object> returnMap = new HashMap<String,Object>();
+        returnMap.put("","");
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/add",returnMap);
     }
 
-    @RequiresPermissions("dajs:*")
+   // @RequiresPermissions("dajs:*")
     @RequestMapping("/save")
-    public @ResponseBody Map<String,Object> save(@ModelAttribute E01Z5Vo vo) throws GenericException {
+    public @ResponseBody Map<String,Object> save(E01Z5Vo vo,HttpServletRequest req,
+                                                 @RequestParam(value = "clFile", required = false) MultipartFile clFile){
         Map<String,Object> returnMap = new HashMap<String,Object>();
         Map<String,String> vMap = ValidateUtil.validAll(vo);
         if(vMap.size()>0){
@@ -87,9 +100,38 @@ public class E01Z5Controller extends BaseController {
             return returnMap;
         }
         try{
+            String fileName = "";
+            String savePath = "";
+            if (clFile != null && !clFile.isEmpty()) {
+                fileName = clFile.getOriginalFilename();
+                if (fileName.endsWith(".doc") || fileName.endsWith(".DOC") || fileName.endsWith(".docx") || fileName.endsWith(".DOCX")
+                        || fileName.endsWith(".xlsx")) {
+                    String fileDir = uploadAbsolutePath + "/e01z5";
+                    File _fileDir = new File(fileDir);
+                    if (_fileDir.exists() == false) {
+                        _fileDir.mkdirs();
+                    }
+                    savePath = fileDir + File.separator + UUIDUtil.getUUID() + "." + FileUtil.getExtend(fileName);
+                    ;
+                    // savePath =fileDir;
+                    try {
+                        FileOutputStream fos = new FileOutputStream(new File(savePath));
+                        fos.write(clFile.getBytes());
+                        fos.flush();
+                        fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new GenericException(e);
+                    }
+                }
+            }
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-             E01Z5 entity = new  E01Z5();
+            E01Z5 entity = new  E01Z5();
+            A38 a38 = new A38();
             BeanUtils.copyProperties(vo, entity);
+            entity.setA38(a38);
+            entity.setFileName(fileName);
+            entity.setFilePath(savePath);
             entity.setId(null);
             EntityWrapper.wrapperSaveBaseProperties(entity,details);
             e01z5Service.save(entity);

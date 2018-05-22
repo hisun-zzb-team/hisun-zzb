@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class EPopedomE01Z1Relation implements Serializable{
     private String id;
     private EApplyE01Z8 applyE01Z8;
-    private E01Z1 e01z1;
+    private String e01z1Id;
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -43,14 +43,14 @@ public class EPopedomE01Z1Relation implements Serializable{
     public void setApplyE01Z8(EApplyE01Z8 applyE01Z8) {
         this.applyE01Z8 = applyE01Z8;
     }
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "e01z1_id")
-    public E01Z1 getE01z1() {
-        return e01z1;
+
+    @Basic
+    @Column(name = "e01z1_id", nullable = true, length = 32)
+    public String getE01z1Id() {
+        return e01z1Id;
     }
 
-    public void setE01z1(E01Z1 e01z1) {
-        this.e01z1 = e01z1;
+    public void setE01z1Id(String e01z1Id) {
+        this.e01z1Id = e01z1Id;
     }
-
 }

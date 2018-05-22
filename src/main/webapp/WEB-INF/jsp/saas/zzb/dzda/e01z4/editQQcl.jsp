@@ -61,7 +61,7 @@
 						<div id="fileTypeNameGroup" class="control-group" >
 							<label class="control-label">材料类型 <span class="required">*</span></label>
 							<div class="controls">
-								<SelectTag:SelectTag id="fileTypeCode" valueName="fileTypeName" needNullValue="true" defaultkeys="${vo.fileTypeCode}" defaultvalues="${vo.fileTypeName}" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select"/>
+								<SelectTag:SelectTag id="fileTypeCode" token="${sessionScope.OWASP_CSRFTOKEN}" valueName="fileTypeName" needNullValue="true" defaultkeys="${vo.fileTypeCode}" defaultvalues="${vo.fileTypeName}" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select"/>
 							</div>
 						</div>
 
@@ -140,28 +140,6 @@
 			}
 		}
 		myLoading.show();
-		$("#form1").ajaxSubmit({
-			url : "${path }/zzb/app/console/bwh/save",
-			type : "post",
-			dataType : "json",
-			enctype : "multipart/form-data",
-			headers: {
-				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-			},
-			success : function(data){
-				myLoading.hide();
-				if(data.success){
-					showTip("提示","操作成功",2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?pageNum=${shpcPageNum}"},2000);
-				}else{
-					showTip("提示", json.message, 2000);
-				}
-			},
-			error : function(arg1, arg2, arg3){
-				myLoading.hide();
-				showTip("提示","出错了请联系管理员");
-			}
-		});
 	}
 
 	function changeFile(obj){

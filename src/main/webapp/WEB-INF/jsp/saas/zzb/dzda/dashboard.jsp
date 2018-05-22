@@ -46,31 +46,31 @@
             </div>
             <ul class="ulCadreSuperlist">
                 <li>
-                    <a href="${path}/zzb/dzda/dak/manage">
+                    <a href="${path}/zzb/dzda/dak/manage?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl05.png">
                         <p>档案库</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/dzda/a38/list">
+                    <a href="${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl01.png">
                         <p>档案管理</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/dzda/a38/shList">
+                    <a href="${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl02.png">
                         <p>档案审核</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/dzda/dajs/list">
+                    <a href="${path}/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl03.png">
                         <p>转入转出</p>
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/dzda/cyshouquan/list">
+                    <a href="${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl04.png">
                         <p>档案查阅</p>
                     </a>

@@ -323,7 +323,7 @@
 	}
 	//删除图片
 	function deleteImg(imgId,imgNo){
-		actionByConfirm1("第“"+imgNo+"”张图片", "${path}/zzb/dzda/mlcl/images/delete/" + imgId, {}, function (data, status) {
+		actionByConfirm1("第“"+imgNo+"”张图片", "${path}/zzb/dzda/mlcl/images/delete/" + imgId+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
 			if (data.success == true) {
 				showTip("提示","图片成功删除",2000);
 				setTimeout(function(){

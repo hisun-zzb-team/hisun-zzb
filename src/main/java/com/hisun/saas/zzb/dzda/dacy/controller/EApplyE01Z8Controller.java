@@ -225,10 +225,10 @@ public class EApplyE01Z8Controller extends BaseController {
                 entity.setApplyType("0");
                 entity.setAccreditType("0");
                 entity.setApplyFileName(fileName);
-                entity.setE01Z807Name(details.getUsername());
+                entity.setE01Z807Name(details.getRealname());
                 entity.setApplyFilePath(savePath);
                 entity.setApplyUserId(details.getUserid());
-                entity.setApplyUserName(details.getUsername());
+                entity.setApplyUserName(details.getRealname());
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 eApplyE01Z8Service.save(entity);
             }
@@ -390,7 +390,7 @@ public class EApplyE01Z8Controller extends BaseController {
         String nowMinDate = DateUtil.formatDefaultDate(new Date()) + " 00:00:00";
         String nowMaxDate = DateUtil.formatDefaultDate(new Date()) + " 23:59:59";
         try {
-            EApplyE01Z8 eApplyE01Z8 = new EApplyE01Z8();
+            EApplyE01Z8 eApplyE01Z8 = null;
             //管理员 浏览管理档案 不做记录
             if (StringUtils.isNotBlank(isAddLog)) {
                 if ("false".equals(isAddLog)) {
@@ -429,34 +429,37 @@ public class EApplyE01Z8Controller extends BaseController {
             String eA38LogPK;
             EA38Log ea38Log = new EA38Log();
             if (eA38Logs == null || eA38Logs.isEmpty()) {
+                A38 a38 = a38Service.getByPK(a38Id);
                 ea38Log.setApplyE01Z8(eApplyE01Z8);
                 //ea38Log.setApplyE01Z8Id(eApplyE01Z8Id);
                 ea38Log.setCyrId(details.getUserid());
-                ea38Log.setCyrName(details.getUsername());
-                ea38Log.setA38(a38Service.getByPK(a38Id));
-                ea38Log.setA0101(a38Service.getByPK(a38Id).getA0101());
+                ea38Log.setCyrName(details.getRealname());
+                ea38Log.setA38(a38);
+                ea38Log.setA0101(a38.getA0101());
                 ea38Log.setReadTenantId(details.getTenantId());
                 ea38Log.setCysj(new Date());
                 ea38Log.setZzcysj(new Date());
                 ea38Log.setReadTenantName(details.getTenantName());
                 ea38Log.setYdzt(1);
-                BeanUtils.copyProperties(ea38Log, details);
+                EntityWrapper.wrapperSaveBaseProperties(ea38Log,details);
                 eA38LogPK = eA38LogService.save(ea38Log);
             } else {
                 ea38Log = eA38Logs.get(0);
                 ea38Log.setYdzt(1);
+                ea38Log.setZzcysj(new Date());
                 eA38LogService.update(ea38Log);
             }
             EA38LogViewTime ea38LogViewTime = new EA38LogViewTime();
             ea38LogViewTime.setA38Log(ea38Log);
             ea38LogViewTime.setStareTime(new Date());
-            BeanUtils.copyProperties(ea38LogViewTime, details);
+            EntityWrapper.wrapperSaveBaseProperties(ea38LogViewTime,details);
             String a38LogViewTimeId = eA38LogViewTimeService.save(ea38LogViewTime);
             returnMap.put("a38LogViewTimeId", a38LogViewTimeId);
             returnMap.put("eApplyE01Z8Id", eApplyE01Z8Id);
             returnMap.put("a38LogId", ea38Log.getId());
             returnMap.put("code", 1);
         } catch (Exception e) {
+            e.printStackTrace();
             returnMap.put("code", 0);
             logger.error(e, e);
             throw new GenericException(e.getMessage());

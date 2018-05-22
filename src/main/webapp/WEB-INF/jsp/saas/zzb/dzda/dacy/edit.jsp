@@ -75,7 +75,7 @@
                             <label class="control-label">查阅时间</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
-                                       id="readTime" name="readTime"  number="true"    maxlength="5">分钟
+                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
                         <div class="control-group" id="phoneGroup">
@@ -189,6 +189,9 @@
             type : "get",
             data : {"param":value},
             dataType : "json",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
             success : function(json){
                 if(json.success){
                     flag = true;
@@ -228,7 +231,7 @@
             success : function(data){
                 // myLoading.hide();
                 if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", data.message, 2000);
                 }
@@ -240,20 +243,20 @@
         });
     }
     function downloadFile(id){
-        window.open("${path }/zzb/dzda/cysq/ajax/down?id="+id);
+        window.open("${path }/zzb/dzda/cysq/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
     }
     function deleteSq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cysq/list";
+                window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
         },"撤销申请")
     }
     function deleteFile(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteFile/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                // $("#applyFileName").val("");
                 $("#applyFileNameGroup").hide();
@@ -278,6 +281,9 @@
                 type : "get",
                 data : {"param":value},
                 dataType : "json",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(json){
                     if(json.success){
                        flag = true;
@@ -317,7 +323,7 @@
             success : function(data){
                 // myLoading.hide();
                 if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", data.message, 2000);
                 }

@@ -28,20 +28,6 @@
     </style>
 </head>
 <body>
-<div id="jgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="title" >
-                    “红叶专”档案图片
-                </h3>
-            </div>
-            <div class="modal-body" id="jgAddDiv" style="background-color: #f1f3f6;">
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
     <div class="modal-dialog">
@@ -109,27 +95,38 @@
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>
-                        <th width=70>档案名称</th>
-                        <th width=70>查阅人</th>
+                        <th width=50>档案名称</th>
+                        <th width=50>查阅人</th>
                         <th  width=120>查阅时间</th>
                         <th width=120>申请内容</th>
-                        <th width=250>查阅情况</th>
+                        <th>查阅情况</th>
                         <th  width=120>申请时间</th>
                         <th width=70>审核状态</th>
-                        <th width="100">操作</th>
+                        <th width="90">操作</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.readDate}"></c:out> </TD>
-                            <TD width="10%"><c:out value="${vo.readContent}"></c:out ></TD>
-                            <TD width="10%"><a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a></TD>
-                            <TD width="10%">
+                            <TD ><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD><c:out value="${vo.e01Z807Name}"></c:out></TD>
+                            <TD ><c:out value="${vo.readDate}"></c:out> </TD>
+                            <TD><c:out value="${vo.readContent}"></c:out ></TD>
+                            <TD >
+                                <%--<a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a>--%>
+                                <div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
+                                    <a href="javascript:ydxiangqing('${vo.id}')">
+                                        <c:if test="${not empty vo.a38Logs}">
+                                            <c:forEach items="${vo.a38Logs.get(0).a38LogDetails}" var="vo1">
+                                                <c:out value="${vo1.e01Z111}"></c:out>
+                                            </c:forEach>
+                                        </c:if>
+                                    </a>
+                                </div>
+                            </TD>
+                            <TD w>
                                 <fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>
                              </TD>
-                            <TD width="10%">
+                            <TD >
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                         待授权
@@ -146,21 +143,22 @@
                                     <c:when test="${vo.auditingState == 4}">
                                         已结束
                                     </c:when>
-                                </c:choose></TD>
-                            <TD width="10%">
+                                </c:choose>
+                            </TD>
+                            <TD >
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">授权</a>|
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">授权</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
-                                        <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>
+                                        <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">再次授权</a>
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&zcsqbs=true&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>
-                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}')">删除 </a></c:if>
+                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteSq('${vo.id}')">删除 </a></c:if>
                             </TD>
                         </tr>
                     </c:forEach>
@@ -233,20 +231,20 @@
         document.searchForm.submit();
     }
     function shouhuiQx(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.success){
                 showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cyshouquan/list";
+                window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
         },"收回权限")
     }
     function deleteSq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
-                showTip("提示","操作成功");
-                window.location.href ="${path }/zzb/dzda/cyshouquan/list";
+                showTip("提示","删除成功");
+                window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);
             }
@@ -298,29 +296,7 @@
         });
     }
 
-    var view = function(){
-        var divHeight = $(window).height()-100;
-        $('#jgModal').attr("data-height",divHeight);
-        $.ajax({
-            url:"${path}/zzb/app/console/daDemo/ajax/viewImgManage",
-            type : "post",
-            data: {},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "html",
-            success : function(html){
-                $('#jgAddDiv').html(html);
 
-                $('#jgModal').modal({
-                    keyboard: true
-                });
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
-            }
-        });
-    }
 
 
 
@@ -331,10 +307,10 @@
 
 
     var del = function(id,itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 2000);
-                setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
+                setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
             }else{
                 showTip("提示", data.message, 2000);
             }

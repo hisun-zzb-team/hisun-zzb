@@ -60,7 +60,7 @@
 						<div id="fileTypeNameGroup" class="control-group" >
 							<label class="control-label">材料类型 <span class="required">*</span></label>
 							<div class="controls">
-								<SelectTag:SelectTag id="fileTypeCode" valueName="fileTypeName" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select" needNullValue="true"/>
+								<SelectTag:SelectTag id="fileTypeCode" valueName="fileTypeName" token="${sessionScope.OWASP_CSRFTOKEN}" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select" needNullValue="true"/>
 							</div>
 						</div>
 
@@ -168,6 +168,9 @@
 			type : "post",
 			data : {"a38Id":a38Id},
 			dataType : "html",
+			headers: {
+				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);

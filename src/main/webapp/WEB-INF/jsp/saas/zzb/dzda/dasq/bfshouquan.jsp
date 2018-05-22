@@ -40,23 +40,36 @@
     function bfsqSubmit(){
         var treeObj = $.fn.zTree.getZTreeObj("a38MlclTree");
         var nodes = treeObj.getCheckedNodes(true);
-        if(nodes.length<1){
+//        if(nodes.length<1){
+//            showTip("提示","请选择要授权的材料",2000);
+//            return
+//        }
+        var idString="";
+        for(var i=0;i<nodes.length;i++){
+            if(nodes[i].nodeType!="dir"){
+                if(idString==""){
+                    idString = nodes[i].id;
+                }else{
+                    idString =  idString + ","+ nodes[i].id;
+                }
+            }
+        }
+        if(idString==""){
             showTip("提示","请选择要授权的材料",2000);
             return
         }
-        var idString="";
-        for(var i=0;i<nodes.length;i++){
-            if(nodes[i].nodeType=="dir"){
-                showTip("提示","不能选择材料目录",2000);
-                return
-            }
-            idString =  idString + ","+ nodes[i].id;
-        }
         $("#e01z1IdContent").val(idString);
+        var sfzasq = "${sfzasq}";
+        var  sqUrl;
+        if(sfzasq == "true"){
+            sqUrl="zcbfshouquan"
+        }else {
+            sqUrl="bfshouquan"
+        }
         var bool = form1.form();
         if(bool){
             $.ajax({
-                url : "${path }/zzb/dzda/cyshouquan/bfshouquan",
+                url : "${path }/zzb/dzda/cyshouquan/"+sqUrl,
                 type : "post",
                 data : $("#form1").serialize(),
                 headers:{
@@ -65,7 +78,7 @@
                 dataType : "json",
                 success : function(data){
                     if(data.success){
-                        window.location.href = "${path}/zzb/dzda/cyshouquan/list";
+                        window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     }
                 },
                 error : function(){

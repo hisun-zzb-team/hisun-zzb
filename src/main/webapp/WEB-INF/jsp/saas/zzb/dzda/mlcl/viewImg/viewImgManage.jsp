@@ -35,7 +35,7 @@
 		<input type="hidden" name="a38LogId" id="a38LogId">
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
 				<div style="margin: 0px;padding: 0px">
-					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
+					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}?eApplyE01Z8Id=${eApplyE01Z8Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
 							   onClick="viewImages" submitType="post" dataType="json" isSearch="false"/>
 				</div>
 		</div>
@@ -59,6 +59,7 @@
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
+
 		if("${isAddLog}" != "false"){
 			$.ajax({
 				url: "${path}/zzb/dzda/cysq/ajax/liulanLog",
@@ -69,6 +70,9 @@
 					"isManage":"${isManage}"
 				},
 				dataType: "json",
+				headers:{
+					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+				},
 				success: function (json) {
 					var  eApplyE01Z8Id = json.eApplyE01Z8Id;
 					$("#eApplyE01Z8Id").val(eApplyE01Z8Id);
@@ -107,6 +111,9 @@
 						"time":time/1000,
 						"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val()
 					},
+					headers:{
+						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+					},
 					success: function (json) {
 						if(json.code == 2){
 							showTip("提示", "您的阅档权限已被收回或阅档时间已结束", 2000);
@@ -143,6 +150,9 @@
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val(),
 				"eApplyE01Z8Id" :$("#eApplyE01Z8Id").val(),
 				"ydsjzt":"1"
+			},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			success: function (json) {
 				if(json.code == 5){
@@ -217,6 +227,9 @@
 						"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 						"lsEa38LogDetailId":$("#ea38LogDetailId").val()
 					},
+					headers:{
+						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+					},
 					success: function (json) {
 
 						$("#eLogDetailViewTimeId").val(json.eLogDetailViewTimeId);
@@ -255,6 +268,9 @@
 				"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
 				"ea38LogDetailId":$("#ea38LogDetailId").val(),
 				"a38LogViewTimeId":$("#a38LogViewTimeId").val()
+			},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			success: function (json) {
 			},

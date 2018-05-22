@@ -18,8 +18,12 @@
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-    <link href="${path }/css/style.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        ul.ztree{margin-bottom: 10px; background: #f1f3f6 !important;}
+        .portlet.box.grey.mainleft{background-color: #f1f3f6;overflow: hidden; padding: 0px !important; margin-bottom: 0px;}
+        .main_left{float:left; width:220px;  margin-right:10px; background-color: #f1f3f6; }
+        .main_right{display: table-cell; width:2000px;}
+    </style>
     <!-- END PAGE LEVEL STYLES -->
     <title>阅档申请</title>
     <style type="text/css">
@@ -91,11 +95,11 @@
                         <th width=70>档案名称</th>
                         <th width=150>单位职务</th>
                         <th width=100>查阅申请内容</th>
-                        <th width="20%">查阅情况</th>
-                        <th width="15%">申请时间</th>
-                        <th width=70>阅档状态</th>
-                        <th width=70>申请情况</th>
-                        <th width="60">操作</th>
+                        <th >查阅情况</th>
+                        <th width="120">申请时间</th>
+                        <th width=50>阅档状态</th>
+                        <th width=50>申请情况</th>
+                        <th width="40">操作</th>
                     </thead>
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
@@ -103,7 +107,18 @@
                             <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
-                            <TD width="20%"><a href="javascript:ydxiangqing('${vo.id}')">详情</a></TD>
+                            <TD width="20%">
+                                <%--<a href="javascript:ydxiangqing('${vo.id}')">详情</a>--%>
+                                <div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
+                                    <a href="javascript:ydxiangqing('${vo.id}')">
+                                        <c:if test="${not empty vo.a38Logs}">
+                                            <c:forEach items="${vo.a38Logs.get(0).a38LogDetails}" var="vo1">
+                                               <c:out value="${vo1.e01Z111}"></c:out>
+                                            </c:forEach>
+                                        </c:if>
+                                    </a>
+                                </div>
+                            </TD>
                             <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%">
                                 <c:choose>
@@ -160,16 +175,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
-                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>
+                   <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
+                   <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" data-dismiss="modal" href="javascript:jieshuyuedang()">
+                        <i class=' icon-remove-sign'></i>结束阅档
+                    </a>
+                    <span id="daojishi"  style="display: none;float: right;font-weight: bold;margin-right: 10px;margin-top: 5px">剩余阅档时间:<span id="timespan" style="color: #C90003"></span></span>
+                <%--<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>--%>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                    <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>
                     <%--<input type="hidden" name="a38LogId" id = "a38LogId"/>--%>
                     <input type="hidden" name="syReadTime" id = "syReadTime"/>
                     <h3 class="modal-title" id="title">
                         “${a0101}”档案图片
-                    </h3><nobr/><span id="daojishi" style="display: none">剩余阅档时间<span id="timespan"></span></span>
-
+                    </h3>
                 </div>
                 <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
                 </div>
@@ -182,7 +200,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="addTitle1" >
+                <h3 class="modal-title" id="viewNeiRongTitle" >
                 </h3>
             </div>
             <div class="modal-body" id="viewNeiRongDiv">
@@ -246,7 +264,8 @@
             url: "${path}/zzb/dzda/mlcl/images/ajax/viewMain/"+a38Id,
             type: "post",
             data: {
-                "a0101":a0101
+                "a0101":a0101,
+                "eApplyE01Z8Id":id
             },
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -294,12 +313,11 @@
 
 
     function deleteYdsq(id){
-        console.log(id);
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id,null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");
                 setTimeout(function(){
-                    window.location.href ="${path }/zzb/dzda/cysq/list";
+                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 },1500);
 
             }else{
@@ -366,30 +384,7 @@
         $("#readContent").val('');
 
     }
-    function exportGbrmsp(){
-        $.cloudAjax({
-            path : '${path}',
-            url : "${path }/zzb/app/console/asetA01/ajax/exportGbrmsp",
-            type : "post",
-            data : $("#form1").serialize(),
-            dataType : "json",
-            success : function(data){
-                if(data.success == true){
-                    showTip("提示","生成干部任免审批表成功!",2000);
-                    //setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
-                }else{
-                    showTip("提示", "生成干部任免审批表失败!", 2000);
-                }
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员",2000);
-            }
-        });
-    }
-    function openGzzzb(){
-        var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-        window.open(url);
-    }
+
 </script>
 </body>
 </html>

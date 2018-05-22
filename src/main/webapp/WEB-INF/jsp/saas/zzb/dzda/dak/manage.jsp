@@ -69,6 +69,9 @@
 			type : "post",
 			data : {},
 			dataType : "html",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -87,6 +90,9 @@
 			type : "post",
 			data : {},
 			dataType : "html",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -98,31 +104,7 @@
 		});
 	}
 
-	var viewA01 = function(){
-		$.ajax({
-			url:"${path}/zzb/app/console/daDemo/ajax/viewA01",
-			type : "post",
-			data: {},
-			headers:{
-				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-			},
-			dataType : "html",
-			success : function(html){
-				$('#viewA01Div').html(html);
 
-				$('#viewA01Modal').modal({
-					keyboard: true
-				});
-			},
-			error : function(){
-				showTip("提示","出错了请联系管理员", 1500);
-			}
-		});
-	}
-
-	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
-	}
 
 </script>
 </body>

@@ -26,7 +26,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+				<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
 				<div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
 					<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 						显示方式<i class="icon-angle-down"></i>
@@ -77,7 +77,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 								<div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
@@ -152,7 +152,7 @@
 <script type="text/javascript">
 	(function(){
 
-		App.init();
+//		App.init();
 
 	})();
 	
@@ -177,6 +177,9 @@
 				"pageSize":pageSize
 			},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -207,6 +210,9 @@
 				"daztContentQuery":daztContentQuery
 			},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -234,6 +240,9 @@
 				OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			dataType: "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success: function (html) {
 				$('#viewImgDiv').html(html);
 				$('#viewImgModal').modal({backdrop: 'static', keyboard: false});
@@ -266,6 +275,9 @@
 			data : {
 			},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -277,13 +289,7 @@
 //		document.searchForm.submit();
 	}
 
-	function openGzzzb(){
-		var url ="http://localhost:8080/GZZZB/la/index.jsp?showFlag=init&moduleCode=LA_APPOINT_STUFF";
-		window.open(url);
-	}
-	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
-	}
+
 
 	var gjcx = function(){
 		$.ajax({

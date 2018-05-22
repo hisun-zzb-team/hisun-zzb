@@ -62,6 +62,7 @@ import java.util.List;
     private String applyUserId;//申请查阅人id
     private String applyUserName;//申请查阅人名字
     private List<EA38Log> a38Logs;//
+    private List<EPopedomE01Z1Relation> popedomE01Z1Relations;
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
@@ -101,6 +102,15 @@ import java.util.List;
 
     public void setA38Logs(List<EA38Log> a38Logs) {
         this.a38Logs = a38Logs;
+    }
+    @OneToMany(mappedBy = "applyE01Z8", fetch = FetchType.LAZY)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    public List<EPopedomE01Z1Relation> getPopedomE01Z1Relations() {
+        return popedomE01Z1Relations;
+    }
+
+    public void setPopedomE01Z1Relations(List<EPopedomE01Z1Relation> popedomE01Z1Relations) {
+        this.popedomE01Z1Relations = popedomE01Z1Relations;
     }
 
     @Basic

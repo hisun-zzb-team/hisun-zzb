@@ -148,6 +148,9 @@
                 type : "get",
                 data : {"param":value},
                 dataType : "json",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
                 success : function(json){
                     if(json.success){
                         var view = $("#a0101ContentGroup");

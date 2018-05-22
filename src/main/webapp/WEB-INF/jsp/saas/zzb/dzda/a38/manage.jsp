@@ -81,7 +81,7 @@
 			<%--</ul>--%>
 		<%--</div>--%>
 		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
-		<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>
+		<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 			下载<i class="icon-angle-down"></i>
@@ -232,6 +232,9 @@
 			type : "post",
 			data : {"id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -248,6 +251,9 @@
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -264,6 +270,9 @@
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -279,6 +288,9 @@
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -295,6 +307,9 @@
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -310,6 +325,9 @@
 			type : "post",
 			data : {"a38Id":"${id}"},
 			dataType : "html",
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
 			success : function(html){
 				var view = $("#tab_show");
 				view.html(html);
@@ -453,7 +471,7 @@
 		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){
 			if (data.code == "1") {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
@@ -462,9 +480,9 @@
 
 	function cancel(){
 		if("${listType}"=="shList"){
-			window.location.href = "${path}/zzb/dzda/a38/shList";
+			window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
 		}else{
-			window.location.href = "${path}/zzb/dzda/a38/list";
+			window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
 		}
 	}
 </script>

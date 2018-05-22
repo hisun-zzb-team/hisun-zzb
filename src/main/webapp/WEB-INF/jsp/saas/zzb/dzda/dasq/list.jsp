@@ -95,27 +95,38 @@
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>
-                        <th width=70>档案名称</th>
-                        <th width=70>查阅人</th>
+                        <th width=50>档案名称</th>
+                        <th width=50>查阅人</th>
                         <th  width=120>查阅时间</th>
                         <th width=120>申请内容</th>
-                        <th width=250>查阅情况</th>
+                        <th>查阅情况</th>
                         <th  width=120>申请时间</th>
                         <th width=70>审核状态</th>
-                        <th width="100">操作</th>
+                        <th width="90">操作</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.readDate}"></c:out> </TD>
-                            <TD width="10%"><c:out value="${vo.readContent}"></c:out ></TD>
-                            <TD width="10%"><a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a></TD>
-                            <TD width="10%">
+                            <TD ><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD><c:out value="${vo.e01Z807Name}"></c:out></TD>
+                            <TD ><c:out value="${vo.readDate}"></c:out> </TD>
+                            <TD><c:out value="${vo.readContent}"></c:out ></TD>
+                            <TD >
+                                <%--<a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a>--%>
+                                <div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
+                                    <a href="javascript:ydxiangqing('${vo.id}')">
+                                        <c:if test="${not empty vo.a38Logs}">
+                                            <c:forEach items="${vo.a38Logs.get(0).a38LogDetails}" var="vo1">
+                                                <c:out value="${vo1.e01Z111}"></c:out>
+                                            </c:forEach>
+                                        </c:if>
+                                    </a>
+                                </div>
+                            </TD>
+                            <TD w>
                                 <fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>
                              </TD>
-                            <TD width="10%">
+                            <TD >
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                         待授权
@@ -132,17 +143,18 @@
                                     <c:when test="${vo.auditingState == 4}">
                                         已结束
                                     </c:when>
-                                </c:choose></TD>
-                            <TD width="10%">
+                                </c:choose>
+                            </TD>
+                            <TD >
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                         <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">授权</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
-                                        <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>
+                                        <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>|
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>

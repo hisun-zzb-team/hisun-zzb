@@ -24,21 +24,30 @@ import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.mlcl.exchange.MlxxExcelExchange;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
+
+import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.StringUtils;
+import com.hisun.util.UUIDUtil;
+import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +66,12 @@ public class E01Z1Controller extends BaseController {
     private A38Service a38Service;
     @Resource
     private E01Z1Service e01Z1Service;
+
+    @Resource
+    MlxxExcelExchange mlxxExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
 
     @RequestMapping(value = "/ajax/mlxxManage")
     public @ResponseBody ModelAndView mlxxManage(HttpServletRequest request){
@@ -407,5 +422,192 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download/{a38Id}")
+    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
+                         @RequestParam(value="xml",defaultValue="2")int xml,
+                         @RequestParam(value="dml",defaultValue="6") int dml){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("sort"));
+        List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        E01Z1Vo vo;
+        String filePath="";
+        Map<String,Object> map = new HashMap();
+        try {
 
+            for(ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos){
+                query=new CommonConditionQuery();
+                orderBy = new CommonOrderBy();
+                query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
+                query.add(CommonRestrictions.and(" e01z101b = :e01z101b ","e01z101b",eCatalogTypeInfo.getCatalogCode()));
+                orderBy.add(CommonOrder.asc("e01Z104"));
+                List<E01Z1> resultList = e01Z1Service.list(query,orderBy);
+                List<E01Z1Vo> e01Z1Vos=new ArrayList<>();
+                for(E01Z1 e01Z1:resultList){
+                    vo = new E01Z1Vo();
+                    BeanUtils.copyProperties(vo,e01Z1);
+                    String date = vo.getE01Z117();
+                    if(date.length()>=4){
+                        vo.setYear(date.substring(date.length()-4,date.length()));
+                        if(date.length()>=6){
+                            vo.setMonth(date.substring(date.length()-6,date.length()-4));
+                            if(date.length()>6){
+                                vo.setDay(date.substring(date.length()-8,date.length()-6));
+                            }
+                        }
+                    }else {
+                        vo.setYear(date);
+                    }
+                    e01Z1Vos.add(vo);
+                }
+                if("010".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("jlcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setJlcl(e01Z1Vos);
+                }else if("020".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("zzcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setZzcl(e01Z1Vos);
+                }else if("030".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJdcl(e01Z1Vos);
+                    map.put("jdcl",e01Z1Vos.size());
+                }else if("041".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setXlxw(e01Z1Vos);
+                    map.put("xlxw",e01Z1Vos.size());
+                }else if("042".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZyzg(e01Z1Vos);
+                    map.put("zyzg",e01Z1Vos.size());
+                }else if("043".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setKysp(e01Z1Vos);
+                    map.put("kysp",e01Z1Vos.size());
+                }else if("044".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setPxcl(e01Z1Vos);
+                    map.put("pxcl",e01Z1Vos.size());
+                }else if("050".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZscl(e01Z1Vos);
+                    map.put("zscl",e01Z1Vos.size());
+                }else if("060".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDtcl(e01Z1Vos);
+                    map.put("dtcl",e01Z1Vos.size());
+                }else if("070".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJlicl(e01Z1Vos);
+                    map.put("jlicl",e01Z1Vos.size());
+                }else if("080".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCfcl(e01Z1Vos);
+                    map.put("cfcl",e01Z1Vos.size());
+                }else if("091".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setGzcl(e01Z1Vos);
+                    map.put("gzcl",e01Z1Vos.size());
+                }else if("092".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setRmcl(e01Z1Vos);
+                    map.put("rmcl",e01Z1Vos.size());
+                }else if("093".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCgcl(e01Z1Vos);
+                    map.put("cgcl",e01Z1Vos.size());
+                }else if("094".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDbdh(e01Z1Vos);
+                    map.put("dbdh",e01Z1Vos.size());
+                }else if("100".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setQtcl(e01Z1Vos);
+                    map.put("qtcl",e01Z1Vos.size());
+                }
+            }
+
+            File storePathFile = new File(Constants.DATP_STORE_PATH);
+            if(!storePathFile.exists()){
+                storePathFile.mkdirs();
+            }
+
+            filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxx.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
+    }
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "GBK");
+        }
+        return filename;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/uploadFile")
+    public void uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+        String filePath = "";
+        File storePathFile = new File(Constants.DATP_STORE_PATH);
+        if(!storePathFile.exists()) storePathFile.mkdirs();
+        filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        File file = new File(filePath);
+        InputStream inputStream = null;
+        OutputStream output = null;
+        try {
+            inputStream = zwbdFile.getInputStream();
+            output = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            if(output!=null){
+                output.close();
+            }
+        }
+//        String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
+//        A38Vo a32Vo = new A38Vo();
+//        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+//        try {
+//            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+//            Integer oldPxInteger=a52Service.getMaxSort(a38Id);
+//            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
+//                List<A52Vo> a52Vos = a32Vo.getA52Vos();
+//                for(int i=0;i<a52Vos.size();i++){
+//                    A52 a52 = new A52();
+//                    A52Vo a52Vo = a52Vos.get(i);
+//                    if(StringUtils.isEmpty(a52Vo.getA5204())){
+//                        continue;
+//                    }
+//                    BeanUtils.copyProperties(a52,a52Vo);
+//                    A38 a38 = this.a38Service.getByPK(a38Id);
+//                    a52.setA38(a38);
+//                    a52.setPx(oldPxInteger+i);
+//                    EntityWrapper.wrapperSaveBaseProperties(a52,details);
+//                    a52Service.save(a52);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }finally {
+//            file.delete();
+//        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.hisun.saas.zzb.dzda.mlcl.vo;
 
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 
 import java.util.List;
@@ -8,23 +9,28 @@ import java.util.List;
  * @author zhout {605144321@qq.com}
  */
 public class E01Z1Vo {
-    private String id;
-    private String e01Z111;
-    private String e01Z111Remark;
-    private String e01Z117;
-//    private Integer e01Z107;
-    private String eCatalogTypeId;
-    private String e01Z101B;
-    private String e01Z101A;
-    private Integer e01Z114;
-    private Integer smys;
-    private Integer e01Z124;
-    private String e01Z207;
-    private String e01Z204;
-    private String e01Z201;
-    private String e01Z231;
-    private Integer yjztps = 0;
-    private Integer e01Z104;
+    private String id;//材料主键
+//    private A38 a38;//外键，档案基本信息主键
+    private String e01Z111;//材料名称
+    private String e01Z111Remark;//材料名称备注
+    private String e01Z117;//材料制成时间
+    //    private Integer e01Z107;//扫描序号（单份材料的扫描序号）
+    private String eCatalogTypeId;//材料类别主键
+    private String e01Z101B;//材料类别字典代码
+    private String e01Z101A;//材料类别字典内容
+    private Integer e01Z114;//材料页数
+    private Integer smys;//扫描页数
+    private Integer e01Z124;//材料份数
+    private String e01Z207;//接收人姓名
+    private String e01Z204;//材料来处
+    private String e01Z201;//材料接收时间
+    private String e01Z231;//备注
+    private Integer yjztps=0;//已加载图片数
+    private Integer e01Z104;//排序号
+
+    private String year;
+    private String month;
+    private String day;
 
     private String parentId;
     private String parentName;
@@ -35,6 +41,22 @@ public class E01Z1Vo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+//    public A38 getA38() {
+//        return a38;
+//    }
+//
+//    public void setA38(A38 a38) {
+//        this.a38 = a38;
+//    }
+
+    public String geteCatalogTypeId() {
+        return eCatalogTypeId;
+    }
+
+    public void seteCatalogTypeId(String eCatalogTypeId) {
+        this.eCatalogTypeId = eCatalogTypeId;
     }
 
     public String getE01Z111() {
@@ -179,5 +201,29 @@ public class E01Z1Vo {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 }

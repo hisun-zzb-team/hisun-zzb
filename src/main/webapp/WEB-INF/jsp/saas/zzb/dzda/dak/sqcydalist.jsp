@@ -146,7 +146,7 @@
 
 <script type="text/javascript">
     (function(){
-        App.init();
+//        App.init();
 
         $("#btn-browseTemplate").bind("change",function(evt){
             if($(this).val()){

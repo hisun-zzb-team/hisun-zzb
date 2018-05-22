@@ -81,7 +81,7 @@
 			<%--</ul>--%>
 		<%--</div>--%>
 		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
-		<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>
+		<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
 			下载<i class="icon-angle-down"></i>

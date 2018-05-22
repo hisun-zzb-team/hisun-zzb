@@ -152,7 +152,7 @@
 <script type="text/javascript">
 	(function(){
 
-		App.init();
+//		App.init();
 
 	})();
 	

@@ -91,7 +91,7 @@
                         <th width=70>档案名称</th>
                         <th width=150>单位职务</th>
                         <th width=100>查阅申请内容</th>
-                        <th width="20%">查阅情况</th>
+                        <th >查阅情况</th>
                         <th width="15%">申请时间</th>
                         <th width=70>阅档状态</th>
                         <th width=70>申请情况</th>
@@ -103,7 +103,14 @@
                             <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
-                            <TD width="20%"><a href="javascript:ydxiangqing('${vo.id}')">详情</a></TD>
+                            <TD width="20%">
+                                <a href="javascript:ydxiangqing('${vo.id}')">详情</a>
+                                <%--<div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">--%>
+                                    <%--<a href="javascript:ydxiangqing('${vo.id}')"><c:forEach items="${vo.a38LogDetails}" var="vo1">--%>
+                                        <%--<c:out value="${vo1.e01Z111}"></c:out>--%>
+                                    <%--</c:forEach></a>--%>
+                                <%--</div>--%>
+                            </TD>
                             <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%">
                                 <c:choose>
@@ -294,7 +301,6 @@
 
 
     function deleteYdsq(id){
-        console.log(id);
         actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
                 showTip("提示","操作成功");

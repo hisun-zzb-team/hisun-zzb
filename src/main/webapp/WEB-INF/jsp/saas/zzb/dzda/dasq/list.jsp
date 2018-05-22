@@ -136,17 +136,17 @@
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">授权</a>|
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">授权</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
                                         <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}">再次授权</a>
+                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>
-                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}')">删除 </a></c:if>
+                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteSq('${vo.id}')">删除 </a></c:if>
                             </TD>
                         </tr>
                     </c:forEach>
@@ -231,7 +231,7 @@
     function deleteSq(id){
         actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.code == 1){
-                showTip("提示","操作成功");
+                showTip("提示","删除成功");
                 window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             }else{
                 showTip("提示", json.message, 2000);

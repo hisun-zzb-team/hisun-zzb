@@ -225,10 +225,10 @@ public class EApplyE01Z8Controller extends BaseController {
                 entity.setApplyType("0");
                 entity.setAccreditType("0");
                 entity.setApplyFileName(fileName);
-                entity.setE01Z807Name(details.getUsername());
+                entity.setE01Z807Name(details.getRealname());
                 entity.setApplyFilePath(savePath);
                 entity.setApplyUserId(details.getUserid());
-                entity.setApplyUserName(details.getUsername());
+                entity.setApplyUserName(details.getRealname());
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 eApplyE01Z8Service.save(entity);
             }
@@ -433,7 +433,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 ea38Log.setApplyE01Z8(eApplyE01Z8);
                 //ea38Log.setApplyE01Z8Id(eApplyE01Z8Id);
                 ea38Log.setCyrId(details.getUserid());
-                ea38Log.setCyrName(details.getUsername());
+                ea38Log.setCyrName(details.getRealname());
                 ea38Log.setA38(a38);
                 ea38Log.setA0101(a38.getA0101());
                 ea38Log.setReadTenantId(details.getTenantId());

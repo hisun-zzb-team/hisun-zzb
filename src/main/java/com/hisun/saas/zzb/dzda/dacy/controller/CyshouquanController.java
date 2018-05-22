@@ -157,11 +157,11 @@ public class CyshouquanController extends BaseController {
         try{
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             BeanUtils.copyProperties(entity,vo);
             //全部授权
             if(vo.getAuditingState().equals("1")) entity.setPopedomStuffType("0");
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -190,13 +190,13 @@ public class CyshouquanController extends BaseController {
                 ep.setE01z1(e01Z1);
                 ePopedomE01Z1RelationService.save(ep);
             }
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             BeanUtils.copyProperties(entity,vo);
             //已审
             entity.setAuditingState("1");
             //部分授权
             entity.setPopedomStuffType("1");
-            entity.setSqdwpzld(details.getUsername());
+            entity.setSqdwpzld(details.getRealname());
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

@@ -40,17 +40,23 @@
     function bfsqSubmit(){
         var treeObj = $.fn.zTree.getZTreeObj("a38MlclTree");
         var nodes = treeObj.getCheckedNodes(true);
-        if(nodes.length<1){
-            showTip("提示","请选择要授权的材料",2000);
-            return
-        }
+//        if(nodes.length<1){
+//            showTip("提示","请选择要授权的材料",2000);
+//            return
+//        }
         var idString="";
         for(var i=0;i<nodes.length;i++){
-            if(nodes[i].nodeType=="dir"){
-                showTip("提示","不能选择材料目录",2000);
-                return
+            if(nodes[i].nodeType!="dir"){
+                if(idString==""){
+                    idString = nodes[i].id;
+                }else{
+                    idString =  idString + ","+ nodes[i].id;
+                }
             }
-            idString =  idString + ","+ nodes[i].id;
+        }
+        if(idString==""){
+            showTip("提示","请选择要授权的材料",2000);
+            return
         }
         $("#e01z1IdContent").val(idString);
         var bool = form1.form();

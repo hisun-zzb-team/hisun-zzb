@@ -44,18 +44,12 @@
     <div class="row-fluid">
         <div class="span12 responsive">
             <%-- 表格开始 --%>
-            <form class=""id="importForm" enctype="multipart/form-data">
-                <div class="portlet-title">
-                    <div class="caption">   "${cyrName}"浏览"'${a0101}'"的阅档详细信息 共"${pager.total}"条</div>
-                    <div class="clearfix fr">
-                    </div>
-                </div>
-            </form>
+
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>
-                        <th width=70 >材料名称</th>
+                        <th >材料名称</th>
                         <th width=70 >材料类别</th>
                         <th width=140>起始时间</th>
                         <th width=140 >结束时间</th>
@@ -77,7 +71,7 @@
                                 <p><fmt:formatDate value="${vo2.endTime}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></p>
                             </c:forEach>
                             </TD>
-                            <TD >  <c:out value="${vo.cysj}"></c:out><a href="javascript:xiangxi('${vo.id}')">秒 &nbsp;【详细】</a></TD>
+                            <TD ><a href="javascript:xiangxi('${vo.e01Z111}','${vo.id}')"><c:out value="${vo.cysj}"></c:out>秒</a></TD>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -92,10 +86,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="title" >
+                <h3 class="modal-title" id="xxviewTimeTitle" >
                 </h3>
             </div>
-            <div class="modal-body" id="xxviewTimeDiv" style="background-color: #f1f3f6;">
+            <div class="modal-body" id="xxviewTimeDiv">
 
             </div>
         </div>
@@ -103,7 +97,10 @@
 </div>
 
 <script type="text/javascript">
-    var xiangxi = function(id){
+    (function(){
+        $("#viewNeiRongTitle").text("${cyrName}浏览'${a0101}'的阅档详细信息 共${pager.total}条");
+    })();
+    var xiangxi = function(e01Z111,id){
         $.ajax({
             url:"${path}/zzb/dzda/dacyjl/ajax/toNrxqViewTime",
             type : "post",
@@ -113,6 +110,7 @@
             },
             dataType : "html",
             success : function(html){
+                $("#xxviewTimeTitle").text(e01Z111+" 阅档详细时间");
                 $('#xxviewTimeDiv').html(html);
 
                 $('#xxviewTimeModal').modal({

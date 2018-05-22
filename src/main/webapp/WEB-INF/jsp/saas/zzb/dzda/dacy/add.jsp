@@ -60,7 +60,7 @@
                         <div id="readContentGroup" class="control-group">
                             <label class="control-label">查阅内容</label>
                             <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                <input size="16" type="text"  class="span10 m-wrap" value="全部材料"
                                        id="readContent" name="readContent" >
                             </div>
 
@@ -75,10 +75,10 @@
                         </div>
                         <div class="control-group" id="readTimeGroup">
 
-                            <label class="control-label">查阅时间</label>
+                            <label class="control-label"><span class="required">*</span>查阅时间</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="120"
-                                       id="readTime" name="readTime"  number="true"    maxlength="5">分钟
+                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
                         <div class="control-group" id="phoneGroup">
@@ -124,7 +124,6 @@
                         <div class="control-group">
                             <div class="controls mt10">
                                 <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-
                                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                             </div>
                         </div>

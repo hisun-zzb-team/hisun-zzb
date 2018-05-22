@@ -75,7 +75,7 @@
                             <label class="control-label">查阅时间</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
-                                       id="readTime" name="readTime"  number="true"    maxlength="5">分钟
+                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
                         <div class="control-group" id="phoneGroup">

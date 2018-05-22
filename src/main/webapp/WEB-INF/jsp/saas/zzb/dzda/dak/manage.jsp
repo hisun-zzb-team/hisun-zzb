@@ -12,7 +12,12 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+	<style type="text/css">
+		ul.ztree{margin-bottom: 10px; background: #f1f3f6 !important;}
+		.portlet.box.grey.mainleft{background-color: #f1f3f6;overflow: hidden; padding: 0px !important; margin-bottom: 0px;}
+		.main_left{float:left; width:220px;  margin-right:10px; background-color: #f1f3f6; }
+		.main_right{display: table-cell; width:2000px;}
+	</style>
 	<title>电子档案系统</title>
 </head>
 <body>

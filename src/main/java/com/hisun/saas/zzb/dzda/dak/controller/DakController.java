@@ -110,8 +110,8 @@ public class DakController extends BaseController {
         }
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-        List<A38> resultList = a38Service.gjcxList(queryVo,userLoginDetails);
-        int total =  resultList.size();
+        List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(), pageNum, pageSize);
+        int total =   a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(),1,100000).size();
         List<A38Vo> a38Vos = new ArrayList<A38Vo>();
         A38Vo vo = new A38Vo();
         for(A38 entity : resultList){

@@ -26,7 +26,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                 <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
                     <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                         显示方式<i class="icon-angle-down"></i>

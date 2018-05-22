@@ -18,5 +18,5 @@ import java.util.List;
  * @author liuzj {279421824@qq.com}
  */
 public interface A38Service extends BaseService<A38,String>{
-    List<A38> gjcxList(DakVo dakVo,UserLoginDetails userLoginDetails);
+    String getGjcxHql(DakVo dakVo,UserLoginDetails userLoginDetails);
 }

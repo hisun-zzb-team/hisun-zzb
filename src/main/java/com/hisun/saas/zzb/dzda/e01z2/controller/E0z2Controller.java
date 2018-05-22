@@ -36,14 +36,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,5 +226,60 @@ public class E0z2Controller extends BaseController {
             filename = new String(filename.getBytes("UTF-8"), "GBK");
         }
         return filename;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/uploadFile")
+    public void uploadFile (String a38Id , @RequestParam(value="cljsFile",required = false) MultipartFile cljsFile , HttpServletResponse resp) throws IOException {
+        String filePath = "";
+        File storePathFile = new File(Constants.CLJS_STORE_PATH);
+        if(!storePathFile.exists()) storePathFile.mkdirs();
+        filePath = uploadBasePath+Constants.CLJS_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        File file = new File(filePath);
+        InputStream inputStream = null;
+        OutputStream output = null;
+        try {
+            inputStream = cljsFile.getInputStream();
+            output = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(inputStream!=null){
+                inputStream.close();
+            }
+            if(output!=null){
+                output.close();
+            }
+        }
+        String tempFile = uploadBasePath+Constants.CLJSMB_STORE_PATH;
+        List<Object> a32Vos=new ArrayList<>();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        try {
+            a32Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
+            Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
+            if(a32Vos.size()>0){
+                for(int i=0;i<a32Vos.size();i++){
+                    E01Z2 e01z2 = new E01Z2();
+                    E01z2Vo e01z2Vo = (E01z2Vo) a32Vos.get(i);
+                    BeanUtils.copyProperties(e01z2,e01z2Vo);
+                    A38 a38 = this.a38Service.getByPK(a38Id);
+                    e01z2.setA38(a38);
+                    e01z2.setE01Z214(oldPxInteger+i);
+                    EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
+                    e01z2Service.save(e01z2);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            file.delete();
+        }
     }
 }

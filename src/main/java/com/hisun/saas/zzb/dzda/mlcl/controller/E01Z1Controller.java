@@ -513,12 +513,12 @@ public class E01Z1Controller extends BaseController {
                 }
             }
 
-            File storePathFile = new File(Constants.DATP_STORE_PATH);
+            File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
             if(!storePathFile.exists()){
                 storePathFile.mkdirs();
             }
 
-            filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
             mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
             resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxx.xlsx"));
@@ -554,16 +554,16 @@ public class E01Z1Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")
-    public void uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+    public void uploadFile (String a38Id , @RequestParam(value="mlxxFile",required = false) MultipartFile mlxxFile , HttpServletResponse resp) throws IOException {
         String filePath = "";
-        File storePathFile = new File(Constants.DATP_STORE_PATH);
+        File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
         if(!storePathFile.exists()) storePathFile.mkdirs();
-        filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
         File file = new File(filePath);
         InputStream inputStream = null;
         OutputStream output = null;
         try {
-            inputStream = zwbdFile.getInputStream();
+            inputStream = mlxxFile.getInputStream();
             output = new FileOutputStream(file);
             byte[] buf = new byte[1024];
             int bytesRead;
@@ -582,12 +582,12 @@ public class E01Z1Controller extends BaseController {
                 output.close();
             }
         }
-//        String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
-//        A38Vo a32Vo = new A38Vo();
-//        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-//        try {
-//            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
-//            Integer oldPxInteger=a52Service.getMaxSort(a38Id);
+        String tempFile = uploadBasePath+Constants.DATPMB_STORE_PATH;
+        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        try {
+        e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
+            Integer oldPxInteger=1;
 //            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
 //                List<A52Vo> a52Vos = a32Vo.getA52Vos();
 //                for(int i=0;i<a52Vos.size();i++){
@@ -604,10 +604,10 @@ public class E01Z1Controller extends BaseController {
 //                    a52Service.save(a52);
 //                }
 //            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }finally {
-//            file.delete();
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            file.delete();
+        }
     }
 }

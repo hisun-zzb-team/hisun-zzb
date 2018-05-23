@@ -33,7 +33,7 @@
                 材料接收导入
             </a>
             <a  class="btn green" href="javascript:download()">
-                打印材料接收
+                材料接收导出
             </a>
         </div>
 

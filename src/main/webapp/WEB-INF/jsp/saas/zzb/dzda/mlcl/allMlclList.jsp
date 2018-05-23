@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
 <%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
@@ -115,15 +116,16 @@
                                 </li>
                                 <li>
                                     <a onclick="unloadFile()">导入目录</a>
-                                    <input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
                                 </li>
 
                             </ul>
                         </div>
 
                         <a class="controllerClass btn green file_but" href="javascript:download()">
-                            <i class="icon-circle-arrow-down"></i>打印目录
+                            <i class="icon-circle-arrow-down"></i>导出目录
                         </a>
+                        <input type="file" style="display: none" name="mlxxFile" id="mlxxFile" accept = '.csv,
+             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
                     </div>
 
                 </div>
@@ -451,6 +453,57 @@
             }
         });
     }
+
+    function uploadFile(){
+        document.getElementById("mlxxFile").click();
+    }
+
+    $("#mlxxFile").on("change", function (evt) {
+        var uploadFile = document.getElementById("mlxxFile");
+        if (uploadFile.files.length > 0) {
+            var name = uploadFile.files[0].name
+            var arr = name.split(".");
+            if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+                showTip("提示", "请上传Excel文件", 2000);
+                return;
+            }
+        }
+        $("#importForm").ajaxSubmit({
+            type:"POST",
+            url:"${path}/zzb/dzda/e01z1/uploadFile",
+            dataType : "json",
+            enctype : "multipart/form-data",
+            headers:{
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            success:function(json){
+                showTip("提示","上传成功!",2000);
+                <%--$.ajax({--%>
+                    <%--async:false,--%>
+                    <%--type:"POST",--%>
+                    <%--url:"${path }/zzb/dzda/e01z1/ajax/list",--%>
+                    <%--dataType : "html",--%>
+                    <%--headers:{--%>
+                        <%--"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'--%>
+                    <%--},--%>
+                    <%--data:{--%>
+                        <%--'a38Id':"${a38Id}"--%>
+                    <%--},--%>
+                    <%--success:function(html){--%>
+                        <%--var view = $("#tab_show");--%>
+                        <%--view.html(html);--%>
+                    <%--},--%>
+                    <%--error : function(){--%>
+                        <%--myLoading.hide();--%>
+                        <%--showTip("提示","出错了,请检查网络!",2000);--%>
+                    <%--}--%>
+                <%--});--%>
+            },
+            error : function(){
+                showTip("提示","上传失败!",2000);
+            }
+        });
+    });
 
 </script>
 </body>

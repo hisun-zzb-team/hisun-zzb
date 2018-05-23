@@ -199,7 +199,7 @@ public class A32Controller extends BaseController {
             filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             gzbdExcelExchange.toExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("工资变动登记表.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("gzbd.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

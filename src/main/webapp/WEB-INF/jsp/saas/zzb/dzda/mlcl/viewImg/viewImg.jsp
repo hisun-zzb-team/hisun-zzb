@@ -200,6 +200,7 @@
 						myLoading.hide();
 						showTip("提示","图片上传成功",2000);
 						setTimeout(function(){
+							refreshTree();
 							loadRight("${e01z1Id}")
 						},2000)
 					}else{
@@ -308,7 +309,8 @@
 					myLoading.hide();
 					showTip("提示","图片排序调整成功",2000);
 					setTimeout(function(){
-						loadRight("${e01z1Id}")
+						refreshTree();
+						loadRight("${e01z1Id}");
 					},2000)
 				}else{
 					showTip("提示", "调整图片顺序失败", 2000);
@@ -328,7 +330,9 @@
 			if (data.success == true) {
 				showTip("提示","图片成功删除",2000);
 				setTimeout(function(){
+					refreshTree();
 					loadRight("${e01z1Id}")
+
 				},2000)
 			} else {
 				showTip("提示", data.msg, 2000);

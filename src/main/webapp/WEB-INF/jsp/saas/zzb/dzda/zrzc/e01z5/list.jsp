@@ -50,10 +50,8 @@
 					</a>
 				</div>
 			</div>
-			<div class="clearfix">
-				<div class="control-group">
-					<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm">
-						<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}" id="OWASP_CSRFTOKEN">
+					<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm" style="margin: 0 0 0px;">
+						<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}" id="OWASP_CSRFTOKEN" >
 						<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 						<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 						档案名称:
@@ -74,9 +72,6 @@
 						&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
 						<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
 					</form>
-				</div>
-
-			</div>
 			<div class="portlet-body">
 				<table class="table table-striped table-bordered table-hover dataTable table-set">
 					<thead>
@@ -87,6 +82,8 @@
 					<th width=70>案卷质量</th>
 					<th width=110  style="text-align: center">回执日期</th>
 					<th width=120  style="text-align: center">档案位置</th>
+					<th width=60  style="text-align: center">修改回执</th>
+					<th width=60  style="text-align: center">查看</th>
 					<th width=90  style="text-align: center">文件下载</th>
 					</thead>
 					<tbody>
@@ -111,17 +108,17 @@
 							</TD>
 							<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z531}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
 							<TD style="text-align: center"><c:out value="${vo.e01Z541}"></c:out></TD>
+							<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">修改</a></TD>
+							<TD style="text-align: center"><a href="${path}/zzb/dzda/dajs/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a></TD>
 							<TD style="text-align: center">
 								<c:choose>
 									<c:when test="${vo.fileName == '' || vo.fileName == null}">
-										无文件
+										下载
 									</c:when>
 									<c:otherwise>
-										<a style="display: <c:if test="${vo.fileName ==''|| vo.fileName == null}"> block</c:if>" class="btn blue" href="javascript:downloadFile('${entity.id}')"><i
-												class="icon-circle-arrow-down"></i>${vo.fileName }</a>
+										<a href="javascript:downloadFile('${vo.id}')">下载</a>
 									</c:otherwise>
 								</c:choose>
-
 							</TD>
 
 						</TR>
@@ -138,6 +135,20 @@
 		</div>
 		<%-- 表格结束 --%>
 	</div>
+	<div id="editModal" class="modal container hide fade" tabindex="-1" data-width="400" style="z-index: 10">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close"  type="button"></button>
+					<h3 class="modal-title" id="editTitle" >
+						填写回执
+					</h3>
+				</div>
+				<div class="modal-body" id="editDiv">
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <%-- END PAGE CONTENT--%>
@@ -148,10 +159,28 @@
 	var myLoading = new MyLoading("${path}",{zindex : 11111});
 	(function(){
 		App.init();
-
-
-
 	})();
+	function editHz(id){
+		$.ajax({
+			url:"${path}/zzb/dzda/dajs/ajax/edit/"+id,
+			type : "post",
+			data: {},
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "html",
+			success : function(html){
+				$('#editDiv').html(html);
+
+				$('#editModal').modal({
+					keyboard: true
+				});
+			},
+			error : function(){
+				showTip("提示","出错了请联系管理员", 1500);
+			}
+		});
+	}
 	function downloadFile(id){
 		window.open("${path }/zzb/dzda/dajs/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}

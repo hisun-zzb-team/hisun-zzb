@@ -45,10 +45,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -195,6 +193,55 @@ public class E01Z5Controller extends BaseController {
 
         return returnMap;
     }
+
+    @RequiresPermissions("dajs:*")
+    @RequestMapping("/ajax/edit/{id}")
+    public ModelAndView edit(@PathVariable("id")String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        model.put("id", id);
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/edit", model);
+    }
+
+    @RequiresPermissions("dajs:*")
+    @RequestMapping("/view/{id}")
+    public ModelAndView view(@PathVariable("id") String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            E01Z5 e01Z5 = e01z5Service.getByPK(id);
+            E01Z5Vo vo = new E01Z5Vo();
+            ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+            BeanUtils.copyProperties(vo,e01Z5);
+            vo.setE01Z501(e01Z5.getE01Z501()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z501()));
+            vo.setE01Z524(e01Z5.getE01Z524()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z524()));
+            vo.setE01Z531(e01Z5.getE01Z531()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z531()));
+            vo.setE01Z534(e01Z5.getE01Z534()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z534()));
+            model.put("vo",vo);
+        }catch (Exception e){
+            logger.error(e);
+        }
+
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/view", model);
+    }
+    @RequiresPermissions("dajs:*")
+    @RequestMapping("/updateHzrq")
+    public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
+                                         @RequestParam(value = "hzrq",required = true) String hzrq){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdf.parse(hzrq);
+            E01Z5 e01Z5 = e01z5Service.getByPK(id);
+            e01Z5.setE01Z531(sdf.parse(hzrq));
+            e01z5Service.update(e01Z5);
+            model.put("code","1");
+        }catch (Exception e){
+            model.put("code","0");
+            logger.error(e);
+        }
+        return model;
+    }
+
+
     @RequestMapping(value = "/ajax/down")
     @RequiresPermissions("cysq:*")
     public void templateDown(String id, HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -223,22 +270,6 @@ public class E01Z5Controller extends BaseController {
         return filename;
     }
 
-    @RequiresPermissions("dajs:*")
-    @RequestMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") String id){
-        Map<String,Object> model = new HashMap<String,Object>();
-        E01Z5 tenant = e01z5Service.getByPK(id);
-        E01Z5Vo vo = new E01Z5Vo();
-        try {
-            BeanUtils.copyProperties(vo,tenant);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        model.put("entity", vo);
-        return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/edit", model);
-    }
 
     @RequiresPermissions("dajs:*")
     @RequestMapping("/update")

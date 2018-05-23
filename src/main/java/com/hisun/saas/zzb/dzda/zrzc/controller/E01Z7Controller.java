@@ -26,6 +26,7 @@ import com.hisun.util.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,14 +37,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -187,18 +189,52 @@ public class E01Z7Controller extends BaseController {
 
         return returnMap;
     }
+    @RequiresPermissions("dazd:*")
+    @RequestMapping("/view/{id}")
+    public ModelAndView view(@PathVariable("id") String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            E01Z7 e01Z7 = e01z7Service.getByPK(id);
+            E01Z7Vo vo = new E01Z7Vo();
+            ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+            BeanUtils.copyProperties(vo,e01Z7);
+            vo.setE01Z701(e01Z7.getE01Z701()==null?null:DateUtil.formatDefaultDate(e01Z7.getE01Z701()));
+            vo.setE01Z727(e01Z7.getE01Z727()==null?null:DateUtil.formatDefaultDate(e01Z7.getE01Z727()));
+            model.put("vo",vo);
+        }catch (Exception e){
+            logger.error(e);
+        }
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/view", model);
+    }
 
     @RequiresPermissions("dazd:*")
-    @RequestMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") String id) throws InvocationTargetException, IllegalAccessException {
-        Map<String, Object> model = new HashMap<String, Object>();
-        E01Z7 tenant = e01z7Service.getByPK(id);
-        E01Z7Vo vo = new E01Z7Vo();
-        BeanUtils.copyProperties(tenant, vo);
-        model.put("entity", vo);
+    @RequestMapping("/ajax/edit/{id}")
+    public ModelAndView edit(@PathVariable("id")String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        model.put("id", id);
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/edit", model);
     }
 
+    @RequiresPermissions("dazd:*")
+    @RequestMapping("/updateHzrq")
+    public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
+                                                       @RequestParam(value = "hzUserName",required = true) String hzUserName,
+                                                       @RequestParam(value = "hzrq",required = true) String hzrq){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdf.parse(hzrq);
+            E01Z7 e01Z7 = e01z7Service.getByPK(id);
+            e01Z7.setE01Z724(hzUserName);
+            e01Z7.setE01Z727(sdf.parse(hzrq));
+            e01z7Service.update(e01Z7);
+            model.put("code","1");
+        }catch (Exception e){
+            model.put("code","0");
+            logger.error(e);
+        }
+        return model;
+    }
     @RequiresPermissions("dazd:*")
     @RequestMapping("/update")
     public
@@ -228,6 +264,34 @@ public class E01Z7Controller extends BaseController {
             returnMap.put("code", -1);
         }
         return returnMap;
+    }
+
+    @RequestMapping(value = "/ajax/down")
+    @RequiresPermissions("cysq:*")
+    public void templateDown(String id, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        E01Z7 entity = e01z7Service.getByPK(id);
+        if (entity.getFileName() != null && !entity.getFilePath().equals("")) {
+            String fileRealPath = entity.getFilePath();
+            resp.setContentType("multipart/form-data");
+            //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
+            resp.setHeader("Content-Disposition", "attachment;fileName="
+                    + encode(fileRealPath.substring(fileRealPath.lastIndexOf(File.separator) + 1)));
+            OutputStream output = resp.getOutputStream();
+            byte[] b = FileUtils.readFileToByteArray(new File(fileRealPath));
+            output.write(b);
+            output.flush();
+            output.close();
+        }
+
+    }
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        return filename;
     }
 
     /**

@@ -17,7 +17,8 @@ public class Constants {
     public static final Integer DATP_MAX_FILE_SIZE =2097152;
 
     //档案存储路径
-    public static final String DATP_STORE_PATH = File.separator+"e01z1"+File.separator;
+    public static final String DATP_STORE_PATH = File.separator+"a38"+File.separator;
+    public static final String DATP_STORE_PATH_UPLOAD = File.separator+"e01z1"+File.separator;
     //档案模板存储路径
     public static final String DATPMB_STORE_PATH = DATP_STORE_PATH+"mlxx.xlsx";
     public static final String[] EXCLUDE_FILE_AND_DIR={"__MACOSX",".DS_Store"};

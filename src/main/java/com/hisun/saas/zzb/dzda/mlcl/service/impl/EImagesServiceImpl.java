@@ -83,7 +83,8 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                 List<File> tpFiles = FileUtil.listFilesOrderByName(file);
                 for (File tpFile : tpFiles) {
                     boolean isNeedDelete = true;
-                    if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
+                    String fileName = tpFile.getName();
+                    if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(fileName)) {
                         continue;
                     }
                     for (E01Z1 e01Z1 : e01z1s) {
@@ -91,8 +92,11 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                         String nameCode = decimalFormat.format(e01Z1.getE01Z104());//当前材料对应文件编号
 
                         String tpNameCode = "";
-                        if (tpFile.getName().lastIndexOf(".") != -1) {
-                            tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                        String ImgNo = "";
+                        if (fileName.lastIndexOf(".") != -1) {
+                            tpNameCode = fileName.substring(0, fileName.lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                            ImgNo = fileName.substring(0, fileName.lastIndexOf("."));
+                            ImgNo =ImgNo.substring(2);
                         }
                         if (tpNameCode.equals(nameCode)) {
                             isNeedDelete = false;
@@ -102,7 +106,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                             DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile, new File(encryptFilePath));
                             eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
                             FileUtils.deleteQuietly(tpFile);
-                            eImages.setImgNo(Integer.getInteger(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2)));
+                            eImages.setImgNo(Integer.parseInt(ImgNo));
                             this.save(eImages);
                             //记录已加载图片数
                             if (yjzTpMaps.get(e01Z1) != null) {

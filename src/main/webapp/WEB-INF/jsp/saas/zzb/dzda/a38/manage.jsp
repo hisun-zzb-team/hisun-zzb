@@ -382,7 +382,10 @@
 	}
 
 	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
+		if(type=="dangantupianxiazai"){
+			window.open("${path}/zzb/dzda/mlcl/tpcl/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
+		<%--window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);--%>
 	}
 
 	function formSave(sjzt){

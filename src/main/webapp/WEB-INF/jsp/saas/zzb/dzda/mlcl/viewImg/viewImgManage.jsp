@@ -214,6 +214,7 @@
 		//var  eApplyE01Z8Id = $("#eApplyE01Z8Id").val();
 		var a38LogId = $("#a38LogId").val();
 		if(a38LogId != undefined && a38LogId != "" && a38LogId != null){
+			if("${isAddLog}" != "false"){
 			//记录阅档日志
 			if(treeNode.nodeType != "dir"){
 				$.ajax({
@@ -242,6 +243,7 @@
 				});
 			}
 		}
+	}
 
 
 		var nodeType = "0";

@@ -42,84 +42,99 @@
 	<div class="row-fluid">
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
-				<div class="portlet-title">
-					<div class="caption">档案接收</div>
-					<div class="clearfix fr">
-						<a class="btn green" href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
-							<i class="icon-ok"></i>接收
-						</a>
-					</div>
+			<div class="portlet-title">
+				<div class="caption">档案接收</div>
+				<div class="clearfix fr">
+					<a class="btn green" href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+						<i class="icon-ok"></i>接收
+					</a>
 				</div>
-				<div class="clearfix">
-					<div class="control-group">
-							<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm">
-								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}" id="OWASP_CSRFTOKEN">
-								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
-								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-								<div style=" float:left;margin-top:4px">档案名称:</div>
-								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="name" id="name" value="${name}" style="width: 80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;来件单位:</div>
-								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="e01Z507A" id="e01Z507A" value="${e01Z507A}" style="width: 80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;接收日期:</div>
-								<div style=" float:left;">
-									<input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
-										   id="e01Z501" readonly
-										   value=""/>
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;经办人:</div>
-								<div style="float:left;width: 160px;">
-									<input type="text" class="m-wrap" name="e01Z517" id="e01Z517" value="${e01Z517}" style="width:80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;案卷质量:</div>
-								<div style="float:left;width: 160px;">
-									<SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" needNullValue="true" defaultkeys="${e01Z527}"
-														 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+			</div>
+			<div class="clearfix">
+				<div class="control-group">
+					<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm">
+						<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}" id="OWASP_CSRFTOKEN">
+						<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+						<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+						档案名称:
+						<input type="text" class="m-wrap" name="name" id="name" value="${name}" style="width: 80px;" />
+						来件单位:
+						<input type="text" class="m-wrap" name="e01Z507A" id="e01Z507A" value="${e01Z507A}" style="width: 80px;" />
+						接收日期:
+						<input type="text" class="span10 m-wrap" name="starTime" maxlength="200" style="width: 80px;"
+							   id="starTime" readonly value="${starTime}"/><span>&nbsp;到&nbsp;
+								<input type="text" class="span10 m-wrap" name="endTime" maxlength="200" style="width: 80px;"
+									   id="endTime" readonly value="${endTime}"/></span>
+						经办人:
+						<input type="text" class="m-wrap" name="e01Z517" id="e01Z517" value="${e01Z517}" style="width:80px;" />
+						案卷质量:
+						<SelectTag:SelectTag id="e01Z527" textClass="m-wrap span10" needNullValue="true" defaultkeys="${e01Z527}"
+											 width="80px"			 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
 
-								</div>
-								<div style="float:left">
-									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
-									<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
-								</div>
-							</form>
-					</div>
+						&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+						<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
+					</form>
+				</div>
 
-				</div>
-				<div class="portlet-body">
-					<table class="table table-striped table-bordered table-hover dataTable table-set">
-						<thead>
-							<th width=60>档案名称</th>
-							<th>来件单位</th>
-							<th width=70>接收日期</th>
-							<th width=40>经办人</th>
-							<th width=70>案卷质量</th>
-							<th width=70  style="text-align: center">回执日期</th>
-							<th width=120  style="text-align: center">档案位置</th>
-						</thead>
-						<tbody>
-							<c:forEach items="${pager.datas}" var="vo">
-								<tr style="text-overflow:ellipsis;">
-									<TD><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList"><c:out value="${vo.name}"></c:out></a> </TD>
-									<TD style="text-align: center"><c:out value="${vo.e01Z507A}"></c:out></TD>
-									<TD ><fmt:formatDate value="${vo.e01Z501}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
-									<TD><c:out value="${vo.e01Z517}"></c:out></TD>
-									<TD  style="text-align: center"><c:out value="${vo.e01Z527}"></c:out></TD>
-									<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z531}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
-									<TD style="text-align: center"><c:out value="${vo.e01Z541}"></c:out></TD>
-								</TR>
-							</c:forEach>
-						</tbody>
-					</table>
-					<jsp:include page="/WEB-INF/jsp/common/page.jsp">
-						<jsp:param value="${pager.total }" name="total"/>
-						<jsp:param value="${pager.pageCount }" name="endPage"/>
-						<jsp:param value="${pager.pageSize }" name="pageSize"/>
-						<jsp:param value="${pager.pageNum }" name="page"/>
-					</jsp:include>
-				</div>
+			</div>
+			<div class="portlet-body">
+				<table class="table table-striped table-bordered table-hover dataTable table-set">
+					<thead>
+					<th width=60>档案名称</th>
+					<th style="text-align: center">来件单位</th>
+					<th width=110>接收日期</th>
+					<th width=40>经办人</th>
+					<th width=70>案卷质量</th>
+					<th width=110  style="text-align: center">回执日期</th>
+					<th width=120  style="text-align: center">档案位置</th>
+					<th width=90  style="text-align: center">文件下载</th>
+					</thead>
+					<tbody>
+					<c:forEach items="${pager.datas}" var="vo">
+						<tr style="text-overflow:ellipsis;">
+							<TD><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.name}"></c:out></a> </TD>
+							<TD style="text-align: center"><c:out value="${vo.e01Z507A}"></c:out></TD>
+							<TD ><fmt:formatDate value="${vo.e01Z501}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
+							<TD><c:out value="${vo.e01Z517}"></c:out></TD>
+							<TD  style="text-align: center">
+								<c:choose>
+									<c:when test="${vo.e01Z527 == 0}">
+										不合格
+									</c:when>
+									<c:when test="${vo.e01Z527 == 1}">
+										合格
+									</c:when>
+									<c:when test="${vo.e01Z527 == 2}">
+										优秀
+									</c:when>
+								</c:choose>
+							</TD>
+							<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z531}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
+							<TD style="text-align: center"><c:out value="${vo.e01Z541}"></c:out></TD>
+							<TD style="text-align: center">
+								<c:choose>
+									<c:when test="${vo.fileName == '' || vo.fileName == null}">
+										无文件
+									</c:when>
+									<c:otherwise>
+										<a style="display: <c:if test="${vo.fileName ==''|| vo.fileName == null}"> block</c:if>" class="btn blue" href="javascript:downloadFile('${entity.id}')"><i
+												class="icon-circle-arrow-down"></i>${vo.fileName }</a>
+									</c:otherwise>
+								</c:choose>
+
+							</TD>
+
+						</TR>
+					</c:forEach>
+					</tbody>
+				</table>
+				<jsp:include page="/WEB-INF/jsp/common/page.jsp">
+					<jsp:param value="${pager.total }" name="total"/>
+					<jsp:param value="${pager.pageCount }" name="endPage"/>
+					<jsp:param value="${pager.pageSize }" name="pageSize"/>
+					<jsp:param value="${pager.pageNum }" name="page"/>
+				</jsp:include>
+			</div>
 		</div>
 		<%-- 表格结束 --%>
 	</div>
@@ -137,7 +152,9 @@
 
 
 	})();
-
+	function downloadFile(id){
+		window.open("${path }/zzb/dzda/dajs/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
+	}
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
@@ -151,10 +168,11 @@
 		$("#name").val('');
 		$("#e01Z507A").val('');
 		$("#e01Z517").val('');
-		$("#e01Z501").val('');
+		$("#starTime").val('');
+		$("#endTime").val('');
 		$("#e01Z527").val('');
-		$("#gbztContentQuery").val('');
-		$("#daztContentQuery").val('');
+		$("#pageNum").val('');
+		$("#pageSize").val('');
 		document.searchForm.submit();
 	}
 	function dataAllcheckChange(){
@@ -172,7 +190,14 @@
 		}
 	}
 	$(function(){
-		$('#e01Z501').datepicker({
+		$('#starTime').datepicker({
+			format: 'yyyy-mm-dd',
+			weekStart: 1,
+			autoclose: true,
+			todayBtn: 'linked',
+			language: 'zh-CN'
+		});
+		$('#endTime').datepicker({
 			format: 'yyyy-mm-dd',
 			weekStart: 1,
 			autoclose: true,

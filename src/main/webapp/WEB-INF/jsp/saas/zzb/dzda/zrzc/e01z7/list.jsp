@@ -27,40 +27,32 @@
 				<div class="portlet-title">
 					<div class="caption">档案转递</div>
 					<div class="clearfix fr">
-						<a class="btn green" href="javascript:ruku()">
+						<a class="btn green" href="${path}/zzb/dzda/dazd/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-ok"></i>转递
 						</a>
 					</div>
 				</div>
 				<div class="clearfix">
 					<div class="control-group">
-							<form action="${path }/zzb/dzda/a38/shList" method="POST" id="searchForm" name="searchForm">
+							<form action="" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-								<div style=" float:left;margin-top:4px">档案名称:</div>
-								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="dabhQuery" id="dabhQuery" value="${dabhQuery}" style="width: 80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;转往单位:</div>
-								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="smxhQuery" id="smxhQuery" value="${smxhQuery}" style="width: 80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;转递日期:</div>
-								<div style=" float:left;">
-									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;经办人:</div>
-								<div style="float:left;width: 160px;">
-									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-								</div>
-								<div style=" float:left;margin-top:4px">&nbsp;回执人:</div>
-								<div style="float:left;width: 160px;">
-									<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-								</div>
-								<div style="float:left">
+								档案名称:
+									<input type="text" class="m-wrap" name="name" id="name" value="${name}" style="width: 80px;" />
+								&nbsp;转往单位:
+									<input type="text" class="m-wrap" name="e01Z704A" id="e01Z704A" value="${e01Z704A}" style="width: 80px;" />
+								&nbsp;转递日期:
+									<input type="text" class="span10 m-wrap" name="starTime" maxlength="200" style="width: 80px;"
+										   id="starTime" readonly value="${starTime}"/><span>&nbsp;到&nbsp;
+								<input type="text" class="span10 m-wrap" name="endTime" maxlength="200" style="width: 80px;"
+									   id="endTime" readonly value="${endTime}"/></span>
+								&nbsp;经办人:
+									<input type="text" class="m-wrap" name="e01Z717" id="e01Z717" value="${e01Z717}" style="width:80px;" />
+								&nbsp;回执人:
+									<input type="text" class="m-wrap" name="e01Z724" id="e01Z724" value="${e01Z724}" style="width:80px;" />
 									&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
 									<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
-								</div>
 							</form>
 					</div>
 
@@ -69,23 +61,36 @@
 					<table class="table table-striped table-bordered table-hover dataTable table-set">
 						<thead>
 							<th width=60>档案名称</th>
-							<th>转往单位</th>
+							<th style="text-align: center">转往单位</th>
 							<th width=70>转递日期</th>
 							<th width=40>经办人</th>
 							<th width=70>转递原因</th>
 							<th width=60>回执人</th>
 							<th width=70 style="text-align: center">回执日期</th>
+							<th width=90  style="text-align: center">文件下载</th>
 						</thead>
 						<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
 								<tr style="text-overflow:ellipsis;">
 									<TD  style="text-align: center"><c:out value="${vo.name}"></c:out></TD>
 									<TD  style="text-align: center"><c:out value="${vo.e01Z704A}"></c:out></TD>
-									<TD ><fmt:formatDate value="${vo.e01Z701}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+									<TD ><fmt:formatDate value="${vo.e01Z701}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
 									<TD  style="text-align: center"><c:out value="${vo.e01Z717}"></c:out></TD>
 									<TD ><c:out value="${vo.e01Z721}"></c:out></TD>
 									<TD><c:out value="${vo.e01Z724}"></c:out></TD>
-									<TD  style="text-align: center"><c:out value="${vo.e01Z727}"></c:out></TD>
+									<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z727}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
+									<TD style="text-align: center">
+										<c:choose>
+											<c:when test="${vo.fileName == '' || vo.fileName == null}">
+												无文件
+											</c:when>
+											<c:otherwise>
+												<a style="display: <c:if test="${vo.fileName ==''|| vo.fileName == null}"> block</c:if>" class="btn blue" href="javascript:downloadFile('${entity.id}')"><i
+														class="icon-circle-arrow-down"></i>${vo.fileName }</a>
+											</c:otherwise>
+										</c:choose>
+
+									</TD>
 								</TR>
 							</c:forEach>
 						</tbody>
@@ -124,17 +129,33 @@
 	function searchSubmit(){
 		document.searchForm.submit();
 	}
-
+	$(function(){
+		$('#starTime').datepicker({
+			format: 'yyyy-mm-dd',
+			weekStart: 1,
+			autoclose: true,
+			todayBtn: 'linked',
+			language: 'zh-CN'
+		});
+		$('#endTime').datepicker({
+			format: 'yyyy-mm-dd',
+			weekStart: 1,
+			autoclose: true,
+			todayBtn: 'linked',
+			language: 'zh-CN'
+		});
+	})
 
 
 	function clearData(){
-		$("#dabhQuery").val('');
-		$("#smxhQuery").val('');
-		$("#a0101Query").val('');
-		$("#gbztCodeQuery").val('');
-		$("#daztCodeQuery").val('');
-		$("#gbztContentQuery").val('');
-		$("#daztContentQuery").val('');
+		$("#name").val('');
+		$("#e01Z704A").val('');
+		$("#starTime").val('');
+		$("#endTime").val('');
+		$("#e01Z717").val('');
+		$("#e01Z724").val('');
+		$("#pageNum").val('');
+		$("#pageSize").val('');
 		document.searchForm.submit();
 	}
 	function dataAllcheckChange(){

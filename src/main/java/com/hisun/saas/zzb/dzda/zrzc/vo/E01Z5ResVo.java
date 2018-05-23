@@ -6,60 +6,32 @@
 
 package com.hisun.saas.zzb.dzda.zrzc.vo;
 
-import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
-import com.hisun.saas.zzb.dzda.a38.entity.A38;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @author liuzj {279421824@qq.com}
+ * @author Marco {854476391@qq.com}
  */
-public class E01Z5Vo implements Serializable{
+public class E01Z5ResVo implements Serializable{
     private String id;
     private String a38Id;
     private String name;//档案名称
-    private String e01Z501;//接收日期
+    private Date e01Z501;//接收日期
     private String e01Z507A;//来件单位名称
     private String e01Z507B;//来件单位ID
     private Integer e01Z511;//正本卷数
     private Integer e01Z514;//副本卷数'
     private String e01Z517;//经办人'
     private String e01Z521;//审核人'
-    private String e01Z524;//审核日期'
+    private Date e01Z524;//审核日期'
     private String e01Z527;//案卷质量 0-不合格；1-合格；2-优秀
-    private String e01Z531;//回执日期
-    private String e01Z534;//入库日期
+    private Date e01Z531;//回执日期
+    private Date e01Z534;//入库日期
     private String e01Z537;//入库审批人
     private String e01Z541;//档案位置
     private String e01Z544;//备注
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getA38Id() {
         return a38Id;
@@ -69,19 +41,11 @@ public class E01Z5Vo implements Serializable{
         this.a38Id = a38Id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getE01Z501() {
+    public Date getE01Z501() {
         return e01Z501;
     }
 
-    public void setE01Z501(String e01Z501) {
+    public void setE01Z501(Date e01Z501) {
         this.e01Z501 = e01Z501;
     }
 
@@ -133,11 +97,11 @@ public class E01Z5Vo implements Serializable{
         this.e01Z521 = e01Z521;
     }
 
-    public String getE01Z524() {
+    public Date getE01Z524() {
         return e01Z524;
     }
 
-    public void setE01Z524(String e01Z524) {
+    public void setE01Z524(Date e01Z524) {
         this.e01Z524 = e01Z524;
     }
 
@@ -149,19 +113,19 @@ public class E01Z5Vo implements Serializable{
         this.e01Z527 = e01Z527;
     }
 
-    public String getE01Z531() {
+    public Date getE01Z531() {
         return e01Z531;
     }
 
-    public void setE01Z531(String e01Z531) {
+    public void setE01Z531(Date e01Z531) {
         this.e01Z531 = e01Z531;
     }
 
-    public String getE01Z534() {
+    public Date getE01Z534() {
         return e01Z534;
     }
 
-    public void setE01Z534(String e01Z534) {
+    public void setE01Z534(Date e01Z534) {
         this.e01Z534 = e01Z534;
     }
 
@@ -187,5 +151,37 @@ public class E01Z5Vo implements Serializable{
 
     public void setE01Z544(String e01Z544) {
         this.e01Z544 = e01Z544;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

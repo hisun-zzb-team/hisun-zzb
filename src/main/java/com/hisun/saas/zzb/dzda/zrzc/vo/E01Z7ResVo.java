@@ -6,21 +6,17 @@
 
 package com.hisun.saas.zzb.dzda.zrzc.vo;
 
-import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
-import com.hisun.saas.zzb.dzda.a38.entity.A38;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * @author liuzj {279421824@qq.com}
+ * @author Marco {854476391@qq.com}
  */
-public class E01Z7Vo {
+public class E01Z7ResVo implements Serializable{
     private String id;
     private String a38Id;
     private String name;//'档案名称'
-    private String e01Z701;//'转递日期'
+    private Date e01Z701;//'转递日期'
     private String e01Z704A;//'转往单位名称'
     private String e01Z704B;//'转往单位Id'
     private Integer e01Z711;//'转出正本数'
@@ -28,34 +24,11 @@ public class E01Z7Vo {
     private String e01Z717;//'经办人'
     private String e01Z721;//'转递原因'
     private String e01Z724;//'回执人'
-    private String e01Z727;//'回执日期'
+    private Date e01Z727;//'回执日期'
     private String e01Z731;//'备注'
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getA38Id() {
         return a38Id;
@@ -65,19 +38,11 @@ public class E01Z7Vo {
         this.a38Id = a38Id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getE01Z701() {
+    public Date getE01Z701() {
         return e01Z701;
     }
 
-    public void setE01Z701(String e01Z701) {
+    public void setE01Z701(Date e01Z701) {
         this.e01Z701 = e01Z701;
     }
 
@@ -137,11 +102,11 @@ public class E01Z7Vo {
         this.e01Z724 = e01Z724;
     }
 
-    public String getE01Z727() {
+    public Date getE01Z727() {
         return e01Z727;
     }
 
-    public void setE01Z727(String e01Z727) {
+    public void setE01Z727(Date e01Z727) {
         this.e01Z727 = e01Z727;
     }
 
@@ -151,5 +116,37 @@ public class E01Z7Vo {
 
     public void setE01Z731(String e01Z731) {
         this.e01Z731 = e01Z731;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

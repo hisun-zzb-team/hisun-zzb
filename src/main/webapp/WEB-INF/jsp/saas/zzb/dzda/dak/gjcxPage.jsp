@@ -27,9 +27,9 @@
                     <div class="portlet-body form">
                         <!-- BEGIN FORM-->
                         <!-- 用于清除 -->
-                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form2" method="post" >
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form2" method="post" >
                         </form>
-                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun" class="form-horizontal" id="form1" method="post" >
+                        <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post" >
                             <div class="portlet-title">
                                 <div class="caption">基本信息</div>
                                 <div class="clearfix fr">

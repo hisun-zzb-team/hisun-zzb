@@ -113,7 +113,7 @@
                                     <a href="javascript:ydxiangqing('${vo.id}')">
                                         <c:if test="${not empty vo.a38Logs}">
                                             <c:forEach items="${vo.a38Logs.get(0).a38LogDetails}" var="vo1">
-                                               <c:out value="${vo1.e01Z111}"></c:out>
+                                               <c:out value="${vo1.e01Z111}"></c:out>;
                                             </c:forEach>
                                         </c:if>
                                     </a>

@@ -104,7 +104,7 @@
                             <TD >
                             <div style="width: 480px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
                                 <a href="javascript:viewNeiRong('${vo.id}')"><c:forEach items="${vo.a38LogDetails}" var="vo1">
-                                    <c:out value="${vo1.e01Z111}"></c:out>
+                                    <c:out value="${vo1.e01Z111}"></c:out>;
                                 </c:forEach></a>
                             </div>
 

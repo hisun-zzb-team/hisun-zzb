@@ -115,7 +115,7 @@
                                     <a onclick="fileDown('xiazaimludaorumoban')">下载目录导入模板</a>
                                 </li>
                                 <li>
-                                    <a onclick="unloadFile()">导入目录</a>
+                                    <a onclick="uploadFile()">导入目录</a>
                                 </li>
 
                             </ul>
@@ -423,10 +423,6 @@
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     });
-    function download(){
-        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
-    };
-
 
     function jztp(id,e01Z111){
         var divHeight = $(window).height()-300;
@@ -454,6 +450,10 @@
         });
     }
 
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    };
+
     function uploadFile(){
         document.getElementById("mlxxFile").click();
     }
@@ -478,26 +478,25 @@
             },
             success:function(json){
                 showTip("提示","上传成功!",2000);
-                <%--$.ajax({--%>
-                    <%--async:false,--%>
-                    <%--type:"POST",--%>
-                    <%--url:"${path }/zzb/dzda/e01z1/ajax/list",--%>
-                    <%--dataType : "html",--%>
-                    <%--headers:{--%>
-                        <%--"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'--%>
-                    <%--},--%>
-                    <%--data:{--%>
-                        <%--'a38Id':"${a38Id}"--%>
-                    <%--},--%>
-                    <%--success:function(html){--%>
-                        <%--var view = $("#tab_show");--%>
-                        <%--view.html(html);--%>
-                    <%--},--%>
-                    <%--error : function(){--%>
-                        <%--myLoading.hide();--%>
-                        <%--showTip("提示","出错了,请检查网络!",2000);--%>
-                    <%--}--%>
-                <%--});--%>
+                $.ajax({
+                    async:false,
+                    type:"POST",
+                    url:"${path }/zzb/dzda/e01z1/ajax/mlxxList",
+                    dataType : "html",
+                    headers:{
+                        "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                    },
+                    data:{
+                        'a38Id':"${a38Id}"
+                    },
+                    success:function(html){
+                        $("#rightList").html(html);
+                    },
+                    error : function(){
+                        myLoading.hide();
+                        showTip("提示","出错了,请检查网络!",2000);
+                    }
+                });
             },
             error : function(){
                 showTip("提示","上传失败!",2000);

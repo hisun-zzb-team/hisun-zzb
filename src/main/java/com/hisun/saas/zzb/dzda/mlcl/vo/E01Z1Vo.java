@@ -28,9 +28,9 @@ public class E01Z1Vo {
     private Integer yjztps=0;//已加载图片数
     private Integer e01Z104;//排序号
 
-    private String year;
-    private String month;
-    private String day;
+    private String year;//用做excel导入时获取年份
+    private String month;//用做excel导入时获取月份
+    private String day;//用做excel导入时获取日期
 
     private String parentId;
     private String parentName;

@@ -47,6 +47,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -584,30 +585,145 @@ public class E01Z1Controller extends BaseController {
         }
         String tempFile = uploadBasePath+Constants.DATPMB_STORE_PATH;
         E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
-        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
-        e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
-            Integer oldPxInteger=1;
-//            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
-//                List<A52Vo> a52Vos = a32Vo.getA52Vos();
-//                for(int i=0;i<a52Vos.size();i++){
-//                    A52 a52 = new A52();
-//                    A52Vo a52Vo = a52Vos.get(i);
-//                    if(StringUtils.isEmpty(a52Vo.getA5204())){
-//                        continue;
-//                    }
-//                    BeanUtils.copyProperties(a52,a52Vo);
-//                    A38 a38 = this.a38Service.getByPK(a38Id);
-//                    a52.setA38(a38);
-//                    a52.setPx(oldPxInteger+i);
-//                    EntityWrapper.wrapperSaveBaseProperties(a52,details);
-//                    a52Service.save(a52);
-//                }
-//            }
+            //解析excel 获得返回数据
+            e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
+            //根据返回数据新增材料
+            addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",a38Id);
+            addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",a38Id);
+            addE01z1(e01Z1ExcelVo.getKysp(),"kysp",a38Id);
+            addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getZscl(),"zscl",a38Id);
+            addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",a38Id);
+            addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",a38Id);
+            addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",a38Id);
+            addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",a38Id);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             file.delete();
         }
+    }
+
+    public void addE01z1(List<E01Z1Vo> e01Z1Vos,String listStr,String a38Id){
+        if(e01Z1Vos.size()>0){
+            //获得材料类别
+            String catalogCode = getCatalogCode(listStr);//获取材料类别Code
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
+            CommonOrderBy orderBy = new CommonOrderBy();
+            List<ECatalogTypeInfo> entities = this.eCatalogTypeService.list(query, orderBy);
+            ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
+            if(entities.size()>0){
+                eCatalogTypeInfo=entities.get(0);
+            }
+
+            try {
+
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos){
+                    boolean e01z104IsEmpty= false;
+                    boolean e01z114IsEmpty= false;
+                    boolean e01z111IsEmpty= false;
+                    if(e01Z1Vo!=null){
+
+                        //判断必填材料是否为空
+                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
+                            e01z104IsEmpty = true;
+                        }
+                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
+                            e01z114IsEmpty = true;
+                        }
+                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            e01z111IsEmpty = true;
+                        }
+
+                        //如果必填材料全不为空，新增材料
+                        if(!e01z104IsEmpty&&!e01z111IsEmpty&&!e01z114IsEmpty){
+                            //拼接日期
+                            String e01Z117 = "";
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+                                e01Z117 = e01Z1Vo.getYear();
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                                    e01Z117 += e01Z1Vo.getMonth();
+                                    if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                                        e01Z117 += e01Z1Vo.getDay();
+                                    }
+                                }
+                            }
+                            e01Z1Vo.setE01Z117(e01Z117);
+
+                            int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
+                            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+                            E01Z1 e01Z1 = new E01Z1();
+                            BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                            e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
+                            e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
+                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+                            e01Z1.setYjztps(0);
+                            if(StringUtils.isNotBlank(a38Id)){
+                                e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                            }
+                            EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
+                            int newSort = e01Z1.getE01Z104();
+                            if(newSort<sort){
+                                e01Z1Service.updateSortBeforSave(e01Z1,sort);
+                            }
+                            e01Z1Service.save(e01Z1);
+                        }
+                    }
+                }
+            }catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getCatalogCode(String listStr){
+        String catalogCode = "";
+        if("jlcl".equals(listStr)){
+            catalogCode = "010";
+        }else if("zzcl".equals(listStr)){
+            catalogCode = "020";
+        }else if("jdcl".equals(listStr)){
+            catalogCode = "030";
+        }else if("xlxw".equals(listStr)){
+            catalogCode = "041";
+        }else if("zyzg".equals(listStr)){
+            catalogCode = "042";
+        }else if("kysp".equals(listStr)){
+            catalogCode = "043";
+        }else if("pxcl".equals(listStr)){
+            catalogCode = "044";
+        }else if("zscl".equals(listStr)){
+            catalogCode = "050";
+        }else if("dtcl".equals(listStr)){
+            catalogCode = "060";
+        }else if("jlicl".equals(listStr)){
+            catalogCode = "070";
+        }else if("cfcl".equals(listStr)){
+            catalogCode = "080";
+        }else if("gzcl".equals(listStr)){
+            catalogCode = "091";
+        }else if("rmcl".equals(listStr)){
+            catalogCode = "092";
+        }else if("cgcl".equals(listStr)){
+            catalogCode = "093";
+        }else if("dbdh".equals(listStr)){
+            catalogCode = "094";
+        }else if("qtcl".equals(listStr)){
+            catalogCode = "100";
+        }
+        return catalogCode;
     }
 }

@@ -119,7 +119,7 @@
                                     <a onclick="fileDown('xiazaimludaorumoban')">下载目录导入模板</a>
                                 </li>
                                 <li>
-                                    <a onclick="unloadFile()">导入目录</a>
+                                    <a onclick="uploadFile()">导入目录</a>
                                     <input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
                                 </li>
 
@@ -129,6 +129,8 @@
                         <a class="controllerClass btn green file_but" href="javascript:download()">
                             <i class="icon-circle-arrow-down"></i>打印目录
                         </a>
+                        <input type="file" style="display: none" name="mlxxFile" id="mlxxFile" accept = '.csv,
+             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
                     </div>
 
                 </div>
@@ -330,10 +332,6 @@
         window.open("${path }/zzb/app/console/daDemo/ajax/down?type=" + type);
     }
 
-    function download(){
-        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
-    };
-
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
         var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
@@ -453,6 +451,61 @@
 
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
+    });
+
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    };
+
+
+    function uploadFile(){
+        document.getElementById("mlxxFile").click();
+    }
+
+    $("#mlxxFile").on("change", function (evt) {
+        var uploadFile = document.getElementById("mlxxFile");
+        if (uploadFile.files.length > 0) {
+            var name = uploadFile.files[0].name
+            var arr = name.split(".");
+            if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+                showTip("提示", "请上传Excel文件", 2000);
+                return;
+            }
+        }
+        $("#importForm").ajaxSubmit({
+            type:"POST",
+            url:"${path}/zzb/dzda/e01z1/uploadFile",
+            dataType : "json",
+            enctype : "multipart/form-data",
+            headers:{
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            success:function(json){
+                showTip("提示","上传成功!",2000);
+                $.ajax({
+                    async:false,
+                    type:"POST",
+                    url:"${path }/zzb/dzda/e01z1/ajax/mlxxList",
+                    dataType : "html",
+                    headers:{
+                        "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                    },
+                    data:{
+                        'a38Id':"${a38Id}"
+                    },
+                    success:function(html){
+                        $("#rightList").html(html);
+                    },
+                    error : function(){
+                        myLoading.hide();
+                        showTip("提示","出错了,请检查网络!",2000);
+                    }
+                });
+            },
+            error : function(){
+                showTip("提示","上传失败!",2000);
+            }
+        });
     });
 </script>
 </body>

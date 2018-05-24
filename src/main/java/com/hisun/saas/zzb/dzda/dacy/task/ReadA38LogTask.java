@@ -152,8 +152,9 @@ public class ReadA38LogTask  extends AbsTask {
                 }
             //                }
         }
+        if(logger.isDebugEnabled())
+                logger.debug("updateLogViewTime is end >>>>>>>>>");
+        }
     }
-    if(logger.isDebugEnabled())
-            logger.debug("updateLogViewTime is end >>>>>>>>>");
-    }
+
 }

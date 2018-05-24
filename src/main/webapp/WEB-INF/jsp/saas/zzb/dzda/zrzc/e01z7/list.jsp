@@ -31,7 +31,7 @@
 							<i class="icon-ok"></i>转递
 						</a>--%>
 						<a href="${path}/zzb/dzda/dazd/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="btn blue">
-							<i class="icon-plus"></i> 转递</a>
+							<i class="icon-share-alt"></i> 转递</a>
 					</div>
 				</div>
 							<form action="" method="POST" id="searchForm" name="searchForm">
@@ -61,12 +61,12 @@
 							<th style="text-align: center">转往单位</th>
 							<th width=70>转递日期</th>
 							<th width=40>经办人</th>
-							<th width=70>转递原因</th>
+							<th width=120>转递原因</th>
 							<th width=60>回执人</th>
 							<th width=70 style="text-align: center">回执日期</th>
-							<th width=60  style="text-align: center">修改回执</th>
+							<th width=60  style="text-align: center">填写回执</th>
 							<th width=60  style="text-align: center">查看</th>
-							<th width=90  style="text-align: center">文件下载</th>
+							<th width=50  style="text-align: center">文件下载</th>
 						</thead>
 						<tbody>
 							<c:forEach items="${pager.datas}" var="vo">

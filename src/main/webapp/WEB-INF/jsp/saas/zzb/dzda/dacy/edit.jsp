@@ -38,7 +38,7 @@
                         <input type="hidden" name="e01Z807Name" value="${entity.e01Z807Name}">
 
                         <div class="control-group" id="a0101Group">
-                            <label class="control-label">查阅何人档案</label>
+                            <label class="control-label"><span class="required">*</span>查阅何人档案</label>
                             <div class="controls">
                                 <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="${entity.a0101}" />
                                 <%--<a href="javascript:queryUser()">添加</a>--%>
@@ -72,7 +72,7 @@
                         </div>
                         <div class="control-group" id="readTimeGroup">
 
-                            <label class="control-label">查阅时间</label>
+                            <label class="control-label"><span class="required">*</span>查阅时间</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
                                        id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟

@@ -45,9 +45,11 @@
 			<div class="portlet-title">
 				<div class="caption">档案接收</div>
 				<div class="clearfix fr">
-					<a class="btn green" href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+					<%--<a class="btn green" href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 						<i class="icon-ok"></i>接收
-					</a>
+					</a>--%>
+					<a href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="btn blue">
+						<i class="icon-plus"></i> 接受</a>
 				</div>
 			</div>
 					<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm" style="margin: 0 0 0px;">

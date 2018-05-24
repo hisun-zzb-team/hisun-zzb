@@ -54,10 +54,10 @@
                     <div class="clearfix fr">
 
                         <div class="btn-group" style="padding-bottom: 0px">
-                            <button type="button" class="btn btn-default" onclick="cancel()"><i
+                            <%--<button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
-                            </button>
-
+                            </button>--%>
+                            <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                         </div>
                     </div>
                     </div>

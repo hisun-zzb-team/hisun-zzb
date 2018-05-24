@@ -27,9 +27,11 @@
 				<div class="portlet-title">
 					<div class="caption">档案转递</div>
 					<div class="clearfix fr">
-						<a class="btn green" href="${path}/zzb/dzda/dazd/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+						<%--<a class="btn green" href="${path}/zzb/dzda/dazd/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 							<i class="icon-ok"></i>转递
-						</a>
+						</a>--%>
+						<a href="${path}/zzb/dzda/dazd/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="btn blue">
+							<i class="icon-plus"></i> 转递</a>
 					</div>
 				</div>
 							<form action="" method="POST" id="searchForm" name="searchForm">

@@ -396,7 +396,7 @@ public class EImagesController extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
 
-            int maxImgNo = this.eImagesService.getMaxImgNo(e01z1Id)+1;
+            int maxImgNo = this.eImagesService.getMaxImgNo(e01z1Id);
             int insertImgNo = maxImgNo;
             if(uploadType.equals("frist")){
                 insertImgNo = 1;

@@ -25,6 +25,8 @@
     <title>档案接收</title>
     <style type="text/css">
     </style>
+    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css" />
+    <script src="${path}/js/bootstrap-fileupload.js"  type="text/javascript"></script>
     <link rel="stylesheet" type="text/css"
           href="${path}/css/select2_metro.css" />
     <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
@@ -105,12 +107,13 @@
                                 </div>
                             </div>
                             <div class="span6 ">
-                                <div id="ee01Z514Group" class="control-group">
+                                <div class="control-group" id="e01Z514Group">
                                     <label class="control-label">副本卷数</label>
 
                                     <div class="controls">
-                                        <input type="text" number="true" class="span10 m-wrap" value=""
-                                               id="e01Z514" name="e01Z514">
+                                        <input type="text" class="span10 m-wrap" number="true" name="e01Z514"
+                                               maxlength="200" id="e01Z514"
+                                               value=""/>
                                     </div>
                                 </div>
                             </div>
@@ -143,8 +146,8 @@
                                     <label class="control-label">案卷质量</label>
 
                                     <div class="controls">
-                                        <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" needNullValue="true"
-                                                             token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+                                        <SelectTag:SelectTag id="e01Z527"  textClass="m-wrap span10" needNullValue="true"  defaultkeys="1"
+                                                             token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
                                     </div>
                                 </div>
                             </div>
@@ -207,9 +210,8 @@
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div id="clFileGroup" class="control-group">
+                                <div  id="clFileGroup" class="control-group">
                                     <label id="clFilelb" class="control-label">上传文件</label>
-
                                     <div class="controls">
                                         <div class="fileupload fileupload-new" data-provides="fileupload">
                                             <div class="input-append">
@@ -220,19 +222,19 @@
 													<span class="btn btn-file border_radius_none">
 													<span class="fileupload-new ">选择文件</span>
 													<span class="fileupload-exists">修改文件</span>
-													<input type="file" class="default " name="clFile" id="clFile"
-                                                           onchange="setName(this)" fileSizeLimit="20"
-                                                           fileType="doc,docx,DOC,DOCX"/>
+													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
 													</span>
-
                                                 <p class="textprompt">附件支持的格式有：'doc','docx'</p>
-
                                                 <p class="Errorred" id="attachFileError"></p>
-                                                <a href="#" class="btn fileupload-exists border_radius_none"
-                                                   data-dismiss="fileupload">移除</a>
+                                                <a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>
                                             </div>
                                         </div>
                                     </div>
+                                    <%--<div class="controls">
+                                        <input type="file" class="default"  name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
+                                        <p class="textprompt">附件支持的格式有：'doc','docx'</p>
+                                        <p class="Errorred" id="attachFileError"></p>
+                                    </div>--%>
                                 </div>
                                 </div>
                                 <div class="span6 ">
@@ -347,10 +349,10 @@
             },
             success : function(data){
                 // myLoading.hide();
-                if(data.success){
-                    window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                if(data.code==1){
+                    window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
-                    showTip("提示", json.message, 2000);
+                    showTip("提示", "新增失败", 2000);
                 }
             },
             error : function(arg1, arg2, arg3){

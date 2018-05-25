@@ -106,7 +106,7 @@
 </div>
 
 <!--BEGIN TABS-->
-<div class="tabbable tabbable-custom">
+<div class="tabbable tabbable-custom" style="margin-bottom: 0px">
 	<ul class="nav nav-tabs" style="font-size: 14px;font-weight: bold;" id="tabs">
 		<li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">基本信息</a></li>
 		<li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">目录信息</a></li>
@@ -115,7 +115,7 @@
 		<li><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">工资变动</a></li>
 		<li><a id="#tab_1_6" href="#tab_1_1" data-toggle="tab">材料接收</a></li>
 	</ul>
-	<div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:10px 0;">
+	<div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
 		<div class="tab-pane active" id="tab_show">
 		</div>
 	</div>

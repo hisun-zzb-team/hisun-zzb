@@ -49,7 +49,7 @@
 						<i class="icon-ok"></i>接收
 					</a>--%>
 					<a href="${path}/zzb/dzda/dajs/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="btn blue">
-						<i class="icon-plus"></i> 接受</a>
+						<i class="icon-plus"></i> 接收</a>
 				</div>
 			</div>
 					<form action="${path }/zzb/dzda/dajs/list" method="POST" id="searchForm" name="searchForm" style="margin: 0 0 0px;">
@@ -84,9 +84,9 @@
 					<th width=70>案卷质量</th>
 					<th width=110  style="text-align: center">回执日期</th>
 					<th width=120  style="text-align: center">档案位置</th>
-					<th width=60  style="text-align: center">修改回执</th>
+					<th width=60  style="text-align: center">填写回执</th>
 					<th width=60  style="text-align: center">查看</th>
-					<th width=90  style="text-align: center">文件下载</th>
+					<th width=50  style="text-align: center">文件下载</th>
 					</thead>
 					<tbody>
 					<c:forEach items="${pager.datas}" var="vo">

@@ -64,26 +64,6 @@
 									</div>
 								</div>
 								<div class="span6 ">
-									<div id="e01Z114Group" class="control-group">
-										<label class="control-label"><span class="required">*</span>材料页数</label>
-										<div class="controls">
-
-											<input type="text" class="span10 m-wrap" name="e01Z114" number="true" maxlength="128" id="e01Z114" value="" required/>
-
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row-fluid">
-								<div class="span6 ">
-									<div id="e01Z124Group" class="control-group">
-										<label class="control-label">材料份数</label>
-										<div class="controls">
-											<input type="text" class="span10 m-wrap" name="e01Z124" number="true" maxlength="128" id="e01Z124" value="1" />
-										</div>
-									</div>
-								</div>
-								<div class="span6 ">
 									<div id="e01Z101AGroup" class="control-group" >
 										<label class="control-label">材料类型 <span class="required">*</span></label>
 										<div class="controls">
@@ -93,6 +73,28 @@
 										</div>
 									</div>
 								</div>
+
+							</div>
+							<div class="row-fluid">
+								<div class="span6 ">
+									<div id="e01Z114Group" class="control-group">
+										<label class="control-label"><span class="required">*</span>材料页数</label>
+										<div class="controls">
+
+											<input type="text" class="span10 m-wrap" name="e01Z114" number="true" maxlength="128" id="e01Z114" value="" required/>
+
+										</div>
+									</div>
+								</div>
+								<div class="span6 ">
+									<div id="e01Z124Group" class="control-group">
+										<label class="control-label">材料份数</label>
+										<div class="controls">
+											<input type="text" class="span10 m-wrap" name="e01Z124" number="true" maxlength="128" id="e01Z124" value="1" />
+										</div>
+									</div>
+								</div>
+
 							</div>
 						</dd>
 					</dl>

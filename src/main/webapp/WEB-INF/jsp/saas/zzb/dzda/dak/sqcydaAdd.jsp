@@ -35,15 +35,15 @@
                             <label class="control-label">查阅何人档案<span class="required">*</span></label>
                             <div class="controls">
                                 <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="" />
-                                <a href="javascript:queryUser()">添加</a>
+                                <%--<a href="javascript:queryUser()">添加</a>--%>
                             </div>
                         </div>
-                        <div  id="a0101ContentGroup" style="display: none">
-                            <label class="control-label"><span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span10 m-wrap"  name="a0101Content" readonly maxlength="200" id="a0101Content" value="" required/>
-                            </div>
-                        </div>
+                        <%--<div  id="a0101ContentGroup" style="display: none">--%>
+                            <%--<label class="control-label"><span class="required">*</span></label>--%>
+                            <%--<div class="controls">--%>
+                                <%--<input type="text" class="span10 m-wrap"  name="a0101Content" readonly maxlength="200" id="a0101Content" value="" required/>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                         <div id="sqcydazwGroup" class="control-group">
                             <label class="control-label">单位职务</label>
                             <div class="controls">
@@ -72,10 +72,10 @@
                         </div>
                         <div class="control-group" id="readTimeGroup">
 
-                            <label class="control-label">查阅时间</label>
+                            <label class="control-label"><span class="required">*</span>查阅时间</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="120"
-                                       id="readTime" name="readTime"  number="true"    maxlength="5">分钟
+                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
                         <div class="control-group" id="phoneGroup">
@@ -180,48 +180,68 @@
     var myVld = new EstValidate("form1");
     function formSubmit(){
         var a0101 = $("#a0101").val();
-        var a0101Content = $("#a0101Content").val();
-        if(a0101Content == "" || a0101Content==null){
-            showTip("提示","请添加查阅何人档案",1500);
+        if(a0101 == "" || a0101 == null){
+            showTip("提示","请输入查阅人信息",1000);
             return;
-        }
-        var bool = myVld.form();
-        if(!bool){
-            return;
-        }
-        var fileInput = document.getElementById("clFile");
-        if (fileInput.files.length > 0) {
-            var name = fileInput.files[0].name
-            var arr = name.split(".");
-            if (arr.length < 2 || !(arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx" || arr[arr.length - 1] == "DOC" || arr[arr.length - 1] == "DOCX")) {
-                showTip("提示", "请上传word文件", 2000);
-                return;
-            }
-        }
-        //myLoading.show();
-        $("#form1").ajaxSubmit({
-            url : "${path }/zzb/dzda/cysq/save",
-            type : "post",
-            dataType : "json",
-            enctype : "multipart/form-data",
-            headers: {
-                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success : function(data){
-                if(data.success){
-                    // myLoading.hide();
-                    $('#addModal').modal('hide');
-                    $('#addDiv').html("");
-                    showTip("提示", "申请成功！", 1500);
-                }else{
-                    showTip("提示", json.message, 2000);
+        }else {
+            $.ajax({
+                url : "${path }/zzb/dzda/cysq/ajax/getDaxx",
+                type : "get",
+                data : {"param":a0101},
+                dataType : "json",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(json){
+                    if(json.success){
+                        var bool = myVld.form();
+                        if(!bool){
+                            return;
+                        }
+                        var fileInput = document.getElementById("clFile");
+                        if (fileInput.files.length > 0) {
+                            var name = fileInput.files[0].name
+                            var arr = name.split(".");
+                            if (arr.length < 2 || !(arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx" || arr[arr.length - 1] == "DOC" || arr[arr.length - 1] == "DOCX")) {
+                                showTip("提示", "请上传word文件", 2000);
+                                return;
+                            }
+                        }
+                        //myLoading.show();
+                        $("#form1").ajaxSubmit({
+                            url : "${path }/zzb/dzda/cysq/save",
+                            type : "post",
+                            dataType : "json",
+                            enctype : "multipart/form-data",
+                            headers: {
+                                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                            },
+                            success : function(data){
+                                if(data.success){
+                                    // myLoading.hide();
+                                    $('#addModal').modal('hide');
+                                    $('#addDiv').html("");
+                                    showTip("提示", "申请成功！", 1500);
+                                }else{
+                                    showTip("提示", json.message, 2000);
+                                }
+                            },
+                            error : function(arg1, arg2, arg3){
+                                //myLoading.hide();
+                                showTip("提示","出错了请联系管理员");
+                            }
+                        });
+                    }else {
+                        showTip("提示","不存在此档案",1500);
+                    }
+
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","加载失败");
                 }
-            },
-            error : function(arg1, arg2, arg3){
-                //myLoading.hide();
-                showTip("提示","出错了请联系管理员");
-            }
-        });
+            });
+        }
+
     }
 
     function setName(obj) {

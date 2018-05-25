@@ -107,7 +107,7 @@
 		})
 	});
 	function changeTreeDivHeight(){
-		var divHeight = $(window).height()-170;
+		var divHeight = $(window).height()-180;
 		$("#leftTree_div").css('height',divHeight);
 	}
 

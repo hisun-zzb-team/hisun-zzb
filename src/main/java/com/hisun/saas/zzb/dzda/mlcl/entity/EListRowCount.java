@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.mlcl.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "e_list_row_count")
-public class EListRowCount  extends TombstoneEntity implements Serializable {
+public class EListRowCount  extends TenantEntity implements Serializable {
     private String id;
     private String bigTypeCount;
     private String smallTypeCount;

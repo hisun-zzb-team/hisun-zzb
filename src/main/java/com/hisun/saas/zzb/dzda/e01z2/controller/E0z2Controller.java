@@ -259,15 +259,15 @@ public class E0z2Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.CLJSMB_STORE_PATH;
-        List<Object> a32Vos=new ArrayList<>();
+        List<Object> e01z2Vos=new ArrayList<>();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
-            a32Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
+            e01z2Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
             Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
-            if(a32Vos.size()>0){
-                for(int i=0;i<a32Vos.size();i++){
+            if(e01z2Vos.size()>0){
+                for(int i=0;i<e01z2Vos.size();i++){
                     E01Z2 e01z2 = new E01Z2();
-                    E01z2Vo e01z2Vo = (E01z2Vo) a32Vos.get(i);
+                    E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
                     BeanUtils.copyProperties(e01z2,e01z2Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     e01z2.setA38(a38);

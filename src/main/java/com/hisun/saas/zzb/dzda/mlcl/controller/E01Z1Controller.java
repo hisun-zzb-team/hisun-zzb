@@ -306,6 +306,9 @@ public class E01Z1Controller extends BaseController {
             @PathVariable("id") String id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            if(StringUtils.isEmpty(id)){
+                return null;
+            }
             E01Z1 e01z1 = this.e01Z1Service.getByPK(id);
             this.e01Z1Service.deleteE01Z1(e01z1);
             map.put("success", true);
@@ -589,22 +592,24 @@ public class E01Z1Controller extends BaseController {
             //解析excel 获得返回数据
             e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
             //根据返回数据新增材料
-            addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",a38Id);
-            addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",a38Id);
-            addE01z1(e01Z1ExcelVo.getKysp(),"kysp",a38Id);
-            addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getZscl(),"zscl",a38Id);
-            addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",a38Id);
-            addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",a38Id);
-            addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",a38Id);
-            addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",a38Id);
+            if(e01Z1ExcelVo!=null){
+                addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",a38Id);
+                addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",a38Id);
+                addE01z1(e01Z1ExcelVo.getKysp(),"kysp",a38Id);
+                addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getZscl(),"zscl",a38Id);
+                addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",a38Id);
+                addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",a38Id);
+                addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",a38Id);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

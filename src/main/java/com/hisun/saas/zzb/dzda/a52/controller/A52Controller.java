@@ -268,13 +268,13 @@ public class A52Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
-        A38Vo a32Vo = new A38Vo();
+        A38Vo a38Vo = new A38Vo();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
-            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+            a38Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
             Integer oldPxInteger=a52Service.getMaxSort(a38Id);
-            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
-                List<A52Vo> a52Vos = a32Vo.getA52Vos();
+            if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
+                List<A52Vo> a52Vos = a38Vo.getA52Vos();
                 for(int i=0;i<a52Vos.size();i++){
                     A52 a52 = new A52();
                     A52Vo a52Vo = a52Vos.get(i);

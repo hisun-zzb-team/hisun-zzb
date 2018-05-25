@@ -91,7 +91,7 @@
 				<a onclick="fileDown('allDa')">整本档案下载(含图片)</a>
 				</li>
 				<li >
-				<a onclick="fileDown('dianzibiaogemulu')">电子表格目录</a>
+				<a onclick="fileDown('danganxiazai')">电子表格目录</a>
 				</li>
 				<li>
 				<a onclick="fileDown('qianquecail')">欠缺材料信息</a>
@@ -382,6 +382,9 @@
 	}
 
 	function fileDown(type) {
+		if(type=="danganxiazai"){
+			window.open("${path}/zzb/dzda/a38/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
 		if(type=="dangantupianxiazai"){
 			window.open("${path}/zzb/dzda/mlcl/tpcl/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 		}

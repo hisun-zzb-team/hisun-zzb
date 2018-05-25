@@ -13,7 +13,7 @@
             <div class="caption">本地材料</div>
             <div class="clearfix fr">
                 <a id="checkFile" class="btn green" href="#"><i class="icon-question-sign"></i>查看检查结果</a>
-                <a id="uploadAndSaveFile" class="btn green" href="#" disabled><i class="icon-save"></i>保存</a>
+                <button type="button" id="uploadAndSaveFile" class="btn green" href="javascript:uploadAndSaveFile();" disabled><i class="icon-save"></i>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
             </div>
         </div>
@@ -118,7 +118,7 @@
         myLoading.show();
         $resultFilelist.html("");
         var currentNodeId = $("#currentNodeId").val();
-
+        $fileJson = [];
         function handleFile(f) {
             //var dateBefore = new Date();
             JSZip.loadAsync(f)
@@ -248,13 +248,13 @@
                                     isExist = true;
                                     if ($aggregateFilelist[i].count != mlclAggregate.count) {
                                         isPass = false
-                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传图片数为:" + $aggregateFilelist[i].count});
+                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]设置页数为:" + mlclAggregate.count + ",实际上传图片数为:" + $aggregateFilelist[i].count});
                                     }
                                 }
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]页数为:" + mlclAggregate.count + ",实际上传图片数为:0"});
+                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]设置页数为:" + mlclAggregate.count + ",实际上传图片数为:0"});
                             }
                         });
                         //判断已上传的文件目录是否多余实际要求的目录
@@ -268,7 +268,7 @@
                             }
                             if (!isExist) {
                                 isPass = false
-                                $checkResultJson.push({"message": "材料:[" + fileJson.fileName + "] 为多余材料,请删除后再上传!"});
+                                $checkResultJson.push({"message": "[" + fileJson.fileName + "]  为多余文件,请删除后再上传!"});
                             }
                         });
                     }
@@ -352,7 +352,7 @@
         });
     }
 
-    $("#uploadAndSaveFile").click(function () {
+   function uploadAndSaveFile(){
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
                 url: "${path}/zzb/dzda/mlcl/tpcl/save/${a38Id}",
@@ -384,6 +384,6 @@
             showTip("提示", "材料验证未通过,请检查通过后再提交！", 2000);
         }
 
-    });
+    }
 
 </script>

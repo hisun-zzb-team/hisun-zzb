@@ -80,7 +80,7 @@
 				<%--</li>--%>
 			<%--</ul>--%>
 		<%--</div>--%>
-		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
+		<a  class="btn green" href="javascript:delA38ByManage()"><i class="icon-remove"></i>删除</a>
 		<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -468,7 +468,7 @@
 		});
 	}
 
-	var del = function(){
+	var delA38ByManage = function(){
 		var id = "${id}";
 		var itemName = "${a0101}";
 		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){

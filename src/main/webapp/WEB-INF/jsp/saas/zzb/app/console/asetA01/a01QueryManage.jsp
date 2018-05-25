@@ -309,10 +309,10 @@
 		var id = node.id;
 		var itemName = node.name+"\",删除该机构将删除机构下的干部，\"请确认继续删除";
 
-		actionByConfirm1(itemName, "${path}/zzb/app/console/appGbcxB01/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/appGbcxB01/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbcx/"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbcx/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
@@ -622,7 +622,7 @@
 		if(confirm("确定要删除\"" + treeNode.name + "\"吗?")){
 			$.ajax({
 				type:"POST",
-				url:"${path}/monitor/customCatalog/delete",
+				url:"${path}/monitor/customCatalog/delete??OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",
 				dataType : "json",
 				headers:{
 					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'

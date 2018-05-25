@@ -22,10 +22,10 @@
 					<div class="portlet-title">
 						<div class="caption">干部查询条件列表</div>
 						<div class="clearfix fr">
-							<a class="btn green" href="${path }/zzb/app/console/asetA01Query/add">
+							<a class="btn green" href="${path }/zzb/app/console/asetA01Query/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 								<i class="icon-plus"></i>添加条件
 							</a>
-							<a class="btn" href="${path }/zzb/app/console/asetA01Query/?queryId=${queryId}"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/asetA01Query/?queryId=${queryId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 						</div>
 					</div>
 			
@@ -41,11 +41,11 @@
 							<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
 								<tr style="text-overflow:ellipsis;">
-									<td title="${vo.queryName}"><a href="${path}/zzb/app/console/asetA01Query/?queryId=${vo.id }&queryPosition=queryList"><c:out value="${vo.queryName}"></c:out></a></td>
+									<td title="${vo.queryName}"><a href="${path}/zzb/app/console/asetA01Query/?queryId=${vo.id }&queryPosition=queryList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.queryName}"></c:out></a></td>
 									<td title="${vo.querySort}" style="text-align: center" ><c:out value="${vo.querySort}"></c:out></td>
 									<td class="Left_alignment">
-										<a href="${path}/zzb/app/console/asetA01Query/?queryId=${vo.id }&queryPosition=queryList" class="">查询</a>|
-										<a href="${path}/zzb/app/console/asetA01Query/edit?id=${vo.id }" class="">编辑</a>|
+										<a href="${path}/zzb/app/console/asetA01Query/?queryId=${vo.id }&queryPosition=queryList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">查询</a>|
+										<a href="${path}/zzb/app/console/asetA01Query/edit?id=${vo.id }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">编辑</a>|
 										<a href="javascript:del('${vo.id }','${vo.queryName}')" class="">删除</a>
 									</td>
 								</tr>
@@ -72,7 +72,7 @@
 		})();
 	
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/asetA01Query/?pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){
@@ -80,10 +80,10 @@
 		}
 		
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01Query/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01Query/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/queryList"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/queryList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}

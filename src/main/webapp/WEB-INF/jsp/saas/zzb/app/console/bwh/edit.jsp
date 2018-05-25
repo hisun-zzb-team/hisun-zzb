@@ -37,7 +37,7 @@
 							<div class="portlet-body form">
 								<!-- BEGIN FORM-->
 
-								<form action="${path }/zzb/app/console/bwh/save" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
+								<form action="${path }/zzb/app/console/bwh/save?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="id" value="${shpc.id }" id="id">
 									<input type="hidden" name="filePath" value="${shpc.filePath }" id="filePath">
 									<div id="pcmcGroup" class="control-group">
@@ -115,7 +115,7 @@
 										<div class="controls mt10">
 											<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
 
-											<a class="btn" href="${path }/zzb/app/console/bwh/?pageNum=${shpcPageNum}"><i class="icon-remove-sign"></i> 取消</a>
+											<a class="btn" href="${path }/zzb/app/console/bwh/?pageNum=${shpcPageNum}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 										</div>
 									</div>
 								</form>
@@ -204,7 +204,7 @@
 				myLoading.hide();
 				if(data.success){
 					showTip("提示","操作成功",2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?pageNum=${shpcPageNum}"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?pageNum=${shpcPageNum}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", json.message, 2000);
 				}
@@ -217,7 +217,7 @@
 	}
 
 	function fileDown() {
-		window.open("${path }/zzb/app/console/bwh/ajax/down?id=${shpc.id}");
+		window.open("${path }/zzb/app/console/bwh/ajax/down?id=${shpc.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 	function changeFile(obj){
 		if(obj.value =="1"){

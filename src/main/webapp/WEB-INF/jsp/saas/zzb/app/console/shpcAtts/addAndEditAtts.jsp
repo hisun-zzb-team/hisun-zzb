@@ -99,7 +99,7 @@
 		}
 	})();
 	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/shpcAtts/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/shpcAtts/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
 				setTimeout(addAtts('${shpcId}'),2000);
@@ -111,6 +111,6 @@
 		});
 	};
 	function fileDown(id) {
-		window.open("${path }/zzb/app/console/shpcAtts/ajax/down?id="+id);
+		window.open("${path }/zzb/app/console/shpcAtts/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}
 </script>

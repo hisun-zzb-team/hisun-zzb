@@ -36,7 +36,7 @@
 					<div class="clearfix">
 						<div class="control-group">
 							<div id="query" style="float: left;">
-								<form action="${path }/zzb/app/console/appClient/" method="POST" id="searchForm" name="searchForm">
+								<form action="${path }/zzb/app/console/appClient/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
@@ -117,10 +117,10 @@
 			document.searchForm.submit();
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/appClient/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/appClient/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}
@@ -140,6 +140,9 @@
 				type : "post",
 				data : $("#form1").serialize(),
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						document.getElementById(id+"_td").innerHTML  = data.statustdValue;

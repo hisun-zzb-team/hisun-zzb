@@ -47,7 +47,7 @@
 				success : function(data){
 					if(data.success){
 						$('#jgModal').modal('hide');
-						setTimeout(function(){window.location.href = "${path}/zzb/app/console/zscx/"},2000);
+						setTimeout(function(){window.location.href = "${path}/zzb/app/console/zscx/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 						showTip("提示","保存成功", 1500);
 						//setTimeout(process.list,2000);
 					}else{

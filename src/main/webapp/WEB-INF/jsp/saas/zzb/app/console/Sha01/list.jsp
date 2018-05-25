@@ -109,7 +109,7 @@
 								</ul>
 							</div>
 
-							<a class="btn" href="${path }/zzb/app/console/bwh/?pageNum=${shpcPageNum}"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/bwh/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum=${shpcPageNum}"><i class="icon-undo"></i>返回</a>
 						</div>
 					</div>
 				</form>
@@ -117,7 +117,7 @@
 				<div class="clearfix">
 					<div class="control-group">
 						<div id="query" style="float: left;">
-							<form action="${path }/zzb/app/console/Sha01/list/?shpcPageNum=${shpcPageNum}" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/app/console/Sha01/list/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcPageNum=${shpcPageNum}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" id="shpcId" name="shpcId" value="${shpcId}"/>
 								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
@@ -162,7 +162,7 @@
 								<c:forEach items="${pager.datas}" var="vo">
 									<tr style="text-overflow:ellipsis;">
 										<td title="${vo.shyj}"><c:out value="${vo.px}"></c:out></td>
-										<td><a href="${path}/zzb/app/console/Sha01/view?id=${vo.id }&shpcPageNum=${shpcPageNum}&a01PageNum=${pager.pageNum}"><c:out value="${vo.xm}"></c:out></a></td>
+										<td><a href="${path}/zzb/app/console/Sha01/view?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id }&shpcPageNum=${shpcPageNum}&a01PageNum=${pager.pageNum}"><c:out value="${vo.xm}"></c:out></a></td>
 										<td><c:out value="${vo.xb}"></c:out></td>
 										<td><c:out value="${vo.mz}"></c:out></td>
 										<td><c:out value="${vo.jg}"></c:out></td>
@@ -286,7 +286,7 @@
 				}
 				//hideErrorMsg();
 				$("#importForm").ajaxSubmit({
-					url : "${path }/zzb/app/console/Sha01/ajax/execute?shpcId=${shpcId}",
+					url : "${path }/zzb/app/console/Sha01/ajax/execute?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}",
 					type : "post",
 					headers:{
 						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -298,7 +298,7 @@
 						if(json.code == 1){
 							showTip("提示","操作成功",500);
 							//loadCiList(ciObjectId);
-							window.location.href="${path }/zzb/app/console/Sha01/list?shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${pager.pageNum}";
+							window.location.href="${path }/zzb/app/console/Sha01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${pager.pageNum}";
 						}else if(json.code == -1){
 							showTip("提示", json.message, 500);
 						}else if(json.code == -2){
@@ -350,10 +350,10 @@
 				}
 				var url = "";
 				if(unloadOnlyFileOrBatch =="batch") {
-					matchResult("干部任免审批表","${path }/zzb/app/Sha01/gbrmspb/ajax/batch/match?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
+					matchResult("干部任免审批表","${path }/zzb/app/Sha01/gbrmspb/ajax/batch/match?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
 					<%--url = "${path }/zzb/app/Sha01/gbrmspb/ajax/batch/upload?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode;--%>
 				}else{
-					url = "${path }/zzb/app/Sha01/gbrmspb/ajax/uploadFile?sha01Id="+a01Id;
+					url = "${path }/zzb/app/Sha01/gbrmspb/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id;
 					$("#importForm").ajaxSubmit({
 						url:url ,
 						type: "post",
@@ -414,10 +414,10 @@
 				}
 				var url = "";
 				if(unloadOnlyFileOrBatch =="batch") {
-					matchResult("考察材料","${path }/zzb/app/Sha01/kccl/ajax/batch/match?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
+					matchResult("考察材料","${path }/zzb/app/Sha01/kccl/ajax/batch/match?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
 					<%--url = "${path }/zzb/app/Sha01/kccl/ajax/batch/match?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode;--%>
 				}else{
-					url = "${path }/zzb/app/Sha01/kccl/ajax/uploadFile?sha01Id="+a01Id;
+					url = "${path }/zzb/app/Sha01/kccl/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id;
 
 					$("#importForm").ajaxSubmit({
 						url: url,
@@ -480,10 +480,10 @@
 				}
 				var url = "";
 				if(unloadOnlyFileOrBatch =="batch") {
-					matchResult("档案审查情况","${path }/zzb/app/Sha01/dascqk/ajax/batch/match?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
+					matchResult("档案审查情况","${path }/zzb/app/Sha01/dascqk/ajax/batch/match?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
 					<%--url = "${path }/zzb/app/Sha01/dascqk/ajax/batch/upload?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode;--%>
 				}else{
-					url = "${path }/zzb/app/Sha01/dascqk/ajax/uploadFile?sha01Id="+a01Id;
+					url = "${path }/zzb/app/Sha01/dascqk/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id;
 					$("#importForm").ajaxSubmit({
 						url:url,
 						type: "post",
@@ -545,10 +545,10 @@
 				}
 				var url = "";
 				if(unloadOnlyFileOrBatch =="batch") {
-					matchResult("个人重大事项","${path }/zzb/app/Sha01/grzdsx/ajax/batch/match?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
+					matchResult("个人重大事项","${path }/zzb/app/Sha01/grzdsx/ajax/batch/match?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode);
 					<%--url = "${path }/zzb/app/Sha01/grzdsx/ajax/batch/upload?shpcId=${shpcId}&split="+split+"&uploadMatchingMode="+uploadMatchingMode;--%>
 				}else{
-					url = "${path }/zzb/app/Sha01/grzdsx/ajax/uploadFile?sha01Id="+a01Id;
+					url = "${path }/zzb/app/Sha01/grzdsx/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id;
 
 					$("#importForm").ajaxSubmit({
 						url: url,
@@ -593,10 +593,10 @@
 		}
 
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/bwh/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/bwh/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);
 				}
@@ -629,16 +629,16 @@
 			document.searchForm.submit();
 		}
 		function gbrmspbDown(a01Id) {
-			window.open("${path }/zzb/app/Sha01/gbrmspb/ajax/down?sha01Id="+a01Id);
+			window.open("${path }/zzb/app/Sha01/gbrmspb/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id);
 		}
 		function kcclDown(a01Id) {
-			window.open("${path }/zzb/app/Sha01/kccl/ajax/down?sha01Id="+a01Id);
+			window.open("${path }/zzb/app/Sha01/kccl/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id);
 		}
 		function dascqkDown(a01Id) {
-			window.open("${path }/zzb/app/Sha01/dascqk/ajax/down?sha01Id="+a01Id);
+			window.open("${path }/zzb/app/Sha01/dascqk/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id);
 		}
 		function grzdsxDown(a01Id) {
-			window.open("${path }/zzb/app/Sha01/grzdsx/ajax/down?sha01Id="+a01Id);
+			window.open("${path }/zzb/app/Sha01/grzdsx/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id="+a01Id);
 		}
 	</script>
 </body>

@@ -62,7 +62,7 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<div id="query" style="float: left;">
-						<form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
+						<form action="${path }/zzb/app/console/asetA01/ajax/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 							<input type="hidden" id="b01Id" name="b01Id" value="${b01Id}"/>
 							<input type="hidden" id="zsId" name="zsId" value="${zsId}"/>
 							<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
@@ -319,10 +319,10 @@
 		});
 	}
 	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&b01Id=${b01Id}&mcid=${mcid}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}

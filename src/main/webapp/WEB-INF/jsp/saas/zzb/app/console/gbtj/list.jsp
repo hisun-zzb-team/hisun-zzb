@@ -70,14 +70,14 @@
 							<tbody>
 								<c:forEach items="${pager.datas}" var="vo">
 									<tr style="text-overflow:ellipsis;">
-										<td><a href="${path}/zzb/app/console/gbtj/edit?id=${vo.id }"><c:out value="${vo.tjmc}"></c:out></a></td>
+										<td><a href="${path}/zzb/app/console/gbtj/edit?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id }"><c:out value="${vo.tjmc}"></c:out></a></td>
 										<td class="Left_alignment">
 											<a href="javascript:viewJosnDate('${vo.id }','${vo.tblx}','${vo.tjmc }')" class="">预览</a>|
 											<a href="javascript:editJosnDate('${vo.id }','${vo.tjmc}')" class="">编辑数据</a>
 										</td>
 										<td><c:out value="${vo.px}"></c:out></td>
 										<td class="Left_alignment">
-											<a href="${path}/zzb/app/console/gbtj/edit?id=${vo.id }" class="">编辑</a>|
+											<a href="${path}/zzb/app/console/gbtj/edit?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id }" class="">编辑</a>|
 											<a href="javascript:del('${vo.id }','${vo.tjmc}')" class="">删除</a>
 										</td>
 									</tr>
@@ -104,7 +104,7 @@
 		})();
 	
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/gbtj/?pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/gbtj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){
@@ -112,10 +112,10 @@
 		}
 		
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/gbtj/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/gbtj/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbtj/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbtj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}

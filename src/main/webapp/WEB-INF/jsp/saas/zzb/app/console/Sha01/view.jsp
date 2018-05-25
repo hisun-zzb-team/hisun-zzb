@@ -44,7 +44,7 @@
         </div>
         <div class="clearfix fr">
             <a class="btn red" href="javascript:del('${shpa01Vo.xm }')"><i class=" icon-remove-sign"></i>删除</a>
-            <a class="btn" href="${path }/zzb/app/console/Sha01/list?shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${a01PageNum}"><i class="icon-undo"></i>返回</a>
+            <a class="btn" href="${path }/zzb/app/console/Sha01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${a01PageNum}"><i class="icon-undo"></i>返回</a>
         </div>
         <div class="mainoneright">
             <div class="Fullname">${shpa01Vo.xm}</div>
@@ -216,7 +216,7 @@
         });
     }
     function dabzDelete(){
-        actionByConfirm1("档案审查备注", "${path}/zzb/app/Sha01/dascqk/dascqktips/delete/${shpa01Vo.id}",{} ,function(data){
+        actionByConfirm1("档案审查备注", "${path}/zzb/app/Sha01/dascqk/dascqktips/delete/${shpa01Vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data){
             if (data.success == true) {
                 showTip("提示","删除成功", 1000);
                 <%--window.location.href="${path }/zzb/app/console/Sha01/view?id=${shpa01Vo.id}";--%>
@@ -423,7 +423,7 @@
                     //showTip("提示","操作成功",2000);
 
                     window.document.getElementById("gbrmspbDownDiv").style.visibility = "visible";
-                    window.location.href="${path }/zzb/app/console/Sha01/view?id=${shpa01Vo.id}&shpcPageNum=${shpcPageNum}&a01PageNum=${a01PageNum}";
+                    window.location.href="${path }/zzb/app/console/Sha01/view?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${shpa01Vo.id}&shpcPageNum=${shpcPageNum}&a01PageNum=${a01PageNum}";
                 } else if (json.code == -1) {
                     showTip("提示", json.message, 2000);
                 } else {
@@ -440,23 +440,23 @@
     }
 
     function gbrmspbDown() {
-        window.open("${path }/zzb/app/Sha01/gbrmspb/ajax/down?sha01Id=${shpa01Vo.id}");
+        window.open("${path }/zzb/app/Sha01/gbrmspb/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id=${shpa01Vo.id}");
     }
     function kcclDown() {
-        window.open("${path }/zzb/app/Sha01/kccl/ajax/down?sha01Id=${shpa01Vo.id}");
+        window.open("${path }/zzb/app/Sha01/kccl/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id=${shpa01Vo.id}");
     }
     function dascqkDown() {
-        window.open("${path }/zzb/app/Sha01/dascqk/ajax/down?sha01Id=${shpa01Vo.id}");
+        window.open("${path }/zzb/app/Sha01/dascqk/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id=${shpa01Vo.id}");
     }
     function grzdsxDown() {
-        window.open("${path }/zzb/app/Sha01/grzdsx/ajax/down?sha01Id=${shpa01Vo.id}");
+        window.open("${path }/zzb/app/Sha01/grzdsx/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&sha01Id=${shpa01Vo.id}");
     }
 
      function del(itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/Sha01/delete/${shpa01Vo.id}",{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/Sha01/delete/${shpa01Vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 1000);
-                setTimeout(function(){window.location.href = "${path}/zzb/app/console/Sha01/list?shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${a01PageNum}"},1000);
+                setTimeout(function(){window.location.href = "${path}/zzb/app/console/Sha01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&shpcPageNum=${shpcPageNum}&pageNum=${a01PageNum}"},1000);
             }else{
                 showTip("提示", data.message, 2000);
             }

@@ -23,7 +23,7 @@
 					<div class="portlet-title">
 						<div class="caption">"${pcmc}"票决情况</div>
 						<div class="clearfix fr">
-							<a class="btn" href="${path }/zzb/app/console/tp/"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/tp/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 						</div>
 					</div>
 			
@@ -43,7 +43,7 @@
 										<td><c:out value="${vo.tpq_bh}"></c:out></td>
 										<%--<td><c:out value="${vo.tpr_xm}"></c:out></td>--%>
 										<td><c:out value="${vo.tp_sj_str}"></c:out></td>
-										<td><a href="${path}/zzb/app/console/tpsj/?shtpId=${vo.id }" class="">查看</a></td>
+										<td><a href="${path}/zzb/app/console/tpsj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shtpId=${vo.id }" class="">查看</a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -68,7 +68,7 @@
 		})();
 	
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/tp/list?shpcId=${shpcId}&pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/tp/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){

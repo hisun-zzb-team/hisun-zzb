@@ -19,8 +19,11 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.zrzc.Constants;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z7;
+import com.hisun.saas.zzb.dzda.zrzc.exchange.DacdExcelExchange;
 import com.hisun.saas.zzb.dzda.zrzc.service.E01Z7Service;
 import com.hisun.saas.zzb.dzda.zrzc.vo.E01Z7ResVo;
 import com.hisun.saas.zzb.dzda.zrzc.vo.E01Z7Vo;
@@ -40,10 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -63,6 +63,12 @@ public class E01Z7Controller extends BaseController {
     private String uploadAbsolutePath;
     @Resource
     private A38Service a38Service;
+
+    @Resource
+    DacdExcelExchange dacdExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
 
 
     @RequiresPermissions("dazd:*")
@@ -143,27 +149,47 @@ public class E01Z7Controller extends BaseController {
             String fileName = "";
             String savePath = "";
             if (clFile != null && !clFile.isEmpty()) {
-                fileName = clFile.getOriginalFilename();
-                if (fileName.endsWith(".doc") || fileName.endsWith(".DOC") || fileName.endsWith(".docx") || fileName.endsWith(".DOCX")
-                        || fileName.endsWith(".xlsx")) {
-                    String fileDir = uploadAbsolutePath + "/e01z5";
-                    File _fileDir = new File(fileDir);
-                    if (_fileDir.exists() == false) {
-                        _fileDir.mkdirs();
+
+                String filePath = "";
+                File storePathFile = new File(Constants.DACD_STORE_PATH);
+                if(!storePathFile.exists()) storePathFile.mkdirs();
+                filePath = uploadBasePath+ Constants.DACD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+                File file = new File(filePath);
+                InputStream inputStream = null;
+                OutputStream output = null;
+                try {
+                    inputStream = clFile.getInputStream();
+                    output = new FileOutputStream(file);
+                    byte[] buf = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buf)) > 0) {
+                        output.write(buf, 0, bytesRead);
                     }
-                    savePath = fileDir + File.separator + UUIDUtil.getUUID() + "." + FileUtil.getExtend(fileName);
-                    ;
-                    // savePath =fileDir;
-                    try {
-                        FileOutputStream fos = new FileOutputStream(new File(savePath));
-                        fos.write(clFile.getBytes());
-                        fos.flush();
-                        fos.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new GenericException(e);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if(inputStream!=null){
+                        inputStream.close();
+                    }
+                    if(output!=null){
+                        output.close();
                     }
                 }
+
+                String tempFile = uploadBasePath+Constants.DACDMB_STORE_PATH;
+                A38Vo a38Vo = new A38Vo();
+                UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+                try {
+                    a38Vo = (A38Vo) dacdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+                    System.out.print(a38Vo.getA0101());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }finally {
+                    file.delete();
+                }
+
             }
             String a38IdString = vo.getNameContent();
             String[] a38ids = a38IdString.split(",");

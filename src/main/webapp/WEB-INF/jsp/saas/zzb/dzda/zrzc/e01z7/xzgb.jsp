@@ -80,18 +80,18 @@
         App.init();
     });
 
+    var ids = [];
+
     function saveXzda(){
-        var pageNum = $("#pageNum").val();
-        var checks = document.getElementsByName("a38Check");
-        var idString = $("#nameContent").val();
-        var nameString = $("#name").val();
-            for(var i=0;i<checks.length;i++){
-                var value = checks[i].value;
-                var idAndName =value.split(",");
+
+        if(ids.length>0){
+            var idString = "";
+            var nameString = "";
+            for(var i=0;i<ids.length;i++){
+                var idAndName =ids[i].split(",");
                 var id = idAndName[0];
-                var name = idAndName[1]
-                // var index = indexOf(ids,id);
-                if(id !="" && checks[i].checked){
+                var name = idAndName[1];
+                if(id !=""){
                     if(idString == ""){
                         idString =id;
                         nameString = name;
@@ -103,6 +103,32 @@
             }
             $("#name").val(nameString);
             $("#nameContent").val(idString);
+        }
+
+
+
+//        var pageNum = $("#pageNum").val();
+//        var checks = document.getElementsByName("a38Check");
+//        var idString = $("#nameContent").val();
+//        var nameString = $("#name").val();
+//        for(var i=0;i<checks.length;i++){
+//            var value = checks[i].value;
+//            var idAndName =value.split(",");
+//            var id = idAndName[0];
+//            var name = idAndName[1]
+//            // var index = indexOf(ids,id);
+//            if(id !="" && checks[i].checked){
+//                if(idString == ""){
+//                    idString =id;
+//                    nameString = name;
+//                    continue;
+//                }
+//                idString=idString+","+id;
+//                nameString = nameString+","+name;
+//            }
+//        }
+//        $("#name").val(nameString);
+//        $("#nameContent").val(idString);
         if(idString=="" || idString==undefined){
             showTip("提示","请选择档案",1500);
             return;
@@ -110,27 +136,27 @@
         $("#xzdaModal").modal("hide");
     }
     function pagehref (pageNum ,pageSize){
-        var checks = document.getElementsByName("a38Check");
-        var idString = $("#nameContent").val();
-        var nameString = $("#name").val();
-        for(var i=0;i<checks.length;i++){
-            var value = checks[i].value;
-            var idAndName =value.split(",");
-            var id = idAndName[0];
-            var name = idAndName[1]
-            // var index = indexOf(ids,id);
-            if(id !="" && checks[i].checked){
-                if(idString == ""){
-                    idString =id;
-                    nameString = name;
-                    continue;
-                }
-                idString=idString+","+id;
-                nameString = nameString+","+name;
-            }
-        }
-        $("#name").val(nameString);
-        $("#nameContent").val(idString);
+//        var checks = document.getElementsByName("a38Check");
+//        var idString = $("#nameContent").val();
+//        var nameString = $("#name").val();
+//        for(var i=0;i<checks.length;i++){
+//            var value = checks[i].value;
+//            var idAndName =value.split(",");
+//            var id = idAndName[0];
+//            var name = idAndName[1]
+//            // var index = indexOf(ids,id);
+//            if(id !="" && checks[i].checked){
+//                if(idString == ""){
+//                    idString =id;
+//                    nameString = name;
+//                    continue;
+//                }
+//                idString=idString+","+id;
+//                nameString = nameString+","+name;
+//            }
+//        }
+//        $("#name").val(nameString);
+//        $("#nameContent").val(idString);
         $.ajax({
             url: "${path}/zzb/dzda/dazd/ajax/getA38List",// 请求的action路径
             cache:false,
@@ -145,7 +171,7 @@
             },
             success:function(html){
                 $('#a38Table').html(html);
-/*
+
                 var checks = document.getElementsByName("a38Check");
                 if(checks){
                     for(var i=0;i<checks.length;i++){
@@ -156,7 +182,7 @@
                             checks[i].parentNode.className = "checked";
                         }
                     }
-                }*/
+                }
             },
             error: function () {// 请求失败处理函数
                 alert('请求失败');
@@ -164,7 +190,6 @@
         });
     }
 
-    var ids = [];
 
     function indexOf(arr, str){
         if(arr && arr.indexOf){

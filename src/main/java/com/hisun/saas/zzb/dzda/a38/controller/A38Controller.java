@@ -444,12 +444,10 @@ public class A38Controller extends BaseController {
                 query.add(CommonRestrictions.and(" e01z101b = :e01z101b ","e01z101b",eCatalogTypeInfo.getCatalogCode()));
                 orderBy.add(CommonOrder.asc("e01Z104"));
                 List<E01Z1> resultList = e01Z1Service.list(query,orderBy);
-                query=new CommonConditionQuery();
-                orderBy = new CommonOrderBy();
                 List<E01Z1Vo> e01Z1Vos=new ArrayList<>();
                 for(E01Z1 e01Z1:resultList){
                     e01Z1Vo = new E01Z1Vo();
-                    BeanUtils.copyProperties(e01Z1Vo,e01Z1);
+                    org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1Vo,e01Z1);
                     String date = e01Z1Vo.getE01Z117();
                     if(date.length()>=4){
                         e01Z1Vo.setYear(date.substring(date.length()-4,date.length()));
@@ -519,6 +517,8 @@ public class A38Controller extends BaseController {
 
 
             //职务变动
+            query=new CommonConditionQuery();
+            orderBy = new CommonOrderBy();
             query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", id));
             List<A52> a52List = a52Service.list(query,null);
             A52Vo a52Vo;
@@ -526,7 +526,7 @@ public class A38Controller extends BaseController {
             List<A52Vo> a52Vos=new ArrayList<>();
             for(A52 a52:a52List){
                 a52Vo = new A52Vo();
-                BeanUtils.copyProperties(a52Vo,a52);
+                org.apache.commons.beanutils.BeanUtils.copyProperties(a52Vo,a52);
                 a52Vos.add(a52Vo);
             }
             if(a52List!=null && a52List.size()>0){
@@ -540,6 +540,8 @@ public class A38Controller extends BaseController {
             a38ExcelVo.setZwbdA38Vo(a38Vo);
 
             //工资变动
+            query=new CommonConditionQuery();
+            orderBy = new CommonOrderBy();
             query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", id));
             orderBy.add(CommonOrder.asc("px"));
             List<A32> a32List = a32Service.list(query,orderBy);
@@ -547,18 +549,20 @@ public class A38Controller extends BaseController {
             List<A32Vo> a32Vos=new ArrayList<>();
             for(A32 a32:a32List){
                 a32Vo = new A32Vo();
-                BeanUtils.copyProperties(a32Vo,a32);
+                org.apache.commons.beanutils.BeanUtils.copyProperties(a32Vo,a32);
                 a32Vos.add(a32Vo);
             }
             a38ExcelVo.setGzbdList(a32Vos);
 
             //材料接收
+            query=new CommonConditionQuery();
+            orderBy = new CommonOrderBy();
             List<E01Z2> cljsList = e01z2Service.list(query,null);
             E01z2Vo e01z2Vo;
             List<E01z2Vo> e01z2Vos=new ArrayList<>();
             for(E01Z2 e01z2:cljsList){
                 e01z2Vo = new E01z2Vo();
-                BeanUtils.copyProperties(e01z2Vo,e01z2);
+                org.apache.commons.beanutils.BeanUtils.copyProperties(e01z2Vo,e01z2);
                 e01z2Vos.add(e01z2Vo);
             }
             a38ExcelVo.setE01z2Vos(e01z2Vos);

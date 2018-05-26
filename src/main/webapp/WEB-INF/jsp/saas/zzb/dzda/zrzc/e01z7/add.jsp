@@ -347,8 +347,8 @@
         if (fileInput.files.length > 0) {
             var name = fileInput.files[0].name
             var arr = name.split(".");
-            if (arr.length < 2 || !(arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx" || arr[arr.length - 1] == "DOC" || arr[arr.length - 1] == "DOCX")) {
-                showTip("提示", "请上传word文件", 2000);
+            if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+                showTip("提示", "请上传Excel文件", 2000);
                 return;
             }
         }

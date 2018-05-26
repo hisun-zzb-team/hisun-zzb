@@ -24,13 +24,16 @@ import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.mlcl.entity.EListRowCount;
 import com.hisun.saas.zzb.dzda.mlcl.exchange.MlxxExcelExchange;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.saas.zzb.dzda.mlcl.service.RowCountService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
+import com.hisun.saas.zzb.dzda.mlcl.vo.EListRowCountVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.StringUtils;
 import com.hisun.util.UUIDUtil;
@@ -67,6 +70,8 @@ public class E01Z1Controller extends BaseController {
     private A38Service a38Service;
     @Resource
     private E01Z1Service e01Z1Service;
+    @Resource
+    private RowCountService rowCountService;
 
     @Resource
     MlxxExcelExchange mlxxExcelExchange;
@@ -391,6 +396,55 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+    @RequestMapping(value = "/ajax/setRowCount")
+    public ModelAndView setRowCount(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        CommonConditionQuery query = new CommonConditionQuery();
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);
+        EListRowCountVo vo = new EListRowCountVo();
+        try {
+            if(eListRowCounts.size()>0){
+                BeanUtils.copyProperties(vo, eListRowCounts.get(0));
+                map.put("vo",vo);
+            }else {
+                vo.setBigTypeCount("6");
+                vo.setSmallTypeCount("2");
+                map.put("vo",vo);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("saas/zzb/dzda/mlcl/eListRowCount/eListRowCount",map);
+    }
+
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "保存行距")
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/rowCount/save", method = RequestMethod.POST)
+    public @ResponseBody Map<String, Object> rowCountSave(EListRowCountVo vo, HttpServletRequest request) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            if(StringUtils.isNotEmpty(vo.getId())){
+                EListRowCount eListRowCount = this.rowCountService.getByPK(vo.getId());
+                EntityWrapper.wrapperUpdateBaseProperties(eListRowCount,userLoginDetails);
+                BeanUtils.copyProperties(eListRowCount, vo);
+                rowCountService.update(eListRowCount);
+            }else{
+                EListRowCount eListRowCount = new EListRowCount();
+                BeanUtils.copyProperties(eListRowCount, vo);
+                EntityWrapper.wrapperSaveBaseProperties(eListRowCount,userLoginDetails);
+                this.rowCountService.save(eListRowCount);
+            }
+            map.put("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
 
     @RequestMapping("/tree")
     public @ResponseBody
@@ -433,6 +487,13 @@ public class E01Z1Controller extends BaseController {
                          @RequestParam(value="dml",defaultValue="6") int dml){
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
+
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);//获得设置空余行数值
+        if(eListRowCounts.size()>0){
+            xml = Integer.parseInt(eListRowCounts.get(0).getSmallTypeCount());
+            dml = Integer.parseInt(eListRowCounts.get(0).getBigTypeCount());
+        }
+
         orderBy.add(CommonOrder.asc("sort"));
         List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
         E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
@@ -526,6 +587,118 @@ public class E01Z1Controller extends BaseController {
             mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
             resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxx.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/downloadMB/{a38Id}")
+    public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
+                         @RequestParam(value="xml",defaultValue="2")int xml,
+                         @RequestParam(value="dml",defaultValue="6") int dml){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);//获得设置空余行数值
+        if(eListRowCounts.size()>0){
+            xml = Integer.parseInt(eListRowCounts.get(0).getSmallTypeCount());
+            dml = Integer.parseInt(eListRowCounts.get(0).getBigTypeCount());
+        }
+
+        orderBy.add(CommonOrder.asc("sort"));
+        List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        E01Z1Vo vo;
+        String filePath="";
+        Map<String,Object> map = new HashMap();
+        try {
+
+            for(ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos){
+                query=new CommonConditionQuery();
+                orderBy = new CommonOrderBy();
+                query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
+                query.add(CommonRestrictions.and(" e01z101b = :e01z101b ","e01z101b",eCatalogTypeInfo.getCatalogCode()));
+                orderBy.add(CommonOrder.asc("e01Z104"));
+                List<E01Z1> resultList = e01Z1Service.list(query,orderBy);
+                List<E01Z1Vo> e01Z1Vos=new ArrayList<>();
+
+                if("010".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("jlcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setJlcl(e01Z1Vos);
+                }else if("020".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("zzcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setZzcl(e01Z1Vos);
+                }else if("030".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJdcl(e01Z1Vos);
+                    map.put("jdcl",e01Z1Vos.size());
+                }else if("041".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setXlxw(e01Z1Vos);
+                    map.put("xlxw",e01Z1Vos.size());
+                }else if("042".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZyzg(e01Z1Vos);
+                    map.put("zyzg",e01Z1Vos.size());
+                }else if("043".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setKysp(e01Z1Vos);
+                    map.put("kysp",e01Z1Vos.size());
+                }else if("044".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setPxcl(e01Z1Vos);
+                    map.put("pxcl",e01Z1Vos.size());
+                }else if("050".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZscl(e01Z1Vos);
+                    map.put("zscl",e01Z1Vos.size());
+                }else if("060".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDtcl(e01Z1Vos);
+                    map.put("dtcl",e01Z1Vos.size());
+                }else if("070".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJlicl(e01Z1Vos);
+                    map.put("jlicl",e01Z1Vos.size());
+                }else if("080".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCfcl(e01Z1Vos);
+                    map.put("cfcl",e01Z1Vos.size());
+                }else if("091".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setGzcl(e01Z1Vos);
+                    map.put("gzcl",e01Z1Vos.size());
+                }else if("092".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setRmcl(e01Z1Vos);
+                    map.put("rmcl",e01Z1Vos.size());
+                }else if("093".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCgcl(e01Z1Vos);
+                    map.put("cgcl",e01Z1Vos.size());
+                }else if("094".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDbdh(e01Z1Vos);
+                    map.put("dbdh",e01Z1Vos.size());
+                }else if("100".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setQtcl(e01Z1Vos);
+                    map.put("qtcl",e01Z1Vos.size());
+                }
+            }
+
+            File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
+            if(!storePathFile.exists()){
+                storePathFile.mkdirs();
+            }
+
+            filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
+            mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxxMB.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

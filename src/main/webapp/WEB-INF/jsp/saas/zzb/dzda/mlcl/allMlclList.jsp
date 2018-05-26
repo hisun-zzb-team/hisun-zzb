@@ -72,6 +72,20 @@
         </div>
     </div>
 </div>
+<div id="setRowCountModal" class="modal container hide fade" tabindex="-1" data-width="700">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button"></button>
+                <h3 class="modal-title">
+                    设置目录空余行数
+                </h3>
+            </div>
+            <div class="modal-body" id="setRowCountDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
@@ -112,10 +126,13 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a onclick="fileDown('xiazaimludaorumoban')">下载目录导入模板</a>
+                                    <a onclick="downloadMB()">下载目录导入模板</a>
                                 </li>
                                 <li>
                                     <a onclick="uploadFile()">导入目录</a>
+                                </li>
+                                <li>
+                                    <a onclick="setRowCount()">设置目录空余行数</a>
                                 </li>
 
                             </ul>
@@ -452,8 +469,11 @@
 
     function download(){
         window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
-    };
 
+    };
+    function downloadMB(){
+        window.open("${path}/zzb/dzda/e01z1/downloadMB/{a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    }
     function uploadFile(){
         document.getElementById("mlxxFile").click();
     }
@@ -504,6 +524,27 @@
         });
     });
 
+    function setRowCount() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/dzda/e01z1/ajax/setRowCount",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {
+            },
+            success: function (html) {
+                $('#setRowCountDiv').html(html);
+                $('#setRowCountModal').modal({backdrop: 'static', keyboard: false});
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+    }
 </script>
 </body>
 </html>

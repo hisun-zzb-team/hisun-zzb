@@ -71,6 +71,20 @@
         </div>
     </div>
 </div>
+<div id="setRowCountModal" class="modal container hide fade" tabindex="-1" data-width="700">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button"></button>
+                <h3 class="modal-title">
+                    设置目录空余行数
+                </h3>
+            </div>
+            <div class="modal-body" id="setRowCountDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
@@ -121,6 +135,9 @@
                                 <li>
                                     <a onclick="uploadFile()">导入目录</a>
                                     <input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
+                                </li>
+                                <li>
+                                    <a onclick="setRowCount()">设置目录空余行数</a>
                                 </li>
 
                             </ul>
@@ -507,6 +524,28 @@
             }
         });
     });
+
+    function setRowCount() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/dzda/e01z1/ajax/setRowCount",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {
+            },
+            success: function (html) {
+                $('#setRowCountDiv').html(html);
+                $('#setRowCountModal').modal({backdrop: 'static', keyboard: false});
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+    }
 </script>
 </body>
 </html>

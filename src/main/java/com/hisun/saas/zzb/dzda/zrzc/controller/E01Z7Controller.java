@@ -6,6 +6,7 @@
 
 package com.hisun.saas.zzb.dzda.zrzc.controller;
 
+import com.google.common.collect.Maps;
 import com.hisun.base.controller.BaseController;
 import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.dao.util.CommonOrder;
@@ -17,6 +18,7 @@ import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z7;
 import com.hisun.saas.zzb.dzda.zrzc.service.E01Z7Service;
@@ -59,6 +61,8 @@ public class E01Z7Controller extends BaseController {
 
     @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
+    @Resource
+    private A38Service a38Service;
 
 
     @RequiresPermissions("dazd:*")
@@ -161,22 +165,26 @@ public class E01Z7Controller extends BaseController {
                     }
                 }
             }
+            String a38IdString = vo.getNameContent();
+            String[] a38ids = a38IdString.split(",");
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z7 entity = new E01Z7();
-            A38 a38 = new A38();
-            //// TODO: 2018/5/23
-            a38.setId("ass" + System.currentTimeMillis());
-            ConvertUtils.register(new DateConverter(null), java.util.Date.class);
-            BeanUtils.copyProperties(entity, vo);
-            entity.setE01Z701(StringUtils.isNotBlank(vo.getE01Z701())? DateUtil.parseDefaultDate(vo.getE01Z701()) :null );
-            entity.setE01Z727(StringUtils.isNotBlank(vo.getE01Z727())? DateUtil.parseDefaultDate(vo.getE01Z727()) :null );
-            entity.setA38(a38);
-            entity.setE01Z717(details.getRealname());
-            entity.setFileName(fileName);
-            entity.setFilePath(savePath);
-            entity.setId(null);
-            EntityWrapper.wrapperSaveBaseProperties(entity, details);
-            e01z7Service.save(entity);
+            for (String a38Id:a38ids){
+                entity = new E01Z7();
+                A38 a38 = a38Service.getByPK(a38Id);
+                ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+                BeanUtils.copyProperties(entity, vo);
+                entity.setE01Z701(StringUtils.isNotBlank(vo.getE01Z701())? DateUtil.parseDefaultDate(vo.getE01Z701()) :null );
+                entity.setE01Z727(StringUtils.isNotBlank(vo.getE01Z727())? DateUtil.parseDefaultDate(vo.getE01Z727()) :null );
+                entity.setA38(a38);
+                entity.setName(a38.getA0101());
+                entity.setE01Z717(details.getRealname());
+                entity.setFileName(fileName);
+                entity.setFilePath(savePath);
+                entity.setId(null);
+                EntityWrapper.wrapperSaveBaseProperties(entity, details);
+                e01z7Service.save(entity);
+            }
             returnMap.put("code", 1);
         } catch (GenericException e) {
             returnMap.put("code", -1);
@@ -211,6 +219,9 @@ public class E01Z7Controller extends BaseController {
     @RequestMapping("/ajax/edit/{id}")
     public ModelAndView edit(@PathVariable("id")String id){
         Map<String,Object> model = new HashMap<String,Object>();
+        E01Z7 e01Z7 = e01z7Service.getByPK(id);
+        model.put("hzUserName",e01Z7.getE01Z724());
+        model.put("hzrq",DateUtil.formatDefaultDate(e01Z7.getE01Z727()));
         model.put("id", id);
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/edit", model);
     }
@@ -264,6 +275,40 @@ public class E01Z7Controller extends BaseController {
             returnMap.put("code", -1);
         }
         return returnMap;
+    }
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/ajax/xzgb")
+    public ModelAndView plAddMlcl(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize){
+        Map<String, Object> map = Maps.newHashMap();
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
+        Long total = a38Service.count(query);
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("smxh"));
+       // orderBy.add(CommonOrder.asc("a0101"));
+        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
+        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        map.put("pager",pager);
+
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/xzgb",map);
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/ajax/getA38List")
+    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize){
+        Map<String, Object> map = Maps.newHashMap();
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
+        Long total = a38Service.count(query);
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("smxh"));
+        //orderBy.add(CommonOrder.asc("a0101"));
+        List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
+        PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        map.put("pager",pager);
+        map.put("list",resultList);
+
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/xzgbTable",map);
     }
 
     @RequestMapping(value = "/ajax/down")

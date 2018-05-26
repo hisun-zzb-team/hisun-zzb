@@ -36,6 +36,17 @@ public class E01Z7  extends TenantEntity implements Serializable {
     private String e01Z731;//'备注'
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
+    private String sjly;//数据来源
+
+    @Basic
+    @Column(name = "sjly")
+    public String getSjly() {
+        return sjly;
+    }
+
+    public void setSjly(String sjly) {
+        this.sjly = sjly;
+    }
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")

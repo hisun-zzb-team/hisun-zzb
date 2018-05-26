@@ -58,9 +58,14 @@
                         <span class="hidden-480">增加档案接收</span>
 
                     </div>
-                    <div class="tools">
-                        <a href="javascript:location.reload();" class="reload"></a>
+                    <div class="clearfix fr">
 
+                        <div class="btn-group" style="padding-bottom: 0px">
+                            <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
+                            <button type="button" class="btn btn-default" onclick="cancel()"><i
+                                    class='icon-remove-sign'></i> 关闭
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -81,6 +86,7 @@
                                                required
                                                value=""/>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="span6 ">
@@ -210,6 +216,31 @@
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
+                                <div class="control-group" id="sjlyGroup">
+                                    <label class="control-label">数据来源</label>
+
+                                    <div class="controls">
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly">
+                                            <option value=""></option>
+                                            <option value="1">导入本单位excel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div id="e01Z544Group" class="control-group">
+                                    <label class="control-label">备注</label>
+
+                                    <div class="controls">
+                                            <textarea class="span10" style="" rows="2" name="e01Z544" maxlength="400"
+                                                      id="e01Z544" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
                                 <div  id="clFileGroup" class="control-group">
                                     <label id="clFilelb" class="control-label">上传文件</label>
                                     <div class="controls">
@@ -222,43 +253,15 @@
 													<span class="btn btn-file border_radius_none">
 													<span class="fileupload-new ">选择文件</span>
 													<span class="fileupload-exists">修改文件</span>
-													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
+													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)"
+                                                          accept="" />
 													</span>
-                                                <p class="textprompt">附件支持的格式有：'doc','docx'</p>
                                                 <p class="Errorred" id="attachFileError"></p>
                                                 <a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <%--<div class="controls">
-                                        <input type="file" class="default"  name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
-                                        <p class="textprompt">附件支持的格式有：'doc','docx'</p>
-                                        <p class="Errorred" id="attachFileError"></p>
-                                    </div>--%>
                                 </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="e01Z544Group" class="control-group">
-                                        <label class="control-label">备注</label>
-
-                                        <div class="controls">
-                                            <textarea class="span10" style="" rows="2" name="e01Z544" maxlength="400"
-                                                      id="e01Z544" style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
-                                    </div>
-                            </div>
-                        <div class="row-fluid">
-
-                            <div class="control-group">
-                                <center>
-                                <div class="controls mt10">
-                                    <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-                                    <button type="button" class="btn btn-default" onclick="cancel()"><i
-                                            class='icon-remove-sign'></i> 关闭
-                                    </button>
-                                </div>
-                                </center>
                             </div>
 
                         </div>
@@ -274,6 +277,7 @@
 
     <%-- END PAGE CONTENT--%>
 </div>
+
 <script type="text/javascript">
     (function(){
         App.init();
@@ -286,6 +290,16 @@
         });
 
     })();
+
+
+    $(function(){
+        $('#sjly').change(function(){
+            var value =$(this).children('option:selected').val();//这就是selected的值
+            if(value ==1){
+                $("#clFile").attr("accept","application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+        })
+    })
 
     $(function () {
         $('#e01Z524').datepicker({

@@ -198,6 +198,7 @@ public class E01Z5Controller extends BaseController {
     @RequestMapping("/ajax/edit/{id}")
     public ModelAndView edit(@PathVariable("id")String id){
         Map<String,Object> model = new HashMap<String,Object>();
+        model.put("hzrq",DateUtil.formatDateByFormat(e01z5Service.getByPK(id).getE01Z531(),"yyyyMMdd"));
         model.put("id", id);
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/edit", model);
     }

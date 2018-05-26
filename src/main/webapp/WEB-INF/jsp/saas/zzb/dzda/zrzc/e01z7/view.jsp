@@ -50,7 +50,7 @@
 
             <div class="portlet box grey">
                 <div class="portlet-title">
-                    <div class="caption">查看档案接收</div>
+                    <div class="caption">查看档案转递</div>
                     <div class="clearfix fr">
 
                         <div class="btn-group" style="padding-bottom: 0px">
@@ -256,7 +256,7 @@
             });
         })
         var cancel = function () {
-            window.location.href = "${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            window.location.href = "${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
         }
 
 

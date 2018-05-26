@@ -58,9 +58,14 @@
                         <span class="hidden-480">增加档案转递</span>
 
                     </div>
-                    <div class="tools">
-                        <a href="javascript:location.reload();" class="reload"></a>
+                    <div class="clearfix fr">
 
+                        <div class="btn-group" style="padding-bottom: 0px">
+                            <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">保存</button>
+                            <button type="button" class="btn btn-default" onclick="cancel()"><i
+                                    class='icon-remove-sign'></i> 关闭
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -78,9 +83,13 @@
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" name="name" maxlength="200" id="name"
-                                               required
+                                               required readonly
                                                value=""/>
+                                        <a href="javascript:xzda()">选择档案</a>
                                     </div>
+                                    <input type="hidden" class="span10 m-wrap" name="nameContent" maxlength="200" id="nameContent"
+                                           required
+                                           value=""/>
                                 </div>
                             </div>
                             <div class="span6 ">
@@ -163,32 +172,16 @@
                             </div>
                         </div>
                         <div class="row-fluid">
+
                             <div class="span6 ">
-                                <div id="clFileGroup" class="control-group">
-                                    <label id="clFilelb" class="control-label">上传文件</label>
+                                <div class="control-group" id="sjlyGroup">
+                                    <label class="control-label">数据来源</label>
 
                                     <div class="controls">
-                                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                                            <div class="input-append">
-                                                <div class="uneditable-input border_radius_none heig20">
-                                                    <i class="icon-file fileupload-exists"></i>
-                                                    <span class="fileupload-preview"></span>
-                                                </div>
-													<span class="btn btn-file border_radius_none">
-													<span class="fileupload-new ">选择文件</span>
-													<span class="fileupload-exists">修改文件</span>
-													<input type="file" class="default " name="clFile" id="clFile"
-                                                           onchange="setName(this)" fileSizeLimit="20"
-                                                           fileType="doc,docx,DOC,DOCX"/>
-													</span>
-
-                                                <p class="textprompt">附件支持的格式有：'doc','docx'</p>
-
-                                                <p class="Errorred" id="attachFileError"></p>
-                                                <a href="#" class="btn fileupload-exists border_radius_none"
-                                                   data-dismiss="fileupload">移除</a>
-                                            </div>
-                                        </div>
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly">
+                                            <option value=""></option>
+                                            <option value="1">导入本单位excel</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -203,16 +196,31 @@
                             </div>
                         </div>
                         <div class="row-fluid">
+                            <div class="span6 ">
+                                <div id="clFileGroup" class="control-group">
+                                    <label id="clFilelb" class="control-label">上传文件</label>
 
-                            <div class="control-group">
-                                <center>
-                                    <div class="controls mt10">
-                                        <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-                                        <button type="button" class="btn btn-default" onclick="cancel()"><i
-                                                class='icon-remove-sign'></i> 关闭
-                                        </button>
+                                    <div class="controls">
+                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                            <div class="input-append">
+                                                <div class="uneditable-input border_radius_none heig20">
+                                                    <i class="icon-file fileupload-exists"></i>
+                                                    <span class="fileupload-preview"></span>
+                                                </div>
+													<span class="btn btn-file border_radius_none">
+													<span class="fileupload-new " id="xzwj" onclick="xzwj()">选择文件</span>
+													<span class="fileupload-exists">修改文件</span>
+													<input type="file" class="default " name="clFile" id="clFile"
+                                                           onchange="setName(this)" fileSizeLimit="20"
+                                                           accept=""/>
+													</span>
+                                                <p class="Errorred" id="attachFileError"></p>
+                                                <a href="#" class="btn fileupload-exists border_radius_none"
+                                                   data-dismiss="fileupload">移除</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </center>
+                                </div>
                             </div>
 
                         </div>
@@ -228,6 +236,27 @@
 
     <%-- END PAGE CONTENT--%>
 </div>
+<div id="xzdaModal" class="modal container hide fade" tabindex="-1" data-width="800" style="z-index: 10">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="float: right;font-weight: bold;" data-dismiss="modal" ><i class='icon-remove-sign'></i> 关闭</button>
+                <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:saveXzda()">
+                    保存
+                </a>
+               <%-- <button data-dismiss="modal" class="close"  type="button"></button>
+                <div class="relationbetTop_but">
+                    <button class="btn green" type="button" onclick="saveXzda()"></button>
+                </div>--%>
+                <h3 class="modal-title" id="editTitle" >
+                    选择档案
+                </h3>
+            </div>
+            <div class="modal-body" id="xzdaDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     (function(){
         App.init();
@@ -240,6 +269,44 @@
         });
 
     })();
+    function xzwj(){
+        var value =$(this).children('option:selected').val();//这就是selected的值
+        if(value==""){
+            showTip("提示","请选择数据来源",1000);
+        }
+    }
+    $(function(){
+        $('#sjly').change(function(){
+            var value =$(this).children('option:selected').val();//这就是selected的值
+            //excel
+            if(value ==1){
+                $("#clFile").attr("accept","application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+            //后续扩展
+        })
+    })
+    function xzda(){
+        $("#nameContent").val("");
+        $("#name").val("");
+        $.ajax({
+            url:"${path}/zzb/dzda/dazd/ajax/xzgb",
+            type : "post",
+            data: {"pageNum":1,"pageSize":5},
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "html",
+            success : function(html){
+                $('#xzdaDiv').html(html);
+                $('#xzdaModal').modal({
+                    keyboard: true
+                });
+            },
+            error : function(){
+                showTip("提示","出错了请联系管理员", 1500);
+            }
+        });
+    }
     function setName(obj) {
         if (obj.value != "") {
             var fileName  = obj.value.substring(obj.value.lastIndexOf('\\')+1);
@@ -272,7 +339,6 @@
 
     var myVld = new EstValidate("form1");
     function formSubmit(){
-        debugger
         var bool = myVld.form();
         if(!bool){
             return;

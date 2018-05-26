@@ -36,7 +36,7 @@
 
                             <div class="controls" style="margin-left: 120px">
                                 <input type="text" class="span8 m-wrap" name="hzrq" maxlength="128" id="hzrq" required
-                                       value="" placeholder="日期格式 例如:20180101" isDate="true" dateformat="yyyymmdd"/>
+                                       value="${hzrq}" placeholder="日期格式 例如:20180101" isDate="true" dateformat="yyyymmdd"/>
                             </div>
                         </div>
 
@@ -61,6 +61,7 @@
     <%-- END PAGE CONTENT--%>
 </div>
 <script type="text/javascript">
+
     var myVld = new EstValidate("form1");
     function formSubmit(){
         var bool = myVld.form();

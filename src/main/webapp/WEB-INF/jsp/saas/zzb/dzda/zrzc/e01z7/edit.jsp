@@ -35,7 +35,7 @@
 
                             <div class="controls" style="margin-left: 120px">
                                 <input type="text" class="span8 m-wrap" name="hzUserName" maxlength="128" id="hzUserName" required
-                                       value=""/>
+                                       value="${hzUserName}"/>
                             </div>
                         </div>
                         <div id="hzrqGroup" class="control-group">
@@ -43,7 +43,7 @@
 
                             <div class="controls" style="margin-left: 120px">
                                 <input type="text" class="span8 m-wrap" name="hzrq" maxlength="128" id="hzrq" required
-                                       value="" placeholder="日期格式 例如:20180101" isDate="true" dateformat="yyyymmdd"/>
+                                       value="${hzrq}" placeholder="日期格式 例如:20180101" isDate="true" dateformat="yyyymmdd"/>
                             </div>
                         </div>
 

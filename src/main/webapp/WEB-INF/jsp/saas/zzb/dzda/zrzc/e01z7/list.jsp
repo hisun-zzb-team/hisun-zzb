@@ -65,7 +65,7 @@
 							<th width=60>回执人</th>
 							<th width=70 style="text-align: center">回执日期</th>
 							<th width=60  style="text-align: center">填写回执</th>
-							<th width=60  style="text-align: center">查看</th>
+							<th width=90  style="text-align: center">操作</th>
 							<th width=50  style="text-align: center">文件下载</th>
 						</thead>
 						<tbody>
@@ -79,7 +79,8 @@
 									<TD><c:out value="${vo.e01Z724}"></c:out></TD>
 									<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z727}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
 									<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">修改</a></TD>
-									<TD style="text-align: center"><a href="${path}/zzb/dzda/dazd/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a></TD>
+									<TD style="text-align: center"><a href="${path}/zzb/dzda/dazd/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a>
+										<a href="javascript:deleteE01z7('${vo.id}') ">删除</a></TD>
 									<TD style="text-align: center">
 										<c:choose>
 											<c:when test="${vo.fileName == '' || vo.fileName == null}">
@@ -124,6 +125,21 @@
 </div>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
+	function deleteE01z7(id){
+		actionByConfirm1('',"${path}/zzb/dzda/dazd/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+			if(json.code == 1){
+				showTip("提示","操作成功");
+				setTimeout(function(){
+					window.location.href ="${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+				},1500);
+
+			}else{
+				showTip("提示","操作失败", 2000);
+			}
+		},"删除")
+	}
+
+
 
 	var myLoading = new MyLoading("${path}",{zindex : 11111});
 	(function(){
@@ -192,66 +208,8 @@
 	function downloadFile(id){
 		window.open("${path }/zzb/dzda/dazd/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}
-	function dataAllcheckChange(){
-		var allCheck = document.getElementById("allCheck");
-		var checks = document.getElementsByName("dataIds");
-		if(checks){
-			for(var i=0;i<checks.length;i++) {
-				checks[i].checked = allCheck.checked;
-				if (allCheck.checked == true) {
-					checks[i].parentNode.className = "checked";
-				}else{
-					checks[i].parentNode.className = "";
-				}
-			}
-		}
-	}
-	function ruku(){
-		var checks = document.getElementsByName("dataIds");
-		var checkedIds = "";
-		var checkedCount = 0;
-		for(var i=0;i<checks.length;i++){
-			if(checks[i].checked==true){
-				checkedCount ++;
-				if(checkedIds==""){
-					checkedIds = checks[i].value;
-				}
-			}
-		}
-		if(checkedCount == 0){
-			showTip("提示","请选择要入库的干部",2000);
-			return;
-		}
-		$.ajax({
-			url : "${path }/zzb/dzda/a38/update/Sjzt",
-			type : "post",
-			data : {
-				"a38Ids":checkedIds,
-				"sjzt":'1'
-			},
-			headers:{
-				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-			},
-			dataType : "json",
-			success : function(json){
-				if(json.code==1){
-					myLoading.hide();
-					showTip("提示", "成功入库", 1300);
-					setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1300);
 
-				}else{
-					myLoading.hide();
-					showTip("提示", json.message, 2000);
-					return false;
-				}
-			},
-			error : function(){
-				showTip("提示","出错了,请检查网络!",2000);
-				myLoading.hide();
-				return false;
-			}
-		});
-	}
+
 </script>
 </body>
 </html>

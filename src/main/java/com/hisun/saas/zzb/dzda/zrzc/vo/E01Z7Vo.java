@@ -20,6 +20,7 @@ public class E01Z7Vo {
     private String id;
     private String a38Id;
     private String name;//'档案名称'
+    private String nameContent;//档案id字符串
     private String e01Z701;//'转递日期'
     private String e01Z704A;//'转往单位名称'
     private String e01Z704B;//'转往单位Id'
@@ -32,6 +33,14 @@ public class E01Z7Vo {
     private String e01Z731;//'备注'
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
+
+    public String getNameContent() {
+        return nameContent;
+    }
+
+    public void setNameContent(String nameContent) {
+        this.nameContent = nameContent;
+    }
 
     public String getFileName() {
         return fileName;

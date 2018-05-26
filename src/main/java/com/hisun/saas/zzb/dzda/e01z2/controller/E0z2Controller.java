@@ -12,12 +12,16 @@ import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
+import com.hisun.base.entity.TombstoneEntity;
 import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
+import com.hisun.saas.sys.admin.dictionary.entity.DictionaryItem;
+import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
+import com.hisun.saas.sys.tenant.tenant.entity.Tenant2ResourcePrivilege;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.e01z2.Constants;
 import com.hisun.saas.zzb.dzda.e01z2.exchange.CljsExcelExchange;
@@ -26,6 +30,7 @@ import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
 import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.util.StringUtils;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -58,6 +63,8 @@ public class E0z2Controller extends BaseController {
     private E01z2Service e01z2Service;
     @Resource
     private A38Service a38Service;
+    @Resource
+    private DictionaryItemService dictionaryItemService;
 
     @Resource
     CljsExcelExchange cljsExcelExchange;
@@ -264,10 +271,32 @@ public class E0z2Controller extends BaseController {
         try {
             e01z2Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
             Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
+            boolean flag = false;//判断是否存在非法数据
             if(e01z2Vos.size()>0){
                 for(int i=0;i<e01z2Vos.size();i++){
                     E01Z2 e01z2 = new E01Z2();
                     E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
+                    if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                        flag = true;
+                    }
+                    if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                        flag = true;
+                    }
+                    if(isNotDate(e01z2Vo.getE01Z201())){
+                        flag = true;
+                    }
+                    if(isNotDate(e01z2Vo.getE01Z227())){
+                        flag = true;
+                    }
+                    if(flag){
+                        continue;
+                    }
+
+                    String e01Z237Content = e01z2Vo.getE01Z237Content();
+                    e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
+                    String e01Z244Content = e01z2Vo.getE01Z244Content();
+                    e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
+
                     BeanUtils.copyProperties(e01z2,e01z2Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     e01z2.setA38(a38);
@@ -281,5 +310,43 @@ public class E0z2Controller extends BaseController {
         }finally {
             file.delete();
         }
+    }
+
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 反向查询获取字典项
+     * @param name
+     * @return
+     */
+    public String getDictionaryItem(String name,String Code){
+        List<DictionaryItem> dictionaryItems;
+        if(StringUtils.isEmpty(name)){
+            return "";
+        }
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" dictionaryType.code=:typeCode ", "typeCode", Code));
+        query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+        query.add(CommonRestrictions.and(" display=:display ", "display", DictionaryItem.DISPLAY));
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("sort"));
+        dictionaryItems = dictionaryItemService.list(query, orderBy);
+        for(DictionaryItem dictionaryItem:dictionaryItems){
+            if(name.equals(dictionaryItem.getName())){
+                return dictionaryItem.getCode();
+            }
+        }
+        return "";
     }
 }

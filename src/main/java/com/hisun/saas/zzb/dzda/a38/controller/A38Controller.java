@@ -13,8 +13,11 @@ import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
+import com.hisun.base.entity.TombstoneEntity;
 import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
+import com.hisun.saas.sys.admin.dictionary.entity.DictionaryItem;
+import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
 import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
 import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
@@ -89,6 +92,9 @@ public class A38Controller extends BaseController {
 
     @Resource
     private ECatalogTypeService eCatalogTypeService;
+
+    @Resource
+    private DictionaryItemService dictionaryItemService;
 
     @Resource
     A38ExcelExchange a38ExcelExchange;
@@ -441,7 +447,7 @@ public class A38Controller extends BaseController {
                 List<E01Z1Vo> e01Z1Vos=new ArrayList<>();
                 for(E01Z1 e01Z1:resultList){
                     e01Z1Vo = new E01Z1Vo();
-                    org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1Vo,e01Z1);
+                    BeanUtils.copyProperties(e01Z1Vo,e01Z1);
                     String date = e01Z1Vo.getE01Z117();
                     if(date.length()>=4){
                         e01Z1Vo.setYear(date.substring(date.length()-4,date.length()));
@@ -518,7 +524,7 @@ public class A38Controller extends BaseController {
             List<A52Vo> a52Vos=new ArrayList<>();
             for(A52 a52:a52List){
                 a52Vo = new A52Vo();
-                org.apache.commons.beanutils.BeanUtils.copyProperties(a52Vo,a52);
+                BeanUtils.copyProperties(a52Vo,a52);
                 a52Vos.add(a52Vo);
             }
             if(a52List!=null && a52List.size()>0){
@@ -539,7 +545,7 @@ public class A38Controller extends BaseController {
             List<A32Vo> a32Vos=new ArrayList<>();
             for(A32 a32:a32List){
                 a32Vo = new A32Vo();
-                org.apache.commons.beanutils.BeanUtils.copyProperties(a32Vo,a32);
+                BeanUtils.copyProperties(a32Vo,a32);
                 a32Vos.add(a32Vo);
             }
             a38ExcelVo.setGzbdList(a32Vos);
@@ -550,7 +556,7 @@ public class A38Controller extends BaseController {
             List<E01z2Vo> e01z2Vos=new ArrayList<>();
             for(E01Z2 e01z2:cljsList){
                 e01z2Vo = new E01z2Vo();
-                org.apache.commons.beanutils.BeanUtils.copyProperties(e01z2Vo,e01z2);
+                BeanUtils.copyProperties(e01z2Vo,e01z2);
                 e01z2Vos.add(e01z2Vo);
             }
             a38ExcelVo.setE01z2Vos(e01z2Vos);
@@ -628,84 +634,155 @@ public class A38Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38ExcelVo = (A38ExcelVo) a38ExcelExchange.fromExcel(A38ExcelVo.class,tempFile,filePath);
+            boolean a38Flag = false;//判断是否存在非法数据
             if(a38ExcelVo!=null){
 
+                //新增档案
                 A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
-                Map<String,String> vMap = ValidateUtil.validAll(jbxxA38Vo);
-                if(vMap.size()>0){
-                }
                 A38 a38 = new A38();
-                BeanUtils.copyProperties(jbxxA38Vo, a38);
-                a38.setId(null);
-                a38.setSjzt("1");
-                EntityWrapper.wrapperSaveBaseProperties(a38,details);
-                id = a38Service.save(a38);
-                a38.setId(id);
 
-                A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
-                if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
-                    Integer oldPxInteger=a52Service.getMaxSort(id);
-                    List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
-                    for(int i=0;i<a52Vos.size();i++){
-                        A52 a52 = new A52();
-                        A52Vo a52Vo = a52Vos.get(i);
-                        if(com.hisun.util.StringUtils.isEmpty(a52Vo.getA5204())){
-                            continue;
+                if(StringUtils.isEmpty(jbxxA38Vo.getA0101())){
+                    a38Flag = true;
+                }
+
+                if (isNotDate(jbxxA38Vo.getA0107())) {
+                    a38Flag = true;
+                }
+
+                if(a38Flag){
+
+                    String a0104Content = jbxxA38Vo.getA0104Content();
+                    jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
+                    String gbztContent = jbxxA38Vo.getGbztContent();
+                    jbxxA38Vo.setGbztContent(getDictionaryItem(gbztContent,"SAN_GBZT"));
+
+                    BeanUtils.copyProperties(jbxxA38Vo, a38);
+                    a38.setId(null);
+                    a38.setSjzt("1");
+                    EntityWrapper.wrapperSaveBaseProperties(a38,details);
+                    id = a38Service.save(a38);
+                    if(StringUtils.isNotEmpty(id)){
+
+                        a38.setId(id);
+
+                        //新增职务变动
+                        A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
+                        if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
+                            Integer oldPxInteger=a52Service.getMaxSort(id);
+                            List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
+                            boolean flag = false;//判断是否存在非法数据
+                            for(int i=0;i<a52Vos.size();i++){
+                                A52 a52 = new A52();
+                                A52Vo a52Vo = a52Vos.get(i);
+                                if(StringUtils.isEmpty(a52Vo.getA5204())){
+                                    flag = true;
+                                }
+                                if(isNotDate(a52Vo.getA5227In())){
+                                    flag = true;
+                                }
+                                if(isNotDate(a52Vo.getA5227Out())){
+                                    flag = true;
+                                }
+
+                                if(flag){
+                                    continue;
+                                }
+                                BeanUtils.copyProperties(a52,a52Vo);
+                                a52.setA38(a38);
+                                a52.setPx(oldPxInteger+i);
+                                EntityWrapper.wrapperSaveBaseProperties(a52,details);
+                                a52Service.save(a52);
+                            }
                         }
-                        org.apache.commons.beanutils.BeanUtils.copyProperties(a52,a52Vo);
-                        a52.setA38(a38);
-                        a52.setPx(oldPxInteger+i);
-                        EntityWrapper.wrapperSaveBaseProperties(a52,details);
-                        a52Service.save(a52);
-                    }
-                }
 
-                List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
-                if(gzbdList.size()>0){
-                    Integer oldPxInteger=a32Service.getMaxSort(id);
-                    for(int i=0;i<gzbdList.size();i++){
-                        A32 a32 = new A32();
-                        A32Vo a32Vo = (A32Vo) gzbdList.get(i);
-                        org.apache.commons.beanutils.BeanUtils.copyProperties(a32,a32Vo);
-                        a32.setA38(a38);
-                        a32.setPx(oldPxInteger+i);
-                        EntityWrapper.wrapperSaveBaseProperties(a32,details);
-                        a32Service.save(a32);
-                    }
-                }
+                        //添加工资变动记录
+                        List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
+                        if(gzbdList.size()>0){
+                            Integer oldPxInteger=a32Service.getMaxSort(id);
+                            boolean flag = false;//判断是否存在非法数据
+                            for(int i=0;i<gzbdList.size();i++){
+                                A32 a32 = new A32();
+                                A32Vo a32Vo = gzbdList.get(i);
 
-                List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
-                if(e01z2Vos.size()>0){
-                    Integer oldPxInteger=e01z2Service.getMaxSort(id);
-                    for(int i=0;i<e01z2Vos.size();i++){
-                        E01Z2 e01z2 = new E01Z2();
-                        E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
-                        org.apache.commons.beanutils.BeanUtils.copyProperties(e01z2,e01z2Vo);
-                        e01z2.setA38(a38);
-                        e01z2.setE01Z214(oldPxInteger+i);
-                        EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
-                        e01z2Service.save(e01z2);
-                    }
-                }
+                                if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                                    flag = true;
+                                }
+                                if(isNotDate(a32Vo.getA3207())){
+                                    flag = true;
+                                }
 
-                E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
-                if(e01Z1ExcelVo!=null){
-                    addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id);
-                    addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id);
-                    addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id);
-                    addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id);
-                    addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id);
-                    addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id);
-                    addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id);
-                    addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id);
-                    addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id);
-                    addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id);
-                    addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id);
-                    addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id);
-                    addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id);
-                    addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id);
-                    addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id);
-                    addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id);
+                                if(flag){
+                                    continue;
+                                }
+
+                                BeanUtils.copyProperties(a32,a32Vo);
+                                a32.setA38(a38);
+                                a32.setPx(oldPxInteger+i);
+                                EntityWrapper.wrapperSaveBaseProperties(a32,details);
+                                a32Service.save(a32);
+                            }
+                        }
+
+                        //添加材料接收记录
+                        List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
+                        if(e01z2Vos.size()>0){
+                            Integer oldPxInteger=e01z2Service.getMaxSort(id);
+                            boolean flag = false;//判断是否存在非法数据
+                            for(int i=0;i<e01z2Vos.size();i++){
+                                E01Z2 e01z2 = new E01Z2();
+                                E01z2Vo e01z2Vo = e01z2Vos.get(i);
+
+                                if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                                    flag = true;
+                                }
+                                if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                                    flag = true;
+                                }
+                                if(isNotDate(e01z2Vo.getE01Z201())){
+                                    flag = true;
+                                }
+                                if(isNotDate(e01z2Vo.getE01Z227())){
+                                    flag = true;
+                                }
+
+                                if(flag){
+                                    continue;
+                                }
+
+                                String e01Z237Content = e01z2Vo.getE01Z237Content();
+                                e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
+                                String e01Z244Content = e01z2Vo.getE01Z244Content();
+                                e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
+
+                                BeanUtils.copyProperties(e01z2,e01z2Vo);
+                                e01z2.setA38(a38);
+                                e01z2.setE01Z214(oldPxInteger+i);
+                                EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
+                                e01z2Service.save(e01z2);
+                            }
+                        }
+
+                        //添加目录信息及材料
+                        E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
+                        if(e01Z1ExcelVo!=null){
+                            addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id);
+                            addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id);
+                            addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id);
+                            addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id);
+                            addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id);
+                            addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id);
+                            addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id);
+                            addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id);
+                            addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id);
+                            addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id);
+                            addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id);
+                            addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id);
+                            addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id);
+                            addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id);
+                            addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id);
+                            addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id);
+                        }
+                    }
                 }
 
             }
@@ -732,56 +809,59 @@ public class A38Controller extends BaseController {
 
             try {
 
-                for(E01Z1Vo e01Z1Vo:e01Z1Vos){
-                    boolean e01z104IsEmpty= false;
-                    boolean e01z114IsEmpty= false;
-                    boolean e01z111IsEmpty= false;
-                    if(e01Z1Vo!=null){
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
+                    boolean flag = false;//判断是否存在非法数据
+                    if (e01Z1Vo != null) {
 
                         //判断必填材料是否为空
-                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
-                            e01z104IsEmpty = true;
+                        if (e01Z1Vo.getE01Z104() == null || e01Z1Vo.getE01Z104() == 0) {
+                            flag = true;
                         }
-                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
-                            e01z114IsEmpty = true;
+                        if (e01Z1Vo.getE01Z114() == null || e01Z1Vo.getE01Z114() == 0) {
+                            flag = true;
                         }
-                        if(com.hisun.util.StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
-                            e01z111IsEmpty = true;
+                        if (com.hisun.util.StringUtils.isEmpty(e01Z1Vo.getE01Z111())) {
+                            flag = true;
                         }
 
-                        //如果必填材料全不为空，新增材料
-                        if(!e01z104IsEmpty&&!e01z111IsEmpty&&!e01z114IsEmpty){
-                            //拼接日期
-                            String e01Z117 = "";
-                            if(com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getYear())){
-                                e01Z117 = e01Z1Vo.getYear();
-                                if(com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
-                                    e01Z117 += e01Z1Vo.getMonth();
-                                    if(com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getDay())){
-                                        e01Z117 += e01Z1Vo.getDay();
-                                    }
+                        //拼接日期
+                        String e01Z117 = "";
+                        if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getYear())) {
+                            e01Z117 = e01Z1Vo.getYear();
+                            if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getMonth())) {
+                                e01Z117 += e01Z1Vo.getMonth();
+                                if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getDay())) {
+                                    e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                            e01Z1Vo.setE01Z117(e01Z117);
-
-                            int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
-                            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-                            E01Z1 e01Z1 = new E01Z1();
-                            org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1, e01Z1Vo);
-                            e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
-                            e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
-                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
-                            e01Z1.setYjztps(0);
-                            if(com.hisun.util.StringUtils.isNotBlank(a38Id)){
-                                e01Z1.setA38(this.a38Service.getByPK(a38Id));
-                            }
-                            EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
-                            int newSort = e01Z1.getE01Z104();
-                            if(newSort<sort){
-                                e01Z1Service.updateSortBeforSave(e01Z1,sort);
-                            }
-                            e01Z1Service.save(e01Z1);
                         }
+                        if (isNotDate(e01Z117)) {
+                            flag = true;
+                        }
+
+                        if (flag) {
+                            continue;
+                        }
+
+                        e01Z1Vo.setE01Z117(e01Z117);
+
+                        int sort = this.e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
+                        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+                        E01Z1 e01Z1 = new E01Z1();
+                        BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                        e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
+                        e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
+                        e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+                        e01Z1.setYjztps(0);
+                        if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {
+                            e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                        }
+                        EntityWrapper.wrapperSaveBaseProperties(e01Z1, userLoginDetails);
+                        int newSort = e01Z1.getE01Z104();
+                        if (newSort < sort) {
+                            e01Z1Service.updateSortBeforSave(e01Z1, sort);
+                        }
+                        e01Z1Service.save(e01Z1);
                     }
                 }
             }catch (IllegalAccessException e) {
@@ -832,4 +912,41 @@ public class A38Controller extends BaseController {
         return catalogCode;
     }
 
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 反向查询获取字典项
+     * @param name
+     * @return
+     */
+    public String getDictionaryItem(String name,String Code){
+        List<DictionaryItem> dictionaryItems;
+        if(StringUtils.isEmpty(name)){
+            return "";
+        }
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and(" dictionaryType.code=:typeCode ", "typeCode", Code));
+        query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+        query.add(CommonRestrictions.and(" display=:display ", "display", DictionaryItem.DISPLAY));
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("sort"));
+        dictionaryItems = dictionaryItemService.list(query, orderBy);
+        for(DictionaryItem dictionaryItem:dictionaryItems){
+            if(name.equals(dictionaryItem.getName())){
+                return dictionaryItem.getCode();
+            }
+        }
+        return "";
+    }
 }

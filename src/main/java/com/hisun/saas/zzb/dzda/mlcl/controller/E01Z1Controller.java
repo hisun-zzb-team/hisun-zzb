@@ -633,55 +633,58 @@ public class E01Z1Controller extends BaseController {
             try {
 
                 for(E01Z1Vo e01Z1Vo:e01Z1Vos){
-                    boolean e01z104IsEmpty= false;
-                    boolean e01z114IsEmpty= false;
-                    boolean e01z111IsEmpty= false;
+                    boolean flag = false;//判断是否存在非法数据
                     if(e01Z1Vo!=null){
 
                         //判断必填材料是否为空
                         if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
-                            e01z104IsEmpty = true;
+                            flag = true;
                         }
                         if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
-                            e01z114IsEmpty = true;
+                            flag = true;
                         }
                         if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
-                            e01z111IsEmpty = true;
+                            flag = true;
                         }
 
-                        //如果必填材料全不为空，新增材料
-                        if(!e01z104IsEmpty&&!e01z111IsEmpty&&!e01z114IsEmpty){
-                            //拼接日期
-                            String e01Z117 = "";
-                            if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
-                                e01Z117 = e01Z1Vo.getYear();
-                                if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
-                                    e01Z117 += e01Z1Vo.getMonth();
-                                    if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
-                                        e01Z117 += e01Z1Vo.getDay();
-                                    }
+                        //拼接日期
+                        String e01Z117 = "";
+                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+                            e01Z117 = e01Z1Vo.getYear();
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                                e01Z117 += e01Z1Vo.getMonth();
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                                    e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                            e01Z1Vo.setE01Z117(e01Z117);
-
-                            int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
-                            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-                            E01Z1 e01Z1 = new E01Z1();
-                            BeanUtils.copyProperties(e01Z1, e01Z1Vo);
-                            e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
-                            e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
-                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
-                            e01Z1.setYjztps(0);
-                            if(StringUtils.isNotBlank(a38Id)){
-                                e01Z1.setA38(this.a38Service.getByPK(a38Id));
-                            }
-                            EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
-                            int newSort = e01Z1.getE01Z104();
-                            if(newSort<sort){
-                                e01Z1Service.updateSortBeforSave(e01Z1,sort);
-                            }
-                            e01Z1Service.save(e01Z1);
                         }
+                        if(isNotDate(e01Z117)){
+                            flag = true;
+                        }
+
+                        if(flag){
+                            continue;
+                        }
+
+                        e01Z1Vo.setE01Z117(e01Z117);
+
+                        int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
+                        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+                        E01Z1 e01Z1 = new E01Z1();
+                        BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                        e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
+                        e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
+                        e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+                        e01Z1.setYjztps(0);
+                        if(StringUtils.isNotBlank(a38Id)){
+                            e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                        }
+                        EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
+                        int newSort = e01Z1.getE01Z104();
+                        if(newSort<sort){
+                            e01Z1Service.updateSortBeforSave(e01Z1,sort);
+                        }
+                        e01Z1Service.save(e01Z1);
                     }
                 }
             }catch (IllegalAccessException e) {
@@ -730,5 +733,18 @@ public class E01Z1Controller extends BaseController {
             catalogCode = "100";
         }
         return catalogCode;
+    }
+
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

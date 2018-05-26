@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
 <%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
@@ -27,6 +28,8 @@
                 <div class="portlet-body form">
                     <!-- BEGIN FORM-->
                     <!-- 用于清除 -->
+                    <input type="hidden" name="editFlag" value="${editFlag}" id="editFlag"/>
+                    <input type="hidden" name="appQueryId" value="${appQueryId}" id="appQueryId"/>
                     <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form2" method="post" >
                     </form>
                     <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post" >
@@ -36,9 +39,10 @@
                                 <button id="submitbut" class="btn green" type="button" style="padding:7px 20px;" >查询</button>
                                 <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存</button>
                                 <button id="clearData" class="btn green" type="button" style="padding:7px 20px;" >清空</button>
+                                <a href="#" onclick="cancel()" id="fanhui" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                             </div>
-                        </div>
 
+                        </div>
                         <div class="row-fluid">
                             <div class="span6 ">
                                 <div id="a0101Group" class="control-group">
@@ -259,37 +263,41 @@
         </div>
     </div>
 
-    <div id="viewImgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
+    <div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="400" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
+                    <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:saveCxtj()">
+                        保存
+                    </a>
                     <h3 class="modal-title" id="title">
                         保存查询条件
                     </h3>
                 </div>
-                <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
-                    <div class="control-group" id="queryNameGroup">
-                        <label class="control-label">查询名称<span class="required">*</span></label>
-                        <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="queryName"  maxlength="200" id="queryName" value="" />
+                <div class="modal-body" id="queryModelDiv" >
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
+                            <div class="portlet box grey">
+                                <div class="portlet-body form">
+                                    <div class="control-group" id="queryNameGroup">
+                                        <div class="controls">
+                                            <label class="control-label"><span class="required">*</span>查阅名称</label>
+                                            <input size="16" type="text"  class="span10 m-wrap" value="${queryName}"
+                                                   id="queryName" name="queryName"    required  maxlength="200">
+                                        </div>
+                                    </div>
+                                    <div class="control-group" id="descriptionGroup">
+                                        <div class="controls">
+                                            <label class="control-label">查询描述</label>
+                                            <input size="16" type="text"  class="span10 m-wrap" value="${description}"
+                                                   id="description" name="description" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div  id="a0101ContentGroup" style="display: none">
-                        <label class="control-label"><span class="required">*</span></label>
-                        <div class="controls">
-                            <input type="text" class="span10 m-wrap"  name="a0101Content" readonly maxlength="200" id="a0101Content" value="" required/>
-                        </div>
-                    </div>
-                    <div id="sqcydazwGroup" class="control-group">
-                        <label class="control-label">单位职务</label>
-                        <div class="controls">
-                            <input size="16" type="text"  class="span10 m-wrap" value=""
-                                   id="sqcydazw" name="sqcydazw" >
-
-                            <!--<input type="text" class="span10 m-wrap"  name="pcsj" formatter="yyyymmdd"   maxlength="8" id="pcsj" type="date"/>-->
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -303,28 +311,123 @@
     //            App.init();//必须，不然导航栏及其菜单无法折叠
     //
     //        });
+    $(function(){
+        var editFlag = "${editFlag}";
+        if(editFlag == "edit"){
+            $("#submitbut").hide();
+        }else {
+            $("#fanhui").hide();
+        }
+    })
 
-    var form1 = new EstValidate("form1");
-    function save(){
+    function cancel(){
         $.ajax({
-            url : "${path }/zzb/dzda/dacx/save",
+            url : "${path}/zzb/dzda/dacx/ajax/list",
             type : "post",
-            data : $("#form1").serialize(),
+            data : {},
             dataType : "html",
             headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
             },
             success : function(html){
-                /*  $('#gjcxModal').modal('hide');
-                 $('#gjcxDiv').html("");*/
+                $('#queryModelModal').modal('hide');
+                $("[id='#tab_1_1']").tab('show');
                 var view = $("#tab_show");
-                view.html("");
                 view.html(html);
+                myLoading.hide();
             },
             error : function(arg1, arg2, arg3){
-                showTip("提示","查询失败");
+                showTip("提示","条件查询加载失败");
             }
         });
+    }
+    var form1 = new EstValidate("form1");
+
+    function save(){
+        $('#queryModelModal').modal({
+            keyboard: true
+        });
+    }
+    function saveCxtj(){
+        var bool = form1.form();
+        if(!bool){
+            return;
+        }
+        var value = $("#form1").serialize();
+        var appQueryId ="${appQueryId}";
+        var queryName = $("#queryName").val();
+        var description = $("#description").val();
+        if("${editFlag}"=="edit"){
+            $.ajax({
+                url : "${path }/zzb/dzda/dacx/update?appQueryId="+appQueryId+"&queryName="+queryName+"&description="+description,
+                type : "post",
+                data :$("#form1").serialize(),
+                dataType : "html",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(json){
+                    $.ajax({
+                        url : "${path}/zzb/dzda/dacx/ajax/list",
+                        type : "post",
+                        data : {},
+                        dataType : "html",
+                        headers:{
+                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                        },
+                        success : function(html){
+                            $('#queryModelModal').modal('hide');
+                            $("[id='#tab_1_1']").tab('show');
+                            var view = $("#tab_show");
+                            view.html(html);
+                            myLoading.hide();
+                        },
+                        error : function(arg1, arg2, arg3){
+                            showTip("提示","条件查询加载失败");
+                        }
+                    });
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","查询失败");
+                }
+            });
+        }else {
+            $.ajax({
+                url : "${path }/zzb/dzda/dacx/save?queryName="+queryName+"&description="+description,
+                type : "post",
+                data :value
+                ,
+                dataType : "html",
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(html){
+                    $.ajax({
+                        url : "${path}/zzb/dzda/dacx/ajax/list",
+                        type : "post",
+                        data : {},
+                        dataType : "html",
+                        headers:{
+                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                        },
+                        success : function(html){
+                            $('#queryModelModal').modal('hide');
+                            $("[id='#tab_1_1']").tab('show');
+                            var view = $("#tab_show");
+                            view.html(html);
+                            myLoading.hide();
+                        },
+                        error : function(arg1, arg2, arg3){
+                            showTip("提示","条件查询加载失败");
+                        }
+                    });
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","查询失败");
+                }
+            });
+        }
+
     }
     $(function(){
 
@@ -337,6 +440,7 @@
                     $("#form1").submit();
 //                        document.form1.submit();
                 }else{
+                    var value = $("#form1").serialize();
                     $.ajax({
                         url : "${path }/zzb/dzda/dacx/ajax/bdwdalist?queryType=gaojichaxun",
                         type : "post",
@@ -360,31 +464,25 @@
             }
         });
         $("#clearData").on("click",function(){
-            var queryType = "${queryType}";
-            if(queryType=="a38List"){
-                $("#form2").submit();
-//                        document.form1.submit();
-            }else{
-                $.ajax({
-                    url : "${path }/zzb/dzda/dacx/ajax/bdwdalist?queryType=gaojichaxun",
-                    type : "post",
-                    data : $("#form2").serialize(),
-                    dataType : "html",
-                    headers:{
-                        OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-                    },
-                    success : function(html){
-                      /*  $('#gjcxModal').modal('hide');
-                        $('#gjcxDiv').html("");*/
-                        var view = $("#tab_show");
-                        view.html("");
-                        view.html(html);
-                    },
-                    error : function(arg1, arg2, arg3){
-                        showTip("提示","查询失败");
-                    }
-                });
-            }
+            $("#form1 input").val("");
+           /* $.ajax({
+                url:"${path}/zzb/dzda/dacx/ajax/gjcx",
+                type : "post",
+                data: {
+                    "editFlag":"edit"},
+                headers:{
+                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                dataType : "html",
+                success : function(html){
+                    var view = $("#tab_show");
+                    view.html(html);
+                    myLoading.hide();
+                },
+                error : function(){
+                    showTip("提示","出错了请联系管理员", 1500);
+                }
+            });*/
         });
         //		document.searchForm.submit();
     });

@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.dzda.dacx.entity;
 
 import com.hisun.saas.sys.tenant.base.entity.TenantEntity;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,7 +29,9 @@ public class AppQueryInfo extends TenantEntity implements Serializable {
     private String queryStatus;//状态0正常 1临时
 
     @Id
-    @Column(name = "id", nullable = false, length = 40)
+    @GenericGenerator(name = "generator", strategy = "uuid")
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id", nullable = false, unique = true, length = 40)
     public String getId() {
         return id;
     }

@@ -28,7 +28,7 @@
             <div class="portlet-title">
                 <div class="caption">本单位档案：共<font color="red"> ${pager.total } </font>人</div>
                 <div class="clearfix fr">
-                    <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存条件</button>
+                    <%--<button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存条件</button>--%>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                 </div>
 
@@ -53,10 +53,6 @@
                             <Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
                                        submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
 
-                        </div>
-                        <div style="float:left">
-                            &nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
-                            <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </div>
                     </form>
                 </div>
@@ -102,47 +98,6 @@
             </div>
         </div>
         <%-- 表格结束 --%>
-    </div>
-</div>
-
-<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="400" >
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
-                <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:saveCxtj()">
-                    保存
-                </a>
-                <h3 class="modal-title" id="title">
-                    保存查询条件
-                </h3>
-            </div>
-            <div class="modal-body" id="queryModelDiv" >
-                <div class="row-fluid">
-                    <div class="span12">
-                        <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
-                        <div class="portlet box grey">
-                            <div class="portlet-body form">
-                                <div class="control-group" id="queryNameGroup">
-                                    <div class="controls">
-                                        <label class="control-label"><span class="required">*</span>查阅名称</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
-                                               id="queryName" name="queryName"    required  maxlength="200">
-                                    </div>
-                                </div>
-                                <div class="control-group" id="descriptionGroup">
-                                    <div class="controls">
-                                        <label class="control-label">查询描述</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
-                                               id="description" name="description" >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <%-- END PAGE CONTENT--%>
@@ -201,20 +156,22 @@
 
     function cancel(){
         $.ajax({
-            url:"${path}/zzb/dzda/dacx/ajax/gjcx",
+            url : "${path}/zzb/dzda/dacx/ajax/list",
             type : "post",
-            data: {"appQueryId":"${appQueryId}"},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
+            data : {},
             dataType : "html",
+            headers:{
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+            },
             success : function(html){
+                $('#queryModelModal').modal('hide');
+                $("[id='#tab_1_1']").tab('show');
                 var view = $("#tab_show");
                 view.html(html);
-               // myLoading.hide();
+                myLoading.hide();
             },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
+            error : function(arg1, arg2, arg3){
+                showTip("提示","条件查询加载失败");
             }
         });
     }
@@ -324,34 +281,6 @@
     function uploadFile(fileName){
         document.getElementById("btn-"+fileName).click();
     }
-    function clearData(){
-        $("#dabhQuery").val('');
-        $("#smxhQuery").val('');
-        $("#a0101Query").val('');
-        $("#gbztCodeQuery").val('');
-        $("#daztCodeQuery").val('');
-        $("#gbztContentQuery").val('');
-        $("#daztContentQuery").val('');
-        $.ajax({
-            url : "${path }/zzb/dzda/dacx/ajax/bdwdalist?queryType=listQuery",
-            type : "post",
-            data : {
-            },
-            dataType : "html",
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success : function(html){
-                var view = $("#tab_show");
-                view.html(html);
-            },
-            error : function(arg1, arg2, arg3){
-                showTip("提示","档案库列表加载失败");
-            }
-        });
-//		document.searchForm.submit();
-    }
-
 
 
     var gjcx = function(){

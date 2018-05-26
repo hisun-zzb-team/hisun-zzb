@@ -57,7 +57,9 @@
                 <div class="portlet-title">
                     <div class="caption">阅档记录</div>
                     <div class="clearfix fr">
-
+                        <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
+                            输出
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix">
@@ -218,6 +220,10 @@
         document.searchForm.submit();
 
     }
+
+  function download() {
+      window.open("${path}/zzb/dzda/dacyjl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+  }
 
 </script>
 </body>

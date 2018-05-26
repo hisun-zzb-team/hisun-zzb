@@ -10,17 +10,6 @@
 <c:set var="path" value="${pageContext.request.contextPath}"></c:set>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <!-- END PAGE LEVEL STYLES -->
-    <title></title>
-    <style type="text/css">
-        form {
-            margin: 0 0 0px;
-        }
-    </style>
-</head>
 <body>
 <div class="container-fluid">
     <div class="row-fluid">
@@ -29,14 +18,15 @@
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
-                    <tr>
-                        <th style="width: 20px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
-                        <th width=70>姓名</th>
-                        <th width=40>性别</th>
-                        <th width=70>出生年月</th>
-                        <th width=70>单位职务</th>
-                        <th width=70>干部状态</th>
-                        <th width=70>现职级时间</th>
+                        <tr>
+                            <th style="width: 20px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
+                            <th width=70>姓名</th>
+                            <th width=40>性别</th>
+                            <th width=70>出生年月</th>
+                            <th width=70>单位职务</th>
+                            <th width=70>干部状态</th>
+                            <th width=70>现职级时间</th>
+                        </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">

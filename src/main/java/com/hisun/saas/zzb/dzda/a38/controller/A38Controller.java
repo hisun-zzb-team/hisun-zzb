@@ -47,9 +47,11 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
+import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.ValidateUtil;
 import com.hisun.util.WebUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
@@ -791,6 +793,51 @@ public class A38Controller extends BaseController {
             e.printStackTrace();
         }finally {
             file.delete();
+        }
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/dagl/download")
+    public void download( HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("smxh"));
+        orderBy.add(CommonOrder.asc("a0101"));
+        List<A38> resultList = a38Service.list(query,orderBy);
+        A38Vo vo;
+        List<A38Vo> a38Vos=new ArrayList<>();
+        String filePath = "";
+        try {
+            for(A38 a38:resultList){
+                vo = new A38Vo();
+                org.apache.commons.beanutils.BeanUtils.copyProperties(vo,a38);
+                a38Vos.add(vo);
+            }
+            File storePathFile = new File(Constants.DAGL_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.DAGL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            a38ExcelExchange.toExcelByManyPojo(a38Vos, uploadBasePath+Constants.DAGLMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("dagl.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
 

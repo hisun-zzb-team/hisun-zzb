@@ -82,7 +82,7 @@
 							</ul>
 						</div>
 						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
-						<a class="btn green" href="javascript:fileDown('list')">
+						<a class="btn green" href="javascript:download()">
 							输出
 						</a>
 						<form action="" id="uploadForm">
@@ -317,6 +317,10 @@
 				showTip("提示","出错了请联系管理员", 1500);
 			}
 		});
+	}
+
+	function download() {
+		window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 </script>
 </body>

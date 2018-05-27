@@ -80,7 +80,7 @@
 
 										<button type="button" class="btn green" onclick="formUpdate()"><i class="icon-ok"></i> 确定</button>
 
-										<a class="btn" href="${path }/zzb/app/console/gbmc/"><i class="icon-remove-sign"></i> 取消</a>
+										<a class="btn" href="${path }/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 
 									</div>
 								</form>
@@ -129,7 +129,7 @@
 							myLoading.hide();
 							if(data.success){
 								showTip("提示","操作成功",2000);
-								setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/"},2000);
+								setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 							}else{
 								showTip("提示", data.message, 2000);
 							}

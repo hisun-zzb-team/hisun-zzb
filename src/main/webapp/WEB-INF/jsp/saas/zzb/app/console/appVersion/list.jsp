@@ -28,7 +28,7 @@
 						<div class="portlet-title">
 							<div class="caption">APP程序管理</div>
 							<div class="clearfix fr">
-								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/appVersion/add">
+								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/appVersion/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 									<i class="icon-plus"></i> 添加
 								</a>
 							</div>
@@ -67,7 +67,7 @@
 											<c:if test="${empty appVersionVo.appStorePath}">
 												<a href="javascript:fileDown('${vo.id }');" class="">下载</a>|
 											</c:if>
-											<a href="${path}/zzb/app/console/appVersion/edit?id=${vo.id }" class="">编辑</a>|
+											<a href="${path}/zzb/app/console/appVersion/edit?id=${vo.id }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">编辑</a>|
 											<a href="javascript:del('${vo.id }','${vo.appVersionName}')" class="">删除</a>
 										</td>
 									</tr>
@@ -105,7 +105,7 @@
 			document.searchForm.submit();
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/appVersion/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/appVersion/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
 					setTimeout(function(){window.location.href = "${path}/zzb/app/console/appVersion/"},2000);
@@ -120,7 +120,7 @@
 			document.searchForm.submit();
 		}
 		function fileDown(id) {
-			window.open("${path }/zzb/app/console/appVersion/ajax/down?id="+id);
+			window.open("${path }/zzb/app/console/appVersion/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 		}
 	</script>
 </body>

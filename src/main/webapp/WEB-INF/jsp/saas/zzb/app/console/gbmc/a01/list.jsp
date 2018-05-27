@@ -46,10 +46,10 @@
 							<%--</span>--%>
 						<input class="file_progress" type="file" name="gbrmspbFile" id="btn-gbrmspbFile">
 						<c:if test="${returnList eq 'b01Lis'}">
-							<a class="btn" href="${path }/zzb/app/console/gbmc/b01/list?mcid=${mcid}"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/gbmc/b01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcid=${mcid}"><i class="icon-undo"></i>返回</a>
 						</c:if>
 						<c:if test="${returnList eq 'gbmcList'}">
-							<a class="btn" href="${path }/zzb/app/console/gbmc/"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 						</c:if>
 					</div>
 				</div>
@@ -57,7 +57,7 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<div id="query" style="float: left;">
-						<form action="${path }/zzb/app/console/gbmc/a01/list" method="POST" id="searchForm" name="searchForm">
+						<form action="${path }/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 							<input type="hidden" id="mcb01id" name="mcb01id" value="${mcb01id}"/>
 							<input type="hidden" id="mcid" name="mcid" value="${mcid}"/>
 							<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
@@ -104,7 +104,7 @@
 						<tbody>
 						<c:forEach items="${pager.datas}" var="vo">
 							<tr style="text-overflow:ellipsis;">
-								<td title="${vo.xm}"><a href="${path}/zzb/app/console/gbmc/a01/view?id=${vo.id }"><c:out value="${vo.xm}"></c:out></a></td>
+								<td title="${vo.xm}"><a href="${path}/zzb/app/console/gbmc/a01/view?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id }"><c:out value="${vo.xm}"></c:out></a></td>
 								<td title="${vo.zw}"><c:out value="${vo.zw}"></c:out></td>
 								<td><c:out value="${vo.jg}"></c:out></td>
 								<td><c:out value="${vo.csd}"></c:out></td>
@@ -181,7 +181,7 @@
 			}
 			//hideErrorMsg();
 			$("#importForm").ajaxSubmit({
-				url : "${path }/zzb/app/console/gbmc/a01/ajax/execute?mcb01id=${mcb01id}",
+				url : "${path }/zzb/app/console/gbmc/a01/ajax/execute?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcb01id=${mcb01id}",
 				type : "post",
 				headers:{
 					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -193,7 +193,7 @@
 					if(json.code == 1){
 						showTip("提示","操作成功",500);
 						//loadCiList(ciObjectId);
-						window.location.href="${path}/zzb/app/console/gbmc/a01/list?mcb01id=${mcb01id}&mcid=${mcid}";
+						window.location.href="${path}/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcb01id=${mcb01id}&mcid=${mcid}";
 					}else if(json.code == -1){
 						showTip("提示", json.message, 500);
 					}else if(json.code == -2){
@@ -238,7 +238,7 @@
 			}
 
 			$("#importForm").ajaxSubmit({
-				url:"${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?gbMcA01Id="+a01Id ,
+				url:"${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&gbMcA01Id="+a01Id ,
 				type: "post",
 				headers: {
 					OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -287,7 +287,7 @@
 				return;
 			}
 			$("#importForm").ajaxSubmit({
-				url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/batch/upload?mcb01id=${mcb01id}",
+				url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/batch/upload?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcb01id=${mcb01id}",
 				type: "post",
 				headers: {
 					OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -327,17 +327,17 @@
 	}
 
 	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/a01/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/a01/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/a01/list?mcb01id=${mcb01id}&mcid=${mcid}"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcb01id=${mcb01id}&mcid=${mcid}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
 		});
 	};
 	function gbrmspbDown(id) {
-		window.open("${path }/zzb/app/console/GbMca01/gbrmspb/ajax/down?gbMcA01Id="+id);
+		window.open("${path }/zzb/app/console/GbMca01/gbrmspb/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&gbMcA01Id="+id);
 	}
 	function uploadFile(fileName){
 		document.getElementById("btn-"+fileName).click();

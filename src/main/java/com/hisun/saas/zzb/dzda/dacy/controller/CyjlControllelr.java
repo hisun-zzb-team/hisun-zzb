@@ -16,19 +16,33 @@ import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.dacy.Constants;
 import com.hisun.saas.zzb.dzda.dacy.entity.*;
+import com.hisun.saas.zzb.dzda.dacy.exchange.CyjlExcelExchange;
 import com.hisun.saas.zzb.dzda.dacy.service.*;
+import com.hisun.saas.zzb.dzda.dacy.vo.EA38LogVo;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
+import com.hisun.util.UUIDUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +69,12 @@ public class CyjlControllelr extends BaseController {
     private EA38LogDetailService eA38LogDetailService;
     @Resource
     private ELogDetailViewTimeService eLogDetailViewTimeService;
+
+    @Resource
+    CyjlExcelExchange cyjlExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
 
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
@@ -155,6 +175,58 @@ public class CyjlControllelr extends BaseController {
             e.printStackTrace();
         }
         return new ModelAndView("saas/zzb/dzda/ydjl/nrxqViewTime",model);
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download")
+    public void download( HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("cysj"));
+        List<EA38Log> resultList = eA38LogService.list(query,orderBy);
+        EA38LogVo vo;
+        List<EA38LogVo> eA38LogVos=new ArrayList<>();
+        String filePath = "";
+        try {
+            for(EA38Log eA38Log:resultList){
+                vo = new EA38LogVo();
+                org.apache.commons.beanutils.BeanUtils.copyProperties(vo,eA38Log);
+                List<EA38LogDetail> a38LogDetails = eA38Log.getA38LogDetails();
+                if(a38LogDetails.size()>0){
+                    StringBuffer strB = new StringBuffer();
+                    for(EA38LogDetail eA38LogDetail:a38LogDetails){
+                        strB.append(eA38LogDetail.getE01Z111());
+                    }
+                    vo.setReadContent(strB.toString());
+                }
+                eA38LogVos.add(vo);
+            }
+            File storePathFile = new File(Constants.CYJL_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.CYJL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            cyjlExcelExchange.toExcelByManyPojo(eA38LogVos, uploadBasePath+Constants.CYJLMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("gzbd.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 
 }

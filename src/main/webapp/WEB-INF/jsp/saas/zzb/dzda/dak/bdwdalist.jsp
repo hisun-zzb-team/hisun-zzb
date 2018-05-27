@@ -68,7 +68,7 @@
 						<a  class="btn green" href="javascript:gjcx()">
 							高级查询
 						</a>
-						<a class="btn green" href="javascript:fileDown('list')">
+						<a class="btn green" href="javascript:download()">
 							输出
 						</a>
 
@@ -310,6 +310,10 @@
 				showTip("提示","出错了请联系管理员", 1500);
 			}
 		});
+	}
+
+	function download() {
+		window.open("${path}/zzb/dzda/dak/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 </script>
 </body>

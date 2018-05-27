@@ -209,10 +209,11 @@ public class EApplyE01Z8Controller extends BaseController {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             if (StringUtils.isNotBlank(vo.getId())) {
                 vo.setId(null);
-                a0a01s = vo.getA0101();
+//                a0a01s = vo.getA0101();
             } else {
-                a0a01s = vo.getA0101Content();
+//                a0a01s = vo.getA0101Content();
             }
+            a0a01s = vo.getA0101();
             String[] names = a0a01s.split(",");
             //一次申请查询多人档案
             for (String name : names) {

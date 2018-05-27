@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
 <%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
@@ -26,7 +27,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModal()"><i class='icon-remove-sign'></i> 关闭</button>
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                 <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
                     <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                         显示方式<i class="icon-angle-down"></i>
@@ -71,6 +72,20 @@
         </div>
     </div>
 </div>
+<div id="setRowCountModal" class="modal container hide fade" tabindex="-1" data-width="700">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button"></button>
+                <h3 class="modal-title">
+                    设置目录空余行数
+                </h3>
+            </div>
+            <div class="modal-body" id="setRowCountDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
@@ -111,19 +126,23 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a onclick="fileDown('xiazaimludaorumoban')">下载目录导入模板</a>
+                                    <a onclick="downloadMB()">下载目录导入模板</a>
                                 </li>
                                 <li>
-                                    <a onclick="unloadFile()">导入目录</a>
-                                    <input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
+                                    <a onclick="uploadFile()">导入目录</a>
+                                </li>
+                                <li>
+                                    <a onclick="setRowCount()">设置目录空余行数</a>
                                 </li>
 
                             </ul>
                         </div>
 
                         <a class="controllerClass btn green file_but" href="javascript:download()">
-                            <i class="icon-circle-arrow-down"></i>打印目录
+                            <i class="icon-circle-arrow-down"></i>导出目录
                         </a>
+                        <input type="file" style="display: none" name="mlxxFile" id="mlxxFile" accept = '.csv,
+             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
                     </div>
 
                 </div>
@@ -421,10 +440,6 @@
     $("#downloadButton").click(function(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     });
-    function download(){
-        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
-    };
-
 
     function jztp(id,e01Z111){
         var divHeight = $(window).height()-300;
@@ -452,6 +467,84 @@
         });
     }
 
+    function download(){
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+
+    };
+    function downloadMB(){
+        window.open("${path}/zzb/dzda/e01z1/downloadMB/{a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    }
+    function uploadFile(){
+        document.getElementById("mlxxFile").click();
+    }
+
+    $("#mlxxFile").on("change", function (evt) {
+        var uploadFile = document.getElementById("mlxxFile");
+        if (uploadFile.files.length > 0) {
+            var name = uploadFile.files[0].name
+            var arr = name.split(".");
+            if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+                showTip("提示", "请上传Excel文件", 2000);
+                return;
+            }
+        }
+        $("#importForm").ajaxSubmit({
+            type:"POST",
+            url:"${path}/zzb/dzda/e01z1/uploadFile",
+            dataType : "json",
+            enctype : "multipart/form-data",
+            headers:{
+                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            success:function(json){
+                showTip("提示","上传成功!",2000);
+                $.ajax({
+                    async:false,
+                    type:"POST",
+                    url:"${path }/zzb/dzda/e01z1/ajax/mlxxList",
+                    dataType : "html",
+                    headers:{
+                        "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                    },
+                    data:{
+                        'a38Id':"${a38Id}"
+                    },
+                    success:function(html){
+                        $("#rightList").html(html);
+                    },
+                    error : function(){
+                        myLoading.hide();
+                        showTip("提示","出错了,请检查网络!",2000);
+                    }
+                });
+            },
+            error : function(){
+                showTip("提示","上传失败!",2000);
+            }
+        });
+    });
+
+    function setRowCount() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/dzda/e01z1/ajax/setRowCount",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {
+            },
+            success: function (html) {
+                $('#setRowCountDiv').html(html);
+                $('#setRowCountModal').modal({backdrop: 'static', keyboard: false});
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+    }
 </script>
 </body>
 </html>

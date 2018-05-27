@@ -57,7 +57,9 @@
                 <div class="portlet-title">
                     <div class="caption">阅档记录</div>
                     <div class="clearfix fr">
-
+                        <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
+                            输出
+                        </a>
                     </div>
                 </div>
                 <div class="clearfix">
@@ -104,7 +106,7 @@
                             <TD >
                             <div style="width: 480px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
                                 <a href="javascript:viewNeiRong('${vo.id}')"><c:forEach items="${vo.a38LogDetails}" var="vo1">
-                                    <c:out value="${vo1.e01Z111}"></c:out>
+                                    <c:out value="${vo1.e01Z111}"></c:out>;
                                 </c:forEach></a>
                             </div>
 
@@ -218,6 +220,10 @@
         document.searchForm.submit();
 
     }
+
+  function download() {
+      window.open("${path}/zzb/dzda/dacyjl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+  }
 
 </script>
 </body>

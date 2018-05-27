@@ -290,10 +290,10 @@
 		});
 	}
 	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/appZscxZs/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/appZscxZs/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/appZscxZs/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/appZscxZs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&b01Id=${b01Id}&mcid=${mcid}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}

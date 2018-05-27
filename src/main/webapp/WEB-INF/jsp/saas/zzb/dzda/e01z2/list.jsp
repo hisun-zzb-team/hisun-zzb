@@ -29,12 +29,17 @@
             <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                 <i class="icon-plus"></i>增加材料接收
             </a>
-            <a  class="btn green" href="#">
+            <a  class="btn green" href="javascript:uploadFile()">
                 材料接收导入
             </a>
             <a  class="btn green" href="javascript:download()">
-                打印材料接收
+                材料接收导出
             </a>
+            <form action="" id="uploadForm">
+                <input type="file" style="display: none" name="cljsFile" id="cljsFile" accept = '.csv,
+                 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
+                <input type="hidden" id="a38Id" name="a38Id" value="${a38Id}">
+            </form>
         </div>
 
     </div>
@@ -197,6 +202,58 @@
         function download() {
             window.open("${path}/zzb/dzda/e01z2/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
         }
+
+        function uploadFile(){
+            document.getElementById("cljsFile").click();
+        }
+
+        $("#cljsFile").on("change", function (evt) {
+            var uploadFile = document.getElementById("cljsFile");
+            var file = uploadFile.files[0];
+            if (uploadFile.files.length > 0) {
+                var name = uploadFile.files[0].name
+                var arr = name.split(".");
+                if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+                    showTip("提示", "请上传Excel文件", 2000);
+                    return;
+                }
+            }
+            $("#uploadForm").ajaxSubmit({
+                type:"POST",
+                url:"${path}/zzb/dzda/e01z2/uploadFile",
+                dataType : "json",
+                enctype : "multipart/form-data",
+                headers:{
+                    "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                },
+                success:function(html){
+                    showTip("提示","上传成功!",2000);
+                    $.ajax({
+                        async:false,
+                        type:"POST",
+                        url:"${path }/zzb/dzda/e01z2/ajax/list",
+                        dataType : "html",
+                        headers:{
+                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                        },
+                        data:{
+                            'a38Id':"${a38Id}"
+                        },
+                        success:function(html){
+                            var view = $("#tab_show");
+                            view.html(html);
+                        },
+                        error : function(){
+                            myLoading.hide();
+                            showTip("提示","出错了,请检查网络!",2000);
+                        }
+                    });
+                },
+                error : function(){
+                    showTip("提示","上传失败!",2000);
+                }
+            });
+        });
 
     </script>
 </body>

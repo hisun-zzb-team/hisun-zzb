@@ -37,7 +37,7 @@
 							<div class="portlet-body form">
 								<!-- BEGIN FORM-->
 
-								<form action="${path }/zzb/app/console/gbtj/save" class="form-horizontal" id="form1" method="post">
+								<form action="${path }/zzb/app/console/gbtj/save?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post">
 									<input type="hidden" name="id" value="${gbtj.id }" id="id">
 									<%--<input type="hidden" name="tjjsondata" value="${gbtj.tjjsondata}" id="tjjsondata">--%>
 									<div id="tjmcGroup" class="control-group">
@@ -71,7 +71,7 @@
 
 										<button type="button" class="btn green" onclick="formUpdate()"><i class="icon-ok"></i> 确定</button>
 
-										<a class="btn" href="${path }/zzb/app/console/gbtj/"><i class="icon-remove-sign"></i> 取消</a>
+										<a class="btn" href="${path }/zzb/app/console/gbtj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 
 									</div>
 								</form>
@@ -119,10 +119,13 @@
 				type : "post",
 				data : $("#form1").serialize(),
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						showTip("提示","操作成功",2000);
-						setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbtj/"},2000);
+						setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbtj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 					}else{
 						showTip("提示", json.message, 2000);
 					}

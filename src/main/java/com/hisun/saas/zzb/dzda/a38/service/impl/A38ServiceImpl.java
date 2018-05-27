@@ -41,7 +41,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         this.a38Dao = (A38Dao)baseDao;
     }
 
-    public List<A38> gjcxList(DakVo dakVo,UserLoginDetails userLoginDetails){
+    public String getGjcxHql(DakVo dakVo,UserLoginDetails userLoginDetails){
         StringBuffer a38Hql = new StringBuffer();
         StringBuffer e01z1Hql = new StringBuffer();
 
@@ -248,9 +248,9 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         queryHql.append(e01z1Hql);
         queryHql.append(" order by a38.smxh desc , a38.a0101 asc ");
 
-        Map<String,Object> paramMap = new HashMap<>();
-        List<A38> a38List = a38Dao.list(queryHql.toString(),null,null);
-        return a38List;
+//        Map<String,Object> paramMap = new HashMap<>();
+//        List<A38> a38List = a38Dao.list(queryHql.toString(),paramMap,pageNum, pageSize);
+        return queryHql.toString();
     }
 
 }

@@ -27,7 +27,7 @@
 						<div class="caption">"${shpcmc}" 票决结果</div>
 						<div class="clearfix fr">
 							<a class="btn green" id="btn-export" onclick="exportCi()"><i class="icon-circle-arrow-down" ></i>导出</a>
-							<a class="btn" href="${path }/zzb/app/console/tp/"><i class="icon-undo"></i>返回</a>
+							<a class="btn" href="${path }/zzb/app/console/tp/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 						</div>
 
                         </div>
@@ -88,7 +88,7 @@
 		})();
 
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/tp/result?shpcId=${shpcId}&pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/tp/result?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 
 		function searchSubmit(){
@@ -96,7 +96,7 @@
 		}
 		//导出方法
 		function exportCi(){
-			window.open('${path}/zzb/app/console/tp/ajax/exportToExcel?shpcId=${shpcId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}');
+			window.open('${path}/zzb/app/console/tp/ajax/exportToExcel?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}');
 			<%--window.open('${path }/zzb/app/console/tp/exportToExcel?shpcId=${shpcId}');--%>
 		}
 

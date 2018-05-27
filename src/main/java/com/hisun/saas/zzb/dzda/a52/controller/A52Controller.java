@@ -268,19 +268,31 @@ public class A52Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
-        A38Vo a32Vo = new A38Vo();
+        A38Vo a38Vo = new A38Vo();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
-            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+            a38Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
             Integer oldPxInteger=a52Service.getMaxSort(a38Id);
-            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
-                List<A52Vo> a52Vos = a32Vo.getA52Vos();
+            boolean flag = false;//判断是否存在非法数据
+            if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
+                List<A52Vo> a52Vos = a38Vo.getA52Vos();
                 for(int i=0;i<a52Vos.size();i++){
                     A52 a52 = new A52();
                     A52Vo a52Vo = a52Vos.get(i);
                     if(StringUtils.isEmpty(a52Vo.getA5204())){
+                        flag = true;
+                    }
+                    if(isNotDate(a52Vo.getA5227In())){
+                        flag = true;
+                    }
+                    if(isNotDate(a52Vo.getA5227Out())){
+                        flag = true;
+                    }
+
+                    if(flag){
                         continue;
                     }
+
                     BeanUtils.copyProperties(a52,a52Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     a52.setA38(a38);
@@ -294,5 +306,18 @@ public class A52Controller extends BaseController {
         }finally {
             file.delete();
         }
+    }
+
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

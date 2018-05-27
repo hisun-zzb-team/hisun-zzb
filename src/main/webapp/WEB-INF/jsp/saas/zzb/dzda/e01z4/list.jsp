@@ -12,13 +12,6 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-	<link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-	<!-- BEGIN PAGE LEVEL STYLES -->
-	<link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-	<link href="${path }/css/style.css" rel="stylesheet" type="text/css">
 	<!-- END PAGE LEVEL STYLES -->
 	<title>欠缺材料</title>
 	<style type="text/css">

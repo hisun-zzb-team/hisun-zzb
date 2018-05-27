@@ -32,8 +32,8 @@
 		<div class="caption_title">生成APP数据包</div>
 		<div class="fr">
 			<a type="button" class="btn green" href="javascript:formSubmit()"  style="color: #ffffff;height: auto"><i class="icon-download"></i>生成</a>
-			<a type="button" class="btn" style="height: 20px;" href="${path }/zzb/app/console/gendata/loadGenerator" ><i class="icon-refresh"></i>刷新</a>
-			<a class="btn" href="${path}/zzb/app/console/gendata/"><i class="icon-undo"></i>返回</a>
+			<a type="button" class="btn" style="height: 20px;" href="${path }/zzb/app/console/gendata/loadGenerator?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" ><i class="icon-refresh"></i>刷新</a>
+			<a class="btn" href="${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 		</div>
 	</div>
 <form action="${path }/zzb/app/console/gendata/generator" class="form-horizontal" id="form1" method="post">
@@ -224,11 +224,14 @@
 				type : "post",
 				data : $("#form1").serialize(),
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						//winopenRef.location="${path }/zzb/app/console/gendata/zip/down?id="+data.gendataId;
 						showTip("提示","数据包生成成功",2000);
-						setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/"},1000);
+						setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1000);
 					}else{
 						showTip("提示", "数据包生成失败", 2000);
 					}

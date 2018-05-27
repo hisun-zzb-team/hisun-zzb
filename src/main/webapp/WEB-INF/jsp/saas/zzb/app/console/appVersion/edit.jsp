@@ -27,7 +27,7 @@
 							</div>
 							<div class="portlet-body form">
 								<!-- BEGIN FORM-->
-								<form action="${path }/zzb/app/console/appVersion/save" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
+								<form action="${path }/zzb/app/console/appVersion/save?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
 									<input type="hidden" name="id" value="${appVersionVo.id }" id="id">
 									<input type="hidden" name="appStorePath" value="${appVersionVo.appStorePath }" id="appStorePath">
 									<input type="hidden" name="appMd5" value="${appVersionVo.appMd5 }" id="appMd5">
@@ -85,7 +85,7 @@
 									<div class="control-group">
 										<div class="controls mt10">
 											<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-											<a class="btn" href="${path }/zzb/app/console/appVersion/"><i class="icon-remove-sign"></i> 取消</a>
+											<a class="btn" href="${path }/zzb/app/console/appVersion/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 										</div>
 									</div>
 								</form>
@@ -182,7 +182,7 @@
 				myLoading.hide();
 				if(data.success){
 					showTip("提示","操作成功",2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/appVersion/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/appVersion/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", json.message, 2000);
 				}
@@ -195,7 +195,7 @@
 	}
 
 	function fileDown() {
-		window.open("${path }/zzb/app/console/appVersion/ajax/down?id=${appVersionVo.id}");
+		window.open("${path }/zzb/app/console/appVersion/ajax/down?id=${appVersionVo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 
 </script>

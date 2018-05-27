@@ -24,13 +24,16 @@ import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.mlcl.entity.EListRowCount;
 import com.hisun.saas.zzb.dzda.mlcl.exchange.MlxxExcelExchange;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.saas.zzb.dzda.mlcl.service.RowCountService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
+import com.hisun.saas.zzb.dzda.mlcl.vo.EListRowCountVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.StringUtils;
 import com.hisun.util.UUIDUtil;
@@ -47,6 +50,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +70,8 @@ public class E01Z1Controller extends BaseController {
     private A38Service a38Service;
     @Resource
     private E01Z1Service e01Z1Service;
+    @Resource
+    private RowCountService rowCountService;
 
     @Resource
     MlxxExcelExchange mlxxExcelExchange;
@@ -305,6 +311,9 @@ public class E01Z1Controller extends BaseController {
             @PathVariable("id") String id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            if(StringUtils.isEmpty(id)){
+                return null;
+            }
             E01Z1 e01z1 = this.e01Z1Service.getByPK(id);
             this.e01Z1Service.deleteE01Z1(e01z1);
             map.put("success", true);
@@ -387,6 +396,55 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+    @RequestMapping(value = "/ajax/setRowCount")
+    public ModelAndView setRowCount(){
+        Map<String, Object> map = new HashMap<String, Object>();
+        CommonConditionQuery query = new CommonConditionQuery();
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);
+        EListRowCountVo vo = new EListRowCountVo();
+        try {
+            if(eListRowCounts.size()>0){
+                BeanUtils.copyProperties(vo, eListRowCounts.get(0));
+                map.put("vo",vo);
+            }else {
+                vo.setBigTypeCount("6");
+                vo.setSmallTypeCount("2");
+                map.put("vo",vo);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("saas/zzb/dzda/mlcl/eListRowCount/eListRowCount",map);
+    }
+
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "保存行距")
+    @RequiresPermissions("a38:*")
+    @RequestMapping(value = "/rowCount/save", method = RequestMethod.POST)
+    public @ResponseBody Map<String, Object> rowCountSave(EListRowCountVo vo, HttpServletRequest request) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            if(StringUtils.isNotEmpty(vo.getId())){
+                EListRowCount eListRowCount = this.rowCountService.getByPK(vo.getId());
+                EntityWrapper.wrapperUpdateBaseProperties(eListRowCount,userLoginDetails);
+                BeanUtils.copyProperties(eListRowCount, vo);
+                rowCountService.update(eListRowCount);
+            }else{
+                EListRowCount eListRowCount = new EListRowCount();
+                BeanUtils.copyProperties(eListRowCount, vo);
+                EntityWrapper.wrapperSaveBaseProperties(eListRowCount,userLoginDetails);
+                this.rowCountService.save(eListRowCount);
+            }
+            map.put("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
 
     @RequestMapping("/tree")
     public @ResponseBody
@@ -429,6 +487,13 @@ public class E01Z1Controller extends BaseController {
                          @RequestParam(value="dml",defaultValue="6") int dml){
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
+
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);//获得设置空余行数值
+        if(eListRowCounts.size()>0){
+            xml = Integer.parseInt(eListRowCounts.get(0).getSmallTypeCount());
+            dml = Integer.parseInt(eListRowCounts.get(0).getBigTypeCount());
+        }
+
         orderBy.add(CommonOrder.asc("sort"));
         List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
         E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
@@ -513,15 +578,127 @@ public class E01Z1Controller extends BaseController {
                 }
             }
 
-            File storePathFile = new File(Constants.DATP_STORE_PATH);
+            File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
             if(!storePathFile.exists()){
                 storePathFile.mkdirs();
             }
 
-            filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
             mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
             resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxx.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/downloadMB/{a38Id}")
+    public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
+                         @RequestParam(value="xml",defaultValue="2")int xml,
+                         @RequestParam(value="dml",defaultValue="6") int dml){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+
+        List<EListRowCount> eListRowCounts = rowCountService.list(query, null);//获得设置空余行数值
+        if(eListRowCounts.size()>0){
+            xml = Integer.parseInt(eListRowCounts.get(0).getSmallTypeCount());
+            dml = Integer.parseInt(eListRowCounts.get(0).getBigTypeCount());
+        }
+
+        orderBy.add(CommonOrder.asc("sort"));
+        List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        E01Z1Vo vo;
+        String filePath="";
+        Map<String,Object> map = new HashMap();
+        try {
+
+            for(ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos){
+                query=new CommonConditionQuery();
+                orderBy = new CommonOrderBy();
+                query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
+                query.add(CommonRestrictions.and(" e01z101b = :e01z101b ","e01z101b",eCatalogTypeInfo.getCatalogCode()));
+                orderBy.add(CommonOrder.asc("e01Z104"));
+                List<E01Z1> resultList = e01Z1Service.list(query,orderBy);
+                List<E01Z1Vo> e01Z1Vos=new ArrayList<>();
+
+                if("010".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("jlcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setJlcl(e01Z1Vos);
+                }else if("020".equals(eCatalogTypeInfo.getCatalogCode())){
+                    map.put("zzcl",e01Z1Vos.size());
+                    e01Z1ExcelVo.setZzcl(e01Z1Vos);
+                }else if("030".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJdcl(e01Z1Vos);
+                    map.put("jdcl",e01Z1Vos.size());
+                }else if("041".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setXlxw(e01Z1Vos);
+                    map.put("xlxw",e01Z1Vos.size());
+                }else if("042".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZyzg(e01Z1Vos);
+                    map.put("zyzg",e01Z1Vos.size());
+                }else if("043".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setKysp(e01Z1Vos);
+                    map.put("kysp",e01Z1Vos.size());
+                }else if("044".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setPxcl(e01Z1Vos);
+                    map.put("pxcl",e01Z1Vos.size());
+                }else if("050".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setZscl(e01Z1Vos);
+                    map.put("zscl",e01Z1Vos.size());
+                }else if("060".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDtcl(e01Z1Vos);
+                    map.put("dtcl",e01Z1Vos.size());
+                }else if("070".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setJlicl(e01Z1Vos);
+                    map.put("jlicl",e01Z1Vos.size());
+                }else if("080".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCfcl(e01Z1Vos);
+                    map.put("cfcl",e01Z1Vos.size());
+                }else if("091".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setGzcl(e01Z1Vos);
+                    map.put("gzcl",e01Z1Vos.size());
+                }else if("092".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setRmcl(e01Z1Vos);
+                    map.put("rmcl",e01Z1Vos.size());
+                }else if("093".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setCgcl(e01Z1Vos);
+                    map.put("cgcl",e01Z1Vos.size());
+                }else if("094".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setDbdh(e01Z1Vos);
+                    map.put("dbdh",e01Z1Vos.size());
+                }else if("100".equals(eCatalogTypeInfo.getCatalogCode())){
+                    e01Z1ExcelVo.setQtcl(e01Z1Vos);
+                    map.put("qtcl",e01Z1Vos.size());
+                }
+            }
+
+            File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
+            if(!storePathFile.exists()){
+                storePathFile.mkdirs();
+            }
+
+            filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
+            mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxxMB.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -554,16 +731,16 @@ public class E01Z1Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")
-    public void uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+    public void uploadFile (String a38Id , @RequestParam(value="mlxxFile",required = false) MultipartFile mlxxFile , HttpServletResponse resp) throws IOException {
         String filePath = "";
-        File storePathFile = new File(Constants.DATP_STORE_PATH);
+        File storePathFile = new File(Constants.DATP_STORE_PATH_UPLOAD);
         if(!storePathFile.exists()) storePathFile.mkdirs();
-        filePath = uploadBasePath+Constants.DATP_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+        filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
         File file = new File(filePath);
         InputStream inputStream = null;
         OutputStream output = null;
         try {
-            inputStream = zwbdFile.getInputStream();
+            inputStream = mlxxFile.getInputStream();
             output = new FileOutputStream(file);
             byte[] buf = new byte[1024];
             int bytesRead;
@@ -582,32 +759,165 @@ public class E01Z1Controller extends BaseController {
                 output.close();
             }
         }
-//        String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
-//        A38Vo a32Vo = new A38Vo();
-//        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-//        try {
-//            a32Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
-//            Integer oldPxInteger=a52Service.getMaxSort(a38Id);
-//            if(a32Vo!=null&&a32Vo.getA52Vos().size()>0){
-//                List<A52Vo> a52Vos = a32Vo.getA52Vos();
-//                for(int i=0;i<a52Vos.size();i++){
-//                    A52 a52 = new A52();
-//                    A52Vo a52Vo = a52Vos.get(i);
-//                    if(StringUtils.isEmpty(a52Vo.getA5204())){
-//                        continue;
-//                    }
-//                    BeanUtils.copyProperties(a52,a52Vo);
-//                    A38 a38 = this.a38Service.getByPK(a38Id);
-//                    a52.setA38(a38);
-//                    a52.setPx(oldPxInteger+i);
-//                    EntityWrapper.wrapperSaveBaseProperties(a52,details);
-//                    a52Service.save(a52);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }finally {
-//            file.delete();
-//        }
+        String tempFile = uploadBasePath+Constants.DATPMB_STORE_PATH;
+        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        try {
+            //解析excel 获得返回数据
+            e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
+            //根据返回数据新增材料
+            if(e01Z1ExcelVo!=null){
+                addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",a38Id);
+                addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",a38Id);
+                addE01z1(e01Z1ExcelVo.getKysp(),"kysp",a38Id);
+                addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getZscl(),"zscl",a38Id);
+                addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",a38Id);
+                addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",a38Id);
+                addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",a38Id);
+                addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",a38Id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            file.delete();
+        }
+    }
+
+    public void addE01z1(List<E01Z1Vo> e01Z1Vos,String listStr,String a38Id){
+        if(e01Z1Vos.size()>0){
+            //获得材料类别
+            String catalogCode = getCatalogCode(listStr);//获取材料类别Code
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
+            CommonOrderBy orderBy = new CommonOrderBy();
+            List<ECatalogTypeInfo> entities = this.eCatalogTypeService.list(query, orderBy);
+            ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
+            if(entities.size()>0){
+                eCatalogTypeInfo=entities.get(0);
+            }
+
+            try {
+
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos){
+                    boolean flag = false;//判断是否存在非法数据
+                    if(e01Z1Vo!=null){
+
+                        //判断必填材料是否为空
+                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
+                            flag = true;
+                        }
+                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
+                            flag = true;
+                        }
+                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            flag = true;
+                        }
+
+                        //拼接日期
+                        String e01Z117 = "";
+                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+                            e01Z117 = e01Z1Vo.getYear();
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                                e01Z117 += e01Z1Vo.getMonth();
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                                    e01Z117 += e01Z1Vo.getDay();
+                                }
+                            }
+                        }
+                        if(isNotDate(e01Z117)){
+                            flag = true;
+                        }
+
+                        if(flag){
+                            continue;
+                        }
+
+                        e01Z1Vo.setE01Z117(e01Z117);
+
+                        int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
+                        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+                        E01Z1 e01Z1 = new E01Z1();
+                        BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                        e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
+                        e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
+                        e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+                        e01Z1.setYjztps(0);
+                        if(StringUtils.isNotBlank(a38Id)){
+                            e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                        }
+                        EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
+                        int newSort = e01Z1.getE01Z104();
+                        if(newSort<sort){
+                            e01Z1Service.updateSortBeforSave(e01Z1,sort);
+                        }
+                        e01Z1Service.save(e01Z1);
+                    }
+                }
+            }catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getCatalogCode(String listStr){
+        String catalogCode = "";
+        if("jlcl".equals(listStr)){
+            catalogCode = "010";
+        }else if("zzcl".equals(listStr)){
+            catalogCode = "020";
+        }else if("jdcl".equals(listStr)){
+            catalogCode = "030";
+        }else if("xlxw".equals(listStr)){
+            catalogCode = "041";
+        }else if("zyzg".equals(listStr)){
+            catalogCode = "042";
+        }else if("kysp".equals(listStr)){
+            catalogCode = "043";
+        }else if("pxcl".equals(listStr)){
+            catalogCode = "044";
+        }else if("zscl".equals(listStr)){
+            catalogCode = "050";
+        }else if("dtcl".equals(listStr)){
+            catalogCode = "060";
+        }else if("jlicl".equals(listStr)){
+            catalogCode = "070";
+        }else if("cfcl".equals(listStr)){
+            catalogCode = "080";
+        }else if("gzcl".equals(listStr)){
+            catalogCode = "091";
+        }else if("rmcl".equals(listStr)){
+            catalogCode = "092";
+        }else if("cgcl".equals(listStr)){
+            catalogCode = "093";
+        }else if("dbdh".equals(listStr)){
+            catalogCode = "094";
+        }else if("qtcl".equals(listStr)){
+            catalogCode = "100";
+        }
+        return catalogCode;
+    }
+
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

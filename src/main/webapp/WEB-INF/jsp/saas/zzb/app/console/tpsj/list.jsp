@@ -34,14 +34,14 @@
                             <h style="color: #C0C0C0 "> 弃权</h>
                         </div>
 						<div class="clearfix fr">
-                                <a class="btn" href="${path }/zzb/app/console/tp/list?shpcId=${shpcId}"><i class="icon-undo"></i>返回</a>
+                                <a class="btn" href="${path }/zzb/app/console/tp/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${shpcId}"><i class="icon-undo"></i>返回</a>
                             </div>
 
                         </div>
                         <div class="clearfix">
                             <div class="control-group">
                                 <div id="query" style="float: left;">
-                                    <form action="${path }/zzb/app/console/tpsj/" method="POST" id="searchForm" name="searchForm">
+                                    <form action="${path }/zzb/app/console/tpsj/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
                                         <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                                         <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                                         <input type="hidden" name="shtpId" value="${shtpId }" id="shtpId">

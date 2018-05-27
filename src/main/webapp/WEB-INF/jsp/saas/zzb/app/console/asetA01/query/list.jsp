@@ -101,7 +101,7 @@
 
 								<ul class="dropdown-menu" style="left: -60px;">
 									<li >
-										<a href="${path }/zzb/app/console/asetA01Query/add?addType=a01List">新条件</a>
+										<a href="${path }/zzb/app/console/asetA01Query/add?addType=a01List&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">新条件</a>
 									</li>
 									<li class="divider"></li>
 									<c:forEach items="${appAsetA01Querys}" var="vo">
@@ -111,11 +111,11 @@
 									</c:forEach>
 									<li class="divider"></li>
 									<li>
-										<a href="${path }/zzb/app/console/asetA01Query/queryList">条件管理</a>
+										<a href="${path }/zzb/app/console/asetA01Query/queryList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">条件管理</a>
 									</li>
 								</ul>
 							</div>
-							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01/">
+							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 								按机构查询
 							</a>
 							<a id="sample_editable_1_new" class="btn green" href="javascript:openGjcx()">
@@ -147,7 +147,7 @@
 
 									</ul>
 								</div>
-								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01/">
+								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 									按机构查询
 								</a>
 								<a id="sample_editable_1_new" class="btn green" href="#">
@@ -164,10 +164,10 @@
 									</ul>
 								</div>
 								<c:if test="${empty queryPosition}">
-									<a class="btn" href="${path }/zzb/app/console/asetA01Query/"><i class="icon-undo"></i>返回</a>
+									<a class="btn" href="${path }/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
 								</c:if>
 								<c:if test="${queryPosition eq 'queryList'}">
-									<a class="btn" href="${path }/zzb/app/console/asetA01Query/queryList"><i class="icon-undo"></i> 返回</a>
+									<a class="btn" href="${path }/zzb/app/console/asetA01Query/queryList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i> 返回</a>
 								</c:if>
 							</c:if>
 
@@ -177,7 +177,7 @@
 					<div class="clearfix">
 						<div class="control-group">
 							<div id="query" style="float: left;">
-								<form action="${path }/zzb/app/console/asetA01Query/" method="POST" id="searchForm" name="searchForm">
+								<form action="${path }/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 									<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 									<input type="hidden" name="queryId" value="${queryId }" id="queryId">
 									<input type="hidden" name="queryPosition" value="${queryPosition }" id="queryPosition">
@@ -208,7 +208,7 @@
 							<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
 								<tr style="text-overflow:ellipsis;">
-									<td title="${vo.xm}"><a href="${path}/zzb/app/console/asetA01Query/view?id=${vo.id }&queryId=${queryId}&queryPosition=${queryPosition}"><c:out value="${vo.xm}"></c:out></a></td>
+									<td title="${vo.xm}"><a href="${path}/zzb/app/console/asetA01Query/view?id=${vo.id }&queryId=${queryId}&queryPosition=${queryPosition}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.xm}"></c:out></a></td>
 										<%--<td title="${vo.xm}">--%>
 										<%--<c:out value="${vo.xm}"></c:out>--%>
 										<%--</td>--%>
@@ -250,7 +250,7 @@
 		})();
 	
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/asetA01Query/?queryId=${queryId}&pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&queryId=${queryId}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){
@@ -290,6 +290,9 @@
 				type : "post",
 				data: {"queryId":"${queryId}","mcName":$("#mcName").val(),"mcSort":$("#mcSort").val()},
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						showTip("提示","成功另存为干部名册",2000);
@@ -305,17 +308,17 @@
 			});
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01Query/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01Query/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/?queryId=${queryId}"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/?queryId=${queryId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}
 			});
 		};
 		function queryByCondition(queryId){
-			window.location.href = "${path}/zzb/app/console/asetA01Query/?queryId="+queryId;
+			window.location.href = "${path}/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&queryId="+queryId;
 		}
 		function isNumberTmp(str) {
 			var Letters = "0123456789";
@@ -363,10 +366,13 @@
 				type : "post",
 				data: {"id":"${queryId}","queryName":$("#queryName").val(),"querySort":$("#querySort").val()},
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						showTip("提示","条件保存成功",2000);
-						setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/queryList"},2000);
+						setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01Query/queryList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 					}else{
 						showTip("提示", json.message, 2000);
 					}

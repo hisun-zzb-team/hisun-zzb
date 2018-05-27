@@ -65,7 +65,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li >
-									<a onclick="unloadFile()">导入excel</a>
+									<a onclick="uploadZbdaFile()">导入excel</a>
 								</li>
 								<li >
 									<a onclick="unloadFile()">导入Lrmx</a>
@@ -82,9 +82,14 @@
 							</ul>
 						</div>
 						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
-						<a class="btn green" href="javascript:fileDown('list')">
+						<a class="btn green" href="javascript:download()">
 							输出
 						</a>
+						<form action="" id="uploadForm">
+							<input type="file" style="display: none" name="zbdaFile" id="zbdaFile" accept = '.csv,
+                 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
+							<input type="hidden" id="a38Id" name="a38Id" value="${a38Id}">
+						</form>
 
 					</div>
 
@@ -192,6 +197,60 @@
 	function unloadFile(){
 		document.getElementById("btn-unloadFile").click();
 	}
+
+	function uploadZbdaFile(){
+		document.getElementById("zbdaFile").click();
+	}
+
+	$("#zbdaFile").on("change", function (evt) {
+		var uploadFile = document.getElementById("zbdaFile");
+		var file = uploadFile.files[0];
+		if (uploadFile.files.length > 0) {
+			var name = uploadFile.files[0].name
+			var arr = name.split(".");
+			if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
+				showTip("提示", "请上传Excel文件", 2000);
+				return;
+			}
+		}
+		$("#uploadForm").ajaxSubmit({
+			type:"POST",
+			url:"${path}/zzb/dzda/a38/uploadFile",
+			dataType : "json",
+			enctype : "multipart/form-data",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
+			success:function(html){
+				showTip("提示","上传成功!",2000);
+				$.ajax({
+					async:false,
+					type:"POST",
+					url:"${path }/zzb/dzda/a38/list",
+					dataType : "html",
+					headers:{
+						"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+					},
+					data:{
+						'id':"${id}"
+					},
+					success:function(html){
+						var view = $("#tab_show");
+						view.html(html);
+					},
+					error : function(){
+						myLoading.hide();
+						showTip("提示","出错了,请检查网络!",2000);
+					}
+				});
+			},
+			error : function(){
+				showTip("提示","上传失败!",2000);
+			}
+		});
+	});
+
+
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
@@ -258,6 +317,10 @@
 				showTip("提示","出错了请联系管理员", 1500);
 			}
 		});
+	}
+
+	function download() {
+		window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 </script>
 </body>

@@ -12,7 +12,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -20,17 +19,44 @@ import java.util.Date;
 public class E01Z7Vo {
     private String id;
     private String a38Id;
-    private String name;
-    private Date e01Z701;
-    private String e01Z704A;
-    private String e01Z704B;
-    private Integer e01Z711;
-    private Integer e01Z714;
-    private String e01Z717;
-    private String e01Z721;
-    private String e01Z724;
-    private Date e01Z727;
-    private String e01Z731;
+    private String name;//'档案名称'
+    private String nameContent;//档案id字符串
+    private String e01Z701;//'转递日期'
+    private String e01Z704A;//'转往单位名称'
+    private String e01Z704B;//'转往单位Id'
+    private Integer e01Z711;//'转出正本数'
+    private Integer e01Z714;//'转出副本数'
+    private String e01Z717;//'经办人'
+    private String e01Z721;//'转递原因'
+    private String e01Z724;//'回执人'
+    private String e01Z727;//'回执日期'
+    private String e01Z731;//'备注'
+    private String filePath;//上传文件路径
+    private String fileName; //上传文件名称
+
+    public String getNameContent() {
+        return nameContent;
+    }
+
+    public void setNameContent(String nameContent) {
+        this.nameContent = nameContent;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public String getId() {
         return id;
@@ -56,11 +82,11 @@ public class E01Z7Vo {
         this.name = name;
     }
 
-    public Date getE01Z701() {
+    public String getE01Z701() {
         return e01Z701;
     }
 
-    public void setE01Z701(Date e01Z701) {
+    public void setE01Z701(String e01Z701) {
         this.e01Z701 = e01Z701;
     }
 
@@ -120,11 +146,11 @@ public class E01Z7Vo {
         this.e01Z724 = e01Z724;
     }
 
-    public Date getE01Z727() {
+    public String getE01Z727() {
         return e01Z727;
     }
 
-    public void setE01Z727(Date e01Z727) {
+    public void setE01Z727(String e01Z727) {
         this.e01Z727 = e01Z727;
     }
 

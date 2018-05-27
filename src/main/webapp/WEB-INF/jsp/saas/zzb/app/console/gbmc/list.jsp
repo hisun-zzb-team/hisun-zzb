@@ -28,7 +28,7 @@
 						<div class="portlet-title">
 							<div class="caption">干部名册</div>
 							<div class="clearfix fr">
-								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/gbmc/add">
+								<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/gbmc/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 									<i class="icon-plus"></i> 添加
 								</a>
 							</div>
@@ -38,7 +38,7 @@
 					<div class="clearfix">
 						<div class="control-group">
 							<div id="query" style="float: left;">
-								<form action="${path }/zzb/app/console/gbmc/" method="POST" id="searchForm" name="searchForm">
+								<form action="${path }/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 								<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 								<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 								<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
@@ -67,16 +67,16 @@
 								<c:forEach items="${pager.datas}" var="vo">
 									<tr style="text-overflow:ellipsis;">
 										<c:if test="${vo.isMl ==0}">
-											<td><a href="${path}/zzb/app/console/gbmc/b01/list?mcid=${vo.id }"><c:out value="${vo.mc}"></c:out></a></td>
+											<td><a href="${path}/zzb/app/console/gbmc/b01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcid=${vo.id }"><c:out value="${vo.mc}"></c:out></a></td>
 										</c:if>
 										<c:if test="${vo.isMl ==1}">
-											<td><a href="${path}/zzb/app/console/gbmc/a01/list?mcid=${vo.id}"><c:out value="${vo.mc}"></c:out></a></td>
+											<td><a href="${path}/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcid=${vo.id}"><c:out value="${vo.mc}"></c:out></a></td>
 										</c:if>
-										<td><a href="${path}/zzb/app/console/gbmc/a01/list?mcid=${vo.id}">共<c:out value="${vo.a01Count}"></c:out>人</a></td>
+										<td><a href="${path}/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcid=${vo.id}">共<c:out value="${vo.a01Count}"></c:out>人</a></td>
 										<td><c:out value="${vo.px}"></c:out></td>
 										<td><c:out value="${vo.isMlValue}"></c:out></td>
 										<td class="Left_alignment">
-											<a href="${path}/zzb/app/console/gbmc/edit?id=${vo.id }" class="">编辑</a>|
+											<a href="${path}/zzb/app/console/gbmc/edit?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id }" class="">编辑</a>|
 											<a href="javascript:del('${vo.id }','${vo.mc}')" class="">删除</a>
 										</td>
 									</tr>
@@ -114,10 +114,10 @@
 			document.searchForm.submit();
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}

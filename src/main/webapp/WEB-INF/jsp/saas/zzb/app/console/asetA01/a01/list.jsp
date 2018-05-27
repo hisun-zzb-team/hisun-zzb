@@ -42,7 +42,7 @@
 								</li>
 							</ul>
 						</div>
-						<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01Query/">
+						<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 						按条件查询
 					</a>
 						<div class="btn-group">
@@ -70,7 +70,7 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<div id="query" style="float: left;">
-						<form action="${path }/zzb/app/console/asetA01/ajax/list" method="POST" id="searchForm" name="searchForm">
+						<form action="${path }/zzb/app/console/asetA01/ajax/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 							<input type="hidden" id="b01Id" name="b01Id" value="${b01Id}"/>
 							<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 							<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
@@ -324,10 +324,10 @@
 		});
 	}
 	var del = function(id,itemName){
-		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/asetA01/list?b01Id=${b01Id}&mcid=${mcid}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
@@ -364,6 +364,9 @@
 			type : "post",
 			data : $("#form1").serialize(),
 			dataType : "json",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
 			success : function(data){
 				if(data.success == true){
 					showTip("提示","生成干部任免审批表成功!",2000);

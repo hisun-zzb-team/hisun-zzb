@@ -23,7 +23,7 @@
 					<div class="portlet-title">
 						<div class="caption">数据交换</div>
 						<div class="clearfix fr">
-							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/exchange/add">
+							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/exchange/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 								<i class="icon-plus"></i> 配置数据源
 							</a>
 						</div>
@@ -46,7 +46,7 @@
 								<c:forEach items="${pager.datas}" var="vo">
 									<tr style="text-overflow:ellipsis;">
 										<td>
-											<a href="${path}/zzb/app/console/exchange/edit?id=${vo.id }" class=""><c:out value="${vo.actuatorName}"></c:out></a>
+											<a href="${path}/zzb/app/console/exchange/edit?id=${vo.id }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class=""><c:out value="${vo.actuatorName}"></c:out></a>
 										</td>
 										<td><c:out value="${vo.sourceTypeValue}"></c:out></td>
 										<td><c:out value="${vo.ip}"></c:out></td>
@@ -56,7 +56,7 @@
 										<td class="Left_alignment">
 											<a href="javascript:importData('${vo.id }','${vo.actuatorName}')" class="">导入数据</a>|
 											<a href="javascript:clearData('${vo.id }','${vo.actuatorName}')" class="">清除导入数据</a>|
-											<a href="${path}/zzb/app/console/exchange/edit?id=${vo.id }" class="">编辑</a>|
+											<a href="${path}/zzb/app/console/exchange/edit?id=${vo.id }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">编辑</a>|
 											<a href="javascript:del('${vo.id }','${vo.sourceTypeValue}')" class="">删除</a>
 										</td>
 									</tr>
@@ -89,20 +89,20 @@
 
 
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/exchange/?pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/exchange/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){
 			document.searchForm.submit();
 		}
 		function fileDown(id) {
-			window.open("${path }/zzb/app/console/exchange/ajax/down?id="+id);
+			window.open("${path }/zzb/app/console/exchange/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/exchange/delete/" + id,{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/exchange/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/exchange/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/exchange/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}
@@ -113,7 +113,7 @@
 			var msg = "系统将在执行导入数据之前，将自动清除原有数据，此过程可能需要几十分钟。请确认后再进行操作，确认后请在下面填写数据源名称。";
 			var tip = "请输入数据源的名称";
 			myLoading.show();
-			showPrompModal2(title,name,msg,tip,"${path}/zzb/app/console/exchange/ajax/importData?id=" + id,null, function(json){
+			showPrompModal2(title,name,msg,tip,"${path}/zzb/app/console/exchange/ajax/importData?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id,null, function(json){
 
 				if(json.success == true){
 					myLoading.hide();
@@ -160,7 +160,7 @@
 			var msg = "这个操作不能撤消，这将永久清除导入数据，清除后将不可恢复，请确认后再进行操作，确认后请在下面填写数据源名称。";
 			var tip = "请输入数据源名称";
 			myLoading.show();
-			showPrompModal2(title,name,msg,tip,"${path}/zzb/app/console/exchange/ajax/clearData?id=" + id,null, function(json){
+			showPrompModal2(title,name,msg,tip,"${path}/zzb/app/console/exchange/ajax/clearData?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id,null, function(json){
 
 				if(json.success == true){
 					myLoading.hide();

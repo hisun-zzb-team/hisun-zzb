@@ -33,6 +33,7 @@
 		<input type="hidden" name="eLogDetailViewTimeId" id="eLogDetailViewTimeId">
 		<input type="hidden" name="a38LogViewTimeId" id="a38LogViewTimeId">
 		<input type="hidden" name="a38LogId" id="a38LogId">
+		<input type="hidden" name="selectNodeId" id="selectNodeId" value="${e01z1Id}">
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
 				<div style="margin: 0px;padding: 0px">
 					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}?eApplyE01Z8Id=${eApplyE01Z8Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
@@ -185,6 +186,19 @@
 		}
 		loadRight(e01z1Id);
 	});
+
+	function refreshTree() {
+		$("#viewImagesTree").empty();
+		refreshTreeTag("viewImagesTree",setting_viewImagesTree,"");
+		selectNodeTree();
+	}
+	function selectNodeTree(){
+		var zTree11 = $.fn.zTree.getZTreeObj("viewImagesTree");
+		var id = $("#selectNodeId").val();
+		var node = zTree11.getNodeByParam('id',id);// 获取id为-1的点
+		zTree11.selectNode(node);
+		zTree11.expandNode(node, true, false , true);
+	}
 	function loadRight(nodeId) {
 		$.ajax({
 			async: false,
@@ -202,6 +216,7 @@
 			},
 			success: function (html) {
 				$("#viewList").html(html);
+				$("#selectNodeId").val(nodeId);
 			},
 			error: function () {
 				showTip("提示", "出错了,请检查网络!", 2000);
@@ -214,35 +229,36 @@
 		//var  eApplyE01Z8Id = $("#eApplyE01Z8Id").val();
 		var a38LogId = $("#a38LogId").val();
 		if(a38LogId != undefined && a38LogId != "" && a38LogId != null){
-			//记录阅档日志
-			if(treeNode.nodeType != "dir"){
-				$.ajax({
-					type: "POST",
-					url:"${path}/zzb/dzda/cysq/ajax/detailViewTime",
-					dataType: "json",
-					data: {
-						"a38LogId": a38LogId,
-						"e01z1Id": treeNode.id,
-						"e01z111":treeNode.name,
-						"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
-						"lsEa38LogDetailId":$("#ea38LogDetailId").val()
-					},
-					headers:{
-						OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-					},
-					success: function (json) {
+			if("${isAddLog}" != "false"){
+				//记录阅档日志
+				if(treeNode.nodeType != "dir"){
+					$.ajax({
+						type: "POST",
+						url:"${path}/zzb/dzda/cysq/ajax/detailViewTime",
+						dataType: "json",
+						data: {
+							"a38LogId": a38LogId,
+							"e01z1Id": treeNode.id,
+							"e01z111":treeNode.name,
+							"lseLogDetailViewTimeId":$("#eLogDetailViewTimeId").val(),
+							"lsEa38LogDetailId":$("#ea38LogDetailId").val()
+						},
+						headers:{
+							OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+						},
+						success: function (json) {
 
-						$("#eLogDetailViewTimeId").val(json.eLogDetailViewTimeId);
-						$("#ea38LogDetailId").val(json.ea38LogDetailId);
-					},
-					error: function () {
-						//myLoading.hide();
-						showTip("提示", "出错了,请检查网络!", 2000);
-					}
-				});
+							$("#eLogDetailViewTimeId").val(json.eLogDetailViewTimeId);
+							$("#ea38LogDetailId").val(json.ea38LogDetailId);
+						},
+						error: function () {
+							//myLoading.hide();
+							showTip("提示", "出错了,请检查网络!", 2000);
+						}
+					});
+				}
 			}
 		}
-
 
 		var nodeType = "0";
 		var treeObj = zViewTree;

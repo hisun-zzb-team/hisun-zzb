@@ -31,7 +31,7 @@
 				<div class="clearfix">
 					<div class="control-group">
 						<div id="query" style="float: left;">
-							<form action="${path }/zzb/app/console/tp/" method="POST" id="searchForm" name="searchForm">
+							<form action="${path }/zzb/app/console/tp/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
 							<input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
 							<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 							<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
@@ -59,9 +59,9 @@
 										<td><c:out value="${vo.pcmc}"></c:out></td>
 										<td><c:out value="${vo.shlxValue}"></c:out></td>
 										<td><c:out value="${vo.pcsjValue}"></c:out></td>
-										<td><a href="${path}/zzb/app/console/tp/list?shpcId=${vo.id }" class="">${vo.tpCount }人已投</a></td>
+										<td><a href="${path}/zzb/app/console/tp/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${vo.id }" class="">${vo.tpCount }人已投</a></td>
 										<td class="Left_alignment">
-											<a href="${path}/zzb/app/console/tp/result?shpcId=${vo.id }" class="">查看</a>
+											<a href="${path}/zzb/app/console/tp/result?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&shpcId=${vo.id }" class="">查看</a>
 										</td>
 									</tr>
 								</c:forEach>

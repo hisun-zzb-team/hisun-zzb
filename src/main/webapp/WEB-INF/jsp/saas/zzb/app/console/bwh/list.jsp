@@ -37,7 +37,7 @@
 					<div class="portlet-title">
 						<div class="caption">会议研究批次</div>
 						<div class="clearfix fr">
-							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/bwh/add?shpcPageNum=${pager.pageNum }">
+							<a id="sample_editable_1_new" class="btn green" href="${path }/zzb/app/console/bwh/add?shpcPageNum=${pager.pageNum }&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
 								<i class="icon-plus"></i> 添加 
 							</a>
 						</div>
@@ -62,7 +62,7 @@
 									<tr style="text-overflow:ellipsis;">
 										<td>
 											<c:if test="${vo.sjlx eq '1'}">
-												<a href="${path}/zzb/app/console/Sha01/list?shpcId=${vo.id }&shpcPageNum=${pager.pageNum}"><c:out value="${vo.pcmc}"></c:out></a>
+												<a href="${path}/zzb/app/console/Sha01/list?shpcId=${vo.id }&shpcPageNum=${pager.pageNum}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.pcmc}"></c:out></a>
 											</c:if>
 											<c:if test="${vo.sjlx eq '2'}">
 												<c:if test="${!empty vo.filePath}">
@@ -79,14 +79,14 @@
 										<td><a href="javascript:changeShZt('${vo.id}')" id="${vo.id }_shZt"><c:out value="${vo.shZtValue}"></c:out></a></td>
 										<td>
 											<c:if test="${vo.sjlx eq '1'}">
-												<a href="${path}/zzb/app/console/Sha01/list?shpcId=${vo.id }&shpcPageNum=${pager.pageNum}" class="">共${vo.a01Count }人</a>
+												<a href="${path}/zzb/app/console/Sha01/list?shpcId=${vo.id }&shpcPageNum=${pager.pageNum}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">共${vo.a01Count }人</a>
 											</c:if>
 											<c:if test="${vo.sjlx eq '2'}">---</c:if>
 										</td>
 										<td><c:out value="${vo.px}"></c:out></td>
 										<td class="Left_alignment">
 
-											<a href="${path}/zzb/app/console/bwh/edit?id=${vo.id }&shpcPageNum=${pager.pageNum}" class="">编辑</a>|
+											<a href="${path}/zzb/app/console/bwh/edit?id=${vo.id }&shpcPageNum=${pager.pageNum}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="">编辑</a>|
 											<a href="javascript:del('${vo.id }','${vo.pcmc}')" class="">删除</a>
 											<c:if test="${vo.sjlx eq '2'}">
 												|<a href="javascript:addAtts('${vo.id }')" class="">附件</a>
@@ -141,20 +141,20 @@
 		}
 
 		function pagehref (pageNum ,pageSize){
-			window.location.href ="${path}/zzb/app/console/bwh/?pageNum="+pageNum+"&pageSize="+pageSize;
+			window.location.href ="${path}/zzb/app/console/bwh/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum="+pageNum+"&pageSize="+pageSize;
 		}
 		
 		function searchSubmit(){
 			document.searchForm.submit();
 		}
 		function fileDown(id) {
-			window.open("${path }/zzb/app/console/bwh/ajax/down?id="+id);
+			window.open("${path }/zzb/app/console/bwh/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 		}
 		var del = function(id,itemName){
-			actionByConfirm1(itemName, "${path}/zzb/app/console/bwh/delete/?id=" + id+"&shpcPageNum=${pager.pageNum }",{} ,function(data,status){
+			actionByConfirm1(itemName, "${path}/zzb/app/console/bwh/delete/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id+"&shpcPageNum=${pager.pageNum }",{} ,function(data,status){
 				if (data.success == true) {
 					showTip("提示","删除成功", 2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?pageNum=${shpcPageNum}"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/bwh/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum=${shpcPageNum}"},2000);
 				}else{
 					showTip("提示", data.message, 2000);	
 				}
@@ -167,6 +167,9 @@
 				type : "post",
 				data : $("#form1").serialize(),
 				dataType : "json",
+				headers:{
+					"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+				},
 				success : function(data){
 					if(data.success){
 						document.getElementById(id+"_shZt").innerHTML  = data.shZtValue;

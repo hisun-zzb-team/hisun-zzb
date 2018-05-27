@@ -106,7 +106,7 @@
                     //showTip("提示","操作成功",2000);
 
                     window.document.getElementById("gbrmspbDownDiv").style.visibility = "visible";
-                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?id=${a01Vo.id}";
+                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${a01Vo.id}";
                 } else if (json.code == -1) {
                     showTip("提示", json.message, 2000);
                 } else {
@@ -126,13 +126,13 @@
         //if("${a01Vo.filepath}"==""){
         //     showTip("提示", "没有可下载的任免审批表!", 2000);
         // }else{
-        window.open("${path }/zzb/app/console/asetA01/ajax/down?id=${a01Vo.id}");
+        window.open("${path }/zzb/app/console/asetA01/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${a01Vo.id}");
         // }
     }
 
 
     function del(itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/${a01Vo.id}",{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/${a01Vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 1000);
                 returnList();

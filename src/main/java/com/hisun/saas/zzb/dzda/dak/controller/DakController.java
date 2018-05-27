@@ -24,23 +24,33 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.taglib.selectTag.SelectNode;
 import com.hisun.saas.sys.taglib.treeTag.TreeNode;
+import com.hisun.saas.zzb.dzda.dak.Constants;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
+import com.hisun.saas.zzb.dzda.dak.exchange.DakExcelExchange;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
+import com.hisun.util.URLEncoderUtil;
+import com.hisun.util.UUIDUtil;
 import org.antlr.stringtemplate.CommonGroupLoader;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -63,6 +73,12 @@ public class DakController extends BaseController {
 
     @Resource
     private DictionaryTypeService dictionaryTypeService;
+
+    @Resource
+    DakExcelExchange dakExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
 
     @RequiresPermissions("a38:dakList ")
     @RequestMapping(value = "/manage")
@@ -110,8 +126,8 @@ public class DakController extends BaseController {
         }
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-        List<A38> resultList = a38Service.gjcxList(queryVo,userLoginDetails);
-        int total =  resultList.size();
+        List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(), pageNum, pageSize);
+        int total =   a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(),1,100000).size();
         List<A38Vo> a38Vos = new ArrayList<A38Vo>();
         A38Vo vo = new A38Vo();
         for(A38 entity : resultList){
@@ -176,6 +192,51 @@ public class DakController extends BaseController {
         DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
         map.put("vo",queryDakVo);
         return new ModelAndView("saas/zzb/dzda/dak/gjcxPage",map);
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download")
+    public void download( HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.desc("smxh"));
+        orderBy.add(CommonOrder.asc("a0101"));
+        List<A38> resultList = a38Service.list(query,orderBy);
+        A38Vo vo;
+        List<A38Vo> a38Vos=new ArrayList<>();
+        String filePath = "";
+        try {
+            for(A38 a38:resultList){
+                vo = new A38Vo();
+                org.apache.commons.beanutils.BeanUtils.copyProperties(vo,a38);
+                a38Vos.add(vo);
+            }
+            File storePathFile = new File(Constants.DAK_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.DAK_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            dakExcelExchange.toExcelByManyPojo(a38Vos, uploadBasePath+Constants.DAKMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("dak.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 
 

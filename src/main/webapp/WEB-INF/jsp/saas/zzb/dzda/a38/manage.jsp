@@ -80,7 +80,7 @@
 				<%--</li>--%>
 			<%--</ul>--%>
 		<%--</div>--%>
-		<a  class="btn green" href="javascript:del()"><i class="icon-remove"></i>删除</a>
+		<a  class="btn green" href="javascript:delA38ByManage()"><i class="icon-remove"></i>删除</a>
 		<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
 		<div class="btn-group" style="padding-bottom: 0px">
 			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -91,7 +91,7 @@
 				<a onclick="fileDown('allDa')">整本档案下载(含图片)</a>
 				</li>
 				<li >
-				<a onclick="fileDown('dianzibiaogemulu')">电子表格目录</a>
+				<a onclick="fileDown('danganxiazai')">电子表格目录</a>
 				</li>
 				<li>
 				<a onclick="fileDown('qianquecail')">欠缺材料信息</a>
@@ -106,7 +106,7 @@
 </div>
 
 <!--BEGIN TABS-->
-<div class="tabbable tabbable-custom">
+<div class="tabbable tabbable-custom" style="margin-bottom: 0px">
 	<ul class="nav nav-tabs" style="font-size: 14px;font-weight: bold;" id="tabs">
 		<li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">基本信息</a></li>
 		<li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">目录信息</a></li>
@@ -115,7 +115,7 @@
 		<li><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">工资变动</a></li>
 		<li><a id="#tab_1_6" href="#tab_1_1" data-toggle="tab">材料接收</a></li>
 	</ul>
-	<div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:10px 0;">
+	<div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
 		<div class="tab-pane active" id="tab_show">
 		</div>
 	</div>
@@ -382,7 +382,13 @@
 	}
 
 	function fileDown(type) {
-		window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);
+		if(type=="danganxiazai"){
+			window.open("${path}/zzb/dzda/a38/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
+		if(type=="dangantupianxiazai"){
+			window.open("${path}/zzb/dzda/mlcl/tpcl/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
+		<%--window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);--%>
 	}
 
 	function formSave(sjzt){
@@ -465,7 +471,7 @@
 		});
 	}
 
-	var del = function(){
+	var delA38ByManage = function(){
 		var id = "${id}";
 		var itemName = "${a0101}";
 		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){

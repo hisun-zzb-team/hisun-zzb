@@ -80,7 +80,7 @@
 							<div class="control-group">
 								<div class="controls mt10">
 									<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
-									<a class="btn" href="${path }/zzb/app/console/appVersion/"><i class="icon-remove-sign"></i> 取消</a>
+									<a class="btn" href="${path }/zzb/app/console/appVersion/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 								</div>
 							</div>
 						</form>
@@ -153,7 +153,7 @@ function formSubmit(){
 			myLoading.hide();
 			if(data.success){
 				showTip("提示","操作成功",2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/appVersion/"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/appVersion/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", json.message, 2000);
 			}

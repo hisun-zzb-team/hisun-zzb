@@ -20,13 +20,16 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.service.E01Z5Service;
+import com.hisun.saas.zzb.dzda.zrzc.vo.E01Z5ResVo;
 import com.hisun.saas.zzb.dzda.zrzc.vo.E01Z5Vo;
-import com.hisun.util.FileUtil;
-import com.hisun.util.UUIDUtil;
-import com.hisun.util.ValidateUtil;
+import com.hisun.util.*;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.BeanUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,17 +38,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
-* @author liuzj {279421824@qq.com}
-*/
+ * @author liuzj {279421824@qq.com}
+ */
 @Controller
 @RequestMapping("/zzb/dzda/dajs")
 public class E01Z5Controller extends BaseController {
@@ -55,28 +60,61 @@ public class E01Z5Controller extends BaseController {
 
     @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
-   
+
 
     @RequiresPermissions("dajs:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
-                             @RequestParam(value = "pageSize",defaultValue = "15")int pageSize) throws UnsupportedEncodingException {
+                             @RequestParam(value = "pageSize",defaultValue = "15")int pageSize,
+                             @RequestParam(value="name",required = false)String name,
+                             @RequestParam(value="e01Z507A",required = false)String e01Z507A,
+                             @RequestParam(value="starTime",required = false)String starTime,
+                             @RequestParam(value="endTime",required = false)String endTime,
+                             @RequestParam(value="e01Z517",required = false)String e01Z517,
+                             @RequestParam(value="e01Z527",required = false)String e01Z527
+    ) throws UnsupportedEncodingException, InvocationTargetException, IllegalAccessException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
+        if(StringUtils.isNotBlank(name)){
+            query.add(CommonRestrictions.and(" name = :name ", "name", name));
+        }
+        if(StringUtils.isNotBlank(e01Z507A)){
+            query.add(CommonRestrictions.and(" e01Z507A = :e01Z507A ", "e01Z507A", e01Z507A));
+        }
+        if(StringUtils.isNotBlank(starTime)){
+            query.add(CommonRestrictions.and(" e01Z501 >= :starTime ", "starTime", new DateTime(starTime).toDate()));
+        }
+        if(StringUtils.isNotBlank(endTime)){
+            query.add(CommonRestrictions.and(" e01Z501 <= :endTime ", "endTime", new DateTime(endTime).toDate()));
+        }
+        if(StringUtils.isNotBlank(e01Z517)){
+            query.add(CommonRestrictions.and(" e01Z517 = :e01Z517 ", "e01Z517", e01Z517));
+        }
+        if(StringUtils.isNotBlank(e01Z527)){
+            query.add(CommonRestrictions.and(" e01Z527 = :e01Z527 ", "e01Z527", e01Z527));
+        }
+
 //        query.add(CommonRestrictions.and(" pId = :pId ", "pId", pId));
         Long total = e01z5Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
 //        orderBy.add(CommonOrder.asc("sort"));
         List<E01Z5> resultList = e01z5Service.list(query,orderBy,pageNum,pageSize);
-        List<E01Z5Vo> e01z5Vos = new ArrayList<E01Z5Vo>();
-        E01Z5Vo vo = new E01Z5Vo();
+        List<E01Z5ResVo> e01z5Vos = new ArrayList<E01Z5ResVo>();
+        E01Z5ResVo vo = new E01Z5ResVo();
         for(E01Z5 entity : resultList){
-            vo = new E01Z5Vo();
-            BeanUtils.copyProperties(entity,vo);
+            vo = new E01Z5ResVo();
+            BeanUtils.copyProperties(vo,entity);
             e01z5Vos.add(vo);
         }
-        PagerVo<E01Z5Vo> pager = new PagerVo<E01Z5Vo>(e01z5Vos, total.intValue(), pageNum, pageSize);
+        PagerVo<E01Z5ResVo> pager = new PagerVo<E01Z5ResVo>(e01z5Vos, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
+        model.put("name",name);
+        model.put("e01Z507A",e01Z507A);
+        model.put("starTime",starTime);
+        model.put("endTime",endTime);
+        model.put("e01Z517",e01Z517);
+        model.put("e01Z527",e01Z527);
+
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/list",model);
     }
 
@@ -88,7 +126,7 @@ public class E01Z5Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/add",returnMap);
     }
 
-   // @RequiresPermissions("dajs:*")
+    // @RequiresPermissions("dajs:*")
     @RequestMapping("/save")
     public @ResponseBody Map<String,Object> save(E01Z5Vo vo,HttpServletRequest req,
                                                  @RequestParam(value = "clFile", required = false) MultipartFile clFile){
@@ -128,11 +166,19 @@ public class E01Z5Controller extends BaseController {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z5 entity = new  E01Z5();
             A38 a38 = new A38();
-            BeanUtils.copyProperties(vo, entity);
-            entity.setA38(a38);
+            //// TODO: 2018/5/23
+            a38.setId("ass" + System.currentTimeMillis());
+            ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+            BeanUtils.copyProperties(entity, vo);
+            entity.setE01Z501(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z501())? DateUtil.parseDefaultDate(vo.getE01Z501()) :null );
+            entity.setE01Z524(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z524())? DateUtil.parseDefaultDate(vo.getE01Z524()) :null );
+            entity.setE01Z531(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z531())? DateUtil.parseDefaultDate(vo.getE01Z531()) :null );
+            entity.setE01Z534(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z534())? DateUtil.parseDefaultDate(vo.getE01Z534()) :null );
+                entity.setA38(a38);
             entity.setFileName(fileName);
             entity.setFilePath(savePath);
             entity.setId(null);
+            entity.setE01Z517(details.getRealname());
             EntityWrapper.wrapperSaveBaseProperties(entity,details);
             e01z5Service.save(entity);
             returnMap.put("code",1);
@@ -149,15 +195,82 @@ public class E01Z5Controller extends BaseController {
     }
 
     @RequiresPermissions("dajs:*")
-    @RequestMapping("/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") String id){
+    @RequestMapping("/ajax/edit/{id}")
+    public ModelAndView edit(@PathVariable("id")String id){
         Map<String,Object> model = new HashMap<String,Object>();
-         E01Z5 tenant = e01z5Service.getByPK(id);
-        E01Z5Vo vo = new E01Z5Vo();
-        BeanUtils.copyProperties(tenant,vo);
-        model.put("entity", vo);
+        model.put("hzrq",DateUtil.formatDateByFormat(e01z5Service.getByPK(id).getE01Z531(),"yyyyMMdd"));
+        model.put("id", id);
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/edit", model);
     }
+
+    @RequiresPermissions("dajs:*")
+    @RequestMapping("/view/{id}")
+    public ModelAndView view(@PathVariable("id") String id){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            E01Z5 e01Z5 = e01z5Service.getByPK(id);
+            E01Z5Vo vo = new E01Z5Vo();
+            ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+            BeanUtils.copyProperties(vo,e01Z5);
+            vo.setE01Z501(e01Z5.getE01Z501()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z501()));
+            vo.setE01Z524(e01Z5.getE01Z524()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z524()));
+            vo.setE01Z531(e01Z5.getE01Z531()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z531()));
+            vo.setE01Z534(e01Z5.getE01Z534()==null?null:DateUtil.formatDefaultDate(e01Z5.getE01Z534()));
+            model.put("vo",vo);
+        }catch (Exception e){
+            logger.error(e);
+        }
+
+        return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/view", model);
+    }
+    @RequiresPermissions("dajs:*")
+    @RequestMapping("/updateHzrq")
+    public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
+                                         @RequestParam(value = "hzrq",required = true) String hzrq){
+        Map<String,Object> model = new HashMap<String,Object>();
+        try{
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = sdf.parse(hzrq);
+            E01Z5 e01Z5 = e01z5Service.getByPK(id);
+            e01Z5.setE01Z531(sdf.parse(hzrq));
+            e01z5Service.update(e01Z5);
+            model.put("code","1");
+        }catch (Exception e){
+            model.put("code","0");
+            logger.error(e);
+        }
+        return model;
+    }
+
+
+    @RequestMapping(value = "/ajax/down")
+    @RequiresPermissions("cysq:*")
+    public void templateDown(String id, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        E01Z5 entity = e01z5Service.getByPK(id);
+        if (entity.getFileName() != null && !entity.getFilePath().equals("")) {
+            String fileRealPath = entity.getFilePath();
+            resp.setContentType("multipart/form-data");
+            //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
+            resp.setHeader("Content-Disposition", "attachment;fileName="
+                    + encode(fileRealPath.substring(fileRealPath.lastIndexOf(File.separator) + 1)));
+            OutputStream output = resp.getOutputStream();
+            byte[] b = FileUtils.readFileToByteArray(new File(fileRealPath));
+            output.write(b);
+            output.flush();
+            output.close();
+        }
+
+    }
+
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        return filename;
+    }
+
 
     @RequiresPermissions("dajs:*")
     @RequestMapping("/update")
@@ -169,7 +282,7 @@ public class E01Z5Controller extends BaseController {
             returnMap.put("code",-1);
             return returnMap;
         }
-         E01Z5 entity = e01z5Service.getByPK(vo.getId());
+        E01Z5 entity = e01z5Service.getByPK(vo.getId());
         if(entity==null){
             returnMap.put("message","数据不存在");
             returnMap.put("code",-1);

@@ -39,7 +39,7 @@
 									<a onclick="genInitDataPacket()">初始化数据包</a>
 								</li>
 								<li>
-									<a  href="${path }/zzb/app/console/gendata/loadGenerator">新数据包</a>
+									<a  href="${path }/zzb/app/console/gendata/loadGenerator?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">新数据包</a>
 								</li>
 								<li>
 									<a onclick="generatorDataByOldPacket()">基于原有数据包</a>
@@ -56,7 +56,7 @@
 						<table class="table table-striped table-bordered table-hover dataTable table-set">
 							<thead>
 							<tr>
-								<th style="width: 20px;"><input type="checkbox" id="allCheck" onchange="dataAllcheckChange()" ></th>
+								<th style="width: 25px;"><input type="checkbox" id="allCheck" onchange="dataAllcheckChange()" ></th>
 								<th>数据包名称</th>
 								<th width="150">数据包生成时间</th>
 								<th width="250">MD5</th>
@@ -145,10 +145,10 @@
 			showTip("提示","生成基于原有数据包只能选择一个数据包",2000);
 			return;
 		}
-		window.location.href ="${path }/zzb/app/console/gendata/loadGeneratorByoldPacket?oldPacketId="+oldPacketId;
+		window.location.href ="${path }/zzb/app/console/gendata/loadGeneratorByoldPacket?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&oldPacketId="+oldPacketId;
 	}
 	function pagehref (pageNum ,pageSize){
-		window.location.href ="${path}/zzb/app/console/gendata/?pageNum="+pageNum+"&pageSize="+pageSize;
+		window.location.href ="${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&pageNum="+pageNum+"&pageSize="+pageSize;
 	}
 
 	function searchSubmit(){
@@ -156,10 +156,10 @@
 	}
 
 	var del = function(id,itemName){
-		actionByConfirm1(itemName+"的数据包", "${path}/zzb/app/console/gendata/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName+"的数据包", "${path}/zzb/app/console/gendata/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
@@ -182,10 +182,10 @@
 			showTip("提示","请选择要删除的数据包",2000);
 			return;
 		}
-		actionByConfirm1("选择的数据包", "${path}/zzb/app/console/gendata/delete/" + delIds,{} ,function(data,status){
+		actionByConfirm1("选择的数据包", "${path}/zzb/app/console/gendata/delete/" + delIds+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
 			if (data.success == true) {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/"},2000);
+				setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 			}else{
 				showTip("提示", data.message, 2000);
 			}
@@ -198,11 +198,14 @@
 			type : "post",
 			data : $("#form1").serialize(),
 			dataType : "json",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
 			success : function(data){
 				if(data.success){
 //					document.getElementById(id+"_shZt").innerHTML  = data.shZtValue;
 					showTip("提示","成功设置为当前数据包",2000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/"},2000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
 				}else{
 					showTip("提示", json.message, 2000);
 				}
@@ -219,10 +222,13 @@
 			type : "post",
 			data : $("#form1").serialize(),
 			dataType : "json",
+			headers:{
+				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+			},
 			success : function(data){
 				if(data.success){
 					showTip("提示","生成初始化数据包",1000);
-					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/"},1000);
+					setTimeout(function(){window.location.href = "${path}/zzb/app/console/gendata/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1000);
 				}else{
 					showTip("提示", json.message, 1000);
 				}
@@ -233,7 +239,7 @@
 		});
 	}
 	function downZip(id) {
-		window.open("${path }/zzb/app/console/gendata/zip/down?id="+id);
+		window.open("${path }/zzb/app/console/gendata/zip/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}
 </script>
 </body>

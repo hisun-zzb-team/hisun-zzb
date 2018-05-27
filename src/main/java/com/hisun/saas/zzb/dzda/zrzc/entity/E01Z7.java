@@ -34,6 +34,19 @@ public class E01Z7  extends TenantEntity implements Serializable {
     private String e01Z724;//'回执人'
     private Date e01Z727;//'回执日期'
     private String e01Z731;//'备注'
+    private String filePath;//上传文件路径
+    private String fileName; //上传文件名称
+    private String sjly;//数据来源
+
+    @Basic
+    @Column(name = "sjly")
+    public String getSjly() {
+        return sjly;
+    }
+
+    public void setSjly(String sjly) {
+        this.sjly = sjly;
+    }
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -67,6 +80,25 @@ public class E01Z7  extends TenantEntity implements Serializable {
         this.name = name;
     }
 
+    @Basic
+    @Column(name = "fileName")
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Basic
+    @Column(name = "filePath")
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
     @Basic
     @Column(name = "e01z701")
     public Date getE01Z701() {

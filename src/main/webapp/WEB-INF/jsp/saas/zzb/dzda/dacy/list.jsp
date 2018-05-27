@@ -113,7 +113,7 @@
                                     <a href="javascript:ydxiangqing('${vo.id}')">
                                         <c:if test="${not empty vo.a38Logs}">
                                             <c:forEach items="${vo.a38Logs.get(0).a38LogDetails}" var="vo1">
-                                               <c:out value="${vo1.e01Z111}"></c:out>
+                                               <c:out value="${vo1.e01Z111}"></c:out>;
                                             </c:forEach>
                                         </c:if>
                                     </a>
@@ -155,7 +155,7 @@
                                  </c:choose></TD>
                             <TD width="10%">
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>
-                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}')">删除 </a></c:if>
+                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}','${vo.auditingState}')">删除 </a></c:if>
                             </TD>
                         </tr>
                         </c:forEach>
@@ -312,18 +312,30 @@
 
 
 
-    function deleteYdsq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
-            if(json.code == 1){
-                showTip("提示","操作成功");
-                setTimeout(function(){
+    function deleteYdsq(id,auditingState){
+        if(auditingState==0){//彻底删除
+            actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+                if(json.code == 1){
+                    showTip("提示","删除成功");
                     window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-                },1500);
+                }else{
+                    showTip("提示", json.message, 2000);
+                }
+            },"删除")
+        }else{
+            actionByConfirm1('',"${path}/zzb/dzda/cysq/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+                if(json.code == 1){
+                    showTip("提示","操作成功");
+                    setTimeout(function(){
+                        window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    },1500);
 
-            }else{
-                showTip("提示", json.message, 2000);
-            }
-        },"删除")
+                }else{
+                    showTip("提示", json.message, 2000);
+                }
+            },"删除")
+        }
+
     }
 
     var add = function(){

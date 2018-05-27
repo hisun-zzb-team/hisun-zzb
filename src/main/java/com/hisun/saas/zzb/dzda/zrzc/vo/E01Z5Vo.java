@@ -34,6 +34,24 @@ public class E01Z5Vo implements Serializable{
     private String e01Z537;//入库审批人
     private String e01Z541;//档案位置
     private String e01Z544;//备注
+    private String filePath;//上传文件路径
+    private String fileName; //上传文件名称
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public String getId() {
         return id;

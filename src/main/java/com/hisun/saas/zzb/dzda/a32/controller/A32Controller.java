@@ -28,6 +28,7 @@ import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
@@ -199,7 +200,7 @@ public class A32Controller extends BaseController {
             filePath = uploadBasePath+Constants.GZBD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             gzbdExcelExchange.toExcelByManyPojo(a32Vos, uploadBasePath+Constants.GZBDMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("工资变动登记表.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("gzbd.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -258,10 +259,23 @@ public class A32Controller extends BaseController {
         try {
             a32Vos = gzbdExcelExchange.fromExcel2ManyPojo(A32Vo.class,tempFile,filePath);
             Integer oldPxInteger=a32Service.getMaxSort(a38Id);
+            boolean flag = false;//判断是否存在非法数据
             if(a32Vos.size()>0){
                 for(int i=0;i<a32Vos.size();i++){
                     A32 a32 = new A32();
                     A32Vo a32Vo = (A32Vo) a32Vos.get(i);
+
+                    if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                        flag = true;
+                    }
+                    if(isNotDate(a32Vo.getA3207())){
+                        flag = true;
+                    }
+
+                    if(flag){
+                        continue;
+                    }
+
                     BeanUtils.copyProperties(a32,a32Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     a32.setA38(a38);
@@ -275,6 +289,18 @@ public class A32Controller extends BaseController {
         }finally {
             file.delete();
         }
+    }
 
+    public boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

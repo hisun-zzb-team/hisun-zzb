@@ -34,10 +34,10 @@
 							<button type="button" class="btn green" onclick="formSubmit('query')">查询</button>
 							<button type="button" class="btn green" onclick="saveAndQuery()"><i class="icon-ok"></i>保存并查询</button>
 							<c:if test="${addType eq 'a01List'}">
-								<a class="btn" href="${path }/zzb/app/console/asetA01Query/"><i class="icon-remove-sign"></i> 取消</a>
+								<a class="btn" href="${path }/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 							</c:if>
 							<c:if test="${empty addType}">
-								<a class="btn" href="${path }/zzb/app/console/asetA01Query/queryList"><i class="icon-remove-sign"></i> 取消</a>
+								<a class="btn" href="${path }/zzb/app/console/asetA01Query/queryList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
 							</c:if>
 
 						</div>
@@ -430,12 +430,12 @@ jQuery(document).ready(function() {
 	};
 	var resTree;
 	$(function(){
-		localPost("<%=path%>/zzb/app/console/bset/ajax/load/tree",{"status":1}, function(data,status){
+		localPost("<%=path%>/zzb/app/console/bset/ajax/load/tree?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{"status":1}, function(data,status){
 			if (status == "success") {
 				//setting.data.key.url = "_url" ;
 				resTree = $.fn.zTree.init($("#treeDemo"), setting, data.customTree);
 
-				localPost("<%=path%>/zzb/app/console/asetA01Query/selectB01?queryId=${vo.id}",null, function(data,status){
+				localPost("<%=path%>/zzb/app/console/asetA01Query/selectB01?queryId=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null, function(data,status){
 					if (status == "success") {
 						var resIdList = data.data;
 						if (resTree != null && resIdList != null) {
@@ -547,7 +547,7 @@ function isNumberTmp(str) {
 				success : function(data){
 					if(data.success){
 //						showTip("提示","操作成功",2000);
-						window.location.href = "${path}/zzb/app/console/asetA01Query/?queryId="+data.id;
+						window.location.href = "${path}/zzb/app/console/asetA01Query/?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&queryId="+data.id;
 					}else{
 						showTip("提示", json.message, 2000);
 					}

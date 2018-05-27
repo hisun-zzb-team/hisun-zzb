@@ -62,7 +62,7 @@
                 </div>
                 <a class="btn blue" herf="javascript:void(0)" onclick="">任免文件</a>
                 <a class="btn blue" herf="javascript:void(0)" onclick="">电子档案</a>
-            <a class="btn" href="${path }/zzb/app/console/asetA01Query/?queryId=${queryId}&queryPosition=${queryPosition}"><i class="icon-undo"></i>返回</a>
+            <a class="btn" href="${path }/zzb/app/console/asetA01Query/?queryId=${queryId}&queryPosition=${queryPosition}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-undo"></i>返回</a>
         </div>
         <div class="mainoneright" style="width: 560px;">
             <div class="Fullname">${a01Vo.xm}</div>
@@ -116,7 +116,7 @@
             return;
         }
         $("#importForm").ajaxSubmit({
-            url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?gbMcA01Id=${a01Vo.id}",
+            url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?gbMcA01Id=${a01Vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",
             type: "post",
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -129,7 +129,7 @@
                     //showTip("提示","操作成功",2000);
 
                     window.document.getElementById("gbrmspbDownDiv").style.visibility = "visible";
-                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?id=${a01Vo.id}";
+                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?id=${a01Vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 } else if (json.code == -1) {
                     showTip("提示", json.message, 2000);
                 } else {
@@ -149,13 +149,13 @@
         //if("${a01Vo.filepath}"==""){
        //     showTip("提示", "没有可下载的任免审批表!", 2000);
        // }else{
-             window.open("${path }/zzb/app/console/asetA01/ajax/down?id=${a01Vo.id}");
+             window.open("${path }/zzb/app/console/asetA01/ajax/down?id=${a01Vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
        // }
     }
 
 
      function del(itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/${a01Vo.id}",{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/asetA01/delete/${a01Vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 1000);
                 returnList();

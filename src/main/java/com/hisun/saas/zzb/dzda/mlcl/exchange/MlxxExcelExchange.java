@@ -4,6 +4,8 @@ package com.hisun.saas.zzb.dzda.mlcl.exchange;
         import com.hisun.saas.sys.exchange.AbsExcelExchange;
         import com.hisun.util.AsposeLicenseUtil;
         import com.hisun.util.JacksonUtil;
+        import com.hisun.util.StringUtils;
+        import org.json.JSONArray;
         import org.json.JSONObject;
         import org.springframework.stereotype.Component;
 
@@ -19,6 +21,9 @@ public class MlxxExcelExchange extends AbsExcelExchange{
         }
 
         public void setLines(String json, String tmplateFile, String destFile, int xml, int dml,Map<String,Object> map) throws Exception {
+                String tmplCellValue = "";
+                int tmplCellValueNumber = 0;
+                Map<String,Object> tmplCell = new HashMap<>();
                 JSONObject jsonObject = new JSONObject(json);
                 Map<String,Integer> fieldMap = new HashMap<>();
                 AsposeLicenseUtil.newInstance().init();
@@ -33,6 +38,9 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                         for (Iterator<Cell> cellIterator = (cells.iterator()); cellIterator.hasNext(); ) {
                                 Cell cell = cellIterator.next();
                                 String value = cell.getStringValue();
+                                tmplCell =valueAndNum(tmplCellValue,tmplCellValueNumber,value);
+                                tmplCellValue = (String) tmplCell.get("tmplCellValue");
+                                tmplCellValueNumber = (int) tmplCell.get("tmplCellValueNumber");
                                 List<String> fields = this.parseField(value);
                                 if (fields != null) {
 
@@ -47,10 +55,18 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                                                 }
                                                 for (int i = 0; i < size; i++) {
                                                         if(row!=rows){
+
                                                                 if(i==size-1){
-                                                                        to+=dml;
+                                                                        if(tmplCellValueNumber==41||tmplCellValueNumber==42
+                                                                                ||tmplCellValueNumber==43||tmplCellValueNumber==44
+                                                                                ||tmplCellValueNumber==91||tmplCellValueNumber==92
+                                                                                ||tmplCellValueNumber==93||tmplCellValueNumber==94){
+                                                                                to+=xml;
+                                                                        }else {
+                                                                                to+=dml;
+                                                                        }
                                                                 }else {
-                                                                        to+=(xml+1);
+                                                                        to++;
                                                                 }
                                                         }
                                                 }
@@ -58,7 +74,14 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                                                 if(row!=rows){
                                                         rows = row;
                                                         if(size==0){
-                                                                to+=(dml-1);
+                                                                if(tmplCellValueNumber==41||tmplCellValueNumber==42
+                                                                        ||tmplCellValueNumber==43||tmplCellValueNumber==44
+                                                                        ||tmplCellValueNumber==91||tmplCellValueNumber==92
+                                                                        ||tmplCellValueNumber==93||tmplCellValueNumber==94){
+                                                                        to+=(xml-1);
+                                                                }else {
+                                                                        to+=(dml-1);
+                                                                }
                                                         }
                                                 }else if(size==0){
                                                 }
@@ -69,25 +92,39 @@ public class MlxxExcelExchange extends AbsExcelExchange{
 
                 //根据获得的数据位置设置模板格式
                 Map<String,Integer> linkMap = sortMap(fieldMap);
+
                 for (Iterator<Worksheet> iterator = worksheets.iterator(); iterator.hasNext(); ) {
                         Worksheet worksheet = iterator.next();
                         Cells cells = worksheet.getCells();
 
                         for(Map.Entry<String, Integer> mapEntry : linkMap.entrySet()){
-                                System.out.println("key:"+mapEntry.getKey()+"  value:"+mapEntry.getValue());
                                 String field = mapEntry.getKey();
                                 int row = mapEntry.getValue();
                                 Integer size = (Integer) map.get(field);
                                 for (int i = 0; i < size; i++) {
                                         if(i==size-1){
-                                                insertRows(cells,row + 1 +i + (i>0?xml*i:0),dml);
+                                                if("xlxw".equals(field)||"zyzg".equals(field)
+                                                        ||"kysp".equals(field)||"pxcl".equals(field)
+                                                        ||"gzcl".equals(field)||"rmcl".equals(field)
+                                                        ||"cgcl".equals(field)||"dbdh".equals(field)){
+                                                        insertRows(cells,row + 1 +i,xml);
+                                                }else{
+                                                        insertRows(cells,row + 1 +i,dml);
+                                                }
                                         }else {
-                                                insertRows(cells,row + 1 +i + (i>0?xml*i:0),xml+1);
+                                                insertRows(cells,row + 1 +i ,1);
                                         }
                                 }
 
                                 if(size==0){
-                                        insertRows(cells,row+1,dml-1);
+                                        if("xlxw".equals(field)||"zyzg".equals(field)
+                                                ||"kysp".equals(field)||"pxcl".equals(field)
+                                                ||"gzcl".equals(field)||"rmcl".equals(field)
+                                                ||"cgcl".equals(field)||"dbdh".equals(field)){
+                                                insertRows(cells,row + 1 ,xml-1);
+                                        }else{
+                                                insertRows(cells,row+1,dml-1);
+                                        }
                                 }
                         }
                 }
@@ -109,7 +146,7 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                                                         int column = cell.getColumn();
                                                         for (int i = 0; i < size; i++) {
                                                                 realValue = getListValue(jsonObject, field, i);
-                                                                cells.get(row + i + (i > 0 ? xml * i : 0), column).setValue(realValue);
+                                                                cells.get(row + i , column).setValue(realValue);
                                                         }
                                                         if (row != rows) {
                                                                 rows = row;
@@ -134,6 +171,12 @@ public class MlxxExcelExchange extends AbsExcelExchange{
         }
 
         public JSONObject fromExcel(String tmplateFile, String srcFile) throws Exception {
+                String tmplCellValue = "";
+                int tmplCellValueNumber = 0;
+                Map<String,Object> tmplCell = new HashMap<>();
+                Map<String,Object> cellMap = new HashMap<>();
+                int rowNumberStart = 0;//生成list后设置值的开始位置
+                int rowNumberEnd = 0;//用作生成list的开始位置
                 JSONObject jsonObject = new JSONObject();
                 AsposeLicenseUtil.newInstance().init();
                 //模板Excel
@@ -147,20 +190,21 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                         Worksheet tpltWorksheet = iterator.next();
                         Cells tpltCells = tpltWorksheet.getCells();
                         for (Iterator<Cell> tpltCellIterator = tpltCells.iterator(); tpltCellIterator.hasNext(); ) {
+                                if(cellMap.size()>0){
+                                        rowNumberStart = (int) cellMap.get("rowNumberStart");
+                                        rowNumberEnd = (int) cellMap.get("rowNumberEnd");
+                                }
                                 Cell tpltCell = tpltCellIterator.next();
                                 String value = tpltCell.getStringValue();
+                                tmplCell =valueAndNum(tmplCellValue,tmplCellValueNumber,value);
+                                tmplCellValue = (String) tmplCell.get("tmplCellValue");//模板value 大类（一、二、三、、、） 小类（二）（三）
+                                tmplCellValueNumber = (int) tmplCell.get("tmplCellValueNumber");//模板number 大类（1、2、3、、、） 小类（41、42、43、、、、）
                                 List<String> fields = this.parseField(value);
-                                String realValue = "";
                                 if (fields != null) {
                                         for (String field : fields) {
                                                 if (isListField(value)) {
                                                         Cells srcCells = srcWorksheets.get(sheetIndex).getCells();
-                                                        setListValue(jsonObject,field,tpltCell,srcCells);
-                                                } else if (isImageField(value)) {
-
-                                                } else {
-                                                        realValue = srcWorksheets.get(sheetIndex).getCells().get(tpltCell.getRow(), tpltCell.getColumn()).getStringValue();
-                                                        setValue(jsonObject,field,realValue);
+                                                        cellMap=setListValue(jsonObject,field,tpltCell,srcCells,tmplCellValue,tmplCellValueNumber,rowNumberStart,rowNumberEnd);
                                                 }
                                         }
                                 }
@@ -190,5 +234,216 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 }
                 return linkMap;
         }
+
+        protected Map<String , Object> setListValue(JSONObject jsonObject,String field,Cell tpltCell,Cells srcCells,String tmplCellValue,int tmplCellValueNumber, int rowNumberStart, int rowNumberEnd){
+                Map<String , Object> cellMap = new HashMap<>();
+                String srcCellValue = "";
+                int srcCellValueNumber = 0;
+                Map<String,Object> srcCellMap = new HashMap<>();
+                int dot = field.indexOf(".");
+                String listFieldName = field.substring(0, dot);
+                String fieldName = field.substring(dot + 1, field.length());
+                String realValue = "";
+                JSONArray jsonArray = null;
+                try {
+                        jsonArray = jsonObject.getJSONArray(listFieldName);
+                } catch (Exception ex) {
+                }
+                String tmplCellValueBig  = yiToOne(tmplCellValueNumber+1);//获取下一个类别
+                if (jsonArray == null) {
+                        if(tmplCellValueNumber == 1){
+                                rowNumberEnd = tpltCell.getRow();
+                        }
+                        List<JSONObject> jsonObjectList = new ArrayList<>();
+                        for (Iterator<Cell> srcCellIterator = srcCells.iterator(); srcCellIterator.hasNext(); ) {
+                                Cell srcCell = srcCellIterator.next();
+                                String value = srcCell.getStringValue();
+                                srcCellMap =valueAndNum(srcCellValue,srcCellValueNumber,value);
+                                srcCellValueNumber = (int) srcCellMap.get("tmplCellValueNumber");//获得当前导入excel文件当前位置的类别
+                                if(tmplCellValueBig.equals(value)){//如果当前类别和下一个类别相等
+                                        if("九".equals(value)){
+                                                rowNumberEnd = srcCell.getRow()+1;
+                                                rowNumberEnd++;//为小类下移一个位置
+                                                break;
+                                        }else if("四".equals(value)){
+                                                rowNumberEnd = srcCell.getRow()+1;
+                                                rowNumberEnd++;//为小类下移一个位置
+                                                break;
+                                        }else if(tmplCellValueNumber>90&&tmplCellValueNumber>srcCellValueNumber){//当小类无法确定位置时，用当前位置类别number做第二次判断
+                                                if("十".equals(value)){
+                                                        rowNumberEnd = srcCell.getRow()+1;
+                                                        break;
+                                                }
+                                        }else{
+                                                rowNumberEnd = srcCell.getRow()+1;
+                                                break;
+                                        }
+                                }
+                                if (srcCell.getRow()>=rowNumberEnd
+                                        &&srcCell.getColumn() == tpltCell.getColumn()) {
+                                        if(jsonObjectList.size()==0){
+                                                rowNumberStart = srcCell.getRow();
+                                        }
+                                        realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
+                                        JSONObject jsonObject1 = new JSONObject();
+                                        jsonObject1.put(fieldName,realValue);
+                                        jsonObjectList.add(jsonObject1);
+
+                                }
+                        }
+                        jsonObject.put(listFieldName, jsonObjectList);
+                } else {
+                        int listIndex = 0;
+                        for (Iterator<Cell> srcCellIterator = srcCells.iterator(); srcCellIterator.hasNext(); ) {
+                                Cell srcCell = srcCellIterator.next();
+                                if (srcCell.getRow()>=rowNumberStart
+                                        &&srcCell.getColumn() == tpltCell.getColumn()) {
+                                        if(jsonArray.length()>listIndex){
+                                                realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
+                                                jsonArray.getJSONObject(listIndex).put(fieldName,realValue);
+                                        }
+                                        listIndex++;
+                                }
+                        }
+                }
+                cellMap.put("rowNumberStart",rowNumberStart);
+                cellMap.put("rowNumberEnd",rowNumberEnd);
+                return cellMap;
+        }
+
+        public String yiToOne(int number){
+                String str = "";
+                switch (number){
+                        case 1:
+                                str = "一";
+                                break;
+                        case 2:
+                                str = "二";
+                                break;
+                        case 3:
+                                str = "三";
+                                break;
+                        case 4:
+                                str = "四";
+                                break;
+                        case 5:
+                                str = "五";
+                                break;
+                        case 6:
+                                str = "六";
+                                break;
+                        case 7:
+                                str = "七";
+                                break;
+                        case 8:
+                                str = "八";
+                                break;
+                        case 9:
+                                str = "九";
+                                break;
+                        case 10:
+                                str = "十";
+                                break;
+                        case 41:
+                                str = "(一)";
+                                break;
+                        case 42:
+                                str = "(二)";
+                                break;
+                        case 43:
+                                str = "(三)";
+                                break;
+                        case 44:
+                                str = "(四)";
+                                break;
+                        case 45:
+                                str = "五";
+                                break;
+                        case 91:
+                                str = "(一)";
+                                break;
+                        case 92:
+                                str = "(二)";
+                                break;
+                        case 93:
+                                str = "(三)";
+                                break;
+                        case 94:
+                                str = "(四)";
+                                break;
+                        case 95:
+                                str = "十";
+                                break;
+                }
+                return  str;
+        }
+
+        public Map<String , Object> valueAndNum(String tmplCellValue, int tmplCellValueNumber, String value){
+                Map<String , Object> tmpl= new HashMap<>();
+                if("一".equals(value)){
+                        tmplCellValueNumber = 1;
+                        tmplCellValue = value;
+                }else if("二".equals(value)){
+                        tmplCellValueNumber = 2;
+                        tmplCellValue = value;
+                }else if("三".equals(value)){
+                        tmplCellValueNumber = 3;
+                        tmplCellValue = value;
+                }else if("四".equals(value)){
+                        tmplCellValueNumber = 4;
+                        tmplCellValue = value;
+                }else if("五".equals(value)){
+                        tmplCellValueNumber = 5;
+                        tmplCellValue = value;
+                }else if("六".equals(value)){
+                        tmplCellValueNumber = 6;
+                        tmplCellValue = value;
+                }else if("七".equals(value)){
+                        tmplCellValueNumber = 7;
+                        tmplCellValue = value;
+                }else if("八".equals(value)){
+                        tmplCellValueNumber = 8;
+                        tmplCellValue = value;
+                }else if("九".equals(value)){
+                        tmplCellValueNumber = 9;
+                        tmplCellValue = value;
+                }else if("十".equals(value)){
+                        tmplCellValueNumber = 10;
+                        tmplCellValue = value;
+                }
+
+                if("(一)".equals(value)&&tmplCellValueNumber == 4){
+                        tmplCellValueNumber = 41;
+                        tmplCellValue = value;
+                }else if("(二)".equals(value)&&tmplCellValueNumber == 41){
+                        tmplCellValueNumber = 42;
+                        tmplCellValue = value;
+                }else if("(三)".equals(value)&&tmplCellValueNumber == 42){
+                        tmplCellValueNumber = 43;
+                        tmplCellValue = value;
+                }else if("(四)".equals(value)&&tmplCellValueNumber == 43){
+                        tmplCellValueNumber = 44;
+                        tmplCellValue = value;
+                }
+
+                if("(一)".equals(value)&&tmplCellValueNumber == 9){
+                        tmplCellValueNumber = 91;
+                        tmplCellValue = value;
+                }else if("(二)".equals(value)&&tmplCellValueNumber == 91){
+                        tmplCellValueNumber = 92;
+                        tmplCellValue = value;
+                }else if("(三)".equals(value)&&tmplCellValueNumber == 92){
+                        tmplCellValueNumber = 93;
+                        tmplCellValue = value;
+                }else if("(四)".equals(value)&&tmplCellValueNumber == 93){
+                        tmplCellValueNumber = 94;
+                        tmplCellValue = value;
+                }
+
+                tmpl.put("tmplCellValue",tmplCellValue);
+                tmpl.put("tmplCellValueNumber",tmplCellValueNumber);
+                return tmpl;
+        }
+
 
 }

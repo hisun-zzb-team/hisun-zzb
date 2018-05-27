@@ -114,7 +114,7 @@
             return;
         }
         $("#importForm").ajaxSubmit({
-            url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?gbMcA01Id=${gbMcA01Vo.id}",
+            url: "${path }/zzb/app/console/GbMca01/gbrmspb/ajax/uploadFile?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&gbMcA01Id=${gbMcA01Vo.id}",
             type: "post",
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -127,7 +127,7 @@
                     //showTip("提示","操作成功",2000);
 
                     window.document.getElementById("gbrmspbDownDiv").style.visibility = "visible";
-                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?id=${gbMcA01Vo.id}";
+                    window.location.href="${path }/zzb/app/console/gbmc/a01/view?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${gbMcA01Vo.id}";
                 } else if (json.code == -1) {
                     showTip("提示", json.message, 2000);
                 } else {
@@ -144,15 +144,15 @@
     }
 
     function gbrmspbDown() {
-        window.open("${path }/zzb/app/console/GbMca01/gbrmspb/ajax/down?gbMcA01Id=${gbMcA01Vo.id}");
+        window.open("${path }/zzb/app/console/GbMca01/gbrmspb/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&gbMcA01Id=${gbMcA01Vo.id}");
     }
 
 
      function del(itemName){
-        actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/a01/delete/${gbMcA01Vo.id}",{} ,function(data,status){
+        actionByConfirm1(itemName, "${path}/zzb/app/console/gbmc/a01/delete/${gbMcA01Vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",{} ,function(data,status){
             if (data.success == true) {
                 showTip("提示","删除成功", 1000);
-                setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/a01/list?mcid=${mcid}&mcb01id=${mcb01id}"},1000);
+                setTimeout(function(){window.location.href = "${path}/zzb/app/console/gbmc/a01/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&mcid=${mcid}&mcb01id=${mcb01id}"},1000);
             }else{
                 showTip("提示", data.message, 2000);
             }

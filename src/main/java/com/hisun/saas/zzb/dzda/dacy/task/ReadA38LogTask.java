@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * @author Marco {854476391@qq.com}
  */
-public class ReadA38LogTask  extends AbsTask {
+public class ReadA38LogTask extends AbsTask {
     @Resource
     private EApplyE01Z8Service eApplyE01Z8Service;
     @Resource
@@ -42,7 +42,7 @@ public class ReadA38LogTask  extends AbsTask {
     private Integer avgViewTime = new Integer(5);
     protected final Logger logger = Logger.getLogger(getClass());
 
-    public void updateReadStatus(){
+    public void updateReadStatus() {
         if (isStart()) {
             if (logger.isDebugEnabled()) {
                 logger.debug("开始执行 updateReadStatus 》》》》》");
@@ -86,14 +86,14 @@ public class ReadA38LogTask  extends AbsTask {
         }
     }
 
-    public void updateLogViewTime(){
+    public void updateLogViewTime() {
         if (isStart()) {
-            if(logger.isDebugEnabled())
+            if (logger.isDebugEnabled())
                 logger.debug("updateLogViewTime is star >>>>>>>>>");
             String sql = "select t.* from e_a38_log t where t.ydzt = 1 and t.zzcysj < date_sub(sysdate(),interval 10 second)";
-            List<EA38Log> ea38Logs = ea38LogService.getA38LogListBySql(sql,null);
-            if(ea38Logs !=null && !ea38Logs.isEmpty()){
-                for(EA38Log ea38Log:ea38Logs) {
+            List<EA38Log> ea38Logs = ea38LogService.getA38LogListBySql(sql, null);
+            if (ea38Logs != null && !ea38Logs.isEmpty()) {
+                for (EA38Log ea38Log : ea38Logs) {
 //                if(DateUtil.diffDateTime(new Date(),ea38Log.getZzcysj())>15){
                     if (logger.isDebugEnabled())
                         logger.debug("阅档时浏览器异常关闭等特殊情况处理 >>>>>>>>>");
@@ -150,10 +150,10 @@ public class ReadA38LogTask  extends AbsTask {
                         ea38LogDetailService.update(ea38LogDetail);
                     }
                 }
-            //                }
+            }
+            if (logger.isDebugEnabled())
+                logger.debug("updateLogViewTime is end >>>>>>>>>");
         }
     }
-    if(logger.isDebugEnabled())
-            logger.debug("updateLogViewTime is end >>>>>>>>>");
-    }
+
 }

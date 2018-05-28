@@ -25,13 +25,13 @@
     <div class="row-fluid">
         <div class="span12 responsive">
             <%-- 表格开始 --%>
-            <div class="portlet-title">
-                <div class="caption">条件查询：</div>
-                <div class="clearfix fr">
-                    <button id="submitSave" onclick="daochu()" class="btn green" type="button" style="padding:7px 20px;">导出</button>
-                </div>
+            <%--<div class="portlet-title">--%>
+                <%--<div class="caption">条件查询：</div>--%>
+                <%--<div class="clearfix fr">--%>
+                    <%----%>
+                <%--</div>--%>
 
-            </div>
+            <%--</div>--%>
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
@@ -39,7 +39,7 @@
                     <TR height=28>
                         <th width=120>查询名称</th>
                         <th style="text-align: center">查询说明</th>
-                        <th width=110  style="text-align: center">修改查询条件内容</th>
+                        <th width=110  style="text-align: center">修改条件</th>
                         <th width=70  style="text-align: center">操作</th>
                     </thead>
                     <tbody>
@@ -47,7 +47,7 @@
                         <tr style="text-overflow:ellipsis;">
                             <TD ><a href="javascript:toQuery('${vo.id}')"><c:out value="${vo.queryName}"></c:out></a> </TD>
                             <TD  style="text-align: center"><c:out value="${vo.description}"></c:out></TD>
-                            <TD  style="text-align: center"><a href="javascript:editcxtj('${vo.id}')" class="">修改查询条件内容</a></TD>
+                            <TD  style="text-align: center"><a href="javascript:editcxtj('${vo.id}')" class="">修改</a></TD>
                             <TD  style="text-align: center">
                             <a href="javascript:editQuery('${vo.id}','${vo.queryName}','${vo.description}')" class="">修改</a>|
                             <a href="javascript:deleteQuery('${vo.id}')" class="">删除</a>

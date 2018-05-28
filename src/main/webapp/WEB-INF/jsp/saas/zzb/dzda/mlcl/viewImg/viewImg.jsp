@@ -127,7 +127,7 @@
 <script type="text/javascript">
 	var imgs = [];
 	var isManage = "false";
-	var myLoading = new MyLoading("${path}",{zindex:20000});
+	var myLoading = new MyLoading("${path}",{zindex:999999});
 	$(function(){
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
@@ -327,14 +327,16 @@
 	//删除图片
 	function deleteImg(imgId,imgNo){
 		actionByConfirm1("第“"+imgNo+"”张图片", "${path}/zzb/dzda/mlcl/images/delete/" + imgId+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
+			myLoading.show();
 			if (data.success == true) {
 				showTip("提示","图片成功删除",2000);
 				setTimeout(function(){
+					myLoading.hide();
 					refreshTree();
 					loadRight("${e01z1Id}")
-
 				},2000)
 			} else {
+				myLoading.hide();
 				showTip("提示", data.msg, 2000);
 			}
 		});

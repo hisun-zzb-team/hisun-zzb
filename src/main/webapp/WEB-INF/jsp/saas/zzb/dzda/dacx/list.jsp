@@ -27,6 +27,9 @@
             <%-- 表格开始 --%>
             <div class="portlet-title">
                 <div class="caption">条件查询：</div>
+                <div class="clearfix fr">
+                    <button id="submitSave" onclick="daochu()" class="btn green" type="button" style="padding:7px 20px;">导出</button>
+                </div>
 
             </div>
             <div class="portlet-body">

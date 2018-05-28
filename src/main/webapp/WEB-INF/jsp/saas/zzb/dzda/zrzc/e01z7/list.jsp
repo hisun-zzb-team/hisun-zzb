@@ -206,7 +206,7 @@
 		document.searchForm.submit();
 	}
 	function downloadFile(id){
-		window.open("${path }/zzb/dzda/dazd/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
+		window.open("${path }/zzb/dzda/dazd/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}
 
 

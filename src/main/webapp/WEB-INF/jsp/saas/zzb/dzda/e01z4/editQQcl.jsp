@@ -50,16 +50,16 @@
 
 						</div>
 						<div id="e01Z401AGroup" class="control-group" >
-							<label class="control-label">所属大类 <span class="required">*</span></label>
+							<label class="control-label">所属大类</label>
 							<div class="controls">
 								<Tree:tree id="e01Z401B" valueName="e01Z401A" treeUrl="${path}/zzb/dzda/e01z4/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-										   submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="true" onClick="onClickByTree1"
+										   submitType="post" dataType="json" isSearch="false" isSelectTree="true" onClick="onClickByTree1"
 										   defaultkeys="${vo.e01Z401B}" defaultvalues="${vo.e01Z401A}" />
 							</div>
 						</div>
 
 						<div id="fileTypeNameGroup" class="control-group" >
-							<label class="control-label">材料类型 <span class="required">*</span></label>
+							<label class="control-label">材料类型</label>
 							<div class="controls">
 								<SelectTag:SelectTag id="fileTypeCode" token="${sessionScope.OWASP_CSRFTOKEN}" valueName="fileTypeName" needNullValue="true" defaultkeys="${vo.fileTypeCode}" defaultvalues="${vo.fileTypeName}" textClass="m-wrap span6" radioOrCheckbox="radio" selectUrl="${path}/zzb/dzda/e01z4/select"/>
 							</div>

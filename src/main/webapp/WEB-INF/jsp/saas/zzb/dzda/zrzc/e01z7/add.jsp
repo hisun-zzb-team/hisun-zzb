@@ -61,7 +61,7 @@
                     <div class="clearfix fr">
 
                         <div class="btn-group" style="padding-bottom: 0px">
-                            <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">保存</button>
+                            <button class="btn green" type="button" style="padding:7px 20px; margin: 7px 10px" onclick="formSubmit()">保存</button>&nbsp;&nbsp;
                             <button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
                             </button>
@@ -195,7 +195,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row-fluid">
+                       <%-- <div class="row-fluid">
                             <div class="span6 ">
                                 <div id="clFileGroup" class="control-group">
                                     <label id="clFilelb" class="control-label">上传文件</label>
@@ -219,7 +219,7 @@
                                                    data-dismiss="fileupload">移除</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>--%>
                                 </div>
                             </div>
 

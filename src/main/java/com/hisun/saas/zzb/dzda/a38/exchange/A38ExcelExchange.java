@@ -65,6 +65,9 @@ public class A38ExcelExchange extends AbsExcelExchange{
                             realValue = getListValue(jsonObject, field, i);
                             cells.get(row + i, column).setValue(realValue);
                         }
+                        if(size==0){
+                            cell.setValue(realValue);
+                        }
                     } else if (isImageField(value)) {
 
                     } else {
@@ -98,6 +101,9 @@ public class A38ExcelExchange extends AbsExcelExchange{
                         for(int i = 0;i<jsonObjects.size();i++){
                             realValue = getValue(jsonObjects.get(i), field);
                             cells.get(row+i,column).setValue(realValue);
+                        }
+                        if(jsonObjects.size()==0){
+                            cell.setValue(realValue);
                         }
                     }
                 }

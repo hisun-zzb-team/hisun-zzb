@@ -556,6 +556,7 @@ public class A38Controller extends BaseController {
 
             //材料接收
             query=new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", id));
             orderBy = new CommonOrderBy();
             List<E01Z2> cljsList = e01z2Service.list(query,null);
             E01z2Vo e01z2Vo;
@@ -574,7 +575,7 @@ public class A38Controller extends BaseController {
             filePath = uploadBasePath+Constants.JBXX_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             a38ExcelExchange.toExcel(a38ExcelVo, uploadBasePath+ Constants.JBXXMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("zbda.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+URLEncoderUtil.encode(a38.getA0101()+".xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -594,15 +595,6 @@ public class A38Controller extends BaseController {
                 file.delete();
             }
         }
-    }
-
-    private String encode(String filename) throws UnsupportedEncodingException {
-        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "GBK");
-        }
-        return filename;
     }
 
     @RequiresPermissions("a38:*")
@@ -655,7 +647,7 @@ public class A38Controller extends BaseController {
                     a38Flag = true;
                 }
 
-                if(a38Flag){
+                if(!a38Flag){
 
                     String a0104Content = jbxxA38Vo.getA0104Content();
                     jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
@@ -668,18 +660,16 @@ public class A38Controller extends BaseController {
                     EntityWrapper.wrapperSaveBaseProperties(a38,details);
                     id = a38Service.save(a38);
                     if(StringUtils.isNotEmpty(id)){
-
                         a38.setId(id);
-
                         //新增职务变动
                         A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
                         if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
-                            Integer oldPxInteger=a52Service.getMaxSort(id);
                             List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
                             boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<a52Vos.size();i++){
                                 A52 a52 = new A52();
                                 A52Vo a52Vo = a52Vos.get(i);
+                                Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
                                     flag = true;
                                 }
@@ -693,7 +683,7 @@ public class A38Controller extends BaseController {
                                 if(flag){
                                     continue;
                                 }
-                                BeanUtils.copyProperties(a52,a52Vo);
+                                BeanUtils.copyProperties(a52Vo,a52);
                                 a52.setA38(a38);
                                 a52.setPx(oldPxInteger+i);
                                 EntityWrapper.wrapperSaveBaseProperties(a52,details);
@@ -704,11 +694,11 @@ public class A38Controller extends BaseController {
                         //添加工资变动记录
                         List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
                         if(gzbdList.size()>0){
-                            Integer oldPxInteger=a32Service.getMaxSort(id);
                             boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<gzbdList.size();i++){
                                 A32 a32 = new A32();
                                 A32Vo a32Vo = gzbdList.get(i);
+                                Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
 
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
                                     flag = true;
@@ -721,7 +711,7 @@ public class A38Controller extends BaseController {
                                     continue;
                                 }
 
-                                BeanUtils.copyProperties(a32,a32Vo);
+                                BeanUtils.copyProperties(a32Vo,a32);
                                 a32.setA38(a38);
                                 a32.setPx(oldPxInteger+i);
                                 EntityWrapper.wrapperSaveBaseProperties(a32,details);
@@ -732,11 +722,11 @@ public class A38Controller extends BaseController {
                         //添加材料接收记录
                         List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
                         if(e01z2Vos.size()>0){
-                            Integer oldPxInteger=e01z2Service.getMaxSort(id);
                             boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<e01z2Vos.size();i++){
                                 E01Z2 e01z2 = new E01Z2();
                                 E01z2Vo e01z2Vo = e01z2Vos.get(i);
+                                Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
 
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
                                     flag = true;
@@ -760,7 +750,7 @@ public class A38Controller extends BaseController {
                                 String e01Z244Content = e01z2Vo.getE01Z244Content();
                                 e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
 
-                                BeanUtils.copyProperties(e01z2,e01z2Vo);
+                                BeanUtils.copyProperties(e01z2Vo,e01z2);
                                 e01z2.setA38(a38);
                                 e01z2.setE01Z214(oldPxInteger+i);
                                 EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
@@ -822,7 +812,7 @@ public class A38Controller extends BaseController {
             filePath = uploadBasePath+Constants.DAGL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             a38ExcelExchange.toExcelByManyPojo(a38Vos, uploadBasePath+Constants.DAGLMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("dagl.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("档案管理表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -899,7 +889,7 @@ public class A38Controller extends BaseController {
                         int sort = this.e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
                         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
                         E01Z1 e01Z1 = new E01Z1();
-                        BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                        BeanUtils.copyProperties(e01Z1Vo, e01Z1);
                         e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
                         e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
                         e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());

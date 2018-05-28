@@ -259,10 +259,10 @@ public class A32Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a32Vos = gzbdExcelExchange.fromExcel2ManyPojo(A32Vo.class,tempFile,filePath);
-            Integer oldPxInteger=a32Service.getMaxSort(a38Id);
-            boolean flag = false;//判断是否存在非法数据
             if(a32Vos.size()>0){
                 for(int i=0;i<a32Vos.size();i++){
+                    Integer oldPxInteger=a32Service.getMaxSort(a38Id);
+                    boolean flag = false;//判断是否存在非法数据
                     A32 a32 = new A32();
                     A32Vo a32Vo = (A32Vo) a32Vos.get(i);
 
@@ -280,7 +280,7 @@ public class A32Controller extends BaseController {
                     BeanUtils.copyProperties(a32,a32Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     a32.setA38(a38);
-                    a32.setPx(oldPxInteger+i);
+                    a32.setPx(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(a32,details);
                     a32Service.save(a32);
                 }

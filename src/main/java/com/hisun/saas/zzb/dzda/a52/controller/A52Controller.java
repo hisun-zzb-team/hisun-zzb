@@ -265,11 +265,11 @@ public class A52Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
-            Integer oldPxInteger=a52Service.getMaxSort(a38Id);
-            boolean flag = false;//判断是否存在非法数据
             if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
                 List<A52Vo> a52Vos = a38Vo.getA52Vos();
                 for(int i=0;i<a52Vos.size();i++){
+                    Integer oldPxInteger=a52Service.getMaxSort(a38Id);
+                    boolean flag = false;//判断是否存在非法数据
                     A52 a52 = new A52();
                     A52Vo a52Vo = a52Vos.get(i);
                     if(StringUtils.isEmpty(a52Vo.getA5204())){
@@ -289,7 +289,7 @@ public class A52Controller extends BaseController {
                     BeanUtils.copyProperties(a52,a52Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     a52.setA38(a38);
-                    a52.setPx(oldPxInteger+i);
+                    a52.setPx(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(a52,details);
                     a52Service.save(a52);
                 }

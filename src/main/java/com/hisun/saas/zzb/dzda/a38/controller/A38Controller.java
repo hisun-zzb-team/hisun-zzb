@@ -665,8 +665,8 @@ public class A38Controller extends BaseController {
                         A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
                         if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
                             List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<a52Vos.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 A52 a52 = new A52();
                                 A52Vo a52Vo = a52Vos.get(i);
                                 Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
@@ -685,7 +685,7 @@ public class A38Controller extends BaseController {
                                 }
                                 BeanUtils.copyProperties(a52Vo,a52);
                                 a52.setA38(a38);
-                                a52.setPx(oldPxInteger+i);
+                                a52.setPx(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(a52,details);
                                 a52Service.save(a52);
                             }
@@ -694,8 +694,8 @@ public class A38Controller extends BaseController {
                         //添加工资变动记录
                         List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
                         if(gzbdList.size()>0){
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<gzbdList.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 A32 a32 = new A32();
                                 A32Vo a32Vo = gzbdList.get(i);
                                 Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
@@ -713,7 +713,7 @@ public class A38Controller extends BaseController {
 
                                 BeanUtils.copyProperties(a32Vo,a32);
                                 a32.setA38(a38);
-                                a32.setPx(oldPxInteger+i);
+                                a32.setPx(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(a32,details);
                                 a32Service.save(a32);
                             }
@@ -722,8 +722,8 @@ public class A38Controller extends BaseController {
                         //添加材料接收记录
                         List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
                         if(e01z2Vos.size()>0){
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<e01z2Vos.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 E01Z2 e01z2 = new E01Z2();
                                 E01z2Vo e01z2Vo = e01z2Vos.get(i);
                                 Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
@@ -752,7 +752,7 @@ public class A38Controller extends BaseController {
 
                                 BeanUtils.copyProperties(e01z2Vo,e01z2);
                                 e01z2.setA38(a38);
-                                e01z2.setE01Z214(oldPxInteger+i);
+                                e01z2.setE01Z214(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
                                 e01z2Service.save(e01z2);
                             }
@@ -985,14 +985,14 @@ public class A38Controller extends BaseController {
             if (lengh == 4 || lengh == 6 || lengh == 8) {
                 if (StringUtils.isNumeric(dateStr)) {
                     if(lengh==6){
-                        int mouth = Integer.parseInt(dateStr.substring(3,5));
+                        int mouth = Integer.parseInt(dateStr.substring(4,6));
                         if(mouth>=1&&mouth<=12){
                             return false;
                         }
                         return true;
                     }else if(lengh==8){
-                        int mouth = Integer.parseInt(dateStr.substring(3,5));
-                        int day = Integer.parseInt(dateStr.substring(5,7));
+                        int mouth = Integer.parseInt(dateStr.substring(4,6));
+                        int day = Integer.parseInt(dateStr.substring(6,8));
                         if(mouth>=1&&mouth<=12&&day>=1&&day<=31){
                             return false;
                         }

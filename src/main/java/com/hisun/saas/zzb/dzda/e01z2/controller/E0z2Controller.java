@@ -264,10 +264,10 @@ public class E0z2Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             e01z2Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
-            Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
-            boolean flag = false;//判断是否存在非法数据
             if(e01z2Vos.size()>0){
                 for(int i=0;i<e01z2Vos.size();i++){
+                    Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
+                    boolean flag = false;//判断是否存在非法数据
                     E01Z2 e01z2 = new E01Z2();
                     E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
@@ -294,7 +294,7 @@ public class E0z2Controller extends BaseController {
                     BeanUtils.copyProperties(e01z2,e01z2Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     e01z2.setA38(a38);
-                    e01z2.setE01Z214(oldPxInteger+i);
+                    e01z2.setE01Z214(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
                     e01z2Service.save(e01z2);
                 }

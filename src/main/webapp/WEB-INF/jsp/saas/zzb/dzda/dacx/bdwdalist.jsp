@@ -26,39 +26,10 @@
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <div class="portlet-title">
-                <div class="caption">本单位档案：共<font color="red"> ${pager.total } </font>人</div>
+                <div class="caption">查询结果：共<font color="red"> ${pager.total } </font>条记录</div>
                 <div class="clearfix fr">
                     <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存条件</button>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
-                </div>
-
-            </div>
-            <div class="clearfix">
-                <div class="control-group">
-                    <form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
-                        <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
-                        <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                        <input type="hidden" name="appQueryId" value="${appQueryId}" id="appQueryId">
-                        <div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
-                        <div style=" float:left;">
-                            <input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-                        </div>
-                        <div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
-                        <div style="float:left;width: 160px;">
-                            <Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}" defaultvalues="${gbztContentQuery}"/>
-                        </div>
-                        <div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
-                        <div style="float:left;width: 160px;">
-                            <Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
-
-                        </div>
-                        <div style="float:left">
-                            &nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
-                            <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
-                        </div>
-                    </form>
                 </div>
 
             </div>
@@ -74,8 +45,6 @@
                         <th width=70  style="text-align: center">接收日期</th>
                         <th width=70  style="text-align: center">干部状态</th>
                         <th width=70  style="text-align: center">现职级时间</th>
-                        <th width="50">修改者</th>
-                        <th width=70>修改时间</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
@@ -87,8 +56,6 @@
                             <TD  style="text-align: center"><c:out value="${vo.a3801}"></c:out></TD>
                             <TD  style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
                             <TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
-                            <TD  width=40><c:out value="${vo.updateUserNameByShow}"></c:out></TD>
-                            <TD ><fmt:formatDate value="${vo.updateDateByShow}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                         </TR>
                     </c:forEach>
                     </tbody>
@@ -125,15 +92,15 @@
                             <div class="portlet-body form">
                                 <div class="control-group" id="queryNameGroup">
                                     <div class="controls">
-                                        <label class="control-label"><span class="required">*</span>查阅名称</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
+                                        <label class="control-label" style="display: inline;width: 70px;line-height: 30px"><span class="required">*</span>查阅名称</label>
+                                        <input size="16" type="text"  class="span9 m-wrap" value="${queryName}"
                                                id="queryName" name="queryName"    required  maxlength="200">
                                     </div>
                                 </div>
                                 <div class="control-group" id="descriptionGroup">
                                     <div class="controls">
-                                        <label class="control-label">查询描述</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
+                                        <label class="control-label" style="display: inline;width: 70px;line-height: 30px">查询描述&nbsp;&nbsp;</label>
+                                        <input size="16" type="text"  class="span9 m-wrap" value="${description}"
                                                id="description" name="description" >
                                     </div>
                                 </div>
@@ -160,6 +127,11 @@
         });
     }
     function saveCxtj(){
+        var queryName = $("#queryName").val();
+        if(queryName==""){
+            showTip("提示","请填写条件名称!");
+            return;
+        }
         $.ajax({
             url : "${path }/zzb/dzda/dacx/saveById",
             type : "post",

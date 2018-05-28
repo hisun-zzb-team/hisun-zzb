@@ -38,8 +38,9 @@
 <!--BEGIN TABS-->
 <div class="tabbable tabbable-custom">
     <ul class="nav nav-tabs" style="font-size: 14px;font-weight: bold;" id="tabs">
-        <li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">常用查询</a></li>
-        <li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">常用查询项</a></li>
+        <li  class="active"><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">常用查询项</a></li>
+        <li><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">常用查询</a></li>
+
     </ul>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:10px 0;">
         <div class="tab-pane active" id="tab_show">
@@ -52,7 +53,7 @@
     var tabIndex ="#tab_1_1";
     $(function(){
         App.init();
-        cycxList();
+        cycx();
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
 
             if($(e.target).attr('id')=="#tab_1_1") {

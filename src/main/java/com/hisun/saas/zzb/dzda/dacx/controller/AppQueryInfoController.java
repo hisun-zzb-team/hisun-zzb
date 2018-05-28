@@ -243,6 +243,7 @@ public class AppQueryInfoController extends BaseController{
                                       @RequestParam(value = "appQueryId" ,required = true)String appQueryId) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         AppQueryInfo appQueryInfo = appQueryInfoService.getByPK(appQueryId);
+        String queryName = appQueryInfo.getQueryName();
         DakVo queryDakVo = JacksonUtil.nonDefaultMapper().fromJson(appQueryInfo.getQueryModel(), DakVo.class);
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryDakVo,userLoginDetails), new ArrayList<Object>(), pageNum, pageSize);
@@ -260,6 +261,7 @@ public class AppQueryInfoController extends BaseController{
 
 
         model.put("pager",pager);
+        model.put("queryName",queryName);
         model.put("a0101Query",queryDakVo.getA0101());
         model.put("gbztCodeQuery",queryDakVo.getGbztCodes());
         model.put("daztCodeQuery",queryDakVo.getDaztCodes());

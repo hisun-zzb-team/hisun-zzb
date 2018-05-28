@@ -30,8 +30,7 @@
                     <!-- 用于清除 -->
                     <input type="hidden" name="editFlag" value="${editFlag}" id="editFlag"/>
                     <input type="hidden" name="appQueryId" value="${appQueryId}" id="appQueryId"/>
-                    <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form2" method="post" >
-                    </form>
+
                     <form action="${path }/zzb/dzda/a38/list?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" method="post" >
                         <div class="portlet-title">
                             <div class="caption">基本信息</div>
@@ -283,15 +282,15 @@
                                 <div class="portlet-body form">
                                     <div class="control-group" id="queryNameGroup">
                                         <div class="controls">
-                                            <label class="control-label"><span class="required">*</span>查阅名称</label>
-                                            <input size="16" type="text"  class="span10 m-wrap" value="${queryName}"
+                                            <label class="control-label" style="display: inline;width: 70px;line-height: 30px"><span class="required">*</span>查阅名称</label>
+                                            <input size="16" type="text"  class="span9 m-wrap" value="${queryName}"
                                                    id="queryName" name="queryName"    required  maxlength="200">
                                         </div>
                                     </div>
                                     <div class="control-group" id="descriptionGroup">
                                         <div class="controls">
-                                            <label class="control-label">查询描述</label>
-                                            <input size="16" type="text"  class="span10 m-wrap" value="${description}"
+                                            <label class="control-label" style="display: inline;width: 70px;line-height: 30px">查询描述&nbsp;&nbsp;</label>
+                                            <input size="16" type="text"  class="span9 m-wrap" value="${description}"
                                                    id="description" name="description" >
                                         </div>
                                     </div>
@@ -357,6 +356,10 @@
         var appQueryId ="${appQueryId}";
         var queryName = $("#queryName").val();
         var description = $("#description").val();
+        if(queryName==""){
+            showTip("提示","请填写条件名称!");
+            return;
+        }
         if("${editFlag}"=="edit"){
             $.ajax({
                 url : "${path }/zzb/dzda/dacx/update?appQueryId="+appQueryId+"&queryName="+queryName+"&description="+description,

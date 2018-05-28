@@ -20,8 +20,8 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
-import com.hisun.saas.zzb.dzda.dacx.entity.AppQueryInfo;
-import com.hisun.saas.zzb.dzda.dacx.service.AppQueryInfoService;
+import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
+import com.hisun.saas.zzb.dzda.dacx.service.DzdaQueryInfoService;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 import com.hisun.util.JacksonUtil;
 import com.hisun.util.StringUtils;
@@ -45,9 +45,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/zzb/dzda/dacx")
-public class AppQueryInfoController extends BaseController{
+public class DzdaQueryInfoController extends BaseController{
     @Resource
-    private AppQueryInfoService appQueryInfoService;
+    private DzdaQueryInfoService dzdaQueryInfoService;
     @Resource
     private A38Service a38Service;
 
@@ -65,9 +65,9 @@ public class AppQueryInfoController extends BaseController{
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.asc("px"));
         query.add(CommonRestrictions.and(" queryStatus = :queryStatus ", "queryStatus", "0"));
-        List<AppQueryInfo> resultList= appQueryInfoService.list(query,orderBy,pageNum,pageSize);
-        Long total = appQueryInfoService.count(query);
-        PagerVo<AppQueryInfo> pager = new PagerVo<AppQueryInfo>(resultList, total.intValue(), pageNum, pageSize);
+        List<DzdaQueryInfo> resultList= dzdaQueryInfoService.list(query,orderBy,pageNum,pageSize);
+        Long total = dzdaQueryInfoService.count(query);
+        PagerVo<DzdaQueryInfo> pager = new PagerVo<DzdaQueryInfo>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
         return  new ModelAndView("saas/zzb/dzda/dacx/list",model);
     }
@@ -77,7 +77,7 @@ public class AppQueryInfoController extends BaseController{
     Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
-            appQueryInfoService.deleteByPK(id);
+            dzdaQueryInfoService.deleteByPK(id);
             returnMap.put("code",1);
         }catch (Exception e){
             logger.error(e,e);
@@ -95,12 +95,12 @@ public class AppQueryInfoController extends BaseController{
         Map<String, Object> map = new HashMap<String, Object>();
       //  DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
         if(StringUtils.isNotBlank(appQueryId)){
-            AppQueryInfo appQueryInfo = appQueryInfoService.getByPK(appQueryId);
-            DakVo queryDakVo = JacksonUtil.nonDefaultMapper().fromJson(appQueryInfo.getQueryModel(), DakVo.class);
+            DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
+            DakVo queryDakVo = JacksonUtil.nonDefaultMapper().fromJson(dzdaQueryInfo.getQueryModel(), DakVo.class);
             map.put("vo",queryDakVo);
             map.put("appQueryId",appQueryId);
-            map.put("queryName",appQueryInfo.getQueryName());
-            map.put("description",appQueryInfo.getDescription());
+            map.put("queryName", dzdaQueryInfo.getQueryName());
+            map.put("description", dzdaQueryInfo.getDescription());
         }
         map.put("editFlag",editFlag);
         return new ModelAndView("saas/zzb/dzda/dacx/gjcx",map);
@@ -113,7 +113,7 @@ public class AppQueryInfoController extends BaseController{
                                    @RequestParam(value = "queryName" ,required = true) String queryName,
                                    @RequestParam(value = "description" ,required = false) String description){
         Map<String,Object> model = Maps.newHashMap();
-        AppQueryInfo entity = new AppQueryInfo();
+        DzdaQueryInfo entity = new DzdaQueryInfo();
         entity.setQueryStatus("0");
         entity.setQueryName(queryName);
         entity.setDescription(description);
@@ -129,11 +129,11 @@ public class AppQueryInfoController extends BaseController{
                                    @RequestParam(value = "queryName" ,required = true) String queryName,
                                    @RequestParam(value = "description" ,required = false) String description){
         Map<String,Object> model = Maps.newHashMap();
-        AppQueryInfo appQueryInfo = appQueryInfoService.getByPK(appQueryId);
-        appQueryInfo.setQueryName(queryName);
-        appQueryInfo.setDescription(description);
-        appQueryInfo.setQueryStatus("0");
-        appQueryInfoService.update(appQueryInfo);
+        DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
+        dzdaQueryInfo.setQueryName(queryName);
+        dzdaQueryInfo.setDescription(description);
+        dzdaQueryInfo.setQueryStatus("0");
+        dzdaQueryInfoService.update(dzdaQueryInfo);
         model.put("code",1);
         return  model;
     }
@@ -147,28 +147,28 @@ public class AppQueryInfoController extends BaseController{
                                        @ModelAttribute DakVo queryVo,HttpServletRequest request){
         Map<String,Object> model = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-        AppQueryInfo appQueryInfo = appQueryInfoService.getByPK(appQueryId);
+        DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
         String queryModel = JacksonUtil.nonDefaultMapper().toJson(queryVo);
         if(StringUtils.isNotBlank(queryName)){
-            appQueryInfo.setQueryName(queryName);
+            dzdaQueryInfo.setQueryName(queryName);
         }
         if(StringUtils.isNotBlank(description)){
-            appQueryInfo.setDescription(description);
+            dzdaQueryInfo.setDescription(description);
         }
-        appQueryInfo.setQueryModel(queryModel);
-        appQueryInfo.setQueryStatus("0");
-        EntityWrapper.wrapperUpdateBaseProperties(appQueryInfo, details);
-        appQueryInfoService.update(appQueryInfo);
+        dzdaQueryInfo.setQueryModel(queryModel);
+        dzdaQueryInfo.setQueryStatus("0");
+        EntityWrapper.wrapperUpdateBaseProperties(dzdaQueryInfo, details);
+        dzdaQueryInfoService.update(dzdaQueryInfo);
         model.put("code",1);
         return  model;
     }
 
-    private String saveModel(DakVo queryVo,AppQueryInfo entity){
+    private String saveModel(DakVo queryVo,DzdaQueryInfo entity){
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         String queryModel = JacksonUtil.nonDefaultMapper().toJson(queryVo);
         entity.setQueryModel(queryModel);
         EntityWrapper.wrapperSaveBaseProperties(entity, details);
-        return  appQueryInfoService.save(entity);
+        return  dzdaQueryInfoService.save(entity);
     }
 
     @RequiresPermissions("dzda:*")
@@ -185,7 +185,7 @@ public class AppQueryInfoController extends BaseController{
             daztCodeQuery= queryVo.getDaztCodes();
             daztContentQuery = queryVo.getDaztContents();
             session.setAttribute("queryDakVo",queryVo);
-            AppQueryInfo entity = new AppQueryInfo();
+            DzdaQueryInfo entity = new DzdaQueryInfo();
             entity.setQueryStatus("1");
             model.put("appQueryId",this.saveModel(queryVo,entity));
         } else if(queryType!=null && queryType.equals("listQuery")){//listQuery
@@ -242,9 +242,9 @@ public class AppQueryInfoController extends BaseController{
     public ModelAndView bdwdalistById(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
                                       @RequestParam(value = "appQueryId" ,required = true)String appQueryId) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
-        AppQueryInfo appQueryInfo = appQueryInfoService.getByPK(appQueryId);
-        String queryName = appQueryInfo.getQueryName();
-        DakVo queryDakVo = JacksonUtil.nonDefaultMapper().fromJson(appQueryInfo.getQueryModel(), DakVo.class);
+        DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
+        String queryName = dzdaQueryInfo.getQueryName();
+        DakVo queryDakVo = JacksonUtil.nonDefaultMapper().fromJson(dzdaQueryInfo.getQueryModel(), DakVo.class);
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryDakVo,userLoginDetails), new ArrayList<Object>(), pageNum, pageSize);
         int total =   a38Service.list(this.a38Service.getGjcxHql(queryDakVo,userLoginDetails), new ArrayList<Object>(),1,100000).size();

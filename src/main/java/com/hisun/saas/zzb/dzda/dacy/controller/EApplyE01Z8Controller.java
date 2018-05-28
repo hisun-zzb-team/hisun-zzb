@@ -554,7 +554,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 if (ea38LogViewTime == null || "".equals(ea38LogViewTime)) {
                     ea38LogDetail.setCysj(String.valueOf(viewTime / 1000));
                 } else {
-                    ea38LogDetail.setCysj(String.valueOf(Integer.valueOf(ea38Log.getViewTime()) + (viewTime / 1000)));
+                    ea38LogDetail.setCysj(String.valueOf(ea38LogViewTime + (viewTime / 1000)));
                 }
                 ea38LogDetail.setJscysj(new Date());
                 eA38LogDetailService.update(ea38LogDetail);

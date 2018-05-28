@@ -268,7 +268,7 @@ public class A32Controller extends BaseController {
                     if(StringUtils.isEmpty(a32Vo.getGzbm())){
                         flag = true;
                     }
-                    if(isNotDate(a32Vo.getA3207())){
+                    if(StringUtils.isNotDate(a32Vo.getA3207())){
                         flag = true;
                     }
 
@@ -291,16 +291,4 @@ public class A32Controller extends BaseController {
         }
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }

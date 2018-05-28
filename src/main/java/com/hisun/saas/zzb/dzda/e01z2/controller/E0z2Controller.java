@@ -205,7 +205,7 @@ public class E0z2Controller extends BaseController {
             filePath = uploadBasePath+Constants.CLJS_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cljsExcelExchange.toExcelByManyPojo(e01z2Vos, uploadBasePath+Constants.CLJSMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("材料接收表.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("cljs.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -275,10 +275,10 @@ public class E0z2Controller extends BaseController {
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                         flag = true;
                     }
-                    if(isNotDate(e01z2Vo.getE01Z201())){
+                    if(StringUtils.isNotDate(e01z2Vo.getE01Z201())){
                         flag = true;
                     }
-                    if(isNotDate(e01z2Vo.getE01Z227())){
+                    if(StringUtils.isNotDate(e01z2Vo.getE01Z227())){
                         flag = true;
                     }
                     if(flag){
@@ -303,19 +303,6 @@ public class E0z2Controller extends BaseController {
         }finally {
             file.delete();
         }
-    }
-
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     /**

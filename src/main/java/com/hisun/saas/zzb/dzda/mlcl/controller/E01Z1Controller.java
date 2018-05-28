@@ -832,7 +832,7 @@ public class E01Z1Controller extends BaseController {
                                 }
                             }
                         }
-                        if(isNotDate(e01Z117)){
+                        if(StringUtils.isNotDate(e01Z117)){
                             flag = true;
                         }
 
@@ -909,16 +909,4 @@ public class E01Z1Controller extends BaseController {
         return catalogCode;
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }

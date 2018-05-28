@@ -51,7 +51,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.hisun.util.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -398,7 +398,7 @@ public class E01Z5Controller extends BaseController {
                     a38Flag = true;
                 }
 
-                if (isNotDate(jbxxA38Vo.getA0107())) {
+                if (StringUtils.isNotDate(jbxxA38Vo.getA0107())) {
                     a38Flag = true;
                 }
 
@@ -407,7 +407,7 @@ public class E01Z5Controller extends BaseController {
                     String a0104Content = jbxxA38Vo.getA0104Content();
                     jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
                     String gbztContent = jbxxA38Vo.getGbztContent();
-                    jbxxA38Vo.setGbztContent(getDictionaryItem(gbztContent,"SAN_GBZT"));
+                    jbxxA38Vo.setGbztCode(getDictionaryItem(gbztContent,"SAN_GBZT"));
 
                     org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
                     a38.setId(null);
@@ -428,10 +428,10 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
                                     flag = true;
                                 }
-                                if(isNotDate(a52Vo.getA5227In())){
+                                if(StringUtils.isNotDate(a52Vo.getA5227In())){
                                     flag = true;
                                 }
-                                if(isNotDate(a52Vo.getA5227Out())){
+                                if(StringUtils.isNotDate(a52Vo.getA5227Out())){
                                     flag = true;
                                 }
 
@@ -458,7 +458,7 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
                                     flag = true;
                                 }
-                                if(isNotDate(a32Vo.getA3207())){
+                                if(StringUtils.isNotDate(a32Vo.getA3207())){
                                     flag = true;
                                 }
 
@@ -489,10 +489,10 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                                     flag = true;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z201())){
+                                if(StringUtils.isNotDate(e01z2Vo.getE01Z201())){
                                     flag = true;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z227())){
+                                if(StringUtils.isNotDate(e01z2Vo.getE01Z227())){
                                     flag = true;
                                 }
 
@@ -582,19 +582,6 @@ public class E01Z5Controller extends BaseController {
         return catalogCode;
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 反向查询获取字典项
      * @param name
@@ -661,7 +648,7 @@ public class E01Z5Controller extends BaseController {
                                 }
                             }
                         }
-                        if (isNotDate(e01Z117)) {
+                        if (StringUtils.isNotDate(e01Z117)) {
                             flag = true;
                         }
 

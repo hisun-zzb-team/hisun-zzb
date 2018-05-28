@@ -274,10 +274,10 @@ public class A52Controller extends BaseController {
                     if(StringUtils.isEmpty(a52Vo.getA5204())){
                         flag = true;
                     }
-                    if(isNotDate(a52Vo.getA5227In())){
+                    if(StringUtils.isNotDate(a52Vo.getA5227In())){
                         flag = true;
                     }
-                    if(isNotDate(a52Vo.getA5227Out())){
+                    if(StringUtils.isNotDate(a52Vo.getA5227Out())){
                         flag = true;
                     }
 
@@ -300,16 +300,4 @@ public class A52Controller extends BaseController {
         }
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }

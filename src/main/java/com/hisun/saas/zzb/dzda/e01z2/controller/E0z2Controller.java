@@ -23,6 +23,7 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.tenant.tenant.entity.Tenant2ResourcePrivilege;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.e01z2.Constants;
 import com.hisun.saas.zzb.dzda.e01z2.exchange.CljsExcelExchange;
 import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
@@ -275,10 +276,10 @@ public class E0z2Controller extends BaseController {
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                         flag = true;
                     }
-                    if(StringUtils.isNotDate(e01z2Vo.getE01Z201())){
+                    if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
                         flag = true;
                     }
-                    if(StringUtils.isNotDate(e01z2Vo.getE01Z227())){
+                    if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
                         flag = true;
                     }
                     if(flag){

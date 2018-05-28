@@ -643,7 +643,7 @@ public class A38Controller extends BaseController {
                     a38Flag = true;
                 }
 
-                if (StringUtils.isNotDate(jbxxA38Vo.getA0107())) {
+                if (isNotDate(jbxxA38Vo.getA0107())) {
                     a38Flag = true;
                 }
 
@@ -673,10 +673,10 @@ public class A38Controller extends BaseController {
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a52Vo.getA5227In())){
+                                if(isNotDate(a52Vo.getA5227In())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a52Vo.getA5227Out())){
+                                if(isNotDate(a52Vo.getA5227Out())){
                                     flag = true;
                                 }
 
@@ -703,7 +703,7 @@ public class A38Controller extends BaseController {
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a32Vo.getA3207())){
+                                if(isNotDate(a32Vo.getA3207())){
                                     flag = true;
                                 }
 
@@ -734,10 +734,10 @@ public class A38Controller extends BaseController {
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(e01z2Vo.getE01Z201())){
+                                if(isNotDate(e01z2Vo.getE01Z201())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(e01z2Vo.getE01Z227())){
+                                if(isNotDate(e01z2Vo.getE01Z227())){
                                     flag = true;
                                 }
 
@@ -876,7 +876,7 @@ public class A38Controller extends BaseController {
                                 }
                             }
                         }
-                        if (StringUtils.isNotDate(e01Z117)) {
+                        if (isNotDate(e01Z117)) {
                             flag = true;
                         }
 
@@ -977,5 +977,32 @@ public class A38Controller extends BaseController {
             }
         }
         return "";
+    }
+
+    public static boolean isNotDate(String dateStr){
+        if(StringUtils.isNotEmpty(dateStr)) {
+            int lengh = dateStr.length();
+            if (lengh == 4 || lengh == 6 || lengh == 8) {
+                if (StringUtils.isNumeric(dateStr)) {
+                    if(lengh==6){
+                        int mouth = Integer.parseInt(dateStr.substring(3,5));
+                        if(mouth>=1&&mouth<=12){
+                            return false;
+                        }
+                        return true;
+                    }else if(lengh==8){
+                        int mouth = Integer.parseInt(dateStr.substring(3,5));
+                        int day = Integer.parseInt(dateStr.substring(5,7));
+                        if(mouth>=1&&mouth<=12&&day>=1&&day<=31){
+                            return false;
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

@@ -19,6 +19,7 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
@@ -274,10 +275,10 @@ public class A52Controller extends BaseController {
                     if(StringUtils.isEmpty(a52Vo.getA5204())){
                         flag = true;
                     }
-                    if(StringUtils.isNotDate(a52Vo.getA5227In())){
+                    if(A38Controller.isNotDate(a52Vo.getA5227In())){
                         flag = true;
                     }
-                    if(StringUtils.isNotDate(a52Vo.getA5227Out())){
+                    if(A38Controller.isNotDate(a52Vo.getA5227Out())){
                         flag = true;
                     }
 

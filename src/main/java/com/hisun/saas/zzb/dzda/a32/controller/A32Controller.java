@@ -23,6 +23,7 @@ import com.hisun.saas.zzb.dzda.a32.Constants;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.exchange.GzbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
@@ -268,7 +269,7 @@ public class A32Controller extends BaseController {
                     if(StringUtils.isEmpty(a32Vo.getGzbm())){
                         flag = true;
                     }
-                    if(StringUtils.isNotDate(a32Vo.getA3207())){
+                    if(A38Controller.isNotDate(a32Vo.getA3207())){
                         flag = true;
                     }
 

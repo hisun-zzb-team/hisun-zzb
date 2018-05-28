@@ -25,6 +25,7 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.exchange.A38ExcelExchange;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
@@ -398,7 +399,7 @@ public class E01Z5Controller extends BaseController {
                     a38Flag = true;
                 }
 
-                if (StringUtils.isNotDate(jbxxA38Vo.getA0107())) {
+                if (A38Controller.isNotDate(jbxxA38Vo.getA0107())) {
                     a38Flag = true;
                 }
 
@@ -428,10 +429,10 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a52Vo.getA5227In())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227In())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a52Vo.getA5227Out())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227Out())){
                                     flag = true;
                                 }
 
@@ -458,7 +459,7 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(a32Vo.getA3207())){
+                                if(A38Controller.isNotDate(a32Vo.getA3207())){
                                     flag = true;
                                 }
 
@@ -489,10 +490,10 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(e01z2Vo.getE01Z201())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
                                     flag = true;
                                 }
-                                if(StringUtils.isNotDate(e01z2Vo.getE01Z227())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
                                     flag = true;
                                 }
 
@@ -648,7 +649,7 @@ public class E01Z5Controller extends BaseController {
                                 }
                             }
                         }
-                        if (StringUtils.isNotDate(e01Z117)) {
+                        if (A38Controller.isNotDate(e01Z117)) {
                             flag = true;
                         }
 

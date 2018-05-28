@@ -16,8 +16,8 @@ import java.io.Serializable;
  * @author Marco {854476391@qq.com}
  */
 @Entity
-@Table(name = "app_query_info")
-public class AppQueryInfo extends TenantEntity implements Serializable {
+@Table(name = "dzda_query_info")
+public class DzdaQueryInfo extends TenantEntity implements Serializable {
     private String id;
     private String queryName;//查询名称
     private String queryModel;//查询json字符串
@@ -124,7 +124,7 @@ public class AppQueryInfo extends TenantEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AppQueryInfo that = (AppQueryInfo) o;
+        DzdaQueryInfo that = (DzdaQueryInfo) o;
 
         if (px != that.px) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;

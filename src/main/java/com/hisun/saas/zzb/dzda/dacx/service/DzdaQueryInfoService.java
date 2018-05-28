@@ -7,12 +7,12 @@
 package com.hisun.saas.zzb.dzda.dacx.service;
 
 import com.hisun.base.service.BaseService;
-import com.hisun.saas.zzb.dzda.dacx.entity.AppQueryInfo;
+import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
 
 /**
  * @author Marco {854476391@qq.com}
  */
-public interface AppQueryInfoService extends BaseService<AppQueryInfo,String> {
+public interface DzdaQueryInfoService extends BaseService<DzdaQueryInfo,String> {
     Integer getMaxSort(String tenantId);
     void updatePx(int oldPx, int newPx, String a38Id);
 }

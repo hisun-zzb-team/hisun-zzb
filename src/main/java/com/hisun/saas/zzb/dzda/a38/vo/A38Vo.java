@@ -12,6 +12,7 @@ import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.dacy.entity.EA38Log;
 import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
+import com.hisun.saas.zzb.dzda.e01z4.vo.E01Z4Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z7;
@@ -75,6 +76,7 @@ public class A38Vo  {
     private Date updateDateByShow;
 
     private List<A52Vo> a52Vos;
+    private List<E01Z4Vo> e01Z4Vos;
 
     public String getId() {
         return id;
@@ -450,5 +452,13 @@ public class A38Vo  {
 
     public void setA52Vos(List<A52Vo> a52Vos) {
         this.a52Vos = a52Vos;
+    }
+
+    public List<E01Z4Vo> getE01Z4Vos() {
+        return e01Z4Vos;
+    }
+
+    public void setE01Z4Vos(List<E01Z4Vo> e01Z4Vos) {
+        this.e01Z4Vos = e01Z4Vos;
     }
 }

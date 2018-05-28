@@ -23,6 +23,7 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.tenant.tenant.entity.Tenant2ResourcePrivilege;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.e01z2.Constants;
 import com.hisun.saas.zzb.dzda.e01z2.exchange.CljsExcelExchange;
 import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
@@ -205,7 +206,7 @@ public class E0z2Controller extends BaseController {
             filePath = uploadBasePath+Constants.CLJS_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cljsExcelExchange.toExcelByManyPojo(e01z2Vos, uploadBasePath+Constants.CLJSMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("材料接收表.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("cljs.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -263,10 +264,10 @@ public class E0z2Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             e01z2Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
-            Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
-            boolean flag = false;//判断是否存在非法数据
             if(e01z2Vos.size()>0){
                 for(int i=0;i<e01z2Vos.size();i++){
+                    Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
+                    boolean flag = false;//判断是否存在非法数据
                     E01Z2 e01z2 = new E01Z2();
                     E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
@@ -275,10 +276,10 @@ public class E0z2Controller extends BaseController {
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                         flag = true;
                     }
-                    if(isNotDate(e01z2Vo.getE01Z201())){
+                    if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
                         flag = true;
                     }
-                    if(isNotDate(e01z2Vo.getE01Z227())){
+                    if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
                         flag = true;
                     }
                     if(flag){
@@ -293,7 +294,7 @@ public class E0z2Controller extends BaseController {
                     BeanUtils.copyProperties(e01z2,e01z2Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     e01z2.setA38(a38);
-                    e01z2.setE01Z214(oldPxInteger+i);
+                    e01z2.setE01Z214(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
                     e01z2Service.save(e01z2);
                 }
@@ -303,19 +304,6 @@ public class E0z2Controller extends BaseController {
         }finally {
             file.delete();
         }
-    }
-
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     /**

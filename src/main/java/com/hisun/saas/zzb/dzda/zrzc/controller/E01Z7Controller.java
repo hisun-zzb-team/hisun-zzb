@@ -136,8 +136,8 @@ public class E01Z7Controller extends BaseController {
     @RequestMapping("/save")
     public
     @ResponseBody
-    Map<String, Object> save(@ModelAttribute E01Z7Vo vo, HttpServletRequest req,
-                             @RequestParam(value = "clFile", required = false) MultipartFile clFile) throws GenericException {
+    Map<String, Object> save(@ModelAttribute E01Z7Vo vo, HttpServletRequest req
+                             ) throws GenericException {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         Map<String, String> vMap = ValidateUtil.validAll(vo);
         if (vMap.size() > 0) {
@@ -146,51 +146,6 @@ public class E01Z7Controller extends BaseController {
             return returnMap;
         }
         try {
-            String fileName = "";
-            String savePath = "";
-            if (clFile != null && !clFile.isEmpty()) {
-
-                String filePath = "";
-                File storePathFile = new File(Constants.DACD_STORE_PATH);
-                if(!storePathFile.exists()) storePathFile.mkdirs();
-                filePath = uploadBasePath+ Constants.DACD_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
-                File file = new File(filePath);
-                InputStream inputStream = null;
-                OutputStream output = null;
-                try {
-                    inputStream = clFile.getInputStream();
-                    output = new FileOutputStream(file);
-                    byte[] buf = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buf)) > 0) {
-                        output.write(buf, 0, bytesRead);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
-                    if(inputStream!=null){
-                        inputStream.close();
-                    }
-                    if(output!=null){
-                        output.close();
-                    }
-                }
-
-                String tempFile = uploadBasePath+Constants.DACDMB_STORE_PATH;
-                A38Vo a38Vo = new A38Vo();
-                UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-                try {
-                    a38Vo = (A38Vo) dacdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
-                    System.out.print(a38Vo.getA0101());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }finally {
-                    file.delete();
-                }
-
-            }
             String a38IdString = vo.getNameContent();
             String[] a38ids = a38IdString.split(",");
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -205,8 +160,8 @@ public class E01Z7Controller extends BaseController {
                 entity.setA38(a38);
                 entity.setName(a38.getA0101());
                 entity.setE01Z717(details.getRealname());
-                entity.setFileName(fileName);
-                entity.setFilePath(savePath);
+           //     entity.setFileName(fileName);
+           //     entity.setFilePath(savePath);
                 entity.setId(null);
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 e01z7Service.save(entity);

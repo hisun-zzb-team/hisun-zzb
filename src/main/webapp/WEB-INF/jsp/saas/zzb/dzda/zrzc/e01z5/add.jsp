@@ -61,7 +61,7 @@
                     <div class="clearfix fr">
 
                         <div class="btn-group" style="padding-bottom: 0px">
-                            <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
+                            <button class="btn green" type="button" style="padding:7px 20px; margin: 7px 10px" onclick="formSubmit()">确定</button>
                             <button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
                             </button>

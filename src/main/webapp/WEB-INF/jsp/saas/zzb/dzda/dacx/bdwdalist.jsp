@@ -29,6 +29,7 @@
                 <div class="caption"><c:if test='${queryName !=""}'>&nbsp;${queryName} &nbsp;</c:if>查询结果：共<font color="red"> ${pager.total } </font>条记录</div>
                 <div class="clearfix fr">
                     <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px; <c:if test="${idQuery=='idQuery'}">display: none</c:if>">保存条件</button>
+                    <button onclick="daochu()" class="btn green" type="button" style="padding:7px 20px;">导出</button>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                 </div>
                 <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">

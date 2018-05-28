@@ -371,22 +371,22 @@
                 },
                 success : function(json){
                     $.ajax({
-                        url : "${path}/zzb/dzda/dacx/ajax/list",
+                        url : "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
                         type : "post",
-                        data : {},
+                        data : {"appQueryId":appQueryId},
                         dataType : "html",
                         headers:{
-                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                            OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                         },
                         success : function(html){
                             $('#queryModelModal').modal('hide');
-                            $("[id='#tab_1_1']").tab('show');
+                            $('#queryModelDiv').html("");
                             var view = $("#tab_show");
+                            view.html("appQueryId");
                             view.html(html);
-                            myLoading.hide();
                         },
                         error : function(arg1, arg2, arg3){
-                            showTip("提示","条件查询加载失败");
+                            showTip("提示","查询失败");
                         }
                     });
                 },
@@ -395,33 +395,34 @@
                 }
             });
         }else {
+            debugger
             $.ajax({
                 url : "${path }/zzb/dzda/dacx/save?queryName="+queryName+"&description="+description,
                 type : "post",
                 data :value
                 ,
-                dataType : "html",
+                dataType : "json",
                 headers:{
                     OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                 },
-                success : function(html){
+                success : function(json){
                     $.ajax({
-                        url : "${path}/zzb/dzda/dacx/ajax/list",
+                        url : "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
                         type : "post",
-                        data : {},
+                        data : {"appQueryId":json.appQueryId},
                         dataType : "html",
                         headers:{
-                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                            OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                         },
                         success : function(html){
                             $('#queryModelModal').modal('hide');
-                            $("[id='#tab_1_1']").tab('show');
+                            $('#queryModelDiv').html("");
                             var view = $("#tab_show");
+                            view.html("appQueryId");
                             view.html(html);
-                            myLoading.hide();
                         },
                         error : function(arg1, arg2, arg3){
-                            showTip("提示","条件查询加载失败");
+                            showTip("提示","查询失败");
                         }
                     });
                 },

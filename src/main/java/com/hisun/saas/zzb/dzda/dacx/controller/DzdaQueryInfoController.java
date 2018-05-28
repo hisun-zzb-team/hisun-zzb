@@ -117,8 +117,9 @@ public class DzdaQueryInfoController extends BaseController{
         entity.setQueryStatus("0");
         entity.setQueryName(queryName);
         entity.setDescription(description);
-        this.saveModel(queryVo,entity);
+        String id = this.saveModel(queryVo,entity);
         model.put("code",1);
+        model.put("appQueryId",id);
         return  model;
     }
 
@@ -174,45 +175,11 @@ public class DzdaQueryInfoController extends BaseController{
     @RequiresPermissions("dzda:*")
     @RequestMapping("/ajax/bdwdalist")
     public ModelAndView bdwdalist(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                                  HttpServletRequest request, String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
-                                  String daztContentQuery, @ModelAttribute DakVo queryVo, String queryType) throws UnsupportedEncodingException {
+                                   @ModelAttribute DakVo queryVo) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
-        HttpSession session = request.getSession();
-        if(queryType!=null && queryType.equals("gaojichaxun")){//高级查询
-            a0101Query =  queryVo.getA0101();
-            gbztCodeQuery = queryVo.getGbztCodes();
-            gbztContentQuery =  queryVo.getGbztContents();
-            daztCodeQuery= queryVo.getDaztCodes();
-            daztContentQuery = queryVo.getDaztContents();
-            session.setAttribute("queryDakVo",queryVo);
-            DzdaQueryInfo entity = new DzdaQueryInfo();
-            entity.setQueryStatus("1");
-            model.put("appQueryId",this.saveModel(queryVo,entity));
-        } else if(queryType!=null && queryType.equals("listQuery")){//listQuery
-            DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
-            if(queryDakVo ==null){
-                queryDakVo = new DakVo();
-            }
-            queryDakVo.setA0101(a0101Query);
-            queryDakVo.setGbztCodes(gbztCodeQuery);
-            queryDakVo.setGbztContents(gbztContentQuery);
-            queryDakVo.setDaztCodes(daztCodeQuery);
-            queryDakVo.setDaztContents(daztContentQuery);
-            queryVo = queryDakVo;
-            session.setAttribute("queryDakVo",queryVo);
-        }else{
-            DakVo queryDakVo = (DakVo)session.getAttribute("queryDakVo");
-            if(queryDakVo ==null){
-                queryDakVo = new DakVo();
-            }
-            a0101Query =queryDakVo.getA0101();
-            gbztCodeQuery =queryDakVo.getGbztCodes();
-            gbztContentQuery =queryDakVo.getGbztContents();
-            daztCodeQuery = queryDakVo.getDaztCodes();
-            daztContentQuery =queryDakVo.getDaztContents();
-            queryVo = queryDakVo;
-        }
-
+        DzdaQueryInfo dzdaQueryInfo = new DzdaQueryInfo();
+        dzdaQueryInfo.setQueryStatus("1");
+        model.put("appQueryId",this.saveModel(queryVo,dzdaQueryInfo));
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(), pageNum, pageSize);
         int total =   a38Service.list(this.a38Service.getGjcxHql(queryVo,userLoginDetails), new ArrayList<Object>(),1,100000).size();
@@ -226,14 +193,6 @@ public class DzdaQueryInfoController extends BaseController{
             a38Vos.add(vo);
         }
         PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);
-
-
-        model.put("pager",pager);
-        model.put("a0101Query",a0101Query);
-        model.put("gbztCodeQuery",gbztCodeQuery);
-        model.put("daztCodeQuery",daztCodeQuery);
-        model.put("gbztContentQuery",gbztContentQuery);
-        model.put("daztContentQuery",daztContentQuery);
         model.put("pager",pager);
         return new ModelAndView("saas/zzb/dzda/dacx/bdwdalist",model);
     }
@@ -258,17 +217,13 @@ public class DzdaQueryInfoController extends BaseController{
             a38Vos.add(vo);
         }
         PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);
-
-
+        if("0".equals(dzdaQueryInfo.getQueryStatus())){
+            model.put("idQuery","idQuery");
+        }
         model.put("pager",pager);
+        model.put("appQueryId",appQueryId);
         model.put("queryName",queryName);
-        model.put("a0101Query",queryDakVo.getA0101());
-        model.put("gbztCodeQuery",queryDakVo.getGbztCodes());
-        model.put("daztCodeQuery",queryDakVo.getDaztCodes());
-        model.put("gbztContentQuery",queryDakVo.getGbztContents());
-        model.put("daztContentQuery",queryDakVo.getDaztContents());
-        model.put("pager",pager);
-        return new ModelAndView("saas/zzb/dzda/dacx/queryList",model);
+        return new ModelAndView("saas/zzb/dzda/dacx/bdwdalist",model);
     }
 
 }

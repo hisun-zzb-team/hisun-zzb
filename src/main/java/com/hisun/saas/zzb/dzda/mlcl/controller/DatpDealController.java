@@ -457,6 +457,10 @@ public class DatpDealController extends BaseController {
                 + UUIDUtil.getUUID() + File.separator;
     }
 
+    private String getTpDownStore() {
+        return Constants.DATP_STORE_PATH + File.separator+"down"+ File.separator
+                + UUIDUtil.getUUID() + File.separator;
+    }
 
     private boolean checkTpDirByCataolog(List<File> files) {
         boolean ispass = true;
@@ -506,8 +510,8 @@ public class DatpDealController extends BaseController {
     @RequestMapping(value = "/download/{a38Id}")
     public void zipDown(@PathVariable(value = "a38Id") String a38Id, HttpServletResponse resp) {
         String srcPath = uploadBasePath + getTpStorePath(a38Id);
-        String destPath = uploadBasePath + getTpStoreTmpPath(a38Id);
-        String zipPath = uploadBasePath + getTpStoreTmpPath(a38Id);
+        String destPath = uploadBasePath + getTpDownStore();
+        String zipPath = uploadBasePath + getTpDownStore();
         try {
             File tpStorePathFile = new File(srcPath);
             A38 a38 = this.a38Service.getByPK(a38Id);
@@ -543,6 +547,7 @@ public class DatpDealController extends BaseController {
                 }
                 output.flush();
                 output.close();
+                fileInputStream.close();
             }
         } catch (Exception e) {
             logger.error(e);
@@ -554,6 +559,7 @@ public class DatpDealController extends BaseController {
                 if (destPathFile.exists()) FileUtils.deleteDirectory(destPathFile);
                 if (zipPathFile.exists()) FileUtils.deleteDirectory(zipPathFile);
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -26,12 +26,15 @@
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <div class="portlet-title">
-                <div class="caption">查询结果：共<font color="red"> ${pager.total } </font>条记录</div>
+                <div class="caption"><c:if test='${queryName !=""}'>&nbsp;${queryName} &nbsp;</c:if>查询结果：共<font color="red"> ${pager.total } </font>条记录</div>
                 <div class="clearfix fr">
-                    <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存条件</button>
+                    <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px; <c:if test="${idQuery=='idQuery'}">display: none</c:if>">保存条件</button>
+                    <button onclick="daochu()" class="btn green" type="button" style="padding:7px 20px;">导出</button>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                 </div>
-
+                <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+                <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+                <input type="hidden" name="pageSize" value="${appQueryId}" id="appQueryId">
             </div>
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
@@ -80,7 +83,7 @@
                 <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:saveCxtj()">
                     保存
                 </a>
-                <h3 class="modal-title" id="title">
+                <h3 class="modal-title" id="title1">
                     保存查询条件
                 </h3>
             </div>
@@ -114,6 +117,41 @@
 </div>
 <%-- END PAGE CONTENT--%>
 </div>
+<div id="viewImgModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
+                <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
+                    <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+                        显示方式<i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li >
+                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
+                        </li>
+                        <li >
+                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
+                        </li>
+                        <%--<li>--%>
+                        <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                        <%--</li>--%>
+                        <li>
+                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
+                        </li>
+                    </ul>
+                </div>
+                <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
+                <h3 class="modal-title" id="title">
+                    “${a0101}”档案图片
+                </h3>
+
+            </div>
+            <div class="modal-body" id="viewImgDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     (function(){
@@ -145,22 +183,22 @@
             },
             success : function(json){
                 $.ajax({
-                    url : "${path}/zzb/dzda/dacx/ajax/list",
+                    url : "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
                     type : "post",
-                    data : {},
+                    data : {"appQueryId":"${appQueryId}"},
                     dataType : "html",
                     headers:{
-                        "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                        OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                     },
                     success : function(html){
                         $('#queryModelModal').modal('hide');
-                        $("[id='#tab_1_1']").tab('show');
+                        $('#queryModelDiv').html("");
                         var view = $("#tab_show");
+                        view.html("appQueryId");
                         view.html(html);
-                        myLoading.hide();
                     },
                     error : function(arg1, arg2, arg3){
-                        showTip("提示","条件查询加载失败");
+                        showTip("提示","查询失败");
                     }
                 });
             },
@@ -194,20 +232,11 @@
     function pagehref (pageNum ,pageSize){
         $("#pageNum").val(pageNum);
         $("#pageSize").val(pageSize);
-        var a0101Query = $("#a0101Query").val();
-        var gbztCodeQuery = $("#gbztCodeQuery").val();
-        var gbztContentQuery = $("#gbztContentQuery").val();
-        var daztCodeQuery = $("#daztCodeQuery").val();
-        var daztContentQuery = $("#daztContentQuery").val();
         $.ajax({
-            url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=listQuery",
+            url : "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
             type : "post",
             data : {
-                "a0101Query":a0101Query,
-                "gbztCodeQuery":gbztCodeQuery,
-                "gbztContentQuery":gbztContentQuery,
-                "daztContentQuery":daztContentQuery,
-                "daztCodeQuery":daztCodeQuery,
+                "appQueryId":$("#appQueryId").val(),
                 "pageNum":pageNum,
                 "pageSize":pageSize
             },
@@ -220,7 +249,7 @@
                 view.html(html);
             },
             error : function(arg1, arg2, arg3){
-                showTip("提示","档案库列表加载失败");
+                showTip("提示","档案信息加载失败");
             }
         });
 //		$("#searchForm").submit();

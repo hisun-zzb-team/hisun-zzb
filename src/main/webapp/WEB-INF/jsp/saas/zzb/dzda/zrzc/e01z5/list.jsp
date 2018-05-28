@@ -184,7 +184,7 @@
 		});
 	}
 	function downloadFile(id){
-		window.open("${path }/zzb/dzda/dajs/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
+		window.open("${path }/zzb/dzda/dajs/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
 	}
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);

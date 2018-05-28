@@ -71,7 +71,7 @@
         </div>
     </div>
 </div>
-<div id="setRowCountModal" class="modal container hide fade" tabindex="-1" data-width="700">
+<div id="setRowCountModal" class="modal container hide fade" tabindex="-1" data-width="500">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

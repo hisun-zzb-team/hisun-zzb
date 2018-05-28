@@ -206,7 +206,7 @@ public class CyjlControllelr extends BaseController {
             filePath = uploadBasePath+Constants.CYJL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cyjlExcelExchange.toExcelByManyPojo(eA38LogVos, uploadBasePath+Constants.CYJLMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("gzbd.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("阅档记录名册表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

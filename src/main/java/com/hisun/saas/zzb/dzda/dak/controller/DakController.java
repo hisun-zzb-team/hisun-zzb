@@ -216,7 +216,7 @@ public class DakController extends BaseController {
             filePath = uploadBasePath+Constants.DAK_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             dakExcelExchange.toExcelByManyPojo(a38Vos, uploadBasePath+Constants.DAKMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("dak.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("档案库管理列表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

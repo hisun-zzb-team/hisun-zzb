@@ -223,26 +223,27 @@
 			},
 			success:function(html){
 				showTip("提示","上传成功!",2000);
-				$.ajax({
-					async:false,
-					type:"POST",
-					url:"${path }/zzb/dzda/a38/list",
-					dataType : "html",
-					headers:{
-						"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-					},
-					data:{
-						'id':"${id}"
-					},
-					success:function(html){
-						var view = $("#tab_show");
-						view.html(html);
-					},
-					error : function(){
-						myLoading.hide();
-						showTip("提示","出错了,请检查网络!",2000);
-					}
-				});
+				window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+				<%--$.ajax({--%>
+					<%--async:false,--%>
+					<%--type:"POST",--%>
+					<%--url:"${path }/zzb/dzda/a38/list",--%>
+					<%--dataType : "html",--%>
+					<%--headers:{--%>
+						<%--"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'--%>
+					<%--},--%>
+					<%--data:{--%>
+						<%--'id':"${id}"--%>
+					<%--},--%>
+					<%--success:function(html){--%>
+						<%--var view = $("#tab_show");--%>
+						<%--view.html(html);--%>
+					<%--},--%>
+					<%--error : function(){--%>
+						<%--myLoading.hide();--%>
+						<%--showTip("提示","出错了,请检查网络!",2000);--%>
+					<%--}--%>
+				<%--});--%>
 			},
 			error : function(){
 				showTip("提示","上传失败!",2000);

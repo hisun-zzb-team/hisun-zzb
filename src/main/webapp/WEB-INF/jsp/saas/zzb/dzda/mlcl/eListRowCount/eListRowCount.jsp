@@ -28,7 +28,7 @@
                 <div class="portlet-body form">
                     <!-- BEGIN FORM-->
 
-                    <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
+                    <form action="" class="form-horizontal" id="form1" method="post">
                         <input type="hidden" name="id" id="id" value="${vo.id }">
                         <div class="control-group" id="bigTypeCountGroup">
                             <label class="control-label">大类间空行数：</label>
@@ -45,8 +45,9 @@
                         </div>
 
                         <div class="control-group">
-                                <div class="controls mt10" style="margin-left: 300px">
+                                <div class="controls mt10" style="margin-left: 180px">
                                     <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                                 </div>
                         </div>
 
@@ -62,24 +63,29 @@
     <%-- END PAGE CONTENT--%>
 </div>
 <script type="text/javascript">
+    var form1 = new EstValidate("form1");
+
     function formSubmit(){
-        $("#form1").ajaxSubmit({
-            type:"POST",
-            url:"${path}/zzb/dzda/e01z1/rowCount/save",
-            dataType : "json",
-            enctype : "multipart/form-data",
-            headers:{
-                "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-            },
-            success:function(json){
-                showTip("提示","上传成功!",2000);
-                $('#setRowCountModal').modal('hide');
-                $('#setRowCountDiv').html("");
-            },
-            error : function(){
-                showTip("提示","上传失败!",2000);
-            }
-        });
+        var bool = form1.form();
+        if(bool){
+            $("#form1").ajaxSubmit({
+                type:"POST",
+                url:"${path}/zzb/dzda/e01z1/rowCount/save",
+                dataType : "json",
+                enctype : "multipart/form-data",
+                headers:{
+                    "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                },
+                success:function(json){
+                    showTip("提示","设置成功!",2000);
+                    $('#setRowCountModal').modal('hide');
+                    $('#setRowCountDiv').html("");
+                },
+                error : function(){
+                    showTip("提示","设置失败!",2000);
+                }
+            });
+        }
     }
 </script>
 </body>

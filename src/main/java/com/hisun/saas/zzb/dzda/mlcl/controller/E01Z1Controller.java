@@ -36,6 +36,7 @@ import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.vo.EListRowCountVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -586,7 +587,7 @@ public class E01Z1Controller extends BaseController {
             filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
             mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxx.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("干部档案目录表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -698,7 +699,7 @@ public class E01Z1Controller extends BaseController {
             filePath = uploadBasePath+Constants.DATP_STORE_PATH_UPLOAD+ UUIDUtil.getUUID()+".xlsx";
             mlxxExcelExchange.setLines(e01Z1ExcelVo, uploadBasePath+Constants.DATPMB_STORE_PATH,filePath,xml, dml,map);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("mlxxMB.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+URLEncoderUtil.encode("档案目录模板.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

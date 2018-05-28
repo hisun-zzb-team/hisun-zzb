@@ -31,6 +31,7 @@ import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.WebUtil;
 import org.apache.commons.beanutils.BeanUtils;
@@ -204,7 +205,7 @@ public class E0z2Controller extends BaseController {
             filePath = uploadBasePath+Constants.CLJS_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cljsExcelExchange.toExcelByManyPojo(e01z2Vos, uploadBasePath+Constants.CLJSMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+encode("cljs.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("材料接收表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -226,14 +227,6 @@ public class E0z2Controller extends BaseController {
         }
     }
 
-    private String encode(String filename) throws UnsupportedEncodingException {
-        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "GBK");
-        }
-        return filename;
-    }
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")

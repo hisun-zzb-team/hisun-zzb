@@ -13,7 +13,7 @@
             <div class="caption">本地材料</div>
             <div class="clearfix fr">
                 <a id="checkFile" class="btn green" href="#"><i class="icon-question-sign"></i>查看检查结果</a>
-                <button type="button" id="uploadAndSaveFile" class="btn green" href="javascript:uploadAndSaveFile();" disabled><i class="icon-save"></i>保存</button>
+                <button type="button" id="uploadAndSaveFile" class="btn green" onclick="uploadAndSaveFile();" disabled><i class="icon-save"></i>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
             </div>
         </div>
@@ -117,6 +117,8 @@
     $("#zipfile").on("change", function (evt) {
         myLoading.show();
         $resultFilelist.html("");
+        $("#isPass").val("true");
+        $("#uploadAndSaveFile").attr("disabled","disabled");
         var currentNodeId = $("#currentNodeId").val();
         $fileJson = [];
         function handleFile(f) {
@@ -295,6 +297,7 @@
                     index++;
                 });
             } else {
+                isPass = true;
                 showTip("提示", "检查通过！", 1500);
             }
             if (isPass) {

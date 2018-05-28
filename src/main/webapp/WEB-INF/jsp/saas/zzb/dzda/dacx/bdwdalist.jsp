@@ -31,7 +31,9 @@
                     <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px; <c:if test="${idQuery=='idQuery'}">display: none</c:if>">保存条件</button>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                 </div>
-
+                <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+                <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+                <input type="hidden" name="pageSize" value="${appQueryId}" id="appQueryId">
             </div>
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
@@ -229,20 +231,11 @@
     function pagehref (pageNum ,pageSize){
         $("#pageNum").val(pageNum);
         $("#pageSize").val(pageSize);
-        var a0101Query = $("#a0101Query").val();
-        var gbztCodeQuery = $("#gbztCodeQuery").val();
-        var gbztContentQuery = $("#gbztContentQuery").val();
-        var daztCodeQuery = $("#daztCodeQuery").val();
-        var daztContentQuery = $("#daztContentQuery").val();
         $.ajax({
-            url : "${path }/zzb/dzda/dak/ajax/bdwdalist?queryType=listQuery",
+            url : "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
             type : "post",
             data : {
-                "a0101Query":a0101Query,
-                "gbztCodeQuery":gbztCodeQuery,
-                "gbztContentQuery":gbztContentQuery,
-                "daztContentQuery":daztContentQuery,
-                "daztCodeQuery":daztCodeQuery,
+                "appQueryId":$("#appQueryId").val(),
                 "pageNum":pageNum,
                 "pageSize":pageSize
             },
@@ -255,7 +248,7 @@
                 view.html(html);
             },
             error : function(arg1, arg2, arg3){
-                showTip("提示","档案库列表加载失败");
+                showTip("提示","档案信息加载失败");
             }
         });
 //		$("#searchForm").submit();

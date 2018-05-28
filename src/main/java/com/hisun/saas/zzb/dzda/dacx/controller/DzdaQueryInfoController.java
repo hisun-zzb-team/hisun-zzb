@@ -217,8 +217,11 @@ public class DzdaQueryInfoController extends BaseController{
             a38Vos.add(vo);
         }
         PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);
-        model.put("idQuery","idQuery");
+        if("0".equals(dzdaQueryInfo.getQueryStatus())){
+            model.put("idQuery","idQuery");
+        }
         model.put("pager",pager);
+        model.put("appQueryId",appQueryId);
         model.put("queryName",queryName);
         return new ModelAndView("saas/zzb/dzda/dacx/bdwdalist",model);
     }

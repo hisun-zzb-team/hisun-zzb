@@ -8,9 +8,9 @@ package com.hisun.saas.zzb.dzda.dacx.service.impl;
 
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.service.impl.BaseServiceImpl;
-import com.hisun.saas.zzb.dzda.dacx.dao.AppQueryInfoDao;
-import com.hisun.saas.zzb.dzda.dacx.entity.AppQueryInfo;
-import com.hisun.saas.zzb.dzda.dacx.service.AppQueryInfoService;
+import com.hisun.saas.zzb.dzda.dacx.dao.DzdaQueryInfoDao;
+import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
+import com.hisun.saas.zzb.dzda.dacx.service.DzdaQueryInfoService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,13 +22,13 @@ import java.util.Map;
  * @author Marco {854476391@qq.com}
  */
 @Service
-public class AppQueryInfoServiceImpl extends BaseServiceImpl<AppQueryInfo,String> implements AppQueryInfoService {
-    private AppQueryInfoDao appQueryInfoDao;
+public class DzdaQueryInfoServiceImpl extends BaseServiceImpl<DzdaQueryInfo,String> implements DzdaQueryInfoService {
+    private DzdaQueryInfoDao dzdaQueryInfoDao;
 
     @Resource
-    public void setBaseDao(BaseDao<AppQueryInfo, String> baseDao) {
+    public void setBaseDao(BaseDao<DzdaQueryInfo, String> baseDao) {
         this.baseDao = baseDao;
-        this.appQueryInfoDao = (AppQueryInfoDao)baseDao;
+        this.dzdaQueryInfoDao = (DzdaQueryInfoDao)baseDao;
     }
 
     /**
@@ -53,7 +53,7 @@ public class AppQueryInfoServiceImpl extends BaseServiceImpl<AppQueryInfo,String
         }
         Map<String, Object> paramMap=new HashMap<String, Object>();
         paramMap.put("tenantId", tenantId);
-        this.appQueryInfoDao.update(sql, paramMap);
+        this.dzdaQueryInfoDao.update(sql, paramMap);
     }
     @Override
     public Integer getMaxSort(String tenantId) {
@@ -63,7 +63,7 @@ public class AppQueryInfoServiceImpl extends BaseServiceImpl<AppQueryInfo,String
             hql = hql + "where t.tenant_id =:tenantId";
             map.put("tenantId", tenantId);
         }
-        List<Map> maxSorts = this.appQueryInfoDao.nativeList(hql, map);
+        List<Map> maxSorts = this.dzdaQueryInfoDao.nativeList(hql, map);
         if (maxSorts.get(0).get("sort") == null) {
             return 1;
         } else {

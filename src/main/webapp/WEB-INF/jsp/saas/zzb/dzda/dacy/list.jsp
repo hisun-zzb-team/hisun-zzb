@@ -176,7 +176,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
-                   <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" data-dismiss="modal" href="javascript:jieshuyuedang()">
+                   <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:jieshuyuedang()">
                         <i class=' icon-remove-sign'></i>结束阅档
                     </a>
                     <span id="daojishi"  style="display: none;float: right;font-weight: bold;margin-right: 10px;margin-top: 5px">剩余阅档时间:<span id="timespan" style="color: #C90003"></span></span>

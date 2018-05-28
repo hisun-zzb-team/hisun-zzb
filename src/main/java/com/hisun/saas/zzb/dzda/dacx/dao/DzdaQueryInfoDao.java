@@ -7,11 +7,10 @@
 package com.hisun.saas.zzb.dzda.dacx.dao;
 
 import com.hisun.base.dao.BaseDao;
-import com.hisun.saas.zzb.dzda.dacx.entity.AppQueryInfo;
-import org.springframework.stereotype.Repository;
+import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
 
 /**
  * @author Marco {854476391@qq.com}
  */
-public interface AppQueryInfoDao extends BaseDao<AppQueryInfo,String> {
+public interface DzdaQueryInfoDao extends BaseDao<DzdaQueryInfo,String> {
 }

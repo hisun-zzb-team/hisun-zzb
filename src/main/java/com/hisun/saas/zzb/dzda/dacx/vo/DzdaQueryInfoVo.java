@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * @author Marco {854476391@qq.com}
  */
-public class AppQueryInfoVo implements Serializable{
+public class DzdaQueryInfoVo implements Serializable{
     private String id;
     private String queryName;//查询名称
     private String queryModel;//查询json字符串

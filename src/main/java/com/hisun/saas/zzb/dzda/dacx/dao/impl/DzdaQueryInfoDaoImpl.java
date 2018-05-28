@@ -7,13 +7,13 @@
 package com.hisun.saas.zzb.dzda.dacx.dao.impl;
 
 import com.hisun.saas.sys.tenant.base.dao.imp.TenantBaseDaoImpl;
-import com.hisun.saas.zzb.dzda.dacx.dao.AppQueryInfoDao;
-import com.hisun.saas.zzb.dzda.dacx.entity.AppQueryInfo;
+import com.hisun.saas.zzb.dzda.dacx.dao.DzdaQueryInfoDao;
+import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author Marco {854476391@qq.com}
  */
 @Repository
-public class AppQueryInfoDaoImpl extends TenantBaseDaoImpl<AppQueryInfo,String> implements AppQueryInfoDao {
+public class DzdaQueryInfoDaoImpl extends TenantBaseDaoImpl<DzdaQueryInfo,String> implements DzdaQueryInfoDao {
 }

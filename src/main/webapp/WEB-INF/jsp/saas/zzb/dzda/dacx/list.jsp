@@ -85,15 +85,15 @@
                             <div class="portlet-body form">
                                 <div class="control-group" id="queryNameGroup">
                                     <div class="controls">
-                                        <label class="control-label"><span class="required">*</span>查阅名称</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
+                                        <label class="control-label" style="display: inline;width: 70px;line-height: 30px"><span class="required">*</span>查阅名称</label>
+                                        <input size="16" type="text"  class="span9 m-wrap" value="${queryName}"
                                                id="queryName" name="queryName"    required  maxlength="200">
                                     </div>
                                 </div>
                                 <div class="control-group" id="descriptionGroup">
                                     <div class="controls">
-                                        <label class="control-label">查询描述</label>
-                                        <input size="16" type="text"  class="span10 m-wrap" value=""
+                                        <label class="control-label" style="display: inline;width: 70px;line-height: 30px">查询描述&nbsp;&nbsp;</label>
+                                        <input size="16" type="text"  class="span9 m-wrap" value="${description}"
                                                id="description" name="description" >
                                     </div>
                                 </div>
@@ -160,6 +160,11 @@
         });
     }
     function upadateCxtj(){
+        var queryName = $("#queryName").val();
+        if(queryName==""){
+            showTip("提示","请填写条件名称!");
+            return;
+        }
         $.ajax({
             url : "${path }/zzb/dzda/dacx/saveById",
             type : "post",

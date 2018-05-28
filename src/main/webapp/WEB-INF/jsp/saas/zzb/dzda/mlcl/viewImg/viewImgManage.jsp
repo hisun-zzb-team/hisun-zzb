@@ -165,10 +165,11 @@
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});
+		window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
 		$('#viewImgModal').modal('hide');
 		$('#viewImgDiv').html("");
 		$("#timespan").html("");
-		location.reload();
+
 	}
 	function changeTreeDivHeight(){
 		var divHeight = $(window).height()-65;

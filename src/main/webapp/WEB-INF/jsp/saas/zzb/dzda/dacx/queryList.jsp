@@ -26,38 +26,14 @@
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <div class="portlet-title">
-                <div class="caption">本单位档案：共<font color="red"> ${pager.total } </font>人</div>
+                <div class="caption">${queryName} 档案：共<font color="red"> ${pager.total } </font>条记录</div>
                 <div class="clearfix fr">
                     <%--<button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px;" >保存条件</button>--%>
                     <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
                 </div>
 
             </div>
-            <div class="clearfix">
-                <div class="control-group">
-                    <form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
-                        <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
-                        <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                        <input type="hidden" name="appQueryId" value="${appQueryId}" id="appQueryId">
-                        <div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
-                        <div style=" float:left;">
-                            <input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
-                        </div>
-                        <div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
-                        <div style="float:left;width: 160px;">
-                            <Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}" defaultvalues="${gbztContentQuery}"/>
-                        </div>
-                        <div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
-                        <div style="float:left;width: 160px;">
-                            <Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
 
-                        </div>
-                    </form>
-                </div>
-
-            </div>
             <div class="portlet-body">
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
@@ -70,8 +46,6 @@
                         <th width=70  style="text-align: center">接收日期</th>
                         <th width=70  style="text-align: center">干部状态</th>
                         <th width=70  style="text-align: center">现职级时间</th>
-                        <th width="50">修改者</th>
-                        <th width=70>修改时间</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
@@ -83,8 +57,6 @@
                             <TD  style="text-align: center"><c:out value="${vo.a3801}"></c:out></TD>
                             <TD  style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
                             <TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out value="${vo.dutyLevelTimeBase}"></c:out></TD>
-                            <TD  width=40><c:out value="${vo.updateUserNameByShow}"></c:out></TD>
-                            <TD ><fmt:formatDate value="${vo.updateDateByShow}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                         </TR>
                     </c:forEach>
                     </tbody>

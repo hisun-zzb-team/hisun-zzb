@@ -33,7 +33,7 @@ public class E01Z7Vo {
     private String e01Z731;//'备注'
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
-
+    private String sjly;//数据来源
     public String getNameContent() {
         return nameContent;
     }
@@ -160,5 +160,13 @@ public class E01Z7Vo {
 
     public void setE01Z731(String e01Z731) {
         this.e01Z731 = e01Z731;
+    }
+
+    public String getSjly() {
+        return sjly;
+    }
+
+    public void setSjly(String sjly) {
+        this.sjly = sjly;
     }
 }

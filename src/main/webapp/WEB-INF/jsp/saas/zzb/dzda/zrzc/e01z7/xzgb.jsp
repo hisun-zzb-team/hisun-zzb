@@ -19,7 +19,7 @@
         <div class="span12">
             <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
 
-            <div class="portlet box grey">
+            <div class="portlet box grey"  id="viewDiv" style="overflow: auto;margin: 0px;">
                 <%--<div class="portlet-title">
                     &lt;%&ndash;<div class="caption">
                         <i class="icon-reorder"></i>
@@ -27,7 +27,7 @@
                     </div>&ndash;%&gt;
 
                 </div>--%>
-                <form action="$${path}/zzb/dzda/dazd/ajax/xzgb" class="form-horizontal" id="form1" method="post">
+                <form action="$${path}/zzb/dzda/dazd/ajax/xzgb" class="form-horizontal" id="form1" method="post" style="margin-bottom: 0px">
                     <input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value=""/>
                     <input type="hidden" id="a38Ids" name="a38Ids" value=""/>
                     <dl class="dlattrbute">
@@ -38,11 +38,11 @@
                                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                                     <thead>
                                     <tr>
-                                        <th style="width: 20px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
+                                        <th style="width: 25px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
                                         <th width=70>姓名</th>
                                         <th width=40>性别</th>
                                         <th width=70>出生年月</th>
-                                        <th width=70>单位职务</th>
+                                        <th>单位职务</th>
                                         <th width=70>干部状态</th>
                                         <th width=70>现职级时间</th>
                                     </thead>
@@ -78,7 +78,19 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
         App.init();
+        changeXzgbDivHeight();
+        $(window).resize(function(){
+            changeXzgbDivHeight();
+        })
     });
+    function changeXzgbDivHeight(){
+        var listHeight = $(window).height()-85;
+        $("#viewDiv").css('height',listHeight);
+//			$("#viewList").css('height',listHeight);
+//			$(".main_left").height(mainHeight);
+
+    }
+    //当浏览器大小改变的时候,要重新计算
 
     var ids = [];
 

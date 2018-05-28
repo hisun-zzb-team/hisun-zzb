@@ -32,6 +32,7 @@ public class E01Z5ResVo implements Serializable{
     private String e01Z544;//备注
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
+    private String sjly;//数据来源
 
     public String getA38Id() {
         return a38Id;
@@ -183,5 +184,13 @@ public class E01Z5ResVo implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSjly() {
+        return sjly;
+    }
+
+    public void setSjly(String sjly) {
+        this.sjly = sjly;
     }
 }

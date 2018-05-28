@@ -15,31 +15,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-    <!-- BEGIN PAGE LEVEL STYLES -->
-    <link rel="stylesheet" href="${path }/css/DT_bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-    <link href="${path }/css/style.css" rel="stylesheet" type="text/css">
     <!-- END PAGE LEVEL STYLES -->
     <title>档案接收</title>
     <style type="text/css">
     </style>
-    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css"/>
-    <script src="${path}/js/bootstrap-fileupload.js" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css"
-          href="${path}/css/select2_metro.css"/>
-    <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="${path}/css/DT_bootstrap.css"/>
-    <script type="text/javascript" src="${path}/js/select2.min.js"></script>
-    <script type="text/javascript"
-            src="${path}/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="${path}/js/jquery.form.js"></script>
-    <script type="text/javascript" src="${path}/js/DT_bootstrap.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datepicker.zh-CN.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -57,7 +36,7 @@
                             <%--<button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
                             </button>--%>
-                            <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
+                            <a href="#" onclick="cancel()" class="btn icn-only"><i class="icon-undo"></i>返回</a>
                         </div>
                     </div>
                     </div>
@@ -170,7 +149,7 @@
                                         <label class="control-label">转递原因</label>
 
                                         <div class="controls">
-                                            <textarea class="span10" style="" rows="2" name="e01Z721" maxlength="400"
+                                            <textarea class="span10" rows="2" name="e01Z721" maxlength="400"
                                                       readonly
                                                       value="${vo.e01Z721}" id="e01Z721"
                                                       style="resize: none;"></textarea>
@@ -182,7 +161,7 @@
                                         <label class="control-label">备注</label>
 
                                         <div class="controls">
-                                            <textarea class="span10" style="" rows="2" name="e01Z731" maxlength="400"
+                                            <textarea class="span10" rows="2" name="e01Z731" maxlength="400"
                                                       readonly
                                                       value="${vo.e01Z731}" id="e01Z731"
                                                       style="resize: none;"></textarea>

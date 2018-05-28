@@ -61,17 +61,17 @@
 						来件单位:
 						<input type="text" class="m-wrap" name="e01Z507A" id="e01Z507A" value="${e01Z507A}" style="width: 80px;" />
 						接收日期:
-						<input type="text" class="span10 m-wrap" name="starTime" maxlength="200" style="width: 80px;"
+						<input type="text" class="span10 m-wrap" name="starTime" maxlength="200" style="width: 80px;height: 30px"
 							   id="starTime" readonly value="${starTime}"/><span>&nbsp;到&nbsp;
-								<input type="text" class="span10 m-wrap" name="endTime" maxlength="200" style="width: 80px;"
+								<input type="text" class="span10 m-wrap" name="endTime" maxlength="200" style="width: 80px;height: 30px"
 									   id="endTime" readonly value="${endTime}"/></span>
 						经办人:
-						<input type="text" class="m-wrap" name="e01Z517" id="e01Z517" value="${e01Z517}" style="width:80px;" />
-						案卷质量:
-						<SelectTag:SelectTag id="e01Z527" textClass="m-wrap span10" needNullValue="true" defaultkeys="${e01Z527}"
-											 width="80px"			 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
+						<input type="text" class="m-wrap" name="e01Z517 m-wrap" id="e01Z517" value="${e01Z517}" style="width:80px;" />
+						<%--案卷质量:--%>
+						<%--<SelectTag:SelectTag id="e01Z527" textClass="span10" needNullValue="true" defaultkeys="${e01Z527}"--%>
+											 <%--width="80px" token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>--%>
 
-						&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+						<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
 						<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
 					</form>
 			<div class="portlet-body">
@@ -91,7 +91,7 @@
 					<tbody>
 					<c:forEach items="${pager.datas}" var="vo">
 						<tr style="text-overflow:ellipsis;">
-							<TD><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&listType=shList&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><c:out value="${vo.name}"></c:out></a> </TD>
+							<TD><c:out value="${vo.name}"></c:out></TD>
 							<TD style="text-align: center"><c:out value="${vo.e01Z507A}"></c:out></TD>
 							<TD ><fmt:formatDate value="${vo.e01Z501}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
 							<TD><c:out value="${vo.e01Z517}"></c:out></TD>
@@ -201,7 +201,7 @@
 		$("#e01Z517").val('');
 		$("#starTime").val('');
 		$("#endTime").val('');
-		$("#e01Z527").val('');
+//		$("#e01Z527").val('');
 		$("#pageNum").val('');
 		$("#pageSize").val('');
 		document.searchForm.submit();

@@ -30,7 +30,7 @@
                 <div class="clearfix fr">
                     <button id="submitSave" onclick="save()" class="btn green" type="button" style="padding:7px 20px; <c:if test="${idQuery=='idQuery'}">display: none</c:if>">保存条件</button>
                     <button onclick="daochu()" class="btn green" type="button" style="padding:7px 20px;">导出</button>
-                    <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
+                    <a href="#" onclick="cancel()" class="btn icn-only"><i class="icon-undo"></i>返回</a>
                 </div>
                 <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                 <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">

@@ -82,7 +82,7 @@
                                     <label class="control-label">档案名称<span class="required">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" name="name" maxlength="200" id="name"
+                                        <input type="text" class="span8 m-wrap" name="name" maxlength="200" id="name"
                                                required readonly
                                                value=""/>
                                         <a href="javascript:xzda()">选择档案</a>
@@ -94,7 +94,7 @@
                             </div>
                             <div class="span6 ">
                                 <div id="e01Z704AGroup" class="control-group">
-                                    <label class="control-label">转往单位名称</label>
+                                    <label class="control-label">转往单位</label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" value=""
@@ -103,25 +103,27 @@
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div class="control-group" id="e01Z711Group">
-                                    <label class="control-label">转出正本数</label>
+                                <div class="control-group" id="e01Z701Group">
+                                    <label class="control-label">转递日期</label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" number="true" name="e01Z711"
-                                               maxlength="200" id="e01Z711"
+                                        <input type="text" class="span10 m-wrap" name="e01Z701" maxlength="200"
+                                               id="e01Z701" readonly
                                                value=""/>
                                     </div>
                                 </div>
                             </div>
                             <div class="span6 ">
-                                <div id="e01Z714Group" class="control-group">
-                                    <label class="control-label">转出副本数</label>
+                                <div class="control-group" id="e01Z721Group">
+                                    <label class="control-label">转递原因</label>
 
                                     <div class="controls">
-                                        <input type="text" number="true" class="span10 m-wrap" value=""
-                                               id="e01Z714" name="e01Z714">
+                                        <input type="text" class="span10 m-wrap" name="e01Z721" maxlength="200"
+                                               id="e01Z721" value=""/>
                                     </div>
                                 </div>
                             </div>
@@ -150,23 +152,23 @@
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div class="control-group" id="e01Z721Group">
-                                    <label class="control-label">转递原因</label>
+                                <div class="control-group" id="e01Z711Group">
+                                    <label class="control-label">转出正本数</label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" name="e01Z721" maxlength="200"
-                                               id="e01Z721" value=""/>
+                                        <input type="text" class="span10 m-wrap" number="true" name="e01Z711"
+                                               maxlength="200" id="e01Z711"
+                                               value=""/>
                                     </div>
                                 </div>
                             </div>
                             <div class="span6 ">
-                                <div class="control-group" id="e01Z701Group">
-                                    <label class="control-label">转递日期</label>
+                                <div id="e01Z714Group" class="control-group">
+                                    <label class="control-label">转出副本数</label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" name="e01Z701" maxlength="200"
-                                               id="e01Z701" readonly
-                                               value=""/>
+                                        <input type="text" number="true" class="span10 m-wrap" value=""
+                                               id="e01Z714" name="e01Z714">
                                     </div>
                                 </div>
                             </div>
@@ -175,12 +177,12 @@
 
                             <div class="span6 ">
                                 <div class="control-group" id="sjlyGroup">
-                                    <label class="control-label">数据来源</label>
+                                    <label class="control-label"><span class="required">*</span>转递数据源</label>
 
                                     <div class="controls">
-                                        <select name="sjly"  class="span10 m-wrap" id="sjly">
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
                                             <option value=""></option>
-                                            <option value="1">导入本单位excel</option>
+                                            <option value="1">转成excel</option>
                                         </select>
                                     </div>
                                 </div>
@@ -189,7 +191,7 @@
                                 <div id="e01Z731Group" class="control-group">
                                     <label class="control-label">备注</label>
                                     <div class="controls">
-                                            <textarea class="span10" style="" rows="2" name="e01Z731" maxlength="400"
+                                            <textarea class="span10"  rows="2" name="e01Z731" maxlength="400"
                                                       id="e01Z731" style="resize: none;"></textarea>
                                     </div>
                                 </div>
@@ -242,22 +244,24 @@
             <div class="modal-header">
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="float: right;font-weight: bold;" data-dismiss="modal" ><i class='icon-remove-sign'></i> 关闭</button>
                 <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:saveXzda()">
-                    保存
+                    确定
                 </a>
                <%-- <button data-dismiss="modal" class="close"  type="button"></button>
                 <div class="relationbetTop_but">
                     <button class="btn green" type="button" onclick="saveXzda()"></button>
                 </div>--%>
                 <h3 class="modal-title" id="editTitle" >
-                    选择档案
+                    选择转递档案
                 </h3>
             </div>
-            <div class="modal-body" id="xzdaDiv">
+            <div class="modal-body" id="xzdaDiv" style="padding:0px;">
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
+    var myLoading = new MyLoading("${path}",20000);
     (function(){
         App.init();
 
@@ -291,7 +295,7 @@
         $.ajax({
             url:"${path}/zzb/dzda/dazd/ajax/xzgb",
             type : "post",
-            data: {"pageNum":1,"pageSize":5},
+            data: {"pageNum":1,"pageSize":10},
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
             },
@@ -343,7 +347,7 @@
         if(!bool){
             return;
         }
-        //myLoading.show();
+        myLoading.show();
         $("#form1").ajaxSubmit({
             url : "${path }/zzb/dzda/dazd/save",
             type : "post",
@@ -353,7 +357,7 @@
                 "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
             },
             success : function(data){
-                // myLoading.hide();
+                 myLoading.hide();
                 if(data.code==1){
                     window.open("${path}/zzb/dzda/dazd/download?filePath="+data.filePath+"&a38IdsLength="+data.a38IdsLength+"&destPath="+data.destPath+"&fileName="+data.fileName+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
                     window.location.href ="${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
@@ -362,7 +366,7 @@
                 }
             },
             error : function(arg1, arg2, arg3){
-                //myLoading.hide();
+                myLoading.hide();
                 showTip("提示","出错了请联系管理员");
             }
         });

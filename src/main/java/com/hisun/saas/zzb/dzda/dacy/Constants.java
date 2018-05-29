@@ -14,10 +14,16 @@ import java.io.File;
 public class Constants {
 
 
-    //工资变动登记表存储路径
+    //查阅记录表存储路径
     public static final String CYJL_STORE_PATH = File.separator+"eA38Log"+File.separator;
 
-    //工资变动登记表模板存储路径
+    //查阅记录表模板存储路径
     public static final String CYJLMB_STORE_PATH = CYJL_STORE_PATH+"cyjl.xlsx";
+
+    //查阅管理表存储路径
+    public static final String CYGL_STORE_PATH = File.separator+"eA38Log"+File.separator;
+
+    //查阅管理表模板存储路径
+    public static final String CYGLMB_STORE_PATH = CYGL_STORE_PATH+"cygl.xlsx";
 
 }

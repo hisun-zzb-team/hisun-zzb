@@ -19,15 +19,23 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
-import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
-import com.hisun.saas.zzb.dzda.dacy.entity.EPopedomE01Z1Relation;
+import com.hisun.saas.zzb.dzda.dacy.Constants;
+import com.hisun.saas.zzb.dzda.dacy.entity.*;
+import com.hisun.saas.zzb.dzda.dacy.exchange.CyjlExcelExchange;
+import com.hisun.saas.zzb.dzda.dacy.service.EA38LogDetailService;
+import com.hisun.saas.zzb.dzda.dacy.service.EA38LogService;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
 import com.hisun.saas.zzb.dzda.dacy.service.EPopedomE01Z1RelationService;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
+import com.hisun.util.UUIDUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +44,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Marco {854476391@qq.com}
@@ -57,6 +66,18 @@ public class CyshouquanController extends BaseController {
     private E01Z1Service e01Z1Service;
     @Resource
     private EPopedomE01Z1RelationService ePopedomE01Z1RelationService;
+
+    @Resource
+    CyjlExcelExchange cyjlExcelExchange;
+
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
+
+    @Resource
+    private EA38LogService eA38LogService;
+
+    @Resource
+    private EA38LogDetailService eA38LogDetailService;
 
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
@@ -299,5 +320,61 @@ public class CyshouquanController extends BaseController {
             logger.error(e);
         }
         return model;
+    }
+
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/download")
+    public void download( HttpServletResponse resp){
+        CommonConditionQuery query = new CommonConditionQuery();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        List<EApplyE01Z8> resultList = eApplyE01Z8Service.list(query,orderBy);
+        EApplyE01Z8Vo vo;
+        List<EApplyE01Z8Vo> eA38LogVos=new ArrayList<>();
+        String filePath = "";
+        try {
+            for(EApplyE01Z8 eApplyE01Z8:resultList){
+                vo = new EApplyE01Z8Vo();
+                query.add(CommonRestrictions.and("applyE01Z8.id = :eApplyE01Z8Id ", "eApplyE01Z8Id", eApplyE01Z8.getId()));
+                List<EA38Log> ea38Logs = eA38LogService.list(query,null);
+                org.apache.commons.beanutils.BeanUtils.copyProperties(vo,eApplyE01Z8);
+                vo.setContent("");
+                if(ea38Logs!=null && !ea38Logs.isEmpty()){
+                    List<EA38LogDetail> a38LogDetails = ea38Logs.get(0).getA38LogDetails();
+                    if(a38LogDetails.size()>0){
+                        StringBuffer strB = new StringBuffer();
+                        for(EA38LogDetail eA38LogDetail:a38LogDetails){
+                            strB.append(eA38LogDetail.getE01Z111());
+                        }
+                        vo.setContent(strB.toString());
+                    }
+                }
+                eA38LogVos.add(vo);
+            }
+            File storePathFile = new File(Constants.CYGL_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.CYGL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            cyjlExcelExchange.toExcelByManyPojo(eA38LogVos, uploadBasePath+Constants.CYGLMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("阅档管理表.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 }

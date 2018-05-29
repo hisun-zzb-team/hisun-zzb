@@ -20,6 +20,7 @@ public class EApplyE01Z8Vo implements Serializable{
     private String readContent;//查阅内容
     private String e01Z824A;//查阅单位名称
     private String readTime;//查阅时长
+    private String readDate;//开始查阅时间
     private String applyFileName;//上传附件名称
     private String phone;//联系电话
     private String applyRemark;//申请备注。申请阅档时由申请用户填写
@@ -35,6 +36,7 @@ public class EApplyE01Z8Vo implements Serializable{
     private String a38Id;
     private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限
     private String e01z1IdContent;//部分授权id集合
+    private String content;//查阅情况
 
     public String getE01z1IdContent() {
         return e01z1IdContent;
@@ -218,5 +220,21 @@ public class EApplyE01Z8Vo implements Serializable{
 
     public void setRefuseReason(String refuseReason) {
         this.refuseReason = refuseReason;
+    }
+
+    public String getReadDate() {
+        return readDate;
+    }
+
+    public void setReadDate(String readDate) {
+        this.readDate = readDate;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

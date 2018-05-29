@@ -53,7 +53,7 @@
                     <div class="caption">查阅管理</div>
                     <div class="clearfix fr">
 
-                        <a id="sample_editable_1_new" class="btn green" href="#">
+                        <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
                             输出
                         </a>
 
@@ -332,6 +332,9 @@
         $("#auditingState option[value='${auditingState}']").attr("selected",
         true);
     })
+   function download() {
+       window.open("${path}/zzb/dzda/cyshouquan/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+   }
     </script>
 </body>
 </html>

@@ -88,7 +88,7 @@
         <%-- 表格结束 --%>
     </div>
 </div>
-<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="400">
+<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="500">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -107,32 +107,32 @@
                                 <div class="control-group" id="queryNameGroup" style="margin-bottom: 0px;">
                                     <div class="controls">
                                         <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px"><span
-                                                class="required">*</span>查阅名称</label>
-                                        <input size="16" type="text" class="span9 m-wrap" value="${queryName}"
+                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;"><span
+                                                class="required">*</span>查阅名称：</label>
+                                        <input size="16" type="text" class="span8 m-wrap" value="${queryName}"
                                                id="queryName" name="queryName" required maxlength="200">
                                     </div>
                                 </div>
                                 <div class="control-group" id="descriptionGroup" style="margin-bottom: 0px;">
                                     <div class="controls">
                                         <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px">
-                                            &nbsp;&nbsp;查询描述</label>
-                                        <input size="16" type="text" class="span9 m-wrap" value="${description}"
-                                               id="description" name="description" maxlength="3" number="true" required>
+                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">
+                                            &nbsp;&nbsp;查询描述：</label>
+                                        <textarea size="16" type="text" class="span8 m-wrap" rows="3" style="resize: none;"
+                                               id="description" name="description" maxlength="200" number="true" required>${description}</textarea>
                                     </div>
                                 </div>
                                 <div class="control-group" id="pxGroup" style="margin-bottom: 0px;">
                                     <div class="controls">
                                         <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px">
-                                            &nbsp;&nbsp;&nbsp;<span class="required">*</span>顺序号</label>
-                                        <input size="16" type="text" class="span9 m-wrap" value="${sort}"
+                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">
+                                            &nbsp;&nbsp;&nbsp;<span class="required">*</span>顺序号：</label>
+                                        <input size="16" type="text" class="span8 m-wrap" value="${sort}"
                                                id="px" name="px">
                                     </div>
                                 </div>
                                 <div id="queryTypeGroup" class="control-group" style="margin-bottom: 0px;">
-                                    <label class="control-label" style="display: inline;width: 70px;line-height: 30px">是否常用</label>
+                                    <label class="control-label" style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">&nbsp;&nbsp;是否常用：</label>
 
                                     <div class="controls" style="display: inline;">
                                         <label class="radio">
@@ -145,21 +145,15 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div id="buttenGroup" class="control-group" style="margin-bottom: 0px;">
+                                <div id="buttenGroup" class="control-group" style="margin-bottom: 0px;margin-right:130px;margin-top: 10px;">
                                     <button type="button" class="btn btn-default"
                                             style="float: right;font-weight: bold;" data-dismiss="modal"><i
                                             class='icon-remove-sign'></i> 关闭
                                     </button>
                                     <a class="btn green" style="float: right;font-weight: bold;margin-right: 10px;"
                                        href="javascript:upadateCxtj()">
-                                        保存
+                                        <i class="icon-ok"></i>保存
                                     </a>
-                                    <%--<div id="pxGroup" class="control-group">--%>
-                                    <%--<label class="control-label" style="display: inline;width: 70px;line-height: 30px"><span class="required">*</span>顺序号</label>--%>
-                                    <%--<div class="controls">--%>
-                                    <%--<input type="text" number="true"  required maxlength="3" class="span9 m-wrap" name="px" id="px" value="${sort}" />--%>
-                                    <%--</div>--%>
-                                    <%--</div>--%>
                                 </div>
                             </div>
                         </div>

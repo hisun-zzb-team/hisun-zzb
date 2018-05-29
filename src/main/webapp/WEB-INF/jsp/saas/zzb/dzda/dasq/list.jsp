@@ -180,7 +180,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="addTitle1" >
+                <h3 class="modal-title" id="viewNeiRongTitle" >
                 </h3>
             </div>
             <div class="modal-body" id="viewNeiRongDiv">

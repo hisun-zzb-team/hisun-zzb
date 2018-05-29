@@ -31,7 +31,7 @@
                     <input type="hidden" name="editFlag" value="${editFlag}" id="editFlag"/>
                     <input type="hidden" name="appQueryId" value="${appQueryId}" id="appQueryId"/>
 
-                    <form action="${path }/zzb/dzda/dacx/bdwdalist?queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+                    <form action="${path }/zzb/dzda/dacx/bdwdalist?appQueryId=${appQueryId}&queryType=gaojichaxun&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
                           class="form-horizontal" id="form1" method="post">
                         <div class="portlet-title">
                             <div class="caption">基本信息</div>
@@ -43,7 +43,9 @@
                                 </button>
                                 <button id="clearData" class="btn green" type="button" style="padding:7px 20px;">清空
                                 </button>
-                                <a href="${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+                                <a href="<c:if test="${editFlag=='editFlag'}">
+                                ${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}
+                                </c:if><c:if test="${editFlag!='editFlag'}">${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}</c:if>"
                                    id="fanhui" class="btn icn-only" style="height:22px;"><i class="icon-undo"></i>返回</a>
                             </div>
 
@@ -355,86 +357,24 @@
         </div>
     </div>
 
-    <div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="400">
+    <div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="600">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button data-dismiss="modal" class="close"  type="button"></button>
+                    <button data-dismiss="modal" class="close" type="button"></button>
                     <h3 class="modal-title" id="title">
                         保存查询条件
                     </h3>
                 </div>
                 <div class="modal-body" id="queryModelDiv">
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
-                            <div class="portlet box grey">
-                                <div class="portlet-body form">
-                                    <div class="control-group" id="queryNameGroup" style="margin-bottom: 0px;">
-                                        <div class="controls">
-                                            <label class="control-label"
-                                                   style="display: inline;width: 70px;line-height: 30px"><span
-                                                    class="required">*</span>查阅名称</label>
-                                            <input size="16" type="text" class="span9 m-wrap" value=""
-                                                   id="queryName" name="queryName" required maxlength="200">
-                                        </div>
-                                    </div>
-                                    <div class="control-group" id="descriptionGroup" style="margin-bottom: 0px;">
-                                        <div class="controls">
-                                            <label class="control-label"
-                                                   style="display: inline;width: 70px;line-height: 30px">&nbsp;&nbsp;查询描述</label>
-                                            <input size="16" type="text" class="span9 m-wrap" value=""
-                                                   id="description" name="description" maxlength=""
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="control-group" id="pxGroup" style="margin-bottom: 0px;">
-                                        <div class="controls">
-                                            <label class="control-label"
-                                                   style="display: inline;width: 70px;line-height: 30px">&nbsp;&nbsp;&nbsp;<span
-                                                    class="required">*</span>顺序号</label>
-                                            <input size="16" type="text" class="span9 m-wrap" value="${sort}"
-                                                   id="px" name="px">
-                                        </div>
-                                    </div>
-                                    <div id="queryTypeGroup" class="control-group" style="margin-bottom: 0px;">
-                                        <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px">是否常用</label>
-
-                                        <div class="controls" style="display: inline;">
-                                            <label class="radio">
-                                                <input type="radio" name="queryType" value="1"/>
-                                                是
-                                            </label>
-                                            <label class="radio">
-                                                <input type="radio" name="queryType" value="0" checked/>
-                                                否
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div id="buttenGroup" class="control-group">
-                                        <div class="controls mt10" >
-                                            <button type="button" class="btn btn-default"
-                                                    style="float: right;font-weight: bold;" data-dismiss="modal"><i
-                                                    class='icon-remove-sign'></i> 关闭
-                                            </button>
-                                            <a class="btn green"
-                                               style="float: right;font-weight: bold;margin-left: 100px;"
-                                               href="javascript:saveCxtj()">
-                                                保存
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <%-- END PAGE CONTENT--%>
+</div>
+</div>
+</div>
+<%-- END PAGE CONTENT--%>
 </div>
 <script type="text/javascript">
     //        jQuery(document).ready(function () {
@@ -475,8 +415,26 @@
     var form1 = new EstValidate("form1");
 
     function save() {
-        $('#queryModelModal').modal({
-            keyboard: true
+        $.ajax({
+            url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
+            type: "post",
+            data: {
+                "appQueryId": "${appQueryId}"
+            },
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                $("#queryModelDiv").html(html);
+                $('#queryModelModal').modal({
+                    keyboard: true
+                });
+                // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
         });
     }
     function saveCxtj() {
@@ -490,26 +448,26 @@
         var description = $("#description").val();
         var px = $("#px").val();
         var queryType = $("input[name='queryType']:checked").val();
-        if (queryName == "" || px=="") {
+        if (queryName == "" || px == "") {
             showTip("提示", "请填写必填字段!");
             return;
         }
         $.ajax({
-                url: "${path }/zzb/dzda/dacx/save?queryName=" + queryName +
-                "&description=" + description +"&queryType=" + queryType+"&px=" + px,
-                type: "post",
-                data: $("#form1").serialize(),
-                dataType: "json",
-                headers: {
-                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-                },
-                success: function (json) {
-                    window.location.href= "${path}/zzb/dzda/dacx/bdwdalist?appQueryId="+json.appQueryId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-                },
-                error: function (arg1, arg2, arg3) {
-                    showTip("提示", "查询失败");
-                }
-            });
+            url: "${path }/zzb/dzda/dacx/save?queryName=" + queryName +
+            "&description=" + description + "&queryType=" + queryType + "&px=" + px,
+            type: "post",
+            data: $("#form1").serialize(),
+            dataType: "json",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (json) {
+                window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?appQueryId=" + json.appQueryId + "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
+        });
 
     }
     $(function () {

@@ -28,7 +28,8 @@
             <div class="portlet-title">
                 <div class="caption">条件查询：</div>
                 <div class="clearfix fr">
-                    <a href="${path}/zzb/dzda/dacx/gjcx?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="btn blue">
+                    <a href="${path}/zzb/dzda/dacx/gjcx?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+                       class="btn blue">
                         <i class="icon-plus"></i>新增条件</a>
                     <a href="${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
                        id="fanhui" class="btn icn-only" style="height:22px;"><i class="icon-undo"></i>返回</a>
@@ -59,18 +60,17 @@
                             <TD style="text-align: center">
                                 <c:choose>
                                     <c:when test="${vo.queryType=='0'}">
-                                        否
+                                        <a href="javascript:updateQueryType('${vo.id}')">否</a>
                                     </c:when>
                                     <c:when test="${vo.queryType=='1'}">
-                                        是
+                                        <a href="javascript:updateQueryType('${vo.id}')">是</a>
                                     </c:when>
                                 </c:choose>
                             </TD>
                             <TD style="text-align: center"><a href="javascript:editcxtj('${vo.id}')"
                                                               class="">修改查询条件内容</a></TD>
                             <TD style="text-align: center">
-                                <a href="javascript:editQuery('${vo.id}','${vo.queryName}','${vo.description}','${vo.queryType}','${vo.px}')"
-                                   class="">修改</a>|
+                                <a href="javascript:editQuery('${vo.id}')"class="">修改</a>|
                                 <a href="javascript:deleteQuery('${vo.id}')" class="">删除</a>
                             </TD>
                         </TR>
@@ -88,80 +88,22 @@
         <%-- 表格结束 --%>
     </div>
 </div>
-<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="500">
+<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="600">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-
+                <button data-dismiss="modal" class="close"  type="button"></button>
                 <h3 class="modal-title" id="title">
                     修改查询条件
                 </h3>
                 <input type="hidden" name="appQueryId" value="" id="appQueryId">
             </div>
-            <div class="modal-body" id="queryModelDiv">
-                <div class="row-fluid">
-                    <div class="span12">
-                        <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
-                        <div class="portlet box grey">
-                            <div class="portlet-body form">
-                                <div class="control-group" id="queryNameGroup" style="margin-bottom: 0px;">
-                                    <div class="controls">
-                                        <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;"><span
-                                                class="required">*</span>查阅名称：</label>
-                                        <input size="16" type="text" class="span8 m-wrap" value="${queryName}"
-                                               id="queryName" name="queryName" required maxlength="200">
-                                    </div>
-                                </div>
-                                <div class="control-group" id="descriptionGroup" style="margin-bottom: 0px;">
-                                    <div class="controls">
-                                        <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">
-                                            &nbsp;&nbsp;查询描述：</label>
-                                        <textarea size="16" type="text" class="span8 m-wrap" rows="3" style="resize: none;"
-                                               id="description" name="description" maxlength="200" number="true" required>${description}</textarea>
-                                    </div>
-                                </div>
-                                <div class="control-group" id="pxGroup" style="margin-bottom: 0px;">
-                                    <div class="controls">
-                                        <label class="control-label"
-                                               style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">
-                                            &nbsp;&nbsp;&nbsp;<span class="required">*</span>顺序号：</label>
-                                        <input size="16" type="text" class="span8 m-wrap" value="${sort}"
-                                               id="px" name="px">
-                                    </div>
-                                </div>
-                                <div id="queryTypeGroup" class="control-group" style="margin-bottom: 0px;">
-                                    <label class="control-label" style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">&nbsp;&nbsp;是否常用：</label>
-
-                                    <div class="controls" style="display: inline;">
-                                        <label class="radio">
-                                            <input type="radio" name="queryType" value="1" id="query1"/>
-                                            是
-                                        </label>
-                                        <label class="radio">
-                                            <input type="radio" name="queryType" value="0" id="query0"/>
-                                            否
-                                        </label>
-                                    </div>
-                                </div>
-                                <div id="buttenGroup" class="control-group" style="margin-bottom: 0px;margin-right:130px;margin-top: 10px;">
-                                    <button type="button" class="btn btn-default"
-                                            style="float: right;font-weight: bold;" data-dismiss="modal"><i
-                                            class='icon-remove-sign'></i> 关闭
-                                    </button>
-                                    <a class="btn green" style="float: right;font-weight: bold;margin-right: 10px;"
-                                       href="javascript:upadateCxtj()">
-                                        <i class="icon-ok"></i>保存
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-body" id="queryModelDiv" >
             </div>
         </div>
     </div>
+</div>
+</div>
 </div>
 </div>
 <%-- END PAGE CONTENT--%>
@@ -169,9 +111,9 @@
 
 <script type="text/javascript">
 
-    function toQuery(id) {
+    function updateQueryType(id) {
         $.ajax({
-            url: "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
+            url: "${path }/zzb/dzda/dacx/ajax/updateQueryType",
             type: "post",
             data: {"appQueryId": id},
             dataType: "html",
@@ -179,11 +121,7 @@
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
             },
             success: function (html) {
-                /*  $('#gjcxModal').modal('hide');
-                 $('#gjcxDiv').html("");*/
-                var view = $("#tab_show");
-                view.html("");
-                view.html(html);
+                window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             },
             error: function (arg1, arg2, arg3) {
                 showTip("提示", "查询失败");
@@ -192,10 +130,10 @@
     }
     //常用查询项
     function editcxtj(id) {
-        window.location.href = "${path}/zzb/dzda/dacx/gjcx?appQueryId=" + id + "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        window.location.href = "${path}/zzb/dzda/dacx/gjcx?appQueryId=" + id + "&editFlag=editFlag"+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
-    function editQuery(id, name, description, queryType, px) {
-        $("#appQueryId").val(id);
+    function editQuery(id) {
+       /* $("#appQueryId").val(id);
         $("#queryName").val(name);
         $("#description").val(description);
         $("#px").val(px);
@@ -209,7 +147,30 @@
             $("#query1").removeAttr('checked');
             $("#query0")[0].parentNode.className = "checked";
             $("#query0").attr('checked', 'checked')
-        }
+        }*/
+        $.ajax({
+            url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
+            type: "post",
+            data: {
+                "appQueryId": id
+            },
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                $("#queryModelDiv").html(html);
+                $('#queryModelModal').modal({
+                    keyboard: true
+                });
+               // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
+        });
+
+
         $('#queryModelModal').modal({
             keyboard: true
         });

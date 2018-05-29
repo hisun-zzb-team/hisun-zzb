@@ -6,7 +6,6 @@
 
 package com.hisun.saas.zzb.app.console.aset.service.impl;
 
-import com.aspose.words.*;
 import com.google.common.collect.Lists;
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.service.impl.BaseServiceImpl;
@@ -15,38 +14,26 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.sys.util.GzjlUtil;
 import com.hisun.saas.zzb.app.console.aset.dao.AppAsetA01QueryDao;
-import com.hisun.saas.zzb.app.console.aset.dao.AppAsetA02Dao;
-import com.hisun.saas.zzb.app.console.aset.dao.AppAsetA36Dao;
 import com.hisun.saas.zzb.app.console.aset.entity.AppAsetA01;
 import com.hisun.saas.zzb.app.console.aset.entity.AppAsetA01Query;
 import com.hisun.saas.zzb.app.console.aset.entity.AppAsetA02;
 import com.hisun.saas.zzb.app.console.aset.service.AppAsetA01QueryService;
 import com.hisun.saas.zzb.app.console.aset.service.AppAsetA01Service;
-import com.hisun.saas.zzb.app.console.aset.vo.AppAsetA01QueryVo;
-import com.hisun.saas.zzb.app.console.aset.vo.AppAsetA36Vo;
 import com.hisun.saas.zzb.app.console.bset.entity.AppBsetFl;
 import com.hisun.saas.zzb.app.console.bset.service.AppBsetFlService;
 import com.hisun.saas.zzb.app.console.gbmc.entity.*;
 import com.hisun.saas.zzb.app.console.gbmc.service.GbMcService;
-import com.hisun.saas.zzb.app.console.gendata.service.GendataService;
-import com.hisun.util.*;
+import com.hisun.util.DateUtil;
+import com.hisun.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.MapListHandler;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhouying on 2017/9/16.

@@ -25,6 +25,7 @@ import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.exchange.A38ExcelExchange;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
@@ -51,7 +52,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.hisun.util.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -398,7 +399,7 @@ public class E01Z5Controller extends BaseController {
                     a38Flag = true;
                 }
 
-                if (isNotDate(jbxxA38Vo.getA0107())) {
+                if (A38Controller.isNotDate(jbxxA38Vo.getA0107())) {
                     a38Flag = true;
                 }
 
@@ -407,7 +408,7 @@ public class E01Z5Controller extends BaseController {
                     String a0104Content = jbxxA38Vo.getA0104Content();
                     jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
                     String gbztContent = jbxxA38Vo.getGbztContent();
-                    jbxxA38Vo.setGbztContent(getDictionaryItem(gbztContent,"SAN_GBZT"));
+                    jbxxA38Vo.setGbztCode(getDictionaryItem(gbztContent,"SAN_GBZT"));
 
                     org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
                     a38.setId(null);
@@ -420,18 +421,18 @@ public class E01Z5Controller extends BaseController {
                         A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
                         if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
                             List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<a52Vos.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 A52 a52 = new A52();
                                 A52Vo a52Vo = a52Vos.get(i);
                                 Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
                                     flag = true;
                                 }
-                                if(isNotDate(a52Vo.getA5227In())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227In())){
                                     flag = true;
                                 }
-                                if(isNotDate(a52Vo.getA5227Out())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227Out())){
                                     flag = true;
                                 }
 
@@ -440,7 +441,7 @@ public class E01Z5Controller extends BaseController {
                                 }
                                 org.springframework.beans.BeanUtils.copyProperties(a52Vo,a52);
                                 a52.setA38(a38);
-                                a52.setPx(oldPxInteger+i);
+                                a52.setPx(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(a52,details);
                                 a52Service.save(a52);
                             }
@@ -449,8 +450,8 @@ public class E01Z5Controller extends BaseController {
                         //添加工资变动记录
                         List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
                         if(gzbdList.size()>0){
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<gzbdList.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 A32 a32 = new A32();
                                 A32Vo a32Vo = gzbdList.get(i);
                                 Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
@@ -458,7 +459,7 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
                                     flag = true;
                                 }
-                                if(isNotDate(a32Vo.getA3207())){
+                                if(A38Controller.isNotDate(a32Vo.getA3207())){
                                     flag = true;
                                 }
 
@@ -468,7 +469,7 @@ public class E01Z5Controller extends BaseController {
 
                                 org.springframework.beans.BeanUtils.copyProperties(a32Vo,a32);
                                 a32.setA38(a38);
-                                a32.setPx(oldPxInteger+i);
+                                a32.setPx(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(a32,details);
                                 a32Service.save(a32);
                             }
@@ -477,8 +478,8 @@ public class E01Z5Controller extends BaseController {
                         //添加材料接收记录
                         List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
                         if(e01z2Vos.size()>0){
-                            boolean flag = false;//判断是否存在非法数据
                             for(int i=0;i<e01z2Vos.size();i++){
+                                boolean flag = false;//判断是否存在非法数据
                                 E01Z2 e01z2 = new E01Z2();
                                 E01z2Vo e01z2Vo = e01z2Vos.get(i);
                                 Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
@@ -489,10 +490,10 @@ public class E01Z5Controller extends BaseController {
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
                                     flag = true;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z201())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
                                     flag = true;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z227())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
                                     flag = true;
                                 }
 
@@ -507,7 +508,7 @@ public class E01Z5Controller extends BaseController {
 
                                 org.springframework.beans.BeanUtils.copyProperties(e01z2Vo,e01z2);
                                 e01z2.setA38(a38);
-                                e01z2.setE01Z214(oldPxInteger+i);
+                                e01z2.setE01Z214(oldPxInteger);
                                 EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
                                 e01z2Service.save(e01z2);
                             }
@@ -582,19 +583,6 @@ public class E01Z5Controller extends BaseController {
         return catalogCode;
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 反向查询获取字典项
      * @param name
@@ -661,7 +649,7 @@ public class E01Z5Controller extends BaseController {
                                 }
                             }
                         }
-                        if (isNotDate(e01Z117)) {
+                        if (A38Controller.isNotDate(e01Z117)) {
                             flag = true;
                         }
 

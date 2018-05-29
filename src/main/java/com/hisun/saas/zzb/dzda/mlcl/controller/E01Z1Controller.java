@@ -22,6 +22,7 @@ import com.hisun.saas.sys.log.LogOperateType;
 import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EListRowCount;
@@ -832,7 +833,7 @@ public class E01Z1Controller extends BaseController {
                                 }
                             }
                         }
-                        if(isNotDate(e01Z117)){
+                        if(A38Controller.isNotDate(e01Z117)){
                             flag = true;
                         }
 
@@ -909,16 +910,4 @@ public class E01Z1Controller extends BaseController {
         return catalogCode;
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }

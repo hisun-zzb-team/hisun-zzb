@@ -23,6 +23,7 @@ import com.hisun.saas.zzb.dzda.a32.Constants;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.exchange.GzbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
@@ -258,17 +259,17 @@ public class A32Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a32Vos = gzbdExcelExchange.fromExcel2ManyPojo(A32Vo.class,tempFile,filePath);
-            Integer oldPxInteger=a32Service.getMaxSort(a38Id);
-            boolean flag = false;//判断是否存在非法数据
             if(a32Vos.size()>0){
                 for(int i=0;i<a32Vos.size();i++){
+                    Integer oldPxInteger=a32Service.getMaxSort(a38Id);
+                    boolean flag = false;//判断是否存在非法数据
                     A32 a32 = new A32();
                     A32Vo a32Vo = (A32Vo) a32Vos.get(i);
 
                     if(StringUtils.isEmpty(a32Vo.getGzbm())){
                         flag = true;
                     }
-                    if(isNotDate(a32Vo.getA3207())){
+                    if(A38Controller.isNotDate(a32Vo.getA3207())){
                         flag = true;
                     }
 
@@ -279,7 +280,7 @@ public class A32Controller extends BaseController {
                     BeanUtils.copyProperties(a32,a32Vo);
                     A38 a38 = this.a38Service.getByPK(a38Id);
                     a32.setA38(a38);
-                    a32.setPx(oldPxInteger+i);
+                    a32.setPx(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(a32,details);
                     a32Service.save(a32);
                 }
@@ -291,16 +292,4 @@ public class A32Controller extends BaseController {
         }
     }
 
-    public boolean isNotDate(String dateStr){
-        if(StringUtils.isNotEmpty(dateStr)) {
-            int lengh = dateStr.length();
-            if (lengh == 4 || lengh == 6 || lengh == 8) {
-                if (StringUtils.isNumeric(dateStr)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
 }

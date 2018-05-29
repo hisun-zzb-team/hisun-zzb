@@ -15,31 +15,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-    <!-- BEGIN PAGE LEVEL STYLES -->
-    <link rel="stylesheet" href="${path }/css/DT_bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
-
-    <link href="${path }/css/style.css" rel="stylesheet" type="text/css">
     <!-- END PAGE LEVEL STYLES -->
     <title>档案接收</title>
-    <style type="text/css">
-    </style>
-    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css"/>
-    <script src="${path}/js/bootstrap-fileupload.js" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css"
-          href="${path}/css/select2_metro.css"/>
-    <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="${path}/css/DT_bootstrap.css"/>
-    <script type="text/javascript" src="${path}/js/select2.min.js"></script>
-    <script type="text/javascript"
-            src="${path}/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="${path}/js/jquery.form.js"></script>
-    <script type="text/javascript" src="${path}/js/DT_bootstrap.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datepicker.zh-CN.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.js"></script>
-    <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -57,7 +35,7 @@
                             <%--<button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
                             </button>--%>
-                            <a href="#" onclick="cancel()" class="btn icn-only"><i class="m-icon-swapleft"></i>返回</a>
+                            <a href="#" onclick="cancel()" class="btn icn-only"><i class="icon-undo"></i>返回</a>
                         </div>
                     </div>
                     </div>
@@ -75,11 +53,11 @@
                                         <label class="control-label">档案名称<span class="required">*</span></label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="name" maxlength="200"
-                                                   id="name"
+                                            <input type="text" class="span10 m-wrap" name="name" maxlength="200" id="name"
                                                    required
                                                    value="${vo.name}"/>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="span6 ">
@@ -95,24 +73,24 @@
                             </div>
                             <div class="row-fluid">
                                 <div class="span6 ">
-                                    <div class="control-group" id="e01Z511Group">
-                                        <label class="control-label">正本卷数</label>
+                                    <div class="control-group" id="e01Z501Group">
+                                        <label class="control-label">接收日期</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z511"
-                                                   maxlength="200" id="e01Z511"
-                                                   value="${vo.e01Z511}"/>
+                                            <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
+                                                   id="e01Z501" readonly
+                                                   value="${vo.e01Z501}"/>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="span6 ">
-                                    <div class="control-group" id="e01Z514Group">
-                                        <label class="control-label">副本卷数</label>
+                                    <div id="e01Z541Group" class="control-group">
+                                        <label class="control-label">档案位置</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z514"
-                                                   maxlength="200" id="e01Z514"
-                                                   value="${vo.e01Z514}"/>
+                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z541}"
+                                                   id="e01Z541" name="e01Z541">
                                         </div>
                                     </div>
                                 </div>
@@ -125,14 +103,13 @@
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" name="e01Z521" maxlength="200"
                                                    id="e01Z521"
-                                                   value="${vo.e01Z524}"/>
+                                                   value="${vo.e01Z521}"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="span6 ">
                                     <div id="e01Z524Group" class="control-group">
                                         <label class="control-label">审核日期</label>
-
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" value="${vo.e01Z524}" readonly
                                                    id="e01Z524" name="e01Z524">
@@ -140,42 +117,15 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row-fluid">
                                 <div class="span6 ">
                                     <div class="control-group" id="e01Z527Group">
                                         <label class="control-label">案卷质量</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap"
-                                            <c:choose>
-                                            <c:when test="${vo.e01Z527 ==0}"> value="不合格" </c:when>
-                                            <c:when test="${vo.e01Z527 ==1}"> value="合格"</c:when>
-                                            <c:when test="${vo.e01Z527 ==2}"> value="优秀"</c:when>
-                                            </c:choose> readonly
-                                                   id="e01Z527" name="e01Z527">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="e01Z541Group" class="control-group">
-                                        <label class="control-label">档案位置</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z541}" readonly
-                                                   id="e01Z541" name="e01Z541">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z501Group">
-                                        <label class="control-label">接收日期</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
-                                                   id="e01Z501" readonly
-                                                   value="${vo.e01Z501}"/>
+                                            <SelectTag:SelectTag id="e01Z527"  textClass="m-wrap span10" needNullValue="true"  defaultkeys="${vo.e01Z527}"
+                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
                                         </div>
                                     </div>
                                 </div>
@@ -207,7 +157,7 @@
                                         <label class="control-label">入库审批人</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z537}" readonly
+                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z537}"
                                                    id="e01Z537" name="e01Z537">
                                         </div>
                                     </div>
@@ -215,27 +165,67 @@
                             </div>
                             <div class="row-fluid">
                                 <div class="span6 ">
-                                    <div id="fileNameGroup" class="control-group">
-                                        <label class="control-label">上传文件</label>
+                                    <div class="control-group" id="e01Z511Group">
+                                        <label class="control-label">正本卷数</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="fileName" id="fileName"
-                                                   value="${vo.fileName}" readonly/>
+                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z511"
+                                                   maxlength="200" id="e01Z511"
+                                                   value="${vo.name}"/>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="span6 ">
+                                    <div class="control-group" id="e01Z514Group">
+                                        <label class="control-label">副本卷数</label>
+
+                                        <div class="controls">
+                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z514"
+                                                   maxlength="200" id="e01Z514"
+                                                   value="${vo.e01Z514}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span6 ">
+                                    <div class="control-group" id="sjlyGroup">
+                                        <label class="control-label"><span class="required">*</span>数据来源</label>
+
+                                        <div class="controls">
+                                            <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                                <option value=""></option>
+                                                <option value="1" <c:if test="${vo.sjly eq '1'}">selected</c:if>>导入excel</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="span6 ">
+                                    <div id="fileNameGroup" class="control-group">
+                                        <label class="control-label">文件下载</label>
+
+                                        <div class="controls">
+                                            <div class="btn-group" id="gbrmspbDownDiv" <c:if test="${empty vo.filePath}">
+                                                style="visibility:hidden"</c:if>>
+                                                <a class="btn blue" herf="javascript:void(0)" onclick="downloadFile()"><i
+                                                        class="icon-circle-arrow-down"></i>下载文件</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div>
                                     <div id="e01Z544Group" class="control-group">
                                         <label class="control-label">备注</label>
 
                                         <div class="controls">
-                                            <textarea class="span10" style="" rows="2" name="e01Z544" maxlength="400"
-                                                      readonly
-                                                      value="${vo.e01Z544}" id="e01Z544"
-                                                      style="resize: none;"></textarea>
+                                            <textarea class="span11" rows="2" name="e01Z544" maxlength="400"
+                                                      id="e01Z544" style="resize: none;">${vo.e01Z544}</textarea>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </form>
 
@@ -295,7 +285,9 @@
         var cancel = function () {
             window.location.href = "${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
         }
-
+        function downloadFile(id){
+            window.open("${path }/zzb/dzda/dajs/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id}");
+        }
 
     </script>
 </body>

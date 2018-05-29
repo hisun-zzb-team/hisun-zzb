@@ -143,7 +143,7 @@
 										<label class="control-label">档案状态</label>
 										<div class="controls">
 											<Tree:tree id="daztCode" valueName="daztContent"  selectClass="span10 m-wrap" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
-													   submitType="get" dataType="json" isSearch="false" isSelectTree="true"/>
+													   submitType="get" dataType="json" isSearch="false" isSelectTree="true" defaultkeys="02" defaultvalues="有档"/>
 										</div>
 									</div>
 								</div>

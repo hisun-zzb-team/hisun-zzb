@@ -148,6 +148,18 @@
 
                         <div class="row-fluid">
                             <div class="span6 ">
+                                <div class="control-group" id="sjlyGroup">
+                                    <label class="control-label"><span class="required">*</span>数据来源</label>
+
+                                    <div class="controls">
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                            <option value=""></option>
+                                            <option value="1" <c:if test="${vo.sjly eq '1'}">selected</c:if>>导入excel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
                                 <div id="fileNameGroup" class="control-group">
                                     <label class="control-label">文件下载</label>
 
@@ -160,18 +172,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="span6 ">
-                                <div id="e01Z731Group" class="control-group">
+
+                        </div>
+                        <div class="row-fluid">
+                            <div>
+                                <div id="e01Z544Group" class="control-group">
                                     <label class="control-label">备注</label>
 
                                     <div class="controls">
-                                            <textarea class="span10" rows="2" name="e01Z731" maxlength="400"
-                                                      readonly
-                                                      value="${vo.e01Z731}" id="e01Z731"
-                                                      style="resize: none;"></textarea>
+                                            <textarea class="span11" rows="2" name="e01Z731" maxlength="400"
+                                                      id="e01Z731" style="resize: none;">${vo.e01Z731}</textarea>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="row-fluid">
 

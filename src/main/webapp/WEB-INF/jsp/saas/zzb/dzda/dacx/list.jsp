@@ -70,7 +70,7 @@
                             <TD style="text-align: center"><a href="javascript:editcxtj('${vo.id}')"
                                                               class="">修改查询条件内容</a></TD>
                             <TD style="text-align: center">
-                                <a href="javascript:editQuery('${vo.id}')"class="">修改</a>|
+                                <a href="javascript:edit('${vo.id}')"class="">修改</a>|
                                 <a href="javascript:deleteQuery('${vo.id}')" class="">删除</a>
                             </TD>
                         </TR>
@@ -132,7 +132,7 @@
     function editcxtj(id) {
         window.location.href = "${path}/zzb/dzda/dacx/gjcx?appQueryId=" + id + "&editFlag=editFlag"+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
-    function editQuery(id) {
+    function edit(id) {
        /* $("#appQueryId").val(id);
         $("#queryName").val(name);
         $("#description").val(description);

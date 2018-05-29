@@ -193,6 +193,12 @@ public class E01Z7Controller extends BaseController {
                 filePath = getFilePath(a38Id,destPath);
                 entity = new E01Z7();
                 A38 a38 = a38Service.getByPK(a38Id);
+                a38.setA3821(vo.getE01Z704A());
+                a38.setZcyy(vo.getE01Z731());
+                a38.setJbrId(details.getUserid());
+                a38.setJbrXm(details.getRealname());
+                a38.setA3817(DateUtil.formatDefaultDate(new Date()));
+                a38Service.update(a38);
                 fileName=a38.getA0101();
                 ConvertUtils.register(new DateConverter(null), java.util.Date.class);
                 BeanUtils.copyProperties(entity, vo);

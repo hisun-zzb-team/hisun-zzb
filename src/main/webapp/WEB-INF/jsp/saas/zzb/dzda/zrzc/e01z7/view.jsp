@@ -39,206 +39,204 @@
                             <a href="#" onclick="cancel()" class="btn icn-only"><i class="icon-undo"></i>返回</a>
                         </div>
                     </div>
-                    </div>
+                </div>
 
 
-                    <div class="portlet-body form">
-                        <!-- BEGIN FORM-->
+                <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
 
-                        <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="id" value="" id="id">
-                            <input type="hidden" name="filePath" value="" id="filePath">
+                    <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="" id="id">
+                        <input type="hidden" name="filePath" value="" id="filePath">
 
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="nameGroup">
-                                        <label class="control-label">档案名称<span class="required">*</span></label>
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group" id="nameGroup">
+                                    <label class="control-label">档案名称<span class="required">*</span></label>
 
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="name" maxlength="200"
-                                                   id="name"
-                                                   required
-                                                   value="${vo.name}"/>
-                                        </div>
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="name" maxlength="200"
+                                               id="name"
+                                               required
+                                               value="${vo.name}"/>
                                     </div>
                                 </div>
-                                <div class="span6 ">
-                                    <div id="e01Z704AGroup" class="control-group">
-                                        <label class="control-label">转往单位名称</label>
+                            </div>
+                            <div class="span6 ">
+                                <div id="e01Z704AGroup" class="control-group">
+                                    <label class="control-label">转往单位</label>
 
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z704A}"
-                                                   id="e01Z704A" name="e01Z704A">
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value="${vo.e01Z704A}"
+                                               id="e01Z704A" name="e01Z704A">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div id="e01Z701Group" class="control-group">
+                                    <label class="control-label">转递日期</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value="${vo.e01Z701}" readonly
+                                               id="e01Z701" name="e01Z701">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z721Group">
+                                    <label class="control-label">转递原因</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="e01Z724" maxlength="200"
+                                               readonly
+                                               value="${vo.e01Z721}" id="e01Z721"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z724Group">
+                                    <label class="control-label">回执人</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="e01Z724" maxlength="200"
+                                               id="e01Z724" readonly
+                                               value="${vo.e01Z724}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div id="e01Z727Group" class="control-group">
+                                    <label class="control-label">回执日期</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value="${vo.e01Z727}" readonly
+                                               id="e01Z727" name="e01Z727">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z711Group">
+                                    <label class="control-label">转出正本数</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" number="true" name="e01Z711"
+                                               maxlength="200" id="e01Z711"
+                                               value="${vo.e01Z711}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z714Group">
+                                    <label class="control-label">转出副本数</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" number="true" name="e01Z714"
+                                               maxlength="200" id="e01Z714"
+                                               value="${vo.e01Z714}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div id="fileNameGroup" class="control-group">
+                                    <label class="control-label">文件下载</label>
+
+                                    <div class="controls">
+                                        <div class="btn-group" id="gbrmspbDownDiv" <c:if test="${vo.filePath}">
+                                            style="visibility:hidden"</c:if>>
+                                            <a class="btn blue" herf="javascript:void(0)" onclick="downloadFile()"><i
+                                                    class="icon-circle-arrow-down"></i>下载文件</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z711Group">
-                                        <label class="control-label">转出正本数</label>
+                            <div class="span6 ">
+                                <div id="e01Z731Group" class="control-group">
+                                    <label class="control-label">备注</label>
 
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z711"
-                                                   maxlength="200" id="e01Z711"
-                                                   value="${vo.e01Z711}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z714Group">
-                                        <label class="control-label">转出副本数</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" number="true" name="e01Z714"
-                                                   maxlength="200" id="e01Z714"
-                                                   value="${vo.e01Z714}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z717Group">
-                                        <label class="control-label">经办人</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="e01Z717" maxlength="200"
-                                                   id="e01Z717"
-                                                   value="${vo.e01Z717}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="e01Z701Group" class="control-group">
-                                        <label class="control-label">转递日期</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z701}" readonly
-                                                   id="e01Z701" name="e01Z701">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z724Group">
-                                        <label class="control-label">回执人</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="e01Z724" maxlength="200"
-                                                   id="e01Z724" readonly
-                                                   value="${vo.e01Z724}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="e01Z727Group" class="control-group">
-                                        <label class="control-label">回执日期</label>
-
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z727}" readonly
-                                                   id="e01Z727" name="e01Z727">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="e01Z721Group">
-                                        <label class="control-label">转递原因</label>
-
-                                        <div class="controls">
-                                            <textarea class="span10" rows="2" name="e01Z721" maxlength="400"
-                                                      readonly
-                                                      value="${vo.e01Z721}" id="e01Z721"
-                                                      style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="e01Z731Group" class="control-group">
-                                        <label class="control-label">备注</label>
-
-                                        <div class="controls">
+                                    <div class="controls">
                                             <textarea class="span10" rows="2" name="e01Z731" maxlength="400"
                                                       readonly
                                                       value="${vo.e01Z731}" id="e01Z731"
                                                       style="resize: none;"></textarea>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div id="fileNameGroup" class="control-group">
-                                        <label class="control-label">上传文件</label>
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="fileName" id="fileName"
-                                                   value="${vo.fileName}" readonly/>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="row-fluid">
 
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
-
-                <%-- END SAMPLE FORM PORTLET--%>
             </div>
+
+            <%-- END SAMPLE FORM PORTLET--%>
         </div>
-
-        <%-- END PAGE CONTENT--%>
     </div>
-    <script type="text/javascript">
-        (function () {
-            App.init();
 
-            $("#btn-browseTemplate").bind("change", function (evt) {
-                if ($(this).val()) {
-                    ajaxSubmit();
-                }
-                $(this).val('');
-            });
+    <%-- END PAGE CONTENT--%>
+</div>
+<script type="text/javascript">
+    (function () {
+        App.init();
 
-        })();
+        $("#btn-browseTemplate").bind("change", function (evt) {
+            if ($(this).val()) {
+                ajaxSubmit();
+            }
+            $(this).val('');
+        });
 
-        $(function () {
-            $('#e01Z524').datepicker({
-                format: 'yyyy-mm-dd',
-                weekStart: 1,
-                autoclose: true,
-                todayBtn: 'linked',
-                language: 'zh-CN'
-            });
-            $('#e01Z501').datepicker({
-                format: 'yyyy-mm-dd',
-                weekStart: 1,
-                autoclose: true,
-                todayBtn: 'linked',
-                language: 'zh-CN'
-            });
-            $('#e01Z531').datepicker({
-                format: 'yyyy-mm-dd',
-                weekStart: 1,
-                autoclose: true,
-                todayBtn: 'linked',
-                language: 'zh-CN'
-            });
-            $('#e01Z534').datepicker({
-                format: 'yyyy-mm-dd',
-                weekStart: 1,
-                autoclose: true,
-                todayBtn: 'linked',
-                language: 'zh-CN'
-            });
-        })
-        var cancel = function () {
-            window.location.href = "${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-        }
+    })();
+    function downloadFile(){
+        window.open("${path }/zzb/dzda/dazd/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=${vo.id}");
+    }
+
+    $(function () {
+        $('#e01Z524').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
+        $('#e01Z501').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
+        $('#e01Z531').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
+        $('#e01Z534').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
+    })
+    var cancel = function () {
+        window.location.href = "${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    }
 
 
-    </script>
+</script>
 </body>
 </html>

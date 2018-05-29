@@ -218,21 +218,18 @@ public class E01Z5Controller extends BaseController {
                         output.close();
                     }
                 }
-                fileName = saveFile(filePath);
             }
+            Map<String,Object>  map = saveFile(filePath,vo);
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z5 entity = new  E01Z5();
-            A38 a38 = new A38();
-            //// TODO: 2018/5/23
-            a38.setId("ass" + System.currentTimeMillis());
             ConvertUtils.register(new DateConverter(null), java.util.Date.class);
             BeanUtils.copyProperties(entity, vo);
             entity.setE01Z501(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z501())? DateUtil.parseDefaultDate(vo.getE01Z501()) :null );
             entity.setE01Z524(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z524())? DateUtil.parseDefaultDate(vo.getE01Z524()) :null );
             entity.setE01Z531(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z531())? DateUtil.parseDefaultDate(vo.getE01Z531()) :null );
             entity.setE01Z534(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z534())? DateUtil.parseDefaultDate(vo.getE01Z534()) :null );
-                entity.setA38(a38);
-            entity.setFileName(fileName);
+            entity.setA38(a38Service.getByPK((String) map.get("a38Id")));
+            entity.setFileName((String) map.get("fileName"));
             entity.setFilePath(filePath);
             entity.setId(null);
             entity.setE01Z517(details.getRealname());
@@ -381,7 +378,8 @@ public class E01Z5Controller extends BaseController {
         return returnMap;
     }
 
-    public String saveFile(String filePath){
+    private Map<String,Object> saveFile(String filePath,E01Z5Vo vo){
+        Map map = Maps.newHashMap();
         String fileName = "";
         String tempFile = uploadBasePath+Constants.DAJSMB_STORE_PATH;
         A38ExcelVo a38ExcelVo = new A38ExcelVo();
@@ -412,9 +410,15 @@ public class E01Z5Controller extends BaseController {
 
                     org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
                     a38.setId(null);
-                    a38.setSjzt("1");
+                    a38.setSjzt("0");
+                    a38.setA3801(DateUtil.formatDefaultDate(new Date()));
+                    a38.setJsr(details.getRealname());
+                    a38.setA3834(vo.getE01Z541());
+                    a38.setA3804B(vo.getE01Z507A());
+                    a38.setZryy(vo.getE01Z544());
                     EntityWrapper.wrapperSaveBaseProperties(a38,details);
                     String id = a38Service.save(a38);
+                    map.put("a38Id",id);
                     if(StringUtils.isNotEmpty(id)){
                         a38.setId(id);
                         //新增职务变动
@@ -538,11 +542,11 @@ public class E01Z5Controller extends BaseController {
                 }
 
             }
-
+        map.put("fileName",fileName);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return fileName;
+        return map;
     }
 
     public String getCatalogCode(String listStr){

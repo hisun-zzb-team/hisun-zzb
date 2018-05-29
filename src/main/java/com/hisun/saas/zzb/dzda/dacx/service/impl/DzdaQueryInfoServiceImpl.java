@@ -37,7 +37,7 @@ public class DzdaQueryInfoServiceImpl extends BaseServiceImpl<DzdaQueryInfo,Stri
      * @param
      */
     public void updatePx(int oldPx,int newPx,String tenantId){
-        String sql = "UPDATE app_query_info t SET ";
+        String sql = "UPDATE dzda_query_info t SET ";
         if(newPx > oldPx) {
             sql = sql + "t.px=t.px-1";
         } else {
@@ -58,9 +58,9 @@ public class DzdaQueryInfoServiceImpl extends BaseServiceImpl<DzdaQueryInfo,Stri
     @Override
     public Integer getMaxSort(String tenantId) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String hql = "select max(t.px)+1 as sort from app_query_info t ";
+        String hql = "select max(t.px)+1 as sort from dzda_query_info t ";
         if (tenantId != null && !tenantId.equals("")) {
-            hql = hql + "where t.tenant_id =:tenantId";
+            hql = hql + "where t.tenant_id =:tenantId and t.query_status = 0";
             map.put("tenantId", tenantId);
         }
         List<Map> maxSorts = this.dzdaQueryInfoDao.nativeList(hql, map);

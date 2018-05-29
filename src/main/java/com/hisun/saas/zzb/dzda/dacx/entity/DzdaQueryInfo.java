@@ -23,7 +23,7 @@ public class DzdaQueryInfo extends TenantEntity implements Serializable {
     private String queryModel;//查询json字符串
     private String cxsy;//查询索引
     private String syxz;//查询限制
-    private String queryType;//查询类型
+    private String queryType;//查询类型 0：普通查询 1：常用查询
     private String description;//查询描述
     private int px;//序号
     private String queryStatus;//状态0正常 1临时

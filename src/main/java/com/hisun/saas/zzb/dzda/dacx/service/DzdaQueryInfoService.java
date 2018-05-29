@@ -14,5 +14,5 @@ import com.hisun.saas.zzb.dzda.dacx.entity.DzdaQueryInfo;
  */
 public interface DzdaQueryInfoService extends BaseService<DzdaQueryInfo,String> {
     Integer getMaxSort(String tenantId);
-    void updatePx(int oldPx, int newPx, String a38Id);
+    void updatePx(int oldPx, int newPx,String tenantId);
 }

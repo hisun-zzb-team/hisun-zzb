@@ -367,25 +367,25 @@ public class A38ExcelExchange extends AbsExcelExchange{
     public Object fromExcel(Worksheet tpltWorksheet, Worksheet srcWorksheet) throws Exception {
         JSONObject jsonObject = new JSONObject();
         Cells tpltCells = tpltWorksheet.getCells();
-            for (Iterator<Cell> tpltCellIterator = tpltCells.iterator(); tpltCellIterator.hasNext(); ) {
-                Cell tpltCell = tpltCellIterator.next();
-                String value = tpltCell.getStringValue();
-                List<String> fields = this.parseField(value);
-                String realValue = "";
-                if (fields != null) {
-                    for (String field : fields) {
-                        if (isListField(value)) {
-                            Cells srcCells = srcWorksheet.getCells();
-                            setListValue(jsonObject,field,tpltCell,srcCells);
-                        } else if (isImageField(value)) {
+        for (Iterator<Cell> tpltCellIterator = tpltCells.iterator(); tpltCellIterator.hasNext(); ) {
+            Cell tpltCell = tpltCellIterator.next();
+            String value = tpltCell.getStringValue();
+            List<String> fields = this.parseField(value);
+            String realValue = "";
+            if (fields != null) {
+                for (String field : fields) {
+                    if (isListField(value)) {
+                        Cells srcCells = srcWorksheet.getCells();
+                        setListValueWithLines(jsonObject,field,tpltCell,srcCells);
+                    } else if (isImageField(value)) {
 
-                        } else {
-                            realValue = srcWorksheet.getCells().get(tpltCell.getRow(), tpltCell.getColumn()).getStringValue();
-                            setValue(jsonObject,field,realValue);
-                        }
+                    } else {
+                        realValue = srcWorksheet.getCells().get(tpltCell.getRow(), tpltCell.getColumn()).getStringValue();
+                        setValue(jsonObject,field,realValue);
                     }
                 }
             }
+        }
         return jsonObject;
     }
 
@@ -402,7 +402,7 @@ public class A38ExcelExchange extends AbsExcelExchange{
                     if (isListField(value)) {
                     } else if (isImageField(value)) {
                     } else {
-                        setValue(jsonObjects,field,tpltCell,srcCells);
+                        setValueWithLines(jsonObjects,field,tpltCell,srcCells);
                     }
                 }
             }
@@ -498,6 +498,7 @@ public class A38ExcelExchange extends AbsExcelExchange{
                     realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
                     JSONObject jsonObject1 = new JSONObject();
                     jsonObject1.put(fieldName,realValue);
+                    jsonObject1.put("row",srcCell.getRow());
                     jsonObjectList.add(jsonObject1);
 
                 }

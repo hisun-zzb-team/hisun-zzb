@@ -23,6 +23,7 @@ import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.a52.exchange.ZwbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -62,6 +64,8 @@ public class A52Controller extends BaseController {
 
     @Resource
     ZwbdExcelExchange zwbdExcelExchange;
+
+    List<WrongExcelColumn> wrongExcelColumns;
 
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
@@ -232,7 +236,10 @@ public class A52Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")
-    public void uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+    public @ResponseBody Map<String,Object> uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        boolean isRight = false;
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         String filePath = "";
         File storePathFile = new File(Constants.ZWBD_STORE_PATH);
         if(!storePathFile.exists()) storePathFile.mkdirs();
@@ -264,25 +271,56 @@ public class A52Controller extends BaseController {
         A38Vo a38Vo = new A38Vo();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
-            a38Vo = (A38Vo) zwbdExcelExchange.fromExcel(A38Vo.class,tempFile,filePath);
+            a38Vo = (A38Vo) zwbdExcelExchange.fromExcelWithLines(A38Vo.class,tempFile,filePath);
+            WrongExcelColumn wrongExcelColumn;
             if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
                 List<A52Vo> a52Vos = a38Vo.getA52Vos();
                 for(int i=0;i<a52Vos.size();i++){
+                    int sum = 0;
                     Integer oldPxInteger=a52Service.getMaxSort(a38Id);
                     boolean flag = false;//判断是否存在非法数据
+                    boolean flag1 = false;//判断必填数据是否全为空
                     A52 a52 = new A52();
                     A52Vo a52Vo = a52Vos.get(i);
                     if(StringUtils.isEmpty(a52Vo.getA5204())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("C"+a52Vo.getRow());
+                        wrongExcelColumn.setReason("部门名称不能为空");
+                        wrongExcelColumn.setWrongExcel("职务变动登记表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
+
                     }
                     if(A38Controller.isNotDate(a52Vo.getA5227In())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("A"+a52Vo.getRow());
+                        wrongExcelColumn.setReason("任职时间格式错误");
+                        wrongExcelColumn.setWrongExcel("职务变动登记表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
                     }
                     if(A38Controller.isNotDate(a52Vo.getA5227Out())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("B"+a52Vo.getRow());
+                        wrongExcelColumn.setReason("免职时间格式错误");
+                        wrongExcelColumn.setWrongExcel("职务变动登记表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
+                    }
+                    if(StringUtils.isEmpty(a52Vo.getA5204())&&StringUtils.isEmpty(a52Vo.getA5227In())&&StringUtils.isEmpty(a52Vo.getA5227Out())){
+                        flag1 = true;
                     }
 
                     if(flag){
+                        if(flag1){
+                            for(int j=0;j<sum;j++){
+                                wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                            }
+                        }
+                        isRight = true;
                         continue;
                     }
 
@@ -291,7 +329,7 @@ public class A52Controller extends BaseController {
                     a52.setA38(a38);
                     a52.setPx(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(a52,details);
-                    a52Service.save(a52);
+//                    a52Service.save(a52);
                 }
             }
         } catch (Exception e) {
@@ -299,6 +337,21 @@ public class A52Controller extends BaseController {
         }finally {
             file.delete();
         }
+        map.put("success",true);
+        if(isRight){
+            this.wrongExcelColumns = wrongExcelColumns;
+            map.put("isWrong",true);
+        }else {
+            map.put("isWrong",false);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/ajax/cwjl")
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("datas",this.wrongExcelColumns);
+        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
     }
 
 }

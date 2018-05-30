@@ -34,6 +34,7 @@ public class E01Z1Vo {
 
     private String parentId;
     private String parentName;
+    private Integer row;
 
     public String getId() {
         return id;
@@ -225,5 +226,13 @@ public class E01Z1Vo {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
     }
 }

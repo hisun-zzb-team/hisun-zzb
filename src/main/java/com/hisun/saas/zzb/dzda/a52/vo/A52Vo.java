@@ -19,6 +19,7 @@ public class A52Vo {
     private String a0245;//任职文号
     private String a0267;//免职文号
     private Integer px;//职务变动排序
+    private Integer row;
 
     public String getA0245() {
         return a0245;
@@ -90,5 +91,13 @@ public class A52Vo {
 
     public void setPx(Integer px) {
         this.px = px;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
     }
 }

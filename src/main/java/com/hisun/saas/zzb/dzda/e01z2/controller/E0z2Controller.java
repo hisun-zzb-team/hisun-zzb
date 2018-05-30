@@ -24,6 +24,8 @@ import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.tenant.tenant.entity.Tenant2ResourcePrivilege;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
+import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
 import com.hisun.saas.zzb.dzda.e01z2.Constants;
 import com.hisun.saas.zzb.dzda.e01z2.exchange.CljsExcelExchange;
 import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
@@ -47,6 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -73,6 +76,8 @@ public class E0z2Controller extends BaseController {
 
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
+
+    List<WrongExcelColumn> wrongExcelColumns;
 
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/list")
@@ -206,7 +211,7 @@ public class E0z2Controller extends BaseController {
             filePath = uploadBasePath+Constants.CLJS_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cljsExcelExchange.toExcelByManyPojo(e01z2Vos, uploadBasePath+Constants.CLJSMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("cljs.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("材料接收表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];
@@ -231,7 +236,9 @@ public class E0z2Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")
-    public void uploadFile (String a38Id , @RequestParam(value="cljsFile",required = false) MultipartFile cljsFile , HttpServletResponse resp) throws IOException {
+    public @ResponseBody Map<String,Object> uploadFile (String a38Id , @RequestParam(value="cljsFile",required = false) MultipartFile cljsFile , HttpServletResponse resp) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        boolean isRight = false;
         String filePath = "";
         File storePathFile = new File(Constants.CLJS_STORE_PATH);
         if(!storePathFile.exists()) storePathFile.mkdirs();
@@ -262,27 +269,69 @@ public class E0z2Controller extends BaseController {
         String tempFile = uploadBasePath+Constants.CLJSMB_STORE_PATH;
         List<Object> e01z2Vos=new ArrayList<>();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         try {
-            e01z2Vos = cljsExcelExchange.fromExcel2ManyPojo(E01z2Vo.class,tempFile,filePath);
+            e01z2Vos = cljsExcelExchange.fromExcel2ManyPojoWithLines(E01z2Vo.class,tempFile,filePath);
+            boolean flag = false;//判断是否存在非法数据
+            boolean flag1 = false;//判断是否存在非法数据
+            WrongExcelColumn wrongExcelColumn;
             if(e01z2Vos.size()>0){
                 for(int i=0;i<e01z2Vos.size();i++){
+                    flag = false;//判断是否存在非法数据
+                    flag1 = false;//判断是否存在非法数据
+                    int sum=0;
                     Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
-                    boolean flag = false;//判断是否存在非法数据
                     E01Z2 e01z2 = new E01Z2();
                     E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("A"+e01z2Vo.getRow());
+                        wrongExcelColumn.setReason("来件单位不能为空");
+                        wrongExcelColumn.setWrongExcel("材料接收表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
                     }
                     if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("E"+e01z2Vo.getRow());
+                        wrongExcelColumn.setReason("材料名称不能为空");
+                        wrongExcelColumn.setWrongExcel("材料接收表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
                     }
                     if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("B"+e01z2Vo.getRow());
+                        wrongExcelColumn.setReason("收件日期格式错误");
+                        wrongExcelColumn.setWrongExcel("材料接收表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
                     }
                     if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
+                        wrongExcelColumn = new WrongExcelColumn();
+                        wrongExcelColumn.setLines("G"+e01z2Vo.getRow());
+                        wrongExcelColumn.setReason("材料制成日期格式错误");
+                        wrongExcelColumn.setWrongExcel("材料接收表");
+                        wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
+                        sum++;
                     }
+
+                    if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())&&StringUtils.isEmpty(e01z2Vo.getE01Z221A())
+                            &&StringUtils.isEmpty(e01z2Vo.getE01Z201())&&StringUtils.isEmpty(e01z2Vo.getE01Z227())){
+                        flag1 = true;
+                    }
+
                     if(flag){
+                        if(flag1){
+                            for(int j=0;j<sum;j++){
+                                wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                            }
+                        }
+                        isRight = true;
                         continue;
                     }
 
@@ -296,7 +345,7 @@ public class E0z2Controller extends BaseController {
                     e01z2.setA38(a38);
                     e01z2.setE01Z214(oldPxInteger);
                     EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
-                    e01z2Service.save(e01z2);
+//                    e01z2Service.save(e01z2);
                 }
             }
         } catch (Exception e) {
@@ -304,6 +353,15 @@ public class E0z2Controller extends BaseController {
         }finally {
             file.delete();
         }
+
+        map.put("success",true);
+        if(isRight){
+            this.wrongExcelColumns = wrongExcelColumns;
+            map.put("isWrong",true);
+        }else {
+            map.put("isWrong",false);
+        }
+        return map;
     }
 
     /**
@@ -329,5 +387,12 @@ public class E0z2Controller extends BaseController {
             }
         }
         return "";
+    }
+
+    @RequestMapping(value = "/ajax/cwjl")
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("datas",this.wrongExcelColumns);
+        return new ModelAndView("saas/zzb/dzda/e01z2/e01z2WrongList",map);
     }
 }

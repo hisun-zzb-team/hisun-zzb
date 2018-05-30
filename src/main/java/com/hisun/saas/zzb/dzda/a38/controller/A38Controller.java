@@ -36,6 +36,7 @@ import com.hisun.saas.zzb.dzda.a38.exchange.A38ExcelExchange;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
@@ -72,8 +73,8 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
-* @author liuzj {279421824@qq.com}
-*/
+ * @author liuzj {279421824@qq.com}
+ */
 @Controller
 @RequestMapping("/zzb/dzda/a38")
 public class A38Controller extends BaseController {
@@ -102,6 +103,8 @@ public class A38Controller extends BaseController {
     @Resource
     A38ExcelExchange a38ExcelExchange;
 
+    List<WrongExcelColumn> wrongExcelColumns;
+
     @Resource
     private EImagesService eImagesService;
 
@@ -111,10 +114,10 @@ public class A38Controller extends BaseController {
     @RequiresPermissions("a38:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
-    String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,@ModelAttribute DakVo queryVo,String queryType) throws UnsupportedEncodingException {
+                             String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery,@ModelAttribute DakVo queryVo,String queryType) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         HttpSession session = request.getSession();
-        
+
         if(queryType!=null && queryType.equals("gaojichaxun")){//高级查询
             a0101Query =  queryVo.getA0101();
             gbztCodeQuery = queryVo.getGbztCodes();
@@ -178,7 +181,7 @@ public class A38Controller extends BaseController {
     @RequiresPermissions("a38:*")
     @RequestMapping("/shList")
     public ModelAndView shList(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                             String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery) throws UnsupportedEncodingException {
+                               String dabhQuery,String smxhQuery,String a0101Query,String gbztCodeQuery,String daztCodeQuery,String gbztContentQuery,String daztContentQuery) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "0"));
@@ -605,7 +608,11 @@ public class A38Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping("/uploadFile")
-    public void uploadFile (String id , @RequestParam(value="zbdaFile",required = false) MultipartFile zbdaFile , HttpServletResponse resp) throws IOException {
+    public @ResponseBody Map<String,Object> uploadFile (String id , @RequestParam(value="zbdaFile",required = false) MultipartFile zbdaFile , HttpServletResponse resp) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        boolean isRight = false;
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        Map<String,Object> returnMap = new HashMap<>();
         String filePath = "";
         File storePathFile = new File(Constants.JBXX_STORE_PATH);
         if(!storePathFile.exists()) storePathFile.mkdirs();
@@ -638,18 +645,35 @@ public class A38Controller extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38ExcelVo = (A38ExcelVo) a38ExcelExchange.fromExcel(A38ExcelVo.class,tempFile,filePath);
+            WrongExcelColumn wrongExcelColumn;
             boolean a38Flag = false;//判断是否存在非法数据
             if(a38ExcelVo!=null){
-
+                int sum = 0;
+                boolean flag = false;//判断是否存在非法数据
+                boolean flag1 = false;//判断必填数据是否全为空
                 //新增档案
                 A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
                 A38 a38 = new A38();
 
                 if(StringUtils.isEmpty(jbxxA38Vo.getA0101())){
+                    wrongExcelColumn = new WrongExcelColumn();
+                    wrongExcelColumn.setLines("C"+jbxxA38Vo.getRow());
+                    wrongExcelColumn.setReason("姓名不能为空");
+                    wrongExcelColumn.setWrongExcel("基本信息");
+                    wrongExcelColumns.add(wrongExcelColumn);
+                    a38Flag = true;
+                    sum++;
                     a38Flag = true;
                 }
 
                 if (isNotDate(jbxxA38Vo.getA0107())) {
+                    wrongExcelColumn = new WrongExcelColumn();
+                    wrongExcelColumn.setLines("F"+jbxxA38Vo.getRow());
+                    wrongExcelColumn.setReason("生日日期格式错误");
+                    wrongExcelColumn.setWrongExcel("基本信息");
+                    wrongExcelColumns.add(wrongExcelColumn);
+                    a38Flag = true;
+                    sum++;
                     a38Flag = true;
                 }
 
@@ -672,18 +696,41 @@ public class A38Controller extends BaseController {
                         if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
                             List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
                             for(int i=0;i<a52Vos.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
+                                flag = false;//判断是否存在非法数据
+                                sum=0;
                                 A52 a52 = new A52();
                                 A52Vo a52Vo = a52Vos.get(i);
                                 Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
                                 if(StringUtils.isEmpty(a52Vo.getA5204())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("C"+a52Vo.getRow());
+                                    wrongExcelColumn.setReason("部门名称不能为空");
+                                    wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
+
                                 }
-                                if(isNotDate(a52Vo.getA5227In())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227In())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("A"+a52Vo.getRow());
+                                    wrongExcelColumn.setReason("任职时间格式错误");
+                                    wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
                                 }
-                                if(isNotDate(a52Vo.getA5227Out())){
+                                if(A38Controller.isNotDate(a52Vo.getA5227Out())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("B"+a52Vo.getRow());
+                                    wrongExcelColumn.setReason("免职时间格式错误");
+                                    wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
+                                }
+                                if(StringUtils.isEmpty(a52Vo.getA5204())&&StringUtils.isEmpty(a52Vo.getA5227In())&&StringUtils.isEmpty(a52Vo.getA5227Out())){
+                                    flag1 = true;
                                 }
 
                                 if(flag){
@@ -701,19 +748,42 @@ public class A38Controller extends BaseController {
                         List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
                         if(gzbdList.size()>0){
                             for(int i=0;i<gzbdList.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
+                                flag = false;//判断是否存在非法数据
+                                sum=0;
                                 A32 a32 = new A32();
                                 A32Vo a32Vo = gzbdList.get(i);
                                 Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
 
                                 if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("A"+a32Vo.getRow());
+                                    wrongExcelColumn.setReason("工作部门不能为空");
+                                    wrongExcelColumn.setWrongExcel("工资变动登记表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
                                 }
-                                if(isNotDate(a32Vo.getA3207())){
+                                if(A38Controller.isNotDate(a32Vo.getA3207())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("E"+a32Vo.getRow());
+                                    wrongExcelColumn.setReason("日期格式错误");
+                                    wrongExcelColumn.setWrongExcel("工资变动登记表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
+                                }
+
+                                if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                                    flag1 = true;
                                 }
 
                                 if(flag){
+                                    if(flag1){
+                                        for(int j=0;j<sum;j++){
+                                            wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                        }
+                                    }
+                                    isRight = true;
                                     continue;
                                 }
 
@@ -729,25 +799,61 @@ public class A38Controller extends BaseController {
                         List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
                         if(e01z2Vos.size()>0){
                             for(int i=0;i<e01z2Vos.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
+                                flag = false;//判断是否存在非法数据
+                                sum=0;
                                 E01Z2 e01z2 = new E01Z2();
                                 E01z2Vo e01z2Vo = e01z2Vos.get(i);
                                 Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
 
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("A"+e01z2Vo.getRow());
+                                    wrongExcelColumn.setReason("来件单位不能为空");
+                                    wrongExcelColumn.setWrongExcel("材料接收表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
                                 }
                                 if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("E"+e01z2Vo.getRow());
+                                    wrongExcelColumn.setReason("材料名称不能为空");
+                                    wrongExcelColumn.setWrongExcel("材料接收表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z201())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("B"+e01z2Vo.getRow());
+                                    wrongExcelColumn.setReason("收件日期格式错误");
+                                    wrongExcelColumn.setWrongExcel("材料接收表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
                                 }
-                                if(isNotDate(e01z2Vo.getE01Z227())){
+                                if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
+                                    wrongExcelColumn = new WrongExcelColumn();
+                                    wrongExcelColumn.setLines("G"+e01z2Vo.getRow());
+                                    wrongExcelColumn.setReason("材料制成日期格式错误");
+                                    wrongExcelColumn.setWrongExcel("材料接收表");
+                                    wrongExcelColumns.add(wrongExcelColumn);
                                     flag = true;
+                                    sum++;
+                                }
+
+                                if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())&&StringUtils.isEmpty(e01z2Vo.getE01Z221A())
+                                        &&StringUtils.isEmpty(e01z2Vo.getE01Z201())&&StringUtils.isEmpty(e01z2Vo.getE01Z227())){
+                                    flag1 = true;
                                 }
 
                                 if(flag){
+                                    if(flag1){
+                                        for(int j=0;j<sum;j++){
+                                            wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                        }
+                                    }
+                                    isRight = true;
                                     continue;
                                 }
 
@@ -764,25 +870,27 @@ public class A38Controller extends BaseController {
                             }
                         }
 
+                        returnMap.put("isRight",isRight);
+                        returnMap.put("wrongExcelColumns",wrongExcelColumns);
                         //添加目录信息及材料
                         E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
                         if(e01Z1ExcelVo!=null){
-                            addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id);
-                            addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id);
-                            addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id);
-                            addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id);
-                            addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id);
-                            addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id);
-                            addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id);
-                            addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id);
-                            addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id);
-                            addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id);
-                            addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id);
-                            addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id);
-                            addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id);
-                            addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id);
-                            addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id);
-                            addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id);
+                            returnMap = addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id,returnMap);
+                            returnMap = addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id,returnMap);
                         }
                     }
                 }
@@ -794,6 +902,16 @@ public class A38Controller extends BaseController {
         }finally {
             file.delete();
         }
+        isRight= (boolean) returnMap.get("isRight");
+        wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
+        map.put("success",true);
+        if(isRight){
+            this.wrongExcelColumns = wrongExcelColumns;
+            map.put("isWrong",true);
+        }else {
+            map.put("isWrong",false);
+        }
+        return map;
     }
 
     @RequiresPermissions("a38:*")
@@ -841,7 +959,14 @@ public class A38Controller extends BaseController {
         }
     }
 
-    public void addE01z1(List<E01Z1Vo> e01Z1Vos,String listStr,String a38Id){
+    @RequestMapping(value = "/ajax/cwjl")
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("datas",this.wrongExcelColumns);
+        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
+    }
+
+    public Map<String,Object> addE01z1(List<E01Z1Vo> e01Z1Vos,String listStr,String a38Id, Map<String,Object> returnMap){
         if(e01Z1Vos.size()>0){
             //获得材料类别
             String catalogCode = getCatalogCode(listStr);//获取材料类别Code
@@ -853,40 +978,81 @@ public class A38Controller extends BaseController {
             if(entities.size()>0){
                 eCatalogTypeInfo=entities.get(0);
             }
+            List<WrongExcelColumn> wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
+            WrongExcelColumn wrongExcelColumn;
 
             try {
 
                 for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
+                    int sum = 0;
                     boolean flag = false;//判断是否存在非法数据
+                    boolean flag1 = false;//判断必填数据是否全为空
                     if (e01Z1Vo != null) {
 
                         //判断必填材料是否为空
-                        if (e01Z1Vo.getE01Z104() == null || e01Z1Vo.getE01Z104() == 0) {
+                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("A"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("序号不能为空且大于0");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
-                        if (e01Z1Vo.getE01Z114() == null || e01Z1Vo.getE01Z114() == 0) {
+                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("F"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("页数不能为空且大于0");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
-                        if (com.hisun.util.StringUtils.isEmpty(e01Z1Vo.getE01Z111())) {
+                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("B"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("材料名称不能为空");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
 
                         //拼接日期
                         String e01Z117 = "";
-                        if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getYear())) {
+                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
                             e01Z117 = e01Z1Vo.getYear();
-                            if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getMonth())) {
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
                                 e01Z117 += e01Z1Vo.getMonth();
-                                if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getDay())) {
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
                                     e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                        }
-                        if (isNotDate(e01Z117)) {
-                            flag = true;
+                            if(A38Controller.isNotDate(e01Z117)){
+                                flag = true;
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
+                                wrongExcelColumn.setReason("日期格式错误");
+                                wrongExcelColumn.setWrongExcel("干部档案目录表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
                         }
 
-                        if (flag) {
+                        if((e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0)
+                                &&(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0)
+                                &&StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            flag1 = true;
+                        }
+
+                        if(flag){
+                            if(flag1){
+                                for(int j=0;j<sum;j++){
+                                    wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                }
+                            }
+                            returnMap.put("isRight",true);
                             continue;
                         }
 
@@ -919,6 +1085,8 @@ public class A38Controller extends BaseController {
                 e.printStackTrace();
             }
         }
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        return returnMap;
     }
 
     public String getCatalogCode(String listStr){

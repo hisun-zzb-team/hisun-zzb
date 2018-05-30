@@ -21,6 +21,20 @@
     </style>
 </head>
 <body>
+<div id="a32Modal" class="modal container hide fade" tabindex="-1" data-width="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" id="close1" type="button"></button>
+                <h3 class="modal-title" id="addTitle" >
+                    导入文件错误列表
+                </h3>
+            </div>
+            <div class="modal-body" id="a32Div">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid" id="a32Table">
             <%-- 表格开始 --%>
             <div class="portlet-title">
@@ -221,28 +235,48 @@
               headers:{
                   "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
               },
-              success:function(html){
-                  showTip("提示","上传成功!",2000);
-                  $.ajax({
-                      async:false,
-                      type:"POST",
-                      url:"${path }/zzb/dzda/a32/ajax/list",
-                      dataType : "html",
-                      headers:{
-                          "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-                      },
-                      data:{
-                          'a38Id':"${a38Id}"
-                      },
-                      success:function(html){
-                          var view = $("#tab_show");
-                          view.html(html);
-                      },
-                      error : function(){
-                          myLoading.hide();
-                          showTip("提示","出错了,请检查网络!",2000);
-                      }
-                  });
+              success:function(data){
+                  if(data.isWrong){
+                      $.ajax({
+                          url:"${path}/zzb/dzda/a32/ajax/cwjl",
+                          type : "post",
+                          data: {},
+                          headers:{
+                              OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                          },
+                          dataType : "html",
+                          success : function(html){
+                              $('#a32Div').html(html);
+
+                              $('#a32Modal').modal({backdrop: 'static', keyboard: false});
+                          },
+                          error : function(){
+                              showTip("提示","出错了请联系管理员", 1500);
+                          }
+                      });
+                  }else {
+                      showTip("提示","上传成功!",2000);
+                      $.ajax({
+                          async:false,
+                          type:"POST",
+                          url:"${path }/zzb/dzda/a32/ajax/list",
+                          dataType : "html",
+                          headers:{
+                              "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                          },
+                          data:{
+                              'a38Id':"${a38Id}"
+                          },
+                          success:function(html){
+                              var view = $("#tab_show");
+                              view.html(html);
+                          },
+                          error : function(){
+                              myLoading.hide();
+                              showTip("提示","出错了,请检查网络!",2000);
+                          }
+                      });
+                  }
               },
               error : function(){
                   showTip("提示","上传失败!",2000);
@@ -250,6 +284,9 @@
           });
       });
 
+      $("#close1").on("click",function(){
+          pagehref("","");
+      });
   </script>
 </body>
 </html>

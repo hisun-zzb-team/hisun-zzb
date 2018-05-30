@@ -287,6 +287,7 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                                         realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
                                         JSONObject jsonObject1 = new JSONObject();
                                         jsonObject1.put(fieldName,realValue);
+                                        jsonObject1.put("row",srcCell.getRow()+1);
                                         jsonObjectList.add(jsonObject1);
 
                                 }

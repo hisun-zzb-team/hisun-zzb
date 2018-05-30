@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ taglib prefix="Select" uri="http://www.springframework.org/tags/form" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
 <%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
@@ -22,45 +23,38 @@
     </style>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12 responsive">
-            <%-- 表格开始 --%>
-            <div class="portlet-body">
-                <table class="table table-striped table-bordered table-hover dataTable table-set">
-                    <thead>
-                    <tr>
-                        <th style="width: 20px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
-                        <th width=70>姓名</th>
-                        <th width=40>性别</th>
-                        <th width=70>出生年月</th>
-                        <th width=70>单位职务</th>
-                        <th width=70>干部状态</th>
-                        <th width=70>现职级时间</th>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${pager.datas}" var="vo">
-                        <tr style="text-overflow:ellipsis;">
-                            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101}"></td>
-                            <td>${vo.a0101}</td>
-                            <td>${vo.a0104Content}</td>
-                            <td>${vo.a0107} </td>
-                            <td>${vo.a0157}</td>
-                            <td>${vo.gbztContent}</td>
-                            <td st>${vo.xzjsj}</td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-                <jsp:include page="/WEB-INF/jsp/common/page.jsp">
-                    <jsp:param value="${pager.total }" name="total"/>
-                    <jsp:param value="${pager.pageCount }" name="endPage"/>
-                    <jsp:param value="${pager.pageSize }" name="pageSize"/>
-                    <jsp:param value="${pager.pageNum }" name="page"/>
-                </jsp:include>
-            </div>
-        </div>
-    </div>
-</div>
+<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+<table class="table table-striped table-bordered table-hover dataTable table-set">
+    <thead>
+    <tr>
+        <th style="width: 25px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
+        <th width=70>姓名</th>
+        <th width=40>性别</th>
+        <th width=70>出生年月</th>
+        <th>单位职务</th>
+        <th width=70>干部状态</th>
+        <th width=70>现职级时间</th>
+    </thead>
+    <tbody>
+    <c:forEach items="${pager.datas}" var="vo">
+        <tr style="text-overflow:ellipsis;">
+            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101}"></td>
+            <td>${vo.a0101}</td>
+            <td>${vo.a0104Content}</td>
+            <td>${vo.a0107} </td>
+            <td>${vo.a0157}</td>
+            <td>${vo.gbztContent}</td>
+            <td st>${vo.xzjsj}</td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+<jsp:include page="/WEB-INF/jsp/common/page.jsp">
+    <jsp:param value="${pager.total }" name="total"/>
+    <jsp:param value="${pager.pageCount }" name="endPage"/>
+    <jsp:param value="${pager.pageSize }" name="pageSize"/>
+    <jsp:param value="${pager.pageNum }" name="page"/>
+</jsp:include>
 </body>
 </html>

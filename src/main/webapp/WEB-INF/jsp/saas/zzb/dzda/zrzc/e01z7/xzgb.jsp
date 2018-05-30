@@ -28,6 +28,7 @@
 
                 </div>--%>
                 <form action="$${path}/zzb/dzda/dazd/ajax/xzgb?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" name="form1" method="post" style="margin-bottom: 0px">
+                    <div style="margin: 10px">
                     <input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value=""/>
                     <input type="hidden" id="a38Ids" name="a38Ids" value=""/>
                     <div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
@@ -40,7 +41,7 @@
                     <Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery" selectClass="span12 m-wrap"
                                height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT"
                                token="${sessionScope.OWASP_CSRFTOKEN}"
-                               submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox"
+                               submitType="get" dataType="json" isSearch="false"
                                checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}"
                                defaultvalues="${gbztContentQuery}"/>
                 </div>
@@ -49,7 +50,7 @@
                     <Tree:tree id="daztCodeQuery" valueName="daztContentQuery" selectClass="span12 m-wrap"
                                height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT"
                                token="${sessionScope.OWASP_CSRFTOKEN}"
-                               submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox"
+                               submitType="get" dataType="json" isSearch="false"
                                checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}"
                                defaultvalues="${daztContentQuery}"/>
 
@@ -59,9 +60,9 @@
                     <button type="button" class="btn Short_but" onclick="searchList()">查询</button>
                     <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                 </div>
-
-                    <dl class="dlattrbute">
-                        <dd>
+                    </div>
+                    <dl class="dlattrbute" >
+                        <dd style="margin: 20px 10px;">
                             <div class="portlet-body" id="a38Table">
                                 <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                                 <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
@@ -121,23 +122,50 @@
 
     }
 
-
+    function clearData(){
+        $("#a0101Query").val("");
+        $("#gbztCodeQuery").val("");
+        $("#gbztContentQuery").val("");
+        $("#daztCodeQuery").val("");
+        $("#daztContentQuery").val("");
+        $.ajax({
+            url: "${path}/zzb/dzda/dazd/ajax/getA38List",
+            type: "post",
+            data: {},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                $('#a38Table').html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
+        });
+    }
     function searchList() {
-        alert("aaa")
-        debugger
+        var a0101Query = $("#a0101Query").val();
+        var gbztCodeQuery = $("#gbztCodeQuery").val();
+        var gbztContentQuery = $("#gbztContentQuery").val();
+        var daztCodeQuery = $("#daztCodeQuery").val();
+        var daztContentQuery = $("#daztContentQuery").val();
         $.ajax({
             url: "${path}/zzb/dzda/dazd/ajax/getA38List",
             type: "post",
             data: {
-                "pageNum":pageNum,
-                "pageSize":pageSize
+                "a0101Query":a0101Query,
+                "gbztCodeQuery":gbztCodeQuery,
+                "gbztContentQuery":gbztContentQuery,
+                "daztCodeQuery":daztCodeQuery,
+                "daztContentQuery":daztContentQuery,
             },
             dataType: "html",
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
             },
             success: function (html) {
-                alert(111)
+                $('#a38Table').html(html);
             },
             error: function (arg1, arg2, arg3) {
                 showTip("提示", "查询失败");

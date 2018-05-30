@@ -393,10 +393,26 @@ public class E01Z7Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/getA38List")
-    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize){
+    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize,
+                                     String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
+                                     String daztContentQuery){
+
         Map<String, Object> map = Maps.newHashMap();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
+        if(StringUtils.isNotBlank(a0101Query)){
+            query.add(CommonRestrictions.and(" a0101 like :a0101 ", "a0101", "%"+a0101Query+"%"));
+        }
+        if(StringUtils.isNotBlank(gbztCodeQuery)){
+            query.add(CommonRestrictions.and(" gbztCode = :gbztCode ", "gbztCode", gbztCodeQuery));
+            query.add(CommonRestrictions.and(" gbztContent = :gbztContent ", "gbztContent", gbztContentQuery));
+        }
+
+        if(StringUtils.isNotBlank(daztCodeQuery)){
+            query.add(CommonRestrictions.and(" daztCode = :daztCode ", "daztCode", daztCodeQuery));
+            query.add(CommonRestrictions.and(" daztContent = :daztContent ", "daztContent", daztContentQuery));
+        }
+
         Long total = a38Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("smxh"));
@@ -404,7 +420,7 @@ public class E01Z7Controller extends BaseController {
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
         map.put("pager",pager);
-        map.put("list",resultList);
+      //  map.put("list",resultList);
 
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/xzgbTable",map);
     }

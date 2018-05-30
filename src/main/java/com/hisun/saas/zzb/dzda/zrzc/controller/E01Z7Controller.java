@@ -376,7 +376,7 @@ public class E01Z7Controller extends BaseController {
     }
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/xzgb")
-    public ModelAndView plAddMlcl(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize){
+    public ModelAndView plAddMlcl(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
         Map<String, Object> map = Maps.newHashMap();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
@@ -393,7 +393,7 @@ public class E01Z7Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/getA38List")
-    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "5")int pageSize,
+    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
                                      String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
                                      String daztContentQuery){
 

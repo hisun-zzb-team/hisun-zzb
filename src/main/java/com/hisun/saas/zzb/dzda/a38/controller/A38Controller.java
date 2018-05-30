@@ -155,8 +155,13 @@ public class A38Controller extends BaseController {
         for(A38 entity : resultList){
             vo = new A38Vo();
             BeanUtils.copyProperties(entity,vo);
-            vo.setUpdateDateByShow(entity.getUpdateDate());
-            vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            if(entity.getUpdateDate()==null || entity.getUpdateDate().equals("")){
+                vo.setUpdateDateByShow(entity.getCreateDate());
+                vo.setUpdateUserNameByShow(entity.getCreateUserName());
+            }else {
+                vo.setUpdateDateByShow(entity.getUpdateDate());
+                vo.setUpdateUserNameByShow(entity.getUpdateUserName());
+            }
             a38Vos.add(vo);
         }
         PagerVo<A38Vo> pager = new PagerVo<A38Vo>(a38Vos, total, pageNum, pageSize);

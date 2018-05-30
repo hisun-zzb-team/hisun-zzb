@@ -363,7 +363,7 @@
             success : function(data){
                  myLoading.hide();
                 if(data.code==1){
-                    window.open("${path}/zzb/dzda/dazd/download?filePath="+data.filePath+"&a38IdsLength="+data.a38IdsLength+"&destPath="+data.destPath+"&fileName="+data.fileName+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+                    window.open("${path}/zzb/dzda/dazd/download?filePath="+data.filePath+"&a38IdsLength="+data.a38IdsLength+"&destPath="+data.destPath+"&fileName="+data.fileName+"&zipFileName="+data.zipFileName+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
                     window.location.href ="${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 }else{
                     showTip("提示", "出错了请联系管理员", 2000);

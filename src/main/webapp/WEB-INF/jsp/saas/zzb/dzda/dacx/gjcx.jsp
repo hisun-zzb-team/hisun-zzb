@@ -415,27 +415,49 @@
     var form1 = new EstValidate("form1");
 
     function save() {
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
-            type: "post",
-            data: {
-                "appQueryId": "${appQueryId}"
-            },
-            dataType: "html",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (html) {
-                $("#queryModelDiv").html(html);
-                $('#queryModelModal').modal({
-                    keyboard: true
+        var appQueryId = "${appQueryId}";
+        if(appQueryId!="" && appQueryId !=undefined){
+            $.ajax({
+                url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
+                type: "post",
+                data: {
+                    "appQueryId": "${appQueryId}"
+                },
+                dataType: "html",
+                headers: {
+                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success: function (html) {
+                    $("#queryModelDiv").html(html);
+                    $('#queryModelModal').modal({
+                        keyboard: true
+                    });
+                    // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                },
+                error: function (arg1, arg2, arg3) {
+                    showTip("提示", "查询失败");
+                }
+            });
+        }else {
+                $.ajax({
+                    url: "${path }/zzb/dzda/dacx/ajax/toBaocun",
+                    type: "post",
+                    dataType: "html",
+                    headers: {
+                        OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+                    },
+                    success: function (html) {
+                        $("#queryModelDiv").html(html);
+                        $('#queryModelModal').modal({
+                            keyboard: true
+                        });
+                        // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    },
+                    error: function (arg1, arg2, arg3) {
+                        showTip("提示", "查询失败");
+                    }
                 });
-                // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "查询失败");
-            }
-        });
+        }
     }
     function saveCxtj() {
         var bool = form1.form();

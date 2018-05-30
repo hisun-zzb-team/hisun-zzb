@@ -116,7 +116,7 @@ public class E01Z5Controller extends BaseController {
     @RequiresPermissions("dajs:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
-                             @RequestParam(value = "pageSize",defaultValue = "15")int pageSize,
+                             @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
                              @RequestParam(value="name",required = false)String name,
                              @RequestParam(value="e01Z507A",required = false)String e01Z507A,
                              @RequestParam(value="starTime",required = false)String starTime,

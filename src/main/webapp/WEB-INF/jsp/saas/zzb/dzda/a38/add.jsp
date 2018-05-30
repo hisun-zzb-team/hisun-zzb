@@ -26,9 +26,8 @@
 
 					</div>
 					<div class="relationbetTop_but">
-
-						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('0')">待审</button>
-						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('1')">入库</button>
+						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('1')"><i class="icon-ok"></i>入库</button>
+						<button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit('0')"><i class="icon-question-sign"></i>待审</button>
 						<a class="btn " href="javascript:cancel()"><i class="icon-remove-sign"></i> 取消</a>
 					</div>
 				</div>

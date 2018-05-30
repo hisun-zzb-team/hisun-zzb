@@ -16,10 +16,10 @@
         }
     </style>
     <div class="row-fluid">
-        <div class="span12">
+        <div>
             <%-- BEGIN SAMPLE FORM PORTLET 表单主体--%>
 
-            <div class="portlet box grey"  id="viewDiv" style="overflow: auto;margin: 0px;">
+            <div class="portlet box grey"  id="viewDiv" style="overflow: auto;">
                 <%--<div class="portlet-title">
                     &lt;%&ndash;<div class="caption">
                         <i class="icon-reorder"></i>
@@ -28,7 +28,7 @@
 
                 </div>--%>
                 <form action="$${path}/zzb/dzda/dazd/ajax/xzgb?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" name="form1" method="post" style="margin-bottom: 0px">
-                    <div style="margin: 10px">
+                <div style="margin-left: 10px;margin-bottom: 10px">
                     <input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value=""/>
                     <input type="hidden" id="a38Ids" name="a38Ids" value=""/>
                     <div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
@@ -60,16 +60,16 @@
                     <button type="button" class="btn Short_but" onclick="searchList()">查询</button>
                     <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                 </div>
-                    </div>
-                    <dl class="dlattrbute" >
-                        <dd style="margin: 20px 10px;">
-                            <div class="portlet-body" id="a38Table">
+             </div>
+                            <div class="portlet-body" id="a38Table"style=" padding-top: 5px;">
                                 <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                                 <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
                                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                                     <thead>
                                     <tr>
-                                        <th style="width: 25px;"><input type="checkbox" id="allCheck" onchange="allCheckChange()"/></th>
+                                        <th style="width: 25px;">
+                                           <input type="checkbox" id="allCheck" onchange="allCheckChange()">
+                                        </th>
                                         <th width=70>姓名</th>
                                         <th width=40>性别</th>
                                         <th width=70>出生年月</th>
@@ -98,8 +98,6 @@
                                     <jsp:param value="${pager.pageNum }" name="page"/>
                                 </jsp:include>
                             </div>
-                        </dd>
-                    </dl>
                 </form>
             </div>
         </div>
@@ -138,6 +136,7 @@
             },
             success: function (html) {
                 $('#a38Table').html(html);
+                App.init();
             },
             error: function (arg1, arg2, arg3) {
                 showTip("提示", "查询失败");
@@ -166,6 +165,7 @@
             },
             success: function (html) {
                 $('#a38Table').html(html);
+                App.init();
             },
             error: function (arg1, arg2, arg3) {
                 showTip("提示", "查询失败");
@@ -284,7 +284,7 @@
             },
             success:function(html){
                 $('#a38Table').html(html);
-
+                App.init();
                 var checks = document.getElementsByName("a38Check");
                 if(checks){
                     for(var i=0;i<checks.length;i++){

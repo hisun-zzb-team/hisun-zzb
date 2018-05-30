@@ -27,9 +27,39 @@
                     </div>&ndash;%&gt;
 
                 </div>--%>
-                <form action="$${path}/zzb/dzda/dazd/ajax/xzgb" class="form-horizontal" id="form1" method="post" style="margin-bottom: 0px">
+                <form action="$${path}/zzb/dzda/dazd/ajax/xzgb?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" class="form-horizontal" id="form1" name="form1" method="post" style="margin-bottom: 0px">
                     <input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value=""/>
                     <input type="hidden" id="a38Ids" name="a38Ids" value=""/>
+                    <div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
+                <div style=" float:left;">
+                    <input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}"
+                           style="width:80px;"/>
+                </div>
+                <div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
+                <div style="float:left;width: 160px;">
+                    <Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery" selectClass="span12 m-wrap"
+                               height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT"
+                               token="${sessionScope.OWASP_CSRFTOKEN}"
+                               submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox"
+                               checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}"
+                               defaultvalues="${gbztContentQuery}"/>
+                </div>
+                <div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
+                <div style="float:left;width: 160px;">
+                    <Tree:tree id="daztCodeQuery" valueName="daztContentQuery" selectClass="span12 m-wrap"
+                               height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT"
+                               token="${sessionScope.OWASP_CSRFTOKEN}"
+                               submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox"
+                               checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}"
+                               defaultvalues="${daztContentQuery}"/>
+
+                </div>
+                <div style="float:left">
+                    &nbsp;&nbsp;
+                    <button type="button" class="btn Short_but" onclick="searchList()">查询</button>
+                    <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
+                </div>
+
                     <dl class="dlattrbute">
                         <dd>
                             <div class="portlet-body" id="a38Table">
@@ -90,8 +120,51 @@
 //			$(".main_left").height(mainHeight);
 
     }
-    //当浏览器大小改变的时候,要重新计算
 
+
+    function searchList() {
+        alert("aaa")
+        debugger
+        $.ajax({
+            url: "${path}/zzb/dzda/dazd/ajax/getA38List",
+            type: "post",
+            data: {
+                "pageNum":pageNum,
+                "pageSize":pageSize
+            },
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                alert(111)
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
+        });
+
+
+        /*
+        $.ajax({
+            url: "${path}/zzb/dzda/dazd/ajax/getA38List",// 请求的action路径
+            type: 'POST',
+            dataType : "html",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data:{
+                "pageNum":pageNum,
+                "pageSize":pageSize
+            },
+            success:function(html){
+                $('#a38Table').html(html);
+            },
+            error: function () {// 请求失败处理函数
+                alert('请求失败');
+            }
+        });*/
+    }
     var ids = [];
 
     function saveXzda(){

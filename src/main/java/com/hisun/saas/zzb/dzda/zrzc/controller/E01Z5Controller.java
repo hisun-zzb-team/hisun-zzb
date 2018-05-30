@@ -24,23 +24,29 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a32.service.impl.A32ServiceImpl;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
 import com.hisun.saas.zzb.dzda.a38.controller.A38Controller;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.exchange.A38ExcelExchange;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.service.impl.A38ServiceImpl;
 import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
+import com.hisun.saas.zzb.dzda.a52.service.impl.A52ServiceImpl;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
 import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
+import com.hisun.saas.zzb.dzda.e01z2.service.impl.E01z2ServiceImpl;
 import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.saas.zzb.dzda.zrzc.Constants;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.exchange.DacdExcelExchange;
@@ -88,6 +94,8 @@ public class E01Z5Controller extends BaseController {
 
     @Resource
     private E01Z1Service e01Z1Service;
+
+    List<WrongExcelColumn> wrongExcelColumns;
 
     @Resource
     private A32Service a32Service;
@@ -236,6 +244,7 @@ public class E01Z5Controller extends BaseController {
             EntityWrapper.wrapperSaveBaseProperties(entity,details);
             e01z5Service.save(entity);
             returnMap.put("code",1);
+            returnMap.putAll(map);
         }catch (GenericException e){
             returnMap.put("code",-1);
             returnMap.put("message", e.getMessage());
@@ -280,7 +289,7 @@ public class E01Z5Controller extends BaseController {
     @RequiresPermissions("dajs:*")
     @RequestMapping("/updateHzrq")
     public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
-                                         @RequestParam(value = "hzrq",required = true) String hzrq){
+                                                       @RequestParam(value = "hzrq",required = true) String hzrq){
         Map<String,Object> model = new HashMap<String,Object>();
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -318,16 +327,6 @@ public class E01Z5Controller extends BaseController {
             logger.error(e, e);
         }
     }
-
-    private String encode(String filename) throws UnsupportedEncodingException {
-        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
-        }
-        return filename;
-    }
-
 
     @RequiresPermissions("dajs:*")
     @RequestMapping("/update")
@@ -379,174 +378,306 @@ public class E01Z5Controller extends BaseController {
     }
 
     private Map<String,Object> saveFile(String filePath,E01Z5Vo vo){
-        Map map = Maps.newHashMap();
-        String fileName = "";
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        boolean isRight=false;
+        Map<String,Object> returnMap = new HashMap<>();
         String tempFile = uploadBasePath+Constants.DAJSMB_STORE_PATH;
         A38ExcelVo a38ExcelVo = new A38ExcelVo();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38ExcelVo = (A38ExcelVo) a38ExcelExchange.fromExcel(A38ExcelVo.class,tempFile,filePath);
-            boolean a38Flag = false;//判断是否存在非法数据
-            if(a38ExcelVo!=null){
-
-                //新增档案
-                A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
-                A38 a38 = new A38();
-
-                if(StringUtils.isEmpty(jbxxA38Vo.getA0101())){
-                    a38Flag = true;
-                }
-
-                if (A38Controller.isNotDate(jbxxA38Vo.getA0107())) {
-                    a38Flag = true;
-                }
-
-                if(!a38Flag){
-                    fileName = jbxxA38Vo.getA0101();
-                    String a0104Content = jbxxA38Vo.getA0104Content();
-                    jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
-                    String gbztContent = jbxxA38Vo.getGbztContent();
-                    jbxxA38Vo.setGbztCode(getDictionaryItem(gbztContent,"SAN_GBZT"));
-
-                    org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
-                    a38.setId(null);
-                    a38.setSjzt("0");
-                    a38.setA3801(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
-                    a38.setJsr(details.getRealname());
-                    a38.setA3834(vo.getE01Z541());
-                    a38.setA3804B(vo.getE01Z507A());
-                    a38.setZryy(vo.getE01Z544());
-                    EntityWrapper.wrapperSaveBaseProperties(a38,details);
-                    String id = a38Service.save(a38);
-                    map.put("a38Id",id);
-                    if(StringUtils.isNotEmpty(id)){
-                        a38.setId(id);
-                        //新增职务变动
-                        A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
-                        if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
-                            List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
-                            for(int i=0;i<a52Vos.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
-                                A52 a52 = new A52();
-                                A52Vo a52Vo = a52Vos.get(i);
-                                Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
-                                if(StringUtils.isEmpty(a52Vo.getA5204())){
-                                    flag = true;
-                                }
-                                if(A38Controller.isNotDate(a52Vo.getA5227In())){
-                                    flag = true;
-                                }
-                                if(A38Controller.isNotDate(a52Vo.getA5227Out())){
-                                    flag = true;
-                                }
-
-                                if(flag){
-                                    continue;
-                                }
-                                org.springframework.beans.BeanUtils.copyProperties(a52Vo,a52);
-                                a52.setA38(a38);
-                                a52.setPx(oldPxInteger);
-                                EntityWrapper.wrapperSaveBaseProperties(a52,details);
-                                a52Service.save(a52);
-                            }
-                        }
-
-                        //添加工资变动记录
-                        List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
-                        if(gzbdList.size()>0){
-                            for(int i=0;i<gzbdList.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
-                                A32 a32 = new A32();
-                                A32Vo a32Vo = gzbdList.get(i);
-                                Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
-
-                                if(StringUtils.isEmpty(a32Vo.getGzbm())){
-                                    flag = true;
-                                }
-                                if(A38Controller.isNotDate(a32Vo.getA3207())){
-                                    flag = true;
-                                }
-
-                                if(flag){
-                                    continue;
-                                }
-
-                                org.springframework.beans.BeanUtils.copyProperties(a32Vo,a32);
-                                a32.setA38(a38);
-                                a32.setPx(oldPxInteger);
-                                EntityWrapper.wrapperSaveBaseProperties(a32,details);
-                                a32Service.save(a32);
-                            }
-                        }
-
-                        //添加材料接收记录
-                        List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
-                        if(e01z2Vos.size()>0){
-                            for(int i=0;i<e01z2Vos.size();i++){
-                                boolean flag = false;//判断是否存在非法数据
-                                E01Z2 e01z2 = new E01Z2();
-                                E01z2Vo e01z2Vo = e01z2Vos.get(i);
-                                Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
-
-                                if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
-                                    flag = true;
-                                }
-                                if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
-                                    flag = true;
-                                }
-                                if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
-                                    flag = true;
-                                }
-                                if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
-                                    flag = true;
-                                }
-
-                                if(flag){
-                                    continue;
-                                }
-
-                                String e01Z237Content = e01z2Vo.getE01Z237Content();
-                                e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
-                                String e01Z244Content = e01z2Vo.getE01Z244Content();
-                                e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
-
-                                org.springframework.beans.BeanUtils.copyProperties(e01z2Vo,e01z2);
-                                e01z2.setA38(a38);
-                                e01z2.setE01Z214(oldPxInteger);
-                                EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
-                                e01z2Service.save(e01z2);
-                            }
-                        }
-
-                        //添加目录信息及材料
-                        E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
-                        if(e01Z1ExcelVo!=null){
-                            addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id);
-                            addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id);
-                            addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id);
-                            addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id);
-                            addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id);
-                            addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id);
-                            addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id);
-                            addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id);
-                            addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id);
-                            addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id);
-                            addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id);
-                            addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id);
-                            addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id);
-                            addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id);
-                            addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id);
-                            addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id);
-                        }
-                    }
-                }
-
-            }
-        map.put("fileName",fileName);
+            returnMap=saveA38ExcelData(a38ExcelVo,details,returnMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return map;
+        isRight= (boolean) returnMap.get("isRight");
+        wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
+        returnMap.put("success",true);
+        if(isRight){
+            this.wrongExcelColumns = wrongExcelColumns;
+            returnMap.put("isWrong",true);
+        }else {
+            returnMap.put("isWrong",false);
+        }
+        return returnMap;
+    }
+
+    public Map<String,Object> saveA38ExcelData(A38ExcelVo a38ExcelVo, UserLoginDetails details, Map<String,Object> returnMap){
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        String id = "";
+        boolean isRight = false;
+        WrongExcelColumn wrongExcelColumn;
+        boolean a38Flag = false;//判断是否存在非法数据
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        returnMap.put("isRight",isRight);
+        if(a38ExcelVo!=null){
+            int sum = 0;
+            boolean flag = false;//判断是否存在非法数据
+            boolean flag1 = false;//判断必填数据是否全为空
+            //新增档案
+            A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
+            A38 a38 = new A38();
+
+            if(StringUtils.isEmpty(jbxxA38Vo.getA0101())){
+                wrongExcelColumn = new WrongExcelColumn();
+                wrongExcelColumn.setLines("C"+jbxxA38Vo.getRow());
+                wrongExcelColumn.setReason("姓名不能为空");
+                wrongExcelColumn.setWrongExcel("基本信息");
+                wrongExcelColumns.add(wrongExcelColumn);
+                a38Flag = true;
+                sum++;
+                a38Flag = true;
+            }
+
+            if (DaUtils.isNotDate(jbxxA38Vo.getA0107())) {
+                wrongExcelColumn = new WrongExcelColumn();
+                wrongExcelColumn.setLines("F"+jbxxA38Vo.getRow());
+                wrongExcelColumn.setReason("生日日期格式错误");
+                wrongExcelColumn.setWrongExcel("基本信息");
+                wrongExcelColumns.add(wrongExcelColumn);
+                a38Flag = true;
+                sum++;
+                a38Flag = true;
+            }
+
+            if(!a38Flag){
+
+                String a0104Content = jbxxA38Vo.getA0104Content();
+                jbxxA38Vo.setA0104(getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
+                String gbztContent = jbxxA38Vo.getGbztContent();
+                jbxxA38Vo.setGbztCode(getDictionaryItem(gbztContent,"SAN_GBZT"));
+
+                org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
+                a38.setId(null);
+                a38.setSjzt("1");
+                EntityWrapper.wrapperSaveBaseProperties(a38,details);
+                id = a38Service.save(a38);
+                returnMap.put("fileName",jbxxA38Vo.getA0101());
+                returnMap.put("a38Id",id);
+                if(StringUtils.isNotEmpty(id)){
+                    a38.setId(id);
+                    //新增职务变动
+                    A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
+                    if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
+                        List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
+                        for(int i=0;i<a52Vos.size();i++){
+                            flag = false;//判断是否存在非法数据
+                            flag1 = false;//判断必填数据是否全为空
+                            sum=0;
+                            A52 a52 = new A52();
+                            A52Vo a52Vo = a52Vos.get(i);
+                            Integer oldPxInteger=a52Service.getMaxSort(a52Vo.getId());
+                            if(StringUtils.isEmpty(a52Vo.getA5204())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("C"+a52Vo.getRow());
+                                wrongExcelColumn.setReason("部门名称不能为空");
+                                wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+
+                            }
+                            if(DaUtils.isNotDate(a52Vo.getA5227In())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("A"+a52Vo.getRow());
+                                wrongExcelColumn.setReason("任职时间格式错误");
+                                wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(DaUtils.isNotDate(a52Vo.getA5227Out())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("B"+a52Vo.getRow());
+                                wrongExcelColumn.setReason("免职时间格式错误");
+                                wrongExcelColumn.setWrongExcel("职务变动登记表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(StringUtils.isEmpty(a52Vo.getA5204())&&StringUtils.isEmpty(a52Vo.getA5227In())&&StringUtils.isEmpty(a52Vo.getA5227Out())){
+                                flag1 = true;
+                            }
+
+                            if(flag){
+                                if(flag1){
+                                    for(int j=0;j<sum;j++){
+                                        wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                    }
+                                }
+                                isRight = true;
+                                continue;
+                            }
+                            org.springframework.beans.BeanUtils.copyProperties(a52Vo,a52);
+                            a52.setA38(a38);
+                            a52.setPx(oldPxInteger);
+                            EntityWrapper.wrapperSaveBaseProperties(a52,details);
+                            a52Service.save(a52);
+                        }
+                    }
+
+                    //添加工资变动记录
+                    List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
+                    if(gzbdList.size()>0){
+                        for(int i=0;i<gzbdList.size();i++){
+                            flag = false;//判断是否存在非法数据
+                            flag1 = false;//判断必填数据是否全为空
+                            sum=0;
+                            A32 a32 = new A32();
+                            A32Vo a32Vo = gzbdList.get(i);
+                            Integer oldPxInteger=a32Service.getMaxSort(a32Vo.getId());
+
+                            if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("A"+a32Vo.getRow());
+                                wrongExcelColumn.setReason("工作部门不能为空");
+                                wrongExcelColumn.setWrongExcel("工资变动登记表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(DaUtils.isNotDate(a32Vo.getA3207())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("E"+a32Vo.getRow());
+                                wrongExcelColumn.setReason("日期格式错误");
+                                wrongExcelColumn.setWrongExcel("工资变动登记表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+
+                            if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                                flag1 = true;
+                            }
+
+                            if(flag){
+                                if(flag1){
+                                    for(int j=0;j<sum;j++){
+                                        wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                    }
+                                }
+                                isRight = true;
+                                continue;
+                            }
+
+                            org.springframework.beans.BeanUtils.copyProperties(a32Vo,a32);
+                            a32.setA38(a38);
+                            a32.setPx(oldPxInteger);
+                            EntityWrapper.wrapperSaveBaseProperties(a32,details);
+                            a32Service.save(a32);
+                        }
+                    }
+
+                    //添加材料接收记录
+                    List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
+                    if(e01z2Vos.size()>0){
+                        for(int i=0;i<e01z2Vos.size();i++){
+                            flag = false;//判断是否存在非法数据
+                            flag1 = false;//判断必填数据是否全为空
+                            sum=0;
+                            E01Z2 e01z2 = new E01Z2();
+                            E01z2Vo e01z2Vo = e01z2Vos.get(i);
+                            Integer oldPxInteger=e01z2Service.getMaxSort(e01z2Vo.getId());
+
+                            if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("A"+e01z2Vo.getRow());
+                                wrongExcelColumn.setReason("来件单位不能为空");
+                                wrongExcelColumn.setWrongExcel("材料接收表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("E"+e01z2Vo.getRow());
+                                wrongExcelColumn.setReason("材料名称不能为空");
+                                wrongExcelColumn.setWrongExcel("材料接收表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(DaUtils.isNotDate(e01z2Vo.getE01Z201())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("B"+e01z2Vo.getRow());
+                                wrongExcelColumn.setReason("收件日期格式错误");
+                                wrongExcelColumn.setWrongExcel("材料接收表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                            if(DaUtils.isNotDate(e01z2Vo.getE01Z227())){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("G"+e01z2Vo.getRow());
+                                wrongExcelColumn.setReason("材料制成日期格式错误");
+                                wrongExcelColumn.setWrongExcel("材料接收表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+
+                            if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())&&StringUtils.isEmpty(e01z2Vo.getE01Z221A())
+                                    &&StringUtils.isEmpty(e01z2Vo.getE01Z201())&&StringUtils.isEmpty(e01z2Vo.getE01Z227())){
+                                flag1 = true;
+                            }
+
+                            if(flag){
+                                if(flag1){
+                                    for(int j=0;j<sum;j++){
+                                        wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                    }
+                                }
+                                isRight = true;
+                                continue;
+                            }
+
+                            String e01Z237Content = e01z2Vo.getE01Z237Content();
+                            e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
+                            String e01Z244Content = e01z2Vo.getE01Z244Content();
+                            e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
+
+                            org.springframework.beans.BeanUtils.copyProperties(e01z2Vo,e01z2);
+                            e01z2.setA38(a38);
+                            e01z2.setE01Z214(oldPxInteger);
+                            EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
+                            e01z2Service.save(e01z2);
+                        }
+                    }
+
+                    returnMap.put("isRight",isRight);
+                    returnMap.put("wrongExcelColumns",wrongExcelColumns);
+                    //添加目录信息及材料
+                    E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
+                    if(e01Z1ExcelVo!=null){
+                        returnMap = addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getKysp(),"kysp",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getZscl(),"zscl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",id,returnMap);
+                        returnMap = addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",id,returnMap);
+                    }
+                }
+            }
+
+        }
+        return returnMap;
+    }
+
+    @RequestMapping(value = "/ajax/cwjl")
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("datas",this.wrongExcelColumns);
+        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
     }
 
     public String getCatalogCode(String listStr){
@@ -612,58 +743,107 @@ public class E01Z5Controller extends BaseController {
         return "";
     }
 
-    public void addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id){
+    /**
+     * 新增材料，将错误数据返回
+     * @param e01Z1Vos
+     * @param listStr
+     * @param a38Id
+     * @param returnMap
+     * @return
+     */
+    public Map<String,Object> addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id, Map<String,Object> returnMap){
+        List<WrongExcelColumn> wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
         if(e01Z1Vos.size()>0){
             //获得材料类别
-            String catalogCode = getCatalogCode(listStr);//获取材料类别Code
+            String catalogCode = DaUtils.getCatalogCode(listStr);//获取材料类别Code
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
             CommonOrderBy orderBy = new CommonOrderBy();
-            List<ECatalogTypeInfo> entities = this.eCatalogTypeService.list(query, orderBy);
+            List<ECatalogTypeInfo> entities = eCatalogTypeService.list(query, orderBy);
             ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
             if(entities.size()>0){
                 eCatalogTypeInfo=entities.get(0);
             }
+            WrongExcelColumn wrongExcelColumn;
 
             try {
 
                 for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
+                    int sum = 0;
                     boolean flag = false;//判断是否存在非法数据
+                    boolean flag1 = false;//判断必填数据是否全为空
                     if (e01Z1Vo != null) {
 
                         //判断必填材料是否为空
-                        if (e01Z1Vo.getE01Z104() == null || e01Z1Vo.getE01Z104() == 0) {
+                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("A"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("序号不能为空且大于0");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
-                        if (e01Z1Vo.getE01Z114() == null || e01Z1Vo.getE01Z114() == 0) {
+                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("F"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("页数不能为空且大于0");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
-                        if (com.hisun.util.StringUtils.isEmpty(e01Z1Vo.getE01Z111())) {
+                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("B"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("材料名称不能为空");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
                             flag = true;
+                            sum++;
                         }
 
                         //拼接日期
                         String e01Z117 = "";
-                        if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getYear())) {
+                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
                             e01Z117 = e01Z1Vo.getYear();
-                            if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getMonth())) {
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
                                 e01Z117 += e01Z1Vo.getMonth();
-                                if (com.hisun.util.StringUtils.isNotEmpty(e01Z1Vo.getDay())) {
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
                                     e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                        }
-                        if (A38Controller.isNotDate(e01Z117)) {
-                            flag = true;
+                            if(DaUtils.isNotDate(e01Z117)){
+                                flag = true;
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
+                                wrongExcelColumn.setReason("日期格式错误");
+                                wrongExcelColumn.setWrongExcel("干部档案目录表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
                         }
 
-                        if (flag) {
+                        if((e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0)
+                                &&(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0)
+                                &&StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            flag1 = true;
+                        }
+
+                        if(flag){
+                            if(flag1){
+                                for(int j=0;j<sum;j++){
+                                    wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                }
+                            }
+                            returnMap.put("isRight",true);
                             continue;
                         }
 
                         e01Z1Vo.setE01Z117(e01Z117);
 
-                        int sort = this.e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
+                        int sort = e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
                         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
                         E01Z1 e01Z1 = new E01Z1();
                         org.springframework.beans.BeanUtils.copyProperties(e01Z1Vo, e01Z1);
@@ -672,7 +852,7 @@ public class E01Z5Controller extends BaseController {
                         e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
                         e01Z1.setYjztps(0);
                         if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {
-                            e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                            e01Z1.setA38(a38Service.getByPK(a38Id));
                         }
                         EntityWrapper.wrapperSaveBaseProperties(e01Z1, userLoginDetails);
                         int newSort = e01Z1.getE01Z104();
@@ -690,5 +870,7 @@ public class E01Z5Controller extends BaseController {
                 e.printStackTrace();
             }
         }
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        return returnMap;
     }
 }

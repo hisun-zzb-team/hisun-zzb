@@ -36,6 +36,7 @@ import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 import com.hisun.saas.zzb.dzda.e01z4.exchange.QQclExcelExchange;
 import com.hisun.saas.zzb.dzda.e01z4.service.E01Z4Service;
 import com.hisun.saas.zzb.dzda.e01z4.vo.E01Z4Vo;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -390,7 +391,7 @@ public class E01Z4Controller extends BaseController {
                         break;
                     }
 
-                    if(A38Controller.isNotDate(e01Z4Vo.getFileTime())){
+                    if(DaUtils.isNotDate(e01Z4Vo.getFileTime())){
                         flag = true;
                     }
 

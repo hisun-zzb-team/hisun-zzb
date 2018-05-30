@@ -31,6 +31,7 @@ import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
 import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
 import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -287,7 +288,7 @@ public class A32Controller extends BaseController {
                         flag = true;
                         sum++;
                     }
-                    if(A38Controller.isNotDate(a32Vo.getA3207())){
+                    if(DaUtils.isNotDate(a32Vo.getA3207())){
                         wrongExcelColumn = new WrongExcelColumn();
                         wrongExcelColumn.setLines("E"+a32Vo.getRow());
                         wrongExcelColumn.setReason("日期格式错误");

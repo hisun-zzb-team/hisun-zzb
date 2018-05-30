@@ -37,6 +37,7 @@ import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.vo.EListRowCountVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -824,15 +825,30 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    public Map<String,Object> addE01z1(List<E01Z1Vo> e01Z1Vos,String listStr,String a38Id, Map<String,Object> returnMap){
+    @RequestMapping(value = "/ajax/cwjl")
+    public ModelAndView loadGjcx(HttpServletRequest request){
+        Map<String,Object> map = new HashMap<>();
+        map.put("datas",this.wrongExcelColumns);
+        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
+    }
+
+    /**
+     * 新增材料，将错误数据返回
+     * @param e01Z1Vos
+     * @param listStr
+     * @param a38Id
+     * @param returnMap
+     * @return
+     */
+    public Map<String,Object> addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id, Map<String,Object> returnMap){
         List<WrongExcelColumn> wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
         if(e01Z1Vos.size()>0){
             //获得材料类别
-            String catalogCode = getCatalogCode(listStr);//获取材料类别Code
+            String catalogCode = DaUtils.getCatalogCode(listStr);//获取材料类别Code
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
             CommonOrderBy orderBy = new CommonOrderBy();
-            List<ECatalogTypeInfo> entities = this.eCatalogTypeService.list(query, orderBy);
+            List<ECatalogTypeInfo> entities = eCatalogTypeService.list(query, orderBy);
             ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
             if(entities.size()>0){
                 eCatalogTypeInfo=entities.get(0);
@@ -841,11 +857,11 @@ public class E01Z1Controller extends BaseController {
 
             try {
 
-                for(E01Z1Vo e01Z1Vo:e01Z1Vos){
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
                     int sum = 0;
                     boolean flag = false;//判断是否存在非法数据
                     boolean flag1 = false;//判断必填数据是否全为空
-                    if(e01Z1Vo!=null){
+                    if (e01Z1Vo != null) {
 
                         //判断必填材料是否为空
                         if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
@@ -886,7 +902,8 @@ public class E01Z1Controller extends BaseController {
                                     e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                            if(A38Controller.isNotDate(e01Z117)){
+                            if(DaUtils.isNotDate(e01Z117)){
+                                flag = true;
                                 wrongExcelColumn = new WrongExcelColumn();
                                 wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
                                 wrongExcelColumn.setReason("日期格式错误");
@@ -915,21 +932,21 @@ public class E01Z1Controller extends BaseController {
 
                         e01Z1Vo.setE01Z117(e01Z117);
 
-                        int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeInfo.getCatalogCode());
+                        int sort = e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
                         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
                         E01Z1 e01Z1 = new E01Z1();
-                        BeanUtils.copyProperties(e01Z1, e01Z1Vo);
+                        org.springframework.beans.BeanUtils.copyProperties(e01Z1Vo, e01Z1);
                         e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
                         e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
                         e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
                         e01Z1.setYjztps(0);
-                        if(StringUtils.isNotBlank(a38Id)){
-                            e01Z1.setA38(this.a38Service.getByPK(a38Id));
+                        if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {
+                            e01Z1.setA38(a38Service.getByPK(a38Id));
                         }
-                        EntityWrapper.wrapperSaveBaseProperties(e01Z1,userLoginDetails);
+                        EntityWrapper.wrapperSaveBaseProperties(e01Z1, userLoginDetails);
                         int newSort = e01Z1.getE01Z104();
-                        if(newSort<sort){
-                            e01Z1Service.updateSortBeforSave(e01Z1,sort);
+                        if (newSort < sort) {
+                            e01Z1Service.updateSortBeforSave(e01Z1, sort);
                         }
                         e01Z1Service.save(e01Z1);
                     }
@@ -944,89 +961,6 @@ public class E01Z1Controller extends BaseController {
         }
         returnMap.put("wrongExcelColumns",wrongExcelColumns);
         return returnMap;
-    }
-
-    @RequestMapping(value = "/ajax/cwjl")
-    public ModelAndView loadGjcx(HttpServletRequest request){
-        Map<String,Object> map = new HashMap<>();
-        map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
-    }
-
-    public String getCatalogCode(String listStr){
-        String catalogCode = "";
-        if("jlcl".equals(listStr)){
-            catalogCode = "010";
-        }else if("zzcl".equals(listStr)){
-            catalogCode = "020";
-        }else if("jdcl".equals(listStr)){
-            catalogCode = "030";
-        }else if("xlxw".equals(listStr)){
-            catalogCode = "041";
-        }else if("zyzg".equals(listStr)){
-            catalogCode = "042";
-        }else if("kysp".equals(listStr)){
-            catalogCode = "043";
-        }else if("pxcl".equals(listStr)){
-            catalogCode = "044";
-        }else if("zscl".equals(listStr)){
-            catalogCode = "050";
-        }else if("dtcl".equals(listStr)){
-            catalogCode = "060";
-        }else if("jlicl".equals(listStr)){
-            catalogCode = "070";
-        }else if("cfcl".equals(listStr)){
-            catalogCode = "080";
-        }else if("gzcl".equals(listStr)){
-            catalogCode = "091";
-        }else if("rmcl".equals(listStr)){
-            catalogCode = "092";
-        }else if("cgcl".equals(listStr)){
-            catalogCode = "093";
-        }else if("dbdh".equals(listStr)){
-            catalogCode = "094";
-        }else if("qtcl".equals(listStr)){
-            catalogCode = "100";
-        }
-        return catalogCode;
-    }
-
-    public String getMlmc(String listStr){
-        String catalogCode = "";
-        if("jlcl".equals(listStr)){
-            catalogCode = "简历材料";
-        }else if("zzcl".equals(listStr)){
-            catalogCode = "自传材料";
-        }else if("jdcl".equals(listStr)){
-            catalogCode = "鉴定、考核、考察材料";
-        }else if("xlxw".equals(listStr)){
-            catalogCode = "学历学位材料";
-        }else if("zyzg".equals(listStr)){
-            catalogCode = "职业（任职）资格和评（聘）专业技术职务（职称）材料";
-        }else if("kysp".equals(listStr)){
-            catalogCode = "反映科研学术水平的材料";
-        }else if("pxcl".equals(listStr)){
-            catalogCode = "培训材料";
-        }else if("zscl".equals(listStr)){
-            catalogCode = "政审材料";
-        }else if("dtcl".equals(listStr)){
-            catalogCode = "加入党团材料";
-        }else if("jlicl".equals(listStr)){
-            catalogCode = "奖励材料";
-        }else if("cfcl".equals(listStr)){
-            catalogCode = "处分材料";
-        }else if("gzcl".equals(listStr)){
-            catalogCode = "工资";
-        }else if("rmcl".equals(listStr)){
-            catalogCode = "任免";
-        }else if("cgcl".equals(listStr)){
-            catalogCode = "出国";
-        }else if("dbdh".equals(listStr)){
-            catalogCode = "代表大会";
-        }else if("qtcl".equals(listStr)){
-            catalogCode = "其他供参考材料";
-        }
-        return catalogCode;
     }
 
 }

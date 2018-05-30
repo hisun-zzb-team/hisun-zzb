@@ -29,6 +29,7 @@ import com.hisun.saas.zzb.dzda.a52.exchange.ZwbdExcelExchange;
 import com.hisun.saas.zzb.dzda.a52.service.A52Service;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.a52.Constants;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -292,7 +293,7 @@ public class A52Controller extends BaseController {
                         sum++;
 
                     }
-                    if(A38Controller.isNotDate(a52Vo.getA5227In())){
+                    if(DaUtils.isNotDate(a52Vo.getA5227In())){
                         wrongExcelColumn = new WrongExcelColumn();
                         wrongExcelColumn.setLines("A"+a52Vo.getRow());
                         wrongExcelColumn.setReason("任职时间格式错误");
@@ -301,7 +302,7 @@ public class A52Controller extends BaseController {
                         flag = true;
                         sum++;
                     }
-                    if(A38Controller.isNotDate(a52Vo.getA5227Out())){
+                    if(DaUtils.isNotDate(a52Vo.getA5227Out())){
                         wrongExcelColumn = new WrongExcelColumn();
                         wrongExcelColumn.setLines("B"+a52Vo.getRow());
                         wrongExcelColumn.setReason("免职时间格式错误");

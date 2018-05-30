@@ -42,6 +42,20 @@
     <script type="text/javascript" src="${path}/js/bootstrap-datetimepicker.zh-CN.js"></script>
 </head>
 <body>
+<div id="e01z5Modal" class="modal container hide fade" tabindex="-1" data-width="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" id="closeE01z5" type="button"></button>
+                <h3 class="modal-title" id="addTitle" >
+                    导入文件错误列表
+                </h3>
+            </div>
+            <div class="modal-body" id="e01z5Div">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
 
     <div class="row-fluid">
@@ -372,7 +386,27 @@ var myLoading = new MyLoading("${path}",20000);
             success : function(data){
                  myLoading.hide();
                 if(data.code==1){
-                    window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    if(data.isWrong){
+                        $.ajax({
+                            url:"${path}/zzb/dzda/dajs/ajax/cwjl",
+                            type : "post",
+                            data: {},
+                            headers:{
+                                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                            },
+                            dataType : "html",
+                            success : function(html){
+                                $('#e01z5Div').html(html);
+
+                                $('#e01z5Modal').modal({backdrop: 'static', keyboard: false});
+                            },
+                            error : function(){
+                                showTip("提示","出错了请联系管理员", 1500);
+                            }
+                        });
+                    }else {
+                        window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    }
                 }else{
                     showTip("提示", "新增失败", 2000);
                 }
@@ -384,6 +418,9 @@ var myLoading = new MyLoading("${path}",20000);
         });
     }
 
+$("#closeE01z5").on("click",function(){
+    window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+});
 </script>
 </body>
 </html>

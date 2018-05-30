@@ -33,6 +33,7 @@ import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
 import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -301,7 +302,7 @@ public class E0z2Controller extends BaseController {
                         flag = true;
                         sum++;
                     }
-                    if(A38Controller.isNotDate(e01z2Vo.getE01Z201())){
+                    if(DaUtils.isNotDate(e01z2Vo.getE01Z201())){
                         wrongExcelColumn = new WrongExcelColumn();
                         wrongExcelColumn.setLines("B"+e01z2Vo.getRow());
                         wrongExcelColumn.setReason("收件日期格式错误");
@@ -310,7 +311,7 @@ public class E0z2Controller extends BaseController {
                         flag = true;
                         sum++;
                     }
-                    if(A38Controller.isNotDate(e01z2Vo.getE01Z227())){
+                    if(DaUtils.isNotDate(e01z2Vo.getE01Z227())){
                         wrongExcelColumn = new WrongExcelColumn();
                         wrongExcelColumn.setLines("G"+e01z2Vo.getRow());
                         wrongExcelColumn.setReason("材料制成日期格式错误");

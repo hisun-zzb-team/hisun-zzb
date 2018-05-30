@@ -59,7 +59,7 @@
                         </a>
                     </div>
                     <div class="btn-group" style="<c:if test="${wutiaojian=='wutiaojian'}">display: none</c:if>">
-                        <a onclick="editQuery()" class="btn green" href="#">
+                        <a onclick="edit()" class="btn green" href="#">
                             保存条件
                         </a>
                     </div>
@@ -221,7 +221,7 @@
     function editcxtj(id) {
         window.location.href = "${path}/zzb/dzda/dacx/gjcx?appQueryId=" + id + "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
-    function editQuery() {
+    function edit() {
         $.ajax({
             url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
             type: "post",

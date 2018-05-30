@@ -52,7 +52,7 @@
                                 <label class="control-label"
                                        style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;">
                                     &nbsp;&nbsp;&nbsp;<span class="required">*</span>顺序号：</label>
-                                <input size="16" type="text" class="span8 m-wrap"
+                                <input size="16" type="text" class="span8 m-wrap" number="true"
                                        required  value="<c:if test="${add =='add'}">${sort}</c:if><c:if test="${add !='add'}">${vo.px}</c:if>"
                                        id="px" name="px">
                             </div>

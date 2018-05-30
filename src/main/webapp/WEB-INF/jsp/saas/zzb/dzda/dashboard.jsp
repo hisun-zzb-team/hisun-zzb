@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+                    <a href="${path}/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl04.png">
                         <p>档案查阅</p>
                     </a>

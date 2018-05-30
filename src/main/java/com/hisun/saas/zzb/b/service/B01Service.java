@@ -7,13 +7,18 @@
 package com.hisun.saas.zzb.b.service;
 
 import com.hisun.base.service.BaseService;
+import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.zzb.b.entity.B01;
+import com.hisun.saas.zzb.b.vo.B01TreeNode;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
+
+import java.util.List;
 
 /**
  * @author liuzj {279421824@qq.com}
  */
 public interface B01Service extends BaseService<B01,String> {
-    public Integer getMaxSort(String a38Id);
-    void updatePx(int oldPx, int newPx, String a38Id);
+    public Integer getMaxSort(String parentId);
+    void updatePx(int oldPx, int newPx, String parentId);
+    List<B01TreeNode> getB01TreeVoList()throws Exception;
 }

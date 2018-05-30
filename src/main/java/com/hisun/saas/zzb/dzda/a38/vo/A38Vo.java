@@ -77,6 +77,7 @@ public class A38Vo  {
 
     private List<A52Vo> a52Vos;
     private List<E01Z4Vo> e01Z4Vos;
+    private Integer row;
 
     public String getId() {
         return id;
@@ -460,5 +461,13 @@ public class A38Vo  {
 
     public void setE01Z4Vos(List<E01Z4Vo> e01Z4Vos) {
         this.e01Z4Vos = e01Z4Vos;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
     }
 }

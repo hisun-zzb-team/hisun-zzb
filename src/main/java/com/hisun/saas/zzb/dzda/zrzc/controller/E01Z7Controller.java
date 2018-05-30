@@ -189,6 +189,11 @@ public class E01Z7Controller extends BaseController {
             new File(destPath).mkdirs();
             String filePath = "";
             String fileName = "";
+            String zipFileName = vo.getE01Z704A();
+            if(StringUtils.isNotEmpty(vo.getE01Z701())){
+                zipFileName = zipFileName+" "+vo.getE01Z701();
+            }
+
             for (String a38Id:a38ids){
                 filePath = getFilePath(a38Id,destPath);
                 entity = new E01Z7();
@@ -200,6 +205,9 @@ public class E01Z7Controller extends BaseController {
                 a38.setA3817(DateUtil.formatDefaultDate(new Date()));
                 a38Service.update(a38);
                 fileName=a38.getA0101();
+                if(StringUtils.isNotEmpty(a38.getA0107())){
+                    fileName=fileName+"("+a38.getA0107()+")";
+                }
                 ConvertUtils.register(new DateConverter(null), java.util.Date.class);
                 BeanUtils.copyProperties(entity, vo);
                 entity.setE01Z701(StringUtils.isNotBlank(vo.getE01Z701())? DateUtil.parseDefaultDate(vo.getE01Z701()) :null );
@@ -207,8 +215,8 @@ public class E01Z7Controller extends BaseController {
                 entity.setA38(a38);
                 entity.setName(a38.getA0101());
                 entity.setE01Z717(details.getRealname());
-                     entity.setFileName(fileName);
-                     entity.setFilePath(filePath);
+                entity.setFileName(fileName);
+                entity.setFilePath(filePath);
                 entity.setId(null);
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 e01z7Service.save(entity);
@@ -216,6 +224,7 @@ public class E01Z7Controller extends BaseController {
 
             if(a38ids.length>1){
                 returnMap.put("destPath", destPath);
+                returnMap.put("zipFileName", zipFileName);
             }else if(a38ids.length==1){
                 returnMap.put("filePath", filePath);
                 returnMap.put("fileName", fileName);
@@ -241,14 +250,15 @@ public class E01Z7Controller extends BaseController {
             ,@RequestParam(value="a38IdsLength",required = true) int a38IdsLength
             ,@RequestParam(value="destPath",required = true) String destPath
             ,@RequestParam(value="fileName",required = true) String fileName
+            ,@RequestParam(value="zipFileName",required = true) String zipFileName
             , HttpServletResponse resp){
         String zipFilePath = uploadBasePath+Constants.DACD_STORE_PATH+ UUIDUtil.getUUID()+".zip";
         try {
             if(a38IdsLength>1){
 
-                CompressUtil.zip(zipFilePath, destPath, "档案文件");
+                CompressUtil.zip(zipFilePath, destPath, "转递文件");
                 resp.setContentType("multipart/form-data");
-                resp.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoderUtil.encode("档案文件" + ".zip"));
+                resp.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoderUtil.encode("转递文件" +"("+zipFileName+")" + ".zip"));
                 OutputStream output = resp.getOutputStream();
                 FileInputStream fileInputStream = new FileInputStream(new File(zipFilePath));
                 byte[] buffer = new byte[8192];
@@ -610,7 +620,11 @@ public class E01Z7Controller extends BaseController {
             if(!storePathFile.exists()){
                 storePathFile.mkdirs();
             }
-            filePath = destPath+ UUIDUtil.getUUID()+".xlsx";
+            String fileName = a38.getA0101();
+            if(StringUtils.isNotEmpty(a38.getA0107())){
+                fileName=fileName+"("+a38.getA0107()+")";
+            }
+            filePath = destPath+ fileName+".xlsx";
             a38ExcelExchange.toExcel(a38ExcelVo, uploadBasePath+ Constants.DACDMB_STORE_PATH,filePath,xml, dml,map);
         } catch (Exception e) {
             e.printStackTrace();

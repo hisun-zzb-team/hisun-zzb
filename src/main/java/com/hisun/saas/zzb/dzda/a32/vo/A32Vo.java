@@ -22,6 +22,7 @@ public class A32Vo implements Serializable{
     private String a3204;//批准机关
     private String a3211;//批准文电号
     private Integer px;//工资变动顺序号
+    private Integer row;//行数
 
     public String getA3204() {
         return a3204;
@@ -101,5 +102,13 @@ public class A32Vo implements Serializable{
 
     public void setZwmc(String zwmc) {
         this.zwmc = zwmc;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
     }
 }

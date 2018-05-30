@@ -33,6 +33,7 @@ public class E01z2Vo implements Serializable {
     private String e01Z244;//是否已受理标识
     private String e01Z244Content;//是否已受理标识
     private Integer e01Z214;// 材料序号
+    private Integer row;//行数
 
     public String getE01Z237Content() {
         return e01Z237Content;
@@ -200,5 +201,13 @@ public class E01z2Vo implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
     }
 }

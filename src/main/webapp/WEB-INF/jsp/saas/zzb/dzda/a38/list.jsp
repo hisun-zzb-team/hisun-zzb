@@ -81,18 +81,18 @@
 							<li >
 								<a onclick="uploadZbdaFile()">导入excel</a>
 							</li>
-							<li >
-								<a onclick="unloadFile()">导入Lrmx</a>
-							</li>
-							<li >
-								<a onclick="unloadFile()">导入Lrm</a>
-							</li>
-							<li >
-								<a onclick="unloadFile()">导入HZB</a>
-							</li>
-							<li >
-								<a onclick="unloadFile()">导入7z</a>
-							</li>
+							<%--<li >--%>
+								<%--<a onclick="unloadFile()">导入Lrmx</a>--%>
+							<%--</li>--%>
+							<%--<li >--%>
+								<%--<a onclick="unloadFile()">导入Lrm</a>--%>
+							<%--</li>--%>
+							<%--<li >--%>
+								<%--<a onclick="unloadFile()">导入HZB</a>--%>
+							<%--</li>--%>
+							<%--<li >--%>
+								<%--<a onclick="unloadFile()">导入7z</a>--%>
+							<%--</li>--%>
 						</ul>
 					</div>
 					<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>

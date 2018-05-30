@@ -101,6 +101,34 @@
 					<dl class="dlattrbute">
 						<dt><a href="###">选择干部</a></dt>
 						<dd>
+							<div class="clearfix">
+								<div class="control-group">
+									<form action="${path}/zzb/dzda/e01z1/ajax/plGetA38List?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
+										<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+										<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+										<div style=" float:left;margin-top:4px">&nbsp;姓名:</div>
+										<div style=" float:left;">
+											<input type="text" class="m-wrap" name="a0101Query" id="a0101Query" value="${a0101Query}" style="width:80px;" />
+										</div>
+										<div style=" float:left;margin-top:4px">&nbsp;干部状态:</div>
+										<div style="float:left;width: 160px;">
+											<Tree:tree id="gbztCodeQuery" valueName="gbztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_GBZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+													   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${gbztCodeQuery}" defaultvalues="${gbztContentQuery}"/>
+										</div>
+										<div style=" float:left;margin-top:4px">&nbsp;档案状态:</div>
+										<div style="float:left;width: 160px;">
+											<Tree:tree id="daztCodeQuery" valueName="daztContentQuery"  selectClass="span12 m-wrap" height="30px" treeUrl="${path}/api/dictionary/tree?typeCode=SAN_DAZT" token="${sessionScope.OWASP_CSRFTOKEN}"
+													   submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${daztCodeQuery}" defaultvalues="${daztContentQuery}"/>
+
+										</div>
+										<div style="float:left">
+											&nbsp;&nbsp;<button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+											<button type="button" class="btn Short_but" onclick="clearData()">清空</button>
+										</div>
+									</form>
+								</div>
+
+							</div>
 							<div class="portlet-body" id="a38Table">
 								<table class="table table-striped table-bordered table-hover dataTable table-set">
 									<thead>
@@ -152,6 +180,11 @@
 	}
 
 	function pagehref (pageNum ,pageSize){
+		var a0101Query = $("#a0101Query").val();
+		var gbztCodeQuery = $("#gbztCodeQuery").val();
+		var gbztContentQuery = $("#gbztContentQuery").val();
+		var daztCodeQuery = $("#daztCodeQuery").val();
+		var daztContentQuery = $("#daztContentQuery").val();
 		$.ajax({
 			url: "${path}/zzb/dzda/e01z1/ajax/plGetA38List",// 请求的action路径
 			cache:false,
@@ -162,7 +195,12 @@
 			},
 			data:{
 				"pageNum":pageNum,
-				"pageSize":pageSize
+				"pageSize":pageSize,
+				"a0101Query":a0101Query,
+				"gbztCodeQuery":gbztCodeQuery,
+				"gbztContentQuery":gbztContentQuery,
+				"daztCodeQuery":daztCodeQuery,
+				"daztContentQuery":daztContentQuery
 			},
 			success:function(html){
 				$('#a38Table').html(html);
@@ -275,6 +313,59 @@
 				}
 			});
 		}
+	}
+
+	function searchSubmit(){
+		var a0101Query = $("#a0101Query").val();
+		var gbztCodeQuery = $("#gbztCodeQuery").val();
+		var gbztContentQuery = $("#gbztContentQuery").val();
+		var daztCodeQuery = $("#daztCodeQuery").val();
+		var daztContentQuery = $("#daztContentQuery").val();
+		$.ajax({
+			url: "${path}/zzb/dzda/e01z1/ajax/plGetA38List",// 请求的action路径
+			cache:false,
+			type: 'POST',
+			dataType : "html",
+			headers: {
+				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			data:{
+				"a0101Query":a0101Query,
+				"gbztCodeQuery":gbztCodeQuery,
+				"gbztContentQuery":gbztContentQuery,
+				"daztCodeQuery":daztCodeQuery,
+				"daztContentQuery":daztContentQuery
+			},
+			success:function(html){
+				$('#a38Table').html(html);
+
+//				var checks = document.getElementsByName("a38Check");
+//				if(checks){
+//					for(var i=0;i<checks.length;i++){
+//						var id = checks[i].value;
+//						var index = indexOf(ids,id);
+//						if(index>-1){
+//							checks[i].checked=true;
+//							checks[i].parentNode.className = "checked";
+//						}
+//					}
+//				}
+			},
+			error: function () {// 请求失败处理函数
+				alert('请求失败');
+			}
+		});
+	}
+
+	function clearData(){
+		$("#dabhQuery").val('');
+		$("#smxhQuery").val('');
+		$("#a0101Query").val('');
+		$("#gbztCodeQuery").val('');
+		$("#daztCodeQuery").val('');
+		$("#gbztContentQuery").val('');
+		$("#daztContentQuery").val('');
+		document.searchForm.submit();
 	}
 
 </script>

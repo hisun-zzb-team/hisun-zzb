@@ -348,16 +348,37 @@ public class E01Z1Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/plGetA38List")
-    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
+    public ModelAndView plGetA38List(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize
+            ,@RequestParam String a0101Query,@RequestParam String gbztCodeQuery,@RequestParam String gbztContentQuery,@RequestParam String daztCodeQuery,@RequestParam String daztContentQuery){
         Map<String, Object> map = Maps.newHashMap();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" sjzt = :sjzt ", "sjzt", "1"));
+        if(StringUtils.isNotEmpty(a0101Query)){
+            query.add(CommonRestrictions.and(" a0101 like :a0101 ", "a0101", "%" + a0101Query + "%") );
+        }
+        if(StringUtils.isNotEmpty(gbztCodeQuery)){
+            query.add(CommonRestrictions.and(" gbztCode = :gbztCode ", "gbztCode", gbztCodeQuery));
+        }
+        if(StringUtils.isNotEmpty(gbztContentQuery)){
+            query.add(CommonRestrictions.and(" gbztContent = :gbztContent ", "gbztContent", gbztContentQuery));
+        }
+        if(StringUtils.isNotEmpty(daztCodeQuery)){
+            query.add(CommonRestrictions.and(" daztCode = :daztCode ", "daztCode", daztCodeQuery));
+        }
+        if(StringUtils.isNotEmpty(daztContentQuery)){
+            query.add(CommonRestrictions.and(" daztContent = :daztContent ", "daztContent", daztContentQuery));
+        }
         Long total = a38Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("smxh"));
         orderBy.add(CommonOrder.asc("a0101"));
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A38> pager = new PagerVo<A38>(resultList, total.intValue(), pageNum, pageSize);
+        map.put("a0101Query",a0101Query);
+        map.put("gbztCodeQuery",gbztCodeQuery);
+        map.put("daztCodeQuery",daztCodeQuery);
+        map.put("gbztContentQuery",gbztContentQuery);
+        map.put("daztContentQuery",daztContentQuery);
         map.put("pager",pager);
         map.put("list",resultList);
 

@@ -190,7 +190,7 @@
 			}
 		}
 		if(checkedCount == 0){
-			showTip("提示","请选择要入库的干部",2000);
+			showTip("提示","请选择要入库的档案",2000);
 			return;
 		}
 		$.ajax({

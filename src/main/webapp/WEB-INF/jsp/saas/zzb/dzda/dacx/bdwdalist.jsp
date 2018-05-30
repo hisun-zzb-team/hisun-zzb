@@ -260,29 +260,9 @@
     }
 
     function pagehref(pageNum, pageSize) {
-        $("#pageNum").val(pageNum);
-        $("#pageSize").val(pageSize);
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/ajax/bdwdalistById",
-            type: "post",
-            data: {
-                "appQueryId": $("#appQueryId").val(),
-                "pageNum": pageNum,
-                "pageSize": pageSize
-            },
-            dataType: "html",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (html) {
-                var view = $("#tab_show");
-                view.html(html);
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "档案信息加载失败");
-            }
-        });
-//		$("#searchForm").submit();
+        var appQueryId =$("#appQueryId").val();
+        window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?appQueryId="+
+                appQueryId+"&pageNum="+pageNum+"&pageSize="+pageSize+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
     function searchSubmit() {

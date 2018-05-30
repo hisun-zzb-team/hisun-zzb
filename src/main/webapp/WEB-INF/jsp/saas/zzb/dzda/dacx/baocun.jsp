@@ -31,7 +31,7 @@
                             <div class="controls" style="margin-left: 0px">
                                 <label class="control-label"
                                        style="display: inline;width: 70px;line-height: 30px;margin-left: 30px !important;"><span
-                                        class="required">*</span>查阅名称：</label>
+                                        class="required">*</span>查询名称：</label>
                                 <input size="16" type="text" class="span8 m-wrap" value="${vo.queryName}" style="margin-top: 10px"
                                        id="queryName" name="queryName" required maxlength="200">
                             </div>
@@ -44,7 +44,7 @@
                                         <textarea size="16" type="text" class="span8 m-wrap" rows="3"
                                                   style="resize: none;"
                                                   id="description" name="description" maxlength="200"
-                                                  required>${vo.description}</textarea>
+                                                  >${vo.description}</textarea>
                             </div>
                         </div>
                         <div class="control-group" id="pxGroup" style="margin-bottom: 0px;">
@@ -102,22 +102,22 @@
 <script type="text/javascript">
    var myVld = new EstValidate("form2");
     var editQuery= "${editQuery}";
+   var editModel = "${editModel}";
     function upadateOrSaveCxtj() {
         var bool = myVld.form();
         if(!bool){
             return;
         }
-        if(editQuery=="editQuery"){
+            var appQueryId = "${appQueryId}";
+            var queryName = $("#queryName").val();
+            var description = $("#description").val();
+            var px = $("#px").val();
+            var queryType = $("input[name='queryType']:checked").val();
             $.ajax({
-                url: "${path }/zzb/dzda/dacx/saveById",
+                url: "${path }/zzb/dzda/dacx/save?queryName=" + queryName +
+                "&description=" + description +"&queryType=" + queryType+"&px=" + px+"&appQueryId="+appQueryId+"&editQuery="+editQuery+"&editModel="+editModel,
                 type: "post",
-                data: {
-                    "appQueryId": "${vo.id}",
-                    "queryName": $("#queryName").val(),
-                    "description": $("#description").val(),
-                    "queryType": $("input[name='queryType']:checked").val(),
-                    "px": $("#px").val()
-                },
+                data: $("#form1").serialize(),
                 dataType: "json",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -126,37 +126,13 @@
                     if(editQuery=="editQuery"){
                         window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     }else {
-                        window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?appQueryId=${appQueryId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                        window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?appQueryId="+json.appQueryId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     }
                 },
                 error: function (arg1, arg2, arg3) {
                     showTip("提示", "查询失败");
                 }
             });
-        }else {
-         //   alert("${queryVo}");
-            var appQueryId = "${appQueryId}";
-            var queryName = $("#queryName").val();
-            var description = $("#description").val();
-            var px = $("#px").val();
-            var queryType = $("input[name='queryType']:checked").val();
-            $.ajax({
-                url: "${path }/zzb/dzda/dacx/save?queryName=" + queryName +
-                "&description=" + description +"&queryType=" + queryType+"&px=" + px,
-                type: "post",
-                data: $("#form1").serialize(),
-                dataType: "json",
-                headers: {
-                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-                },
-                success: function (json) {
-                    window.location.href= "${path}/zzb/dzda/dacx/bdwdalist?appQueryId="+json.appQueryId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-                },
-                error: function (arg1, arg2, arg3) {
-                    showTip("提示", "查询失败");
-                }
-            });
-        }
     }
 </script>
 </body>

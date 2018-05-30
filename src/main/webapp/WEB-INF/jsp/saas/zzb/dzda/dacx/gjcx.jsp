@@ -415,10 +415,11 @@
     var form1 = new EstValidate("form1");
 
     function save() {
+        debugger
         var appQueryId = "${appQueryId}";
         if(appQueryId!="" && appQueryId !=undefined){
             $.ajax({
-                url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
+                url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery&editModel=editModel",
                 type: "post",
                 data: {
                     "appQueryId": "${appQueryId}"

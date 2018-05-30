@@ -6,7 +6,6 @@
 
 package com.hisun.saas.zzb.dzda.a38.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hisun.base.controller.BaseController;
 import com.hisun.base.dao.util.CommonConditionQuery;
@@ -22,10 +21,6 @@ import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
 import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.log.LogOperateType;
-import com.hisun.saas.sys.log.RequiresLog;
-import com.hisun.saas.sys.tenant.tenant.service.TenantService;
-import com.hisun.saas.sys.tenant.user.service.TenantUserService;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
@@ -49,12 +44,11 @@ import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
+import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
 import com.hisun.util.ValidateUtil;
-import com.hisun.util.WebUtil;
 import org.apache.commons.io.FileUtils;
-import com.hisun.util.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +63,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**

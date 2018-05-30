@@ -119,12 +119,48 @@ public class DzdaQueryInfoController extends BaseController {
                                     @RequestParam(value = "queryName", required = true) String queryName,
                                     @RequestParam(value = "description", required = false) String description,
                                     @RequestParam(value = "queryType", required = false) String queryType,
-                                    @RequestParam(value = "px", required = true) Integer px) {
+                                    @RequestParam(value = "px", required = true) Integer px,
+                                    @RequestParam(value = "appQueryId", required = false) String appQueryId,
+                                    @RequestParam(value = "editQuery", required = false)String editQuery,
+                                    @RequestParam(value = "editModel", required = false)String editModel) {
         Map<String, Object> model = Maps.newHashMap();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        if(StringUtils.isNotBlank(appQueryId)){
+            DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
+            dzdaQueryInfo.setQueryName(queryName);
+            dzdaQueryInfo.setDescription(description);
+            dzdaQueryInfo.setQueryType(queryType);
+            int newPx = px;
+            int oldPx = dzdaQueryInfo.getPx();
+            if (oldPx != newPx) {
+                this.dzdaQueryInfoService.updatePx(oldPx, newPx,details.getTenantId());
+            }
+            if(StringUtils.isNotBlank(editModel)){
+                String queryModel = JacksonUtil.nonDefaultMapper().toJson(queryVo);
+                dzdaQueryInfo.setQueryModel(queryModel);
+            }
+            dzdaQueryInfo.setPx(px);
+            dzdaQueryInfo.setQueryStatus("0");
+            EntityWrapper.wrapperSaveBaseProperties(dzdaQueryInfo, details);
+            dzdaQueryInfoService.update(dzdaQueryInfo);
+            model.put("appQueryId", appQueryId);
+            return model;
+        }
         DzdaQueryInfo entity = new DzdaQueryInfo();
         entity.setQueryStatus("0");
         entity.setQueryName(queryName);
         entity.setQueryType(queryType);
+        int newPx = px;
+        int oldPx = 0;
+        Integer oldPxInteger=dzdaQueryInfoService.getMaxSort(details.getTenantId());
+        if(oldPxInteger != null){
+            oldPx = oldPxInteger.intValue();
+        }else{
+            oldPx = 1;
+        }
+        if (oldPx != newPx) {
+            this.dzdaQueryInfoService.updatePx(oldPx, newPx,details.getTenantId());
+        }
         entity.setPx(px);
         entity.setDescription(description);
         String id = this.saveModel(queryVo, entity);
@@ -227,7 +263,8 @@ public class DzdaQueryInfoController extends BaseController {
     @RequestMapping("/ajax/toBaocun")
     public ModelAndView toBaocun(@ModelAttribute DakVo queryVo,
                                  @RequestParam(value = "appQueryId", required = false) String appQueryId,
-                                 @RequestParam(value = "editQuery", required = false) String editQuery){
+                                 @RequestParam(value = "editQuery", required = false) String editQuery,
+                                 @RequestParam(value = "editModel",required = false) String editModel){
         Map<String, Object> model = new HashMap<String, Object>();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         if(StringUtils.isNotBlank(appQueryId)){
@@ -245,7 +282,9 @@ public class DzdaQueryInfoController extends BaseController {
             model.put("sort", sort);
            // model.put("queryVo",queryVo);
         }
+        model.put("appQueryId",appQueryId);
         model.put("editQuery",editQuery);
+        model.put("editModel",editModel);
         return new ModelAndView("saas/zzb/dzda/dacx/baocun",model);
     }
 
@@ -257,6 +296,8 @@ public class DzdaQueryInfoController extends BaseController {
                                   @RequestParam(value = "appQueryId", required = false) String appQueryId,
                                   @RequestParam(value = "ercichaxun", required = false) String ercichaxun) throws UnsupportedEncodingException {
         Map<String, Object> model = new HashMap<String, Object>();
+        String baocunFlag="";
+        String appQueryIdValue = "";
         if (StringUtils.isNotBlank(appQueryId)) {
             DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
             queryVo = JacksonUtil.nonDefaultMapper().fromJson(dzdaQueryInfo.getQueryModel(), DakVo.class);
@@ -265,13 +306,12 @@ public class DzdaQueryInfoController extends BaseController {
             gbztContentQuery = queryVo.getGbztContents();
             daztCodeQuery = queryVo.getDaztCodes();
             daztContentQuery = queryVo.getDaztContents();
-            model.put("appQueryId", appQueryId);
+          //  model.put("appQueryId", appQueryId);
+            appQueryIdValue= appQueryId;
             model.put("fanhui", "1");
         } else if (queryType != null && queryType.equals("listQuery")) {//listQuery
+
             DakVo queryDakVo = new DakVo();
-            if (queryDakVo == null) {
-                queryDakVo = new DakVo();
-            }
             queryDakVo.setA0101(a0101Query);
             queryDakVo.setGbztCodes(gbztCodeQuery);
             queryDakVo.setGbztContents(gbztContentQuery);
@@ -279,14 +319,15 @@ public class DzdaQueryInfoController extends BaseController {
             queryDakVo.setDaztContents(daztContentQuery);
             queryVo = queryDakVo;
             if(StringUtils.isNotBlank(ercichaxun))
-                model.put("appQueryId",ercichaxun );
-
+                //model.put("appQueryId",ercichaxun );
+                appQueryIdValue = ercichaxun;
             model.put("fanhui", "1");
         } else if (queryType != null && queryType.equals("gaojichaxun")) {
             DzdaQueryInfo dzdaQueryInfo = new DzdaQueryInfo();
             dzdaQueryInfo.setQueryStatus("1");
             model.put("gaojichaxun", "gaojichaxun");
-            model.put("appQueryId", this.saveModel(queryVo, dzdaQueryInfo));
+          //  model.put("appQueryId", this.saveModel(queryVo, dzdaQueryInfo));
+            appQueryIdValue = this.saveModel(queryVo, dzdaQueryInfo);
             a0101Query = queryVo.getA0101();
             gbztCodeQuery = queryVo.getGbztCodes();
             gbztContentQuery = queryVo.getGbztContents();
@@ -294,8 +335,9 @@ public class DzdaQueryInfoController extends BaseController {
             daztContentQuery = queryVo.getDaztContents();
             model.put("fanhui", "1");
         }else {
+            baocunFlag="0";
             queryVo= new DakVo();
-            model.put("wutiaojian","wutiaojian");
+            model.put("baocunFlag",baocunFlag);
         }
 
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
@@ -323,12 +365,12 @@ public class DzdaQueryInfoController extends BaseController {
             BeanUtils.copyProperties(i, vo1);
             dzdaQueryInfoVos.add(vo1);
         }
+        model.put("appQueryId",appQueryIdValue);
         //查询queryName用
-        String id = (String)model.get("appQueryId");
-        if(StringUtils.isNotBlank(id)){
-            model.put("queryName",dzdaQueryInfoService.getByPK(id).getQueryName());
+       // String id = (String)model.get("appQueryId");
+        if(StringUtils.isNotBlank(appQueryIdValue)){
+            model.put("queryName",dzdaQueryInfoService.getByPK(appQueryIdValue).getQueryName());
         }
-
         model.put("a0101Query", a0101Query);
         model.put("gbztCodeQuery", gbztCodeQuery);
         model.put("daztCodeQuery", daztCodeQuery);

@@ -30,7 +30,7 @@
                         color="red"> ${pager.total } </font>条记录
                 </div>
                 <div class="clearfix fr">
-                    <c:if test='${wutiaojian=="wutiaojian"}'>
+                    <c:if test='${appQueryId==""}'>
                         <div class="btn-group">
                             <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                                 条件查询 <i class="icon-angle-down"></i>
@@ -58,7 +58,7 @@
                             导出
                         </a>
                     </div>
-                    <div class="btn-group" style="<c:if test="${wutiaojian=='wutiaojian'}">display: none</c:if>">
+                    <div class="btn-group" style="<c:if test='${appQueryId==""}'>display: none</c:if>">
                         <a onclick="edit()" class="btn green" href="#">
                             保存条件
                         </a>
@@ -217,10 +217,6 @@
 
     })();
 
-    //常用查询项
-    function editcxtj(id) {
-        window.location.href = "${path}/zzb/dzda/dacx/gjcx?appQueryId=" + id + "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-    }
     function edit() {
         $.ajax({
             url: "${path }/zzb/dzda/dacx/ajax/toBaocun?editQuery=editQuery",
@@ -237,142 +233,12 @@
                 $('#queryModelModal').modal({
                     keyboard: true
                 });
-                // window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "查询失败");
-            }
-        });
-
-        /*$.ajax({
-         url : "
-        ${path }/zzb/dzda/dacx/ajax/getById",
-         type : "post",
-         data : {"appQueryId":"
-        ${appQueryId}"},
-         dataType : "json",
-         headers:{
-         OWASP_CSRFTOKEN:"
-        ${sessionScope.OWASP_CSRFTOKEN}"
-         },
-         success : function(json){
-         $("#appQueryId").val(json.queryVo.id);
-         $("#queryName").val(json.queryVo.queryName);
-         $("#description").val(json.queryVo.description);
-         $("#px").val(json.queryVo.px);
-         if (json.queryVo.queryType == '1') {
-         $("#query0")[0].parentNode.className = "";
-         $("#query0").removeAttr('checked');
-         $("#query1")[0].parentNode.className = "checked";
-         $("#query1").attr('checked', 'checked')
-         } else {
-         $("#query1")[0].parentNode.className = "";
-         $("#query1").removeAttr('checked');
-         $("#query0")[0].parentNode.className = "checked";
-         $("#query0").attr('checked', 'checked')
-         }
-         $('#queryModelModal').modal({
-         keyboard: true
-         });
-         },
-         error : function(arg1, arg2, arg3){
-         showTip("提示","加载失败");
-         }
-         });*/
-
-    }
-
-    /*  function cs(){
-     var radioNode = $("#cgfcggcgfgfg")[0];
-     var parent = radioNode.parentNode
-     parent.className = "checked"
-     $("#cgfcggcgfgfg").attr("checked","checked");
-     }*/
-    function upadateCxtj() {
-        var queryName = $("#queryName").val();
-        if (queryName == "") {
-            showTip("提示", "请填写条件名称!");
-            return;
-        }
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/saveById",
-            type: "post",
-            data: {
-                "appQueryId": $("#appQueryId").val(),
-                "queryName": $("#queryName").val(),
-                "description": $("#description").val(),
-                "queryType": $("input[name='queryType']:checked").val(),
-                "px": $("#px").val()
-            },
-            dataType: "json",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (json) {
-                window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             },
             error: function (arg1, arg2, arg3) {
                 showTip("提示", "查询失败");
             }
         });
     }
-
-
-    function toQuery(id) {
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/bdwdalistById",
-            type: "post",
-            data: {"appQueryId": id},
-            dataType: "html",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (html) {
-                /*  $('#gjcxModal').modal('hide');
-                 $('#gjcxDiv').html("");*/
-                var view = $("#tab_show");
-                view.html("");
-                view.html(html);
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "查询失败");
-            }
-        });
-    }
-    function save() {
-        $('#queryModelModal').modal({
-            keyboard: true
-        });
-    }
-    function saveCxtj() {
-        var queryName = $("#queryName").val();
-        if (queryName == "") {
-            showTip("提示", "请填写条件名称!");
-            return;
-        }
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/saveById",
-            type: "post",
-            data: {
-                "appQueryId": "${appQueryId}",
-                "queryName": $("#queryName").val(),
-                "description": $("#description").val()
-            },
-            dataType: "json",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (json) {
-
-                window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?appQueryId=${appQueryId}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "查询失败");
-            }
-        });
-    }
-
-
     function cancel() {
         $.ajax({
             url: "${path}/zzb/dzda/dacx/ajax/gjcx",
@@ -420,40 +286,8 @@
     }
 
     function searchSubmit() {
-        /* var a0101Query = $("#a0101Query").val();
-         var gbztCodeQuery = $("#gbztCodeQuery").val();
-         var gbztContentQuery = $("#gbztContentQuery").val();
-         var daztCodeQuery = $("#daztCodeQuery").val();
-         var daztContentQuery = $("#daztContentQuery").val();
-         var data = $("#form1").serialize();
-         $.ajax({
-         url : "
-        ${path }/zzb/dzda/dacx/bdwdalist?queryType=listQuery",
-         type : "post",
-         data :{
-         "data":data,
-         "a0101Query":a0101Query,
-         "gbztCodeQuery":gbztCodeQuery,
-         "gbztContentQuery":gbztContentQuery,
-         "daztCodeQuery":daztCodeQuery,
-         "daztContentQuery":daztContentQuery
-         },
-         dataType : "html",
-         headers:{
-         OWASP_CSRFTOKEN:"
-        ${sessionScope.OWASP_CSRFTOKEN}"
-         },
-         success : function(html){
-         var view = $("#tab_show");
-         view.html(html);
-         },
-         error : function(arg1, arg2, arg3){
-         showTip("提示","档案库列表加载失败");
-         }
-         });*/
         document.searchForm.submit();
     }
-
     var viewImageMain = function (a38Id, a0101) {
         var divHeight = $(window).height() - 60;
         var divWidth = $(window).width() - 100;
@@ -495,27 +329,6 @@
         window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
-
-    var gjcx = function () {
-        $.ajax({
-            url: "${path}/zzb/dzda/dak/ajax/gjcx",
-            type: "post",
-            data: {},
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType: "html",
-            success: function (html) {
-                $('#gjcxModal').modal({
-                    keyboard: true
-                });
-                $('#gjcxDiv').html(html);
-            },
-            error: function () {
-                showTip("提示", "出错了请联系管理员", 1500);
-            }
-        });
-    }
 </script>
 </body>
 </html>

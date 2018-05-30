@@ -82,11 +82,15 @@
                                     <label class="control-label">档案名称<span class="required">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="span8 m-wrap" name="name" maxlength="200" id="name"
+                                        <input type="text" class="span7 m-wrap" name="name" maxlength="200" id="name"
                                                required readonly
-                                               value=""/>
-                                        <a href="javascript:xzda()">选择档案</a>
+                                               value="" onclick="xzda()"/>
+                                        <a id="sample_editable_1_new" class="btn green" href="javascript:xzda()">
+                                            <i class="icon-plus"></i> 选择档案
+                                        </a>
+                                        <%--<div style="float:left;margin-top:4px"><a href="javascript:xzda()">选择档案</a></div>--%>
                                     </div>
+
                                     <input type="hidden" class="span10 m-wrap" name="nameContent" maxlength="200" id="nameContent"
                                            required
                                            value=""/>

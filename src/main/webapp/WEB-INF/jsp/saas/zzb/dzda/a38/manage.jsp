@@ -62,8 +62,8 @@
 <div class="portlet-title">
 	<div class="caption">姓名：${a0101}</div>
 	<div class="clearfix fr">
-		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
 		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库 </button>
+		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
 		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
 			<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
 			<%--干部库 <i class="icon-angle-down"></i>--%>

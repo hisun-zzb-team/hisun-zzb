@@ -64,8 +64,7 @@
 							<th width=120>转递原因</th>
 							<th width=60>回执人</th>
 							<th width=70 style="text-align: center">回执日期</th>
-							<th width=60  style="text-align: center">填写回执</th>
-							<th width=120  style="text-align: center">操作</th>
+							<th width=170  style="text-align: center">操作</th>
 						</thead>
 						<tbody>
 							<c:forEach items="${pager.datas}" var="vo">
@@ -77,8 +76,8 @@
 									<TD ><c:out value="${vo.e01Z721}"></c:out></TD>
 									<TD><c:out value="${vo.e01Z724}"></c:out></TD>
 									<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z727}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
-									<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">修改</a></TD>
-									<TD style="text-align: center"><a href="${path}/zzb/dzda/dazd/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a>|
+									<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">填写回执</a>|
+										<a href="${path}/zzb/dzda/dazd/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a>|
 										<a href="javascript:deleteE01z7('${vo.id}') ">删除</a>|
 										<c:choose>
 											<c:when test="${vo.fileName == '' || vo.fileName == null}">

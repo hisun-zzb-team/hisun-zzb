@@ -84,9 +84,7 @@
 					<th width=70>案卷质量</th>
 					<th width=110  style="text-align: center">回执日期</th>
 					<th width=120  style="text-align: center">档案位置</th>
-					<th width=60  style="text-align: center">填写回执</th>
-					<th width=60  style="text-align: center">查看</th>
-					<th width=50  style="text-align: center">文件下载</th>
+					<th width=130  style="text-align: center">操作</th>
 					</thead>
 					<tbody>
 					<c:forEach items="${pager.datas}" var="vo">
@@ -110,9 +108,8 @@
 							</TD>
 							<TD  style="text-align: center"><fmt:formatDate value="${vo.e01Z531}" pattern="yyyy-MM-dd"></fmt:formatDate></TD>
 							<TD style="text-align: center"><c:out value="${vo.e01Z541}"></c:out></TD>
-							<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">修改</a></TD>
-							<TD style="text-align: center"><a href="${path}/zzb/dzda/dajs/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a></TD>
-							<TD style="text-align: center">
+							<TD style="text-align: center"><a href="javascript:editHz('${vo.id}')">填写回执</a>|
+								<a href="${path}/zzb/dzda/dajs/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a>|
 								<c:choose>
 									<c:when test="${vo.fileName == '' || vo.fileName == null}">
 										下载

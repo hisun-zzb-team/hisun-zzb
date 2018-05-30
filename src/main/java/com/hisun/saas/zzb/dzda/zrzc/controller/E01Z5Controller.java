@@ -411,7 +411,7 @@ public class E01Z5Controller extends BaseController {
                     org.springframework.beans.BeanUtils.copyProperties(jbxxA38Vo, a38);
                     a38.setId(null);
                     a38.setSjzt("0");
-                    a38.setA3801(DateUtil.formatDefaultDate(new Date()));
+                    a38.setA3801(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
                     a38.setJsr(details.getRealname());
                     a38.setA3834(vo.getE01Z541());
                     a38.setA3804B(vo.getE01Z507A());

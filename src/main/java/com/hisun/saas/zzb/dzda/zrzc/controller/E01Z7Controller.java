@@ -202,7 +202,7 @@ public class E01Z7Controller extends BaseController {
                 a38.setZcyy(vo.getE01Z731());
                 a38.setJbrId(details.getUserid());
                 a38.setJbrXm(details.getRealname());
-                a38.setA3817(DateUtil.formatDefaultDate(new Date()));
+                a38.setA3817(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
                 a38Service.update(a38);
                 fileName=a38.getA0101();
                 if(StringUtils.isNotEmpty(a38.getA0107())){

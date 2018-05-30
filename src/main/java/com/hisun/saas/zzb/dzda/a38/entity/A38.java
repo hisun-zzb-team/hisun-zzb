@@ -16,10 +16,12 @@ import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z5;
 import com.hisun.saas.zzb.dzda.zrzc.entity.E01Z7;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
@@ -655,7 +657,7 @@ public class A38 extends TenantEntity implements Serializable {
         this.e01z1s = e01z1s;
     }
     @OneToMany(mappedBy = "a38", fetch = FetchType.LAZY)
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     public List<E01Z5> getE01z5s() {
         return e01z5s;
     }
@@ -664,7 +666,7 @@ public class A38 extends TenantEntity implements Serializable {
         this.e01z5s = e01z5s;
     }
     @OneToMany(mappedBy = "a38", fetch = FetchType.LAZY)
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     public List<E01Z7> getE01z7s() {
         return e01z7s;
     }
@@ -674,7 +676,7 @@ public class A38 extends TenantEntity implements Serializable {
     }
 
     @OneToMany(mappedBy = "a38", fetch = FetchType.LAZY)
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    @Cascade({CascadeType.PERSIST})
     public List<EA38Log> getA38Logs() {
         return a38Logs;
     }

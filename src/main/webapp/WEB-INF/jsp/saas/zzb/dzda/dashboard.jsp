@@ -46,9 +46,9 @@
             </div>
             <ul class="ulCadreSuperlist">
                 <li>
-                    <a href="${path}/zzb/dzda/dak/manage?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
+                    <a href="${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">
                         <img src="${path}/images/templateImage/dagl05.png">
-                        <p>档案库</p>
+                        <p>档案查询</p>
                     </a>
                 </li>
                 <li>

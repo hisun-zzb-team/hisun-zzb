@@ -120,7 +120,7 @@
 					<div id="e01Z231Group" class="control-group">
 						<label class="control-label" style="width:120px">备注</label>
 						<div class="controls" style="margin-left: 140px;">
-							<textarea id="e01Z231" name="e01Z231" class="span9 m-wrap">${vo.e01Z231}</textarea>
+							<textarea id="e01Z231" name="e01Z231" class="span9 m-wrap"  style="resize: none;">${vo.e01Z231}</textarea>
 						</div>
 					</div>
 				</div>

@@ -87,17 +87,17 @@
 			下载<i class="icon-angle-down"></i>
 			</a>
 			<ul class="dropdown-menu">
+				<%--<li >--%>
+				<%--<a onclick="fileDownByManage('allDa')">整本档案下载(含图片)</a>--%>
+				<%--</li>--%>
 				<li >
-				<a onclick="fileDown('allDa')">整本档案下载(含图片)</a>
-				</li>
-				<li >
-				<a onclick="fileDown('danganxiazai')">电子表格目录</a>
+				<a onclick="fileDownByManage('danganxiazai')">电子表格目录</a>
 				</li>
 				<li>
-				<a onclick="fileDown('qianquecail')">欠缺材料信息</a>
+				<a onclick="fileDownByManage('qianquecail')">欠缺材料信息</a>
 				</li>
 				<li>
-				<a onclick="fileDown('dangantupianxiazai')">档案图片下载</a>
+				<a onclick="fileDownByManage('dangantupianxiazai')">档案图片下载</a>
 				</li>
 			</ul>
 		</div>
@@ -381,7 +381,7 @@
 		});
 	}
 
-	function fileDown(type) {
+	function fileDownByManage(type) {
 		if(type=="danganxiazai"){
 			window.open("${path}/zzb/dzda/a38/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 		}
@@ -477,7 +477,11 @@
 		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){
 			if (data.code == "1") {
 				showTip("提示","删除成功", 2000);
-				setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
+				if("${listType}"=="shList"){
+					setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
+				}else{
+					setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
+				}
 			}else{
 				showTip("提示", data.message, 2000);
 			}

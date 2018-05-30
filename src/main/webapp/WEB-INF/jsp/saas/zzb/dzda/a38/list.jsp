@@ -83,7 +83,7 @@
 						</div>
 						<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
 						<a class="btn green" href="javascript:download()">
-							输出
+							导出
 						</a>
 						<form action="" id="uploadForm">
 							<input type="file" style="display: none" name="zbdaFile" id="zbdaFile" accept = '.csv,

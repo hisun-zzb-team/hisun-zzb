@@ -45,6 +45,7 @@ import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
 import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.util.URLEncoderUtil;
@@ -100,6 +101,9 @@ public class A38Controller extends BaseController {
 
     @Resource
     A38ExcelExchange a38ExcelExchange;
+
+    @Resource
+    private EImagesService eImagesService;
 
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
@@ -392,7 +396,9 @@ public class A38Controller extends BaseController {
     public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
-            a38Service.deleteByPK(id);
+            A38 a38 = this.a38Service.getByPK(id);
+            this.eImagesService.deleteEImagesAndFileByA38(a38);
+            a38Service.delete(a38);
             returnMap.put("code",1);
         }catch (Exception e){
             logger.error(e,e);

@@ -174,45 +174,7 @@
         $('#queryModelModal').modal({
             keyboard: true
         });
-
-
     }
-
-    /*  function cs(){
-     var radioNode = $("#cgfcggcgfgfg")[0];
-     var parent = radioNode.parentNode
-     parent.className = "checked"
-     $("#cgfcggcgfgfg").attr("checked","checked");
-     }*/
-    function upadateCxtj() {
-        var queryName = $("#queryName").val();
-        if (queryName == "") {
-            showTip("提示", "请填写条件名称!");
-            return;
-        }
-        $.ajax({
-            url: "${path }/zzb/dzda/dacx/saveById",
-            type: "post",
-            data: {
-                "appQueryId": $("#appQueryId").val(),
-                "queryName": $("#queryName").val(),
-                "description": $("#description").val(),
-                "queryType": $("input[name='queryType']:checked").val(),
-                "px": $("#px").val()
-            },
-            dataType: "json",
-            headers: {
-                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            success: function (json) {
-                window.location.href = "${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-            },
-            error: function (arg1, arg2, arg3) {
-                showTip("提示", "查询失败");
-            }
-        });
-    }
-
 
     var deleteQuery = function (id) {
         actionByConfirm1('', "${path}/zzb/dzda/dacx/delete/" + id, null, function (json) {

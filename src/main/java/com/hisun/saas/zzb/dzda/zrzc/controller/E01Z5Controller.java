@@ -227,7 +227,12 @@ public class E01Z5Controller extends BaseController {
                     }
                 }
             }
-            Map<String,Object>  map = saveFile(filePath,vo);
+            Map<String,Object>  map = saveFile(filePath);
+            if((boolean) map.get("isWrong")){
+                returnMap.put("code",1);
+                returnMap.putAll(map);
+                return returnMap;
+            }
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             E01Z5 entity = new  E01Z5();
             ConvertUtils.register(new DateConverter(null), java.util.Date.class);
@@ -377,12 +382,12 @@ public class E01Z5Controller extends BaseController {
         return returnMap;
     }
 
-    private Map<String,Object> saveFile(String filePath,E01Z5Vo vo){
+    private Map<String,Object> saveFile(String filePath){
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
-        boolean isRight=false;
+        boolean isRight;
         Map<String,Object> returnMap = new HashMap<>();
         String tempFile = uploadBasePath+Constants.DAJSMB_STORE_PATH;
-        A38ExcelVo a38ExcelVo = new A38ExcelVo();
+        A38ExcelVo a38ExcelVo;
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38ExcelVo = (A38ExcelVo) a38ExcelExchange.fromExcel(A38ExcelVo.class,tempFile,filePath);
@@ -725,7 +730,7 @@ public class E01Z5Controller extends BaseController {
     public ModelAndView loadGjcx(HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
+        return new ModelAndView("saas/zzb/dzda/e01z5/wrongList",map);
     }
 
     /**

@@ -419,7 +419,8 @@ var myLoading = new MyLoading("${path}",20000);
     }
 
 $("#closeE01z5").on("click",function(){
-    window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    $('#e01z5Modal').modal('hide');
+    $('#e01z5Div').html("");
 });
 </script>
 </body>

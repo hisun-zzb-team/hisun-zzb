@@ -791,22 +791,42 @@ public class E01Z1Controller extends BaseController {
             e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
             //根据返回数据新增材料
             if(e01Z1ExcelVo!=null){
-                returnMap = addE01z1(e01Z1ExcelVo.getJlcl(),"jlcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getZzcl(),"zzcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getJdcl(),"jdcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getXlxw(),"xlxw",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getZyzg(),"zyzg",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getKysp(),"kysp",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getPxcl(),"pxcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getZscl(),"zscl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getDtcl(),"dtcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getJlicl(),"jlicl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getCfcl(),"cfcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getGzcl(),"gzcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getRmcl(),"rmcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getCgcl(),"cgcl",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getDbdh(),"dbdh",a38Id,returnMap);
-                returnMap = addE01z1(e01Z1ExcelVo.getQtcl(),"qtcl",a38Id,returnMap);
+                List<E01Z1Vo> e01Z1Vos = new ArrayList<>();
+                e01Z1Vos.addAll(e01Z1ExcelVo.getJlcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getZzcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getJdcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getXlxw());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getZyzg());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getKysp());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getPxcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getZscl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getDtcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getJlicl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getCfcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getGzcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getRmcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getCgcl());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getDbdh());
+                e01Z1Vos.addAll(e01Z1ExcelVo.getQtcl());
+                returnMap = DaUtils.checkE01z1(e01Z1Vos,returnMap);
+                if(!(boolean) returnMap.get("isRight")) {
+                    addE01z1(e01Z1ExcelVo.getJlcl(), "jlcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getZzcl(), "zzcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getJdcl(), "jdcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getXlxw(), "xlxw", a38Id);
+                    addE01z1(e01Z1ExcelVo.getZyzg(), "zyzg", a38Id);
+                    addE01z1(e01Z1ExcelVo.getKysp(), "kysp", a38Id);
+                    addE01z1(e01Z1ExcelVo.getPxcl(), "pxcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getZscl(), "zscl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getDtcl(), "dtcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getJlicl(), "jlicl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getCfcl(), "cfcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getGzcl(), "gzcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getRmcl(), "rmcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getCgcl(), "cgcl", a38Id);
+                    addE01z1(e01Z1ExcelVo.getDbdh(), "dbdh", a38Id);
+                    addE01z1(e01Z1ExcelVo.getQtcl(), "qtcl", a38Id);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -829,7 +849,7 @@ public class E01Z1Controller extends BaseController {
     public ModelAndView loadGjcx(HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
+        return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
     }
 
     /**
@@ -837,11 +857,9 @@ public class E01Z1Controller extends BaseController {
      * @param e01Z1Vos
      * @param listStr
      * @param a38Id
-     * @param returnMap
      * @return
      */
-    public Map<String,Object> addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id, Map<String,Object> returnMap){
-        List<WrongExcelColumn> wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
+    public void addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id){
         if(e01Z1Vos.size()>0){
             //获得材料类别
             String catalogCode = DaUtils.getCatalogCode(listStr);//获取材料类别Code
@@ -863,35 +881,6 @@ public class E01Z1Controller extends BaseController {
                     boolean flag1 = false;//判断必填数据是否全为空
                     if (e01Z1Vo != null) {
 
-                        //判断必填材料是否为空
-                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
-                            wrongExcelColumn = new WrongExcelColumn();
-                            wrongExcelColumn.setLines("A"+e01Z1Vo.getRow());
-                            wrongExcelColumn.setReason("序号不能为空且大于0");
-                            wrongExcelColumn.setWrongExcel("干部档案目录表");
-                            wrongExcelColumns.add(wrongExcelColumn);
-                            flag = true;
-                            sum++;
-                        }
-                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
-                            wrongExcelColumn = new WrongExcelColumn();
-                            wrongExcelColumn.setLines("F"+e01Z1Vo.getRow());
-                            wrongExcelColumn.setReason("页数不能为空且大于0");
-                            wrongExcelColumn.setWrongExcel("干部档案目录表");
-                            wrongExcelColumns.add(wrongExcelColumn);
-                            flag = true;
-                            sum++;
-                        }
-                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
-                            wrongExcelColumn = new WrongExcelColumn();
-                            wrongExcelColumn.setLines("B"+e01Z1Vo.getRow());
-                            wrongExcelColumn.setReason("材料名称不能为空");
-                            wrongExcelColumn.setWrongExcel("干部档案目录表");
-                            wrongExcelColumns.add(wrongExcelColumn);
-                            flag = true;
-                            sum++;
-                        }
-
                         //拼接日期
                         String e01Z117 = "";
                         if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
@@ -902,34 +891,7 @@ public class E01Z1Controller extends BaseController {
                                     e01Z117 += e01Z1Vo.getDay();
                                 }
                             }
-                            if(DaUtils.isNotDate(e01Z117)){
-                                flag = true;
-                                wrongExcelColumn = new WrongExcelColumn();
-                                wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
-                                wrongExcelColumn.setReason("日期格式错误");
-                                wrongExcelColumn.setWrongExcel("干部档案目录表");
-                                wrongExcelColumns.add(wrongExcelColumn);
-                                flag = true;
-                                sum++;
-                            }
                         }
-
-                        if((e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0)
-                                &&(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0)
-                                &&StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
-                            flag1 = true;
-                        }
-
-                        if(flag){
-                            if(flag1){
-                                for(int j=0;j<sum;j++){
-                                    wrongExcelColumns.remove(wrongExcelColumns.size()-1);
-                                }
-                            }
-                            returnMap.put("isRight",true);
-                            continue;
-                        }
-
                         e01Z1Vo.setE01Z117(e01Z117);
 
                         int sort = e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
@@ -959,8 +921,6 @@ public class E01Z1Controller extends BaseController {
                 e.printStackTrace();
             }
         }
-        returnMap.put("wrongExcelColumns",wrongExcelColumns);
-        return returnMap;
     }
 
 }

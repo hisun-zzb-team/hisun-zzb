@@ -111,6 +111,7 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
+						<input type="hidden" name="queryType" value="${queryType }" id="queryType">
 						<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 						<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 						<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -256,26 +257,7 @@
 					});
 				}else {
 					showTip("提示","上传成功!",2000);
-					$.ajax({
-						async:false,
-						type:"POST",
-						url:"${path }/zzb/dzda/a52/ajax/list",
-						dataType : "html",
-						headers:{
-							"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-						},
-						data:{
-							'a38Id':"${a38Id}"
-						},
-						success:function(html){
-							var view = $("#tab_show");
-							view.html(html);
-						},
-						error : function(){
-							myLoading.hide();
-							showTip("提示","出错了,请检查网络!",2000);
-						}
-					});
+					pagehref("","");
 				}
 			},
 			error : function(){

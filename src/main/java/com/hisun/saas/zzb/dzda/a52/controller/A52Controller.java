@@ -276,16 +276,16 @@ public class A52Controller extends BaseController {
             WrongExcelColumn wrongExcelColumn;
             if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
                 List<A52Vo> a52Vos = a38Vo.getA52Vos();
-                for(int i=0;i<a52Vos.size();i++){
+                for(int i=0;i<a52Vos.size();i++) {
                     int sum = 0;
-                    Integer oldPxInteger=a52Service.getMaxSort(a38Id);
+                    Integer oldPxInteger = a52Service.getMaxSort(a38Id);
                     boolean flag = false;//判断是否存在非法数据
                     boolean flag1 = false;//判断必填数据是否全为空
                     A52 a52 = new A52();
                     A52Vo a52Vo = a52Vos.get(i);
-                    if(StringUtils.isEmpty(a52Vo.getA5204())){
+                    if (StringUtils.isEmpty(a52Vo.getA5204())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("C"+a52Vo.getRow());
+                        wrongExcelColumn.setLines("C" + a52Vo.getRow());
                         wrongExcelColumn.setReason("部门名称不能为空");
                         wrongExcelColumn.setWrongExcel("职务变动登记表");
                         wrongExcelColumns.add(wrongExcelColumn);
@@ -293,44 +293,50 @@ public class A52Controller extends BaseController {
                         sum++;
 
                     }
-                    if(DaUtils.isNotDate(a52Vo.getA5227In())){
+                    if (DaUtils.isNotDate(a52Vo.getA5227In())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("A"+a52Vo.getRow());
+                        wrongExcelColumn.setLines("A" + a52Vo.getRow());
                         wrongExcelColumn.setReason("任职时间格式错误");
                         wrongExcelColumn.setWrongExcel("职务变动登记表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(DaUtils.isNotDate(a52Vo.getA5227Out())){
+                    if (DaUtils.isNotDate(a52Vo.getA5227Out())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("B"+a52Vo.getRow());
+                        wrongExcelColumn.setLines("B" + a52Vo.getRow());
                         wrongExcelColumn.setReason("免职时间格式错误");
                         wrongExcelColumn.setWrongExcel("职务变动登记表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(StringUtils.isEmpty(a52Vo.getA5204())&&StringUtils.isEmpty(a52Vo.getA5227In())&&StringUtils.isEmpty(a52Vo.getA5227Out())){
+                    if (StringUtils.isEmpty(a52Vo.getA5204()) && StringUtils.isEmpty(a52Vo.getA5227In()) && StringUtils.isEmpty(a52Vo.getA5227Out())) {
                         flag1 = true;
                     }
 
-                    if(flag){
-                        if(flag1){
-                            for(int j=0;j<sum;j++){
-                                wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                    if (flag) {
+                        if (flag1) {
+                            for (int j = 0; j < sum; j++) {
+                                wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                             }
                         }
                         isRight = true;
                         continue;
                     }
-
-                    BeanUtils.copyProperties(a52,a52Vo);
-                    A38 a38 = this.a38Service.getByPK(a38Id);
-                    a52.setA38(a38);
-                    a52.setPx(oldPxInteger);
-                    EntityWrapper.wrapperSaveBaseProperties(a52,details);
-//                    a52Service.save(a52);
+                }
+                if(isRight) {
+                    for (int i = 0; i < a52Vos.size(); i++) {
+                        Integer oldPxInteger = a52Service.getMaxSort(a38Id);
+                        A52 a52 = new A52();
+                        A52Vo a52Vo = a52Vos.get(i);
+                        BeanUtils.copyProperties(a52, a52Vo);
+                        A38 a38 = this.a38Service.getByPK(a38Id);
+                        a52.setA38(a38);
+                        a52.setPx(oldPxInteger);
+                        EntityWrapper.wrapperSaveBaseProperties(a52, details);
+                        a52Service.save(a52);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -352,7 +358,7 @@ public class A52Controller extends BaseController {
     public ModelAndView loadGjcx(HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
+        return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
     }
 
 }

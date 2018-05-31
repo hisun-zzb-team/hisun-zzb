@@ -277,43 +277,41 @@ public class E0z2Controller extends BaseController {
             boolean flag1 = false;//判断是否存在非法数据
             WrongExcelColumn wrongExcelColumn;
             if(e01z2Vos.size()>0){
-                for(int i=0;i<e01z2Vos.size();i++){
+                for(int i=0;i<e01z2Vos.size();i++) {
                     flag = false;//判断是否存在非法数据
                     flag1 = false;//判断是否存在非法数据
-                    int sum=0;
-                    Integer oldPxInteger=e01z2Service.getMaxSort(a38Id);
-                    E01Z2 e01z2 = new E01Z2();
+                    int sum = 0;
                     E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
-                    if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())){
+                    if (StringUtils.isEmpty(e01z2Vo.getE01Z204A())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("A"+e01z2Vo.getRow());
+                        wrongExcelColumn.setLines("A" + e01z2Vo.getRow());
                         wrongExcelColumn.setReason("来件单位不能为空");
                         wrongExcelColumn.setWrongExcel("材料接收表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(StringUtils.isEmpty(e01z2Vo.getE01Z221A())){
+                    if (StringUtils.isEmpty(e01z2Vo.getE01Z221A())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("E"+e01z2Vo.getRow());
+                        wrongExcelColumn.setLines("E" + e01z2Vo.getRow());
                         wrongExcelColumn.setReason("材料名称不能为空");
                         wrongExcelColumn.setWrongExcel("材料接收表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(DaUtils.isNotDate(e01z2Vo.getE01Z201())){
+                    if (DaUtils.isNotDate(e01z2Vo.getE01Z201())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("B"+e01z2Vo.getRow());
+                        wrongExcelColumn.setLines("B" + e01z2Vo.getRow());
                         wrongExcelColumn.setReason("收件日期格式错误");
                         wrongExcelColumn.setWrongExcel("材料接收表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(DaUtils.isNotDate(e01z2Vo.getE01Z227())){
+                    if (DaUtils.isNotDate(e01z2Vo.getE01Z227())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("G"+e01z2Vo.getRow());
+                        wrongExcelColumn.setLines("G" + e01z2Vo.getRow());
                         wrongExcelColumn.setReason("材料制成日期格式错误");
                         wrongExcelColumn.setWrongExcel("材料接收表");
                         wrongExcelColumns.add(wrongExcelColumn);
@@ -321,32 +319,38 @@ public class E0z2Controller extends BaseController {
                         sum++;
                     }
 
-                    if(StringUtils.isEmpty(e01z2Vo.getE01Z204A())&&StringUtils.isEmpty(e01z2Vo.getE01Z221A())
-                            &&StringUtils.isEmpty(e01z2Vo.getE01Z201())&&StringUtils.isEmpty(e01z2Vo.getE01Z227())){
+                    if (StringUtils.isEmpty(e01z2Vo.getE01Z204A()) && StringUtils.isEmpty(e01z2Vo.getE01Z221A())
+                            && StringUtils.isEmpty(e01z2Vo.getE01Z201()) && StringUtils.isEmpty(e01z2Vo.getE01Z227())) {
                         flag1 = true;
                     }
 
-                    if(flag){
-                        if(flag1){
-                            for(int j=0;j<sum;j++){
-                                wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                    if (flag) {
+                        if (flag1) {
+                            for (int j = 0; j < sum; j++) {
+                                wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                             }
                         }
                         isRight = true;
                         continue;
                     }
+                }
+                if(isRight){
+                    for(int i=0;i<e01z2Vos.size();i++){
+                        Integer oldPxInteger = e01z2Service.getMaxSort(a38Id);
+                        E01Z2 e01z2 = new E01Z2();
+                        E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
+                        String e01Z237Content = e01z2Vo.getE01Z237Content();
+                        e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
+                        String e01Z244Content = e01z2Vo.getE01Z244Content();
+                        e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
 
-                    String e01Z237Content = e01z2Vo.getE01Z237Content();
-                    e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
-                    String e01Z244Content = e01z2Vo.getE01Z244Content();
-                    e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
-
-                    BeanUtils.copyProperties(e01z2,e01z2Vo);
-                    A38 a38 = this.a38Service.getByPK(a38Id);
-                    e01z2.setA38(a38);
-                    e01z2.setE01Z214(oldPxInteger);
-                    EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
-//                    e01z2Service.save(e01z2);
+                        BeanUtils.copyProperties(e01z2,e01z2Vo);
+                        A38 a38 = this.a38Service.getByPK(a38Id);
+                        e01z2.setA38(a38);
+                        e01z2.setE01Z214(oldPxInteger);
+                        EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
+                        e01z2Service.save(e01z2);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -394,6 +398,6 @@ public class E0z2Controller extends BaseController {
     public ModelAndView loadGjcx(HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/e01z2/e01z2WrongList",map);
+        return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
     }
 }

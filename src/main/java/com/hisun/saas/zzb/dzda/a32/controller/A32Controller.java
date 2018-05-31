@@ -271,26 +271,26 @@ public class A32Controller extends BaseController {
             a32Vos =  gzbdExcelExchange.fromExcel2ManyPojoWithLines(A32Vo.class,tempFile,filePath);
             WrongExcelColumn wrongExcelColumn;
             if(a32Vos.size()>0){
-                for(int i=0;i<a32Vos.size();i++){
-                    Integer oldPxInteger=a32Service.getMaxSort(a38Id);
+                for(int i=0;i<a32Vos.size();i++) {
                     int sum = 0;
                     boolean flag = false;//判断是否存在非法数据
                     boolean flag1 = false;//判断是否存在非法数据
+                    Integer oldPxInteger = a32Service.getMaxSort(a38Id);
                     A32 a32 = new A32();
                     A32Vo a32Vo = (A32Vo) a32Vos.get(i);
 
-                    if(StringUtils.isEmpty(a32Vo.getGzbm())){
+                    if (StringUtils.isEmpty(a32Vo.getGzbm())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("A"+a32Vo.getRow());
+                        wrongExcelColumn.setLines("A" + a32Vo.getRow());
                         wrongExcelColumn.setReason("工作部门不能为空");
                         wrongExcelColumn.setWrongExcel("工资变动登记表");
                         wrongExcelColumns.add(wrongExcelColumn);
                         flag = true;
                         sum++;
                     }
-                    if(DaUtils.isNotDate(a32Vo.getA3207())){
+                    if (DaUtils.isNotDate(a32Vo.getA3207())) {
                         wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("E"+a32Vo.getRow());
+                        wrongExcelColumn.setLines("E" + a32Vo.getRow());
                         wrongExcelColumn.setReason("日期格式错误");
                         wrongExcelColumn.setWrongExcel("工资变动登记表");
                         wrongExcelColumns.add(wrongExcelColumn);
@@ -298,26 +298,32 @@ public class A32Controller extends BaseController {
                         sum++;
                     }
 
-                    if(StringUtils.isEmpty(a32Vo.getGzbm())&&StringUtils.isEmpty(a32Vo.getA3207())){
+                    if (StringUtils.isEmpty(a32Vo.getGzbm()) && StringUtils.isEmpty(a32Vo.getA3207())) {
                         flag1 = true;
                     }
 
-                    if(flag){
-                        if(flag1){
-                            for(int j=0;j<sum;j++){
-                                wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                    if (flag) {
+                        if (flag1) {
+                            for (int j = 0; j < sum; j++) {
+                                wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                             }
                         }
                         isRight = true;
                         continue;
                     }
-
-                    BeanUtils.copyProperties(a32,a32Vo);
-                    A38 a38 = this.a38Service.getByPK(a38Id);
-                    a32.setA38(a38);
-                    a32.setPx(oldPxInteger);
-                    EntityWrapper.wrapperSaveBaseProperties(a32,details);
-//                    a32Service.save(a32);
+                }
+                if(isRight) {
+                    for (int i = 0; i < a32Vos.size(); i++) {
+                        Integer oldPxInteger = a32Service.getMaxSort(a38Id);
+                        A32 a32 = new A32();
+                        A32Vo a32Vo = (A32Vo) a32Vos.get(i);
+                        BeanUtils.copyProperties(a32, a32Vo);
+                        A38 a38 = this.a38Service.getByPK(a38Id);
+                        a32.setA38(a38);
+                        a32.setPx(oldPxInteger);
+                        EntityWrapper.wrapperSaveBaseProperties(a32, details);
+                        a32Service.save(a32);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -339,6 +345,6 @@ public class A32Controller extends BaseController {
     public ModelAndView loadGjcx(HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
-        return new ModelAndView("saas/zzb/dzda/a32/a32WrongList",map);
+        return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
     }
 }

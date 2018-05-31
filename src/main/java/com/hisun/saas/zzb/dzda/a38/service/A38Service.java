@@ -14,6 +14,7 @@ import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +27,12 @@ public interface A38Service extends BaseService<A38,String>{
     Map<String,Object> checkA38ExcelData(A38ExcelVo a38ExcelVo, Map<String,Object> returnMap);
     String saveA38(A38Vo a38Vo,UserLoginDetails details);
     String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details);
+    /**
+     * 档案信息列表导出
+     * @param resp
+     * @param resultList
+     * @return
+     */
+    String download(HttpServletResponse resp, List<A38> resultList);
+
 }

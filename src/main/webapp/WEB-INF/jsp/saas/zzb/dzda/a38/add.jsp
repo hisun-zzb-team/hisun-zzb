@@ -267,35 +267,56 @@
 		$("#sjzt").val(sjzt);
 		var bool = form1.form();
 		if(bool){
-			$.ajax({
-				url : "${path }/zzb/dzda/a38/save",
-				type : "post",
-				data : $("#form1").serialize(),
-				headers:{
-					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-				},
-				dataType : "json",
-				success : function(data){
-					if(data.code=="1"){
-						if(sjzt=="0"){
-							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
-						}else{
-							setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
-						}
-						showTip("提示","保存成功", 1500);
-						//setTimeout(process.list,2000);
+			var value=$("#smxh").val();
+			if(value!=""){
+				localPost("${path}/zzb/dzda/a38/smxh/check",{
+					"smxh":$("#smxh").val(),
+					"id":$("#id").val()
+				},function(data) {
+					if (!data.success) {
+						showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
+//						obj.value="";
+						setTimeout(function(){
+							$("#smxh").focus();
+						},510);
 					}else{
-						var message = data.msg?data.msg:data.message;
-						showTip("提示", message, 2000);
+						saveData(sjzt);
 					}
-				},
-				error : function(){
-					showTip("提示","出错了,请检查网络!",2000);
-				}
-			});
+				},"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});
+			}else{
+				saveData(sjzt);
+			}
 		}
 	}
 
+	function saveData(sjzt){
+		$.ajax({
+			url : "${path }/zzb/dzda/a38/save",
+			type : "post",
+			data : $("#form1").serialize(),
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "json",
+			success : function(data){
+				if(data.code=="1"){
+					if(sjzt=="0"){
+						setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
+					}else{
+						setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
+					}
+					showTip("提示","保存成功", 1500);
+					//setTimeout(process.list,2000);
+				}else{
+					var message = data.msg?data.msg:data.message;
+					showTip("提示", message, 2000);
+				}
+			},
+			error : function(){
+				showTip("提示","出错了,请检查网络!",2000);
+			}
+		});
+	}
 	function checkSmxh(obj){
 		var value=obj.value;
 		if(value!=""){
@@ -305,8 +326,8 @@
 			},function(data) {
 				if (!data.success) {
 					showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
+//					obj.value="";
 					setTimeout(function(){
-						obj.value="";
 						obj.focus();
 					},510);
 

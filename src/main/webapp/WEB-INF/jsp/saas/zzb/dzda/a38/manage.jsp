@@ -133,97 +133,95 @@
 			if($(e.target).attr('id')!='#tab_1_1'&& tabIndex=="#tab_1_1"){
 				var bool = a38Form.form();
 				if(bool){
-					myLoading.show();
-					$.ajax({
-						url : "${path }/zzb/dzda/a38/update",
-						type : "post",
-						data : $("#a38Form").serialize(),
-						headers:{
-							OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-						},
-						dataType : "json",
-						success : function(json){
-							if(json.code==1){
-								myLoading.hide();
-								tabIndex = $(e.target).attr('id');
-								if($(e.target).attr('id')=="#tab_1_2"){
-									$("[id='#tab_1_2']").tab('show');
-									mlLoad();
-								}else if($(e.target).attr('id')=="#tab_1_3"){
-									$("[id='#tab_1_3']").tab('show');
-									qqclLoad();
-								}else if($(e.target).attr('id')=="#tab_1_4"){
-									$("[id='#tab_1_4']").tab('show');
-									zwbdLoad();
-								}else if($(e.target).attr('id')=="#tab_1_5"){
-									$("[id='#tab_1_5']").tab('show');
-									gzbdLoad();
-								}else if($(e.target).attr('id')=="#tab_1_6"){
-									$("[id='#tab_1_6']").tab('show');
-									cljsLoad();
-								}
-							}else{
+					var value=$("#smxh").val();
+					if(value!=""){
+						localPost("${path}/zzb/dzda/a38/smxh/check",{
+							"smxh":$("#smxh").val(),
+							"id":$("#id").val()
+						},function(data) {
+							if (!data.success) {
 								$("[id='#tab_1_1']").tab('show');
-								myLoading.hide();
-								showTip("提示", json.message, 2000);
-								return false;
+								showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
+								setTimeout(function(){
+									$("#smxh").focus();
+								},510);
+							}else{
+								tabSaveData(e);
 							}
-						},
-						error : function(){
-							$("[id='#tab_1_1']").tab('show');
-							showTip("提示","出错了,请检查网络!",2000);
-							myLoading.hide();
-							return false;
-						}
-					});
+						},"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});
+					}else {
+						tabSaveData(e);
+					}
+
+
 				}else{
 					$("[id='#tab_1_1']").tab('show');
 					return false;
 				}
 			}else{
 				if($(e.target).attr('id')=="#tab_1_1") {
-//					$("[id='#tab_1_1']").tab('show');
 					baseLoad();
 				}else if($(e.target).attr('id')=="#tab_1_2"){
-//					$("[id='#tab_1_2']").tab('show');
 					mlLoad();
 				}else if($(e.target).attr('id')=="#tab_1_3"){
-//					$("[id='#tab_1_3']").tab('show');
 					qqclLoad();
 				}else if($(e.target).attr('id')=="#tab_1_4"){
-//					$("[id='#tab_1_4']").tab('show');
 					zwbdLoad();
 				}else if($(e.target).attr('id')=="#tab_1_5"){
-			//		$("[id='#tab_1_5']").tab('show');
 					gzbdLoad();
 				}else if($(e.target).attr('id')=="#tab_1_6"){
-			//		$("[id='#tab_1_6']").tab('show');
 					cljsLoad();
 				}
 				tabIndex = $(e.target).attr('id');
 			}
-
 		});
-//		$("#tabs li a").each(function(){
-//			$(this).click(function(){
-//				if($(this).attr("id")=="#tab_1_1"){
-//					$("[id='#tab_1_1']").tab('show');
-//					baseLoad();
-//				}else if($(this).attr("id")=="#tab_1_2"){
-//					$("[id='#tab_1_2']").tab('show');
-//					mlLoad();
-//				}else if($(this).attr("id")=="#tab_1_3"){
-//					$("[id='#tab_1_3']").tab('show');
-//					qqclLoad();
-//				}else if($(this).attr("id")=="#tab_1_4"){
-//					$("[id='#tab_1_3']").tab('show');
-//					zwbdLoad();
-//				}
-//			});
-//		});
-
 	});
 
+	function tabSaveData(e){
+		myLoading.show();
+		$.ajax({
+			url : "${path }/zzb/dzda/a38/update",
+			type : "post",
+			data : $("#a38Form").serialize(),
+			headers:{
+				OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+			},
+			dataType : "json",
+			success : function(json){
+				if(json.code==1){
+					myLoading.hide();
+					tabIndex = $(e.target).attr('id');
+					if($(e.target).attr('id')=="#tab_1_2"){
+						$("[id='#tab_1_2']").tab('show');
+						mlLoad();
+					}else if($(e.target).attr('id')=="#tab_1_3"){
+						$("[id='#tab_1_3']").tab('show');
+						qqclLoad();
+					}else if($(e.target).attr('id')=="#tab_1_4"){
+						$("[id='#tab_1_4']").tab('show');
+						zwbdLoad();
+					}else if($(e.target).attr('id')=="#tab_1_5"){
+						$("[id='#tab_1_5']").tab('show');
+						gzbdLoad();
+					}else if($(e.target).attr('id')=="#tab_1_6"){
+						$("[id='#tab_1_6']").tab('show');
+						cljsLoad();
+					}
+				}else{
+					$("[id='#tab_1_1']").tab('show');
+					myLoading.hide();
+					showTip("提示", json.message, 2000);
+					return false;
+				}
+			},
+			error : function(){
+				$("[id='#tab_1_1']").tab('show');
+				showTip("提示","出错了,请检查网络!",2000);
+				myLoading.hide();
+				return false;
+			}
+		});
+	}
 
 	//基本信息
 	function baseLoad(){
@@ -402,7 +400,24 @@
 		if(isSave == true){
 			if(bool){
 				$("#sjzt").val(sjzt);
-				saveA38(sjzt);
+				var value=$("#smxh").val();
+				if(value!=""){
+					localPost("${path}/zzb/dzda/a38/smxh/check",{
+						"smxh":$("#smxh").val(),
+						"id":$("#id").val()
+					},function(data) {
+						if (!data.success) {
+							showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
+							setTimeout(function(){
+								$("#smxh").focus();
+							},510);
+						}else{
+							saveA38(sjzt);
+						}
+					},"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});
+				}else {
+					saveA38(sjzt);
+				}
 			}
 		}else{
 			myLoading.show();

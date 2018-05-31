@@ -227,34 +227,56 @@
 	jQuery(document).ready(function() {
 	});
 	var a38Form = new EstValidate("a38Form");
-	function formSubmit(){
-		var bool = a38Form.form();
-		if(bool){
-			$.ajax({
-				url : "${path }/zzb/dzda/a38/save",
-				type : "post",
-				data : $("#form1").serialize(),
-				headers:{
-					OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-				},
-				dataType : "json",
-				success : function(data){
-					if(data.code=="1"){
-						setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
-						showTip("提示","保存成功", 1500);
-						//setTimeout(process.list,2000);
-					}else{
-						var message = data.msg?data.msg:data.message;
-						showTip("提示", message, 2000);
-					}
-				},
-				error : function(){
-					showTip("提示","出错了,请检查网络!",2000);
-				}
-			});
-		}
-	}
+	<%--function formSubmit(){--%>
+		<%--var bool = a38Form.form();--%>
+		<%--if(bool){--%>
+			<%--var value=obj.value;--%>
+			<%--if(value!=""){--%>
+				<%--localPost("${path}/zzb/dzda/a38/smxh/check",{--%>
+					<%--"smxh":$("#smxh").val(),--%>
+					<%--"id":$("#id").val()--%>
+				<%--},function(data) {--%>
+					<%--if (!data.success) {--%>
+<%--//						obj.value="";--%>
+						<%--showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");--%>
+						<%--setTimeout(function(){--%>
+							<%--obj.focus();--%>
+						<%--},510);--%>
 
+					<%--}else{--%>
+						<%--saveData();--%>
+					<%--}--%>
+				<%--},"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});--%>
+			<%--}else{--%>
+				<%--saveData();--%>
+			<%--}--%>
+		<%--}--%>
+	<%--}--%>
+
+	<%--function saveData(){--%>
+		<%--$.ajax({--%>
+			<%--url : "${path }/zzb/dzda/a38/save",--%>
+			<%--type : "post",--%>
+			<%--data : $("#form1").serialize(),--%>
+			<%--headers:{--%>
+				<%--OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"--%>
+			<%--},--%>
+			<%--dataType : "json",--%>
+			<%--success : function(data){--%>
+				<%--if(data.code=="1"){--%>
+					<%--setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);--%>
+					<%--showTip("提示","保存成功", 1500);--%>
+					<%--//setTimeout(process.list,2000);--%>
+				<%--}else{--%>
+					<%--var message = data.msg?data.msg:data.message;--%>
+					<%--showTip("提示", message, 2000);--%>
+				<%--}--%>
+			<%--},--%>
+			<%--error : function(){--%>
+				<%--showTip("提示","出错了,请检查网络!",2000);--%>
+			<%--}--%>
+		<%--});--%>
+	<%--}--%>
 	function checkSmxh(obj){
 		var value=obj.value;
 		if(value!=""){
@@ -263,9 +285,9 @@
 				"id":$("#id").val()
 			},function(data) {
 				if (!data.success) {
+//					obj.value="";
 					showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
 					setTimeout(function(){
-						obj.value="";
 						obj.focus();
 					},510);
 

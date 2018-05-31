@@ -335,7 +335,17 @@
 	}
 
 	function download() {
-		window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		var gbztCodeQuery=$("#gbztCodeQuery").val();
+		var a0101Query = $("#a0101Query").val();
+		var gbztContentQuery = $("#gbztContentQuery").val();
+		var daztCodeQuery = $("#daztCodeQuery").val();
+		var daztContentQuery = $("#daztContentQuery").val();
+		var dabhQuery = $("#dabhQuery").val();
+		var smxhQuery = $("#smxhQuery").val();
+
+		window.open("${path}/zzb/dzda/a38/dagl/download?dabhQuery="+dabhQuery+"&gbztCodeQuery="+gbztCodeQuery+"&a0101Query="+a0101Query+"&gbztContentQuery="+gbztContentQuery+
+				"&smxhQuery="+smxhQuery+"&daztCodeQuery="+daztCodeQuery+"&daztContentQuery="+daztContentQuery+ "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		//window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 
 	$("#closeA38").on("click",function(){

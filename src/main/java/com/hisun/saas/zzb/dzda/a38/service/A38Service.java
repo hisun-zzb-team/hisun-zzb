@@ -12,6 +12,7 @@ import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -19,4 +20,12 @@ import java.util.List;
  */
 public interface A38Service extends BaseService<A38,String>{
     String getGjcxHql(DakVo dakVo,UserLoginDetails userLoginDetails);
+
+    /**
+     * 档案信息列表导出
+     * @param resp
+     * @param resultList
+     * @return
+     */
+    String download(HttpServletResponse resp, List<A38> resultList);
 }

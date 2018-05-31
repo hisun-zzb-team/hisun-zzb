@@ -13,18 +13,26 @@ import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.tenant.privilege.dao.TenantPrivilegeDao;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.sys.tenant.privilege.service.TenantPrivilegeService;
+import com.hisun.saas.zzb.dzda.a38.Constants;
 import com.hisun.saas.zzb.dzda.a38.dao.A38Dao;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.a38.exchange.A38ExcelExchange;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
+import com.hisun.util.UUIDUtil;
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -33,7 +41,14 @@ import java.util.Map;
 public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         implements A38Service {
 
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
+
+    @Resource
+    A38ExcelExchange a38ExcelExchange;
+
     private A38Dao a38Dao;
+
 
     @Resource
     public void setBaseDao(BaseDao<A38, String> baseDao) {
@@ -251,6 +266,40 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 //        Map<String,Object> paramMap = new HashMap<>();
 //        List<A38> a38List = a38Dao.list(queryHql.toString(),paramMap,pageNum, pageSize);
         return queryHql.toString();
+    }
+
+    @Override
+    public String download(HttpServletResponse resp, List<A38> resultList) {
+        String filePath = "";
+        try{
+            A38Vo vo;
+            List<A38Vo> a38Vos=new ArrayList<>();
+            for(A38 a38:resultList){
+                vo = new A38Vo();
+                org.apache.commons.beanutils.BeanUtils.copyProperties(vo,a38);
+                a38Vos.add(vo);
+            }
+            File storePathFile = new File(Constants.DAGL_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.DAGL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            a38ExcelExchange.toExcelByManyPojo(a38Vos, uploadBasePath+Constants.DAGLMB_STORE_PATH,filePath);
+            resp.setContentType("multipart/form-data");
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("档案信息表.xlsx"));
+            OutputStream output = resp.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  filePath;
     }
 
 }

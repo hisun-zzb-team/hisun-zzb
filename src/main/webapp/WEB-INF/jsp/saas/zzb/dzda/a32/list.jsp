@@ -44,10 +44,10 @@
                         <i class="icon-plus"></i>增加工资变动
                     </a>
                     <a  class="btn green" href="javascript:uploadFile()">
-                        工资变动导入
+                        <i class="icon-circle-arrow-up"></i>导入
                     </a>
                     <a  class="btn green" href="javascript:download()">
-                        工资变动导出
+                        <i class="icon-circle-arrow-down"></i>导出
                     </a>
                 </div>
                 <form action="" id="uploadForm">

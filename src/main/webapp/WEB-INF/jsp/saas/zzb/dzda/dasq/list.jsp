@@ -54,7 +54,7 @@
                     <div class="clearfix fr">
 
                         <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
-                            输出
+                            导出
                         </a>
 
 
@@ -333,7 +333,12 @@
         true);
     })
    function download() {
-       window.open("${path}/zzb/dzda/cyshouquan/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+       var userName = $("#userName").val();
+       var readContent = $("#readContent").val();
+       var e01Z807Name=$("#e01Z807Name").val();
+       var auditingState = $("#auditingState").val();
+       window.open("${path}/zzb/dzda/cyshouquan/download?"+"&userName="+userName+"&readContent="+readContent+"&e01Z807Name="+e01Z807Name+"&auditingState="+auditingState+
+       "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
    }
     </script>
 </body>

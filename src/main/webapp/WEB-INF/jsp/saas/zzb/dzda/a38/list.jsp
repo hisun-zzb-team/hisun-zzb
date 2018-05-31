@@ -71,7 +71,7 @@
 					</div>
 
 					<a  class="btn green" href="javascript:gjcx()">
-						高级查询
+						<i class="icon-search"></i>高级查询
 					</a>
 					<div class="btn-group" style="padding-bottom: 0px">
 						<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -97,7 +97,7 @@
 					</div>
 					<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
 					<a class="btn green" href="javascript:download()">
-						导出
+						<i class="icon-circle-arrow-down"></i>导出
 					</a>
 					<form action="" id="uploadForm">
 						<input type="file" style="display: none" name="zbdaFile" id="zbdaFile" accept = '.csv,
@@ -111,7 +111,6 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
-						<input type="hidden" name="queryType" value="${queryType }" id="queryType">
 						<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 						<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 						<div style=" float:left;margin-top:4px">档案编号:</div>
@@ -336,7 +335,17 @@
 	}
 
 	function download() {
-		window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		var gbztCodeQuery=$("#gbztCodeQuery").val();
+		var a0101Query = $("#a0101Query").val();
+		var gbztContentQuery = $("#gbztContentQuery").val();
+		var daztCodeQuery = $("#daztCodeQuery").val();
+		var daztContentQuery = $("#daztContentQuery").val();
+		var dabhQuery = $("#dabhQuery").val();
+		var smxhQuery = $("#smxhQuery").val();
+
+		window.open("${path}/zzb/dzda/a38/dagl/download?dabhQuery="+dabhQuery+"&gbztCodeQuery="+gbztCodeQuery+"&a0101Query="+a0101Query+"&gbztContentQuery="+gbztContentQuery+
+				"&smxhQuery="+smxhQuery+"&daztCodeQuery="+daztCodeQuery+"&daztContentQuery="+daztContentQuery+ "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		//window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 
 	$("#closeA38").on("click",function(){

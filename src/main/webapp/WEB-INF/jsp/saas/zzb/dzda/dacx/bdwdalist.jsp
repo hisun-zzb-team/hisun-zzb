@@ -54,7 +54,7 @@
                         </div>
                     </c:if>
                     <div class="btn-group">
-                        <a class="btn green" href="#">
+                        <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
                             导出
                         </a>
                     </div>
@@ -258,6 +258,17 @@
             }
         });
     }
+    function download() {
+        var appQueryId =$("#appQueryId").val();
+        var gbztCodeQuery=$("#gbztCodeQuery").val();
+        var a0101Query = $("#a0101Query").val();
+        var gbztContentQuery = $("#gbztContentQuery").val();
+        var daztCodeQuery = $("#daztCodeQuery").val();
+        var daztContentQuery = $("#daztContentQuery").val();
+
+        window.open("${path}/zzb/dzda/dacx/download?appQueryId="+appQueryId+"&gbztCodeQuery="+gbztCodeQuery+"&a0101Query="+a0101Query+"&gbztContentQuery="+gbztContentQuery+
+                "&daztCodeQuery="+daztCodeQuery+"&daztContentQuery="+daztContentQuery+ "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    }
 
     function pagehref(pageNum, pageSize) {
         var appQueryId =$("#appQueryId").val();
@@ -302,9 +313,6 @@
         $('#viewImgDiv').html("");
     }
 
-    function uploadFile(fileName) {
-        document.getElementById("btn-" + fileName).click();
-    }
     function clearData() {
         window.location.href = "${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }

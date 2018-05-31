@@ -44,10 +44,10 @@
                 <i class="icon-plus"></i>增加材料接收
             </a>
             <a  class="btn green" href="javascript:uploadFile()">
-                材料接收导入
+                <i class="icon-circle-arrow-up"></i>导入
             </a>
             <a  class="btn green" href="javascript:download()">
-                材料接收导出
+                <i class="icon-circle-arrow-down"></i>导出
             </a>
             <form action="" id="uploadForm">
                 <input type="file" style="display: none" name="cljsFile" id="cljsFile" accept = '.csv,

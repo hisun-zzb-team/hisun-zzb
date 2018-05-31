@@ -44,10 +44,10 @@
                         <i class="icon-plus"></i>增加职务变动
                     </a>
                     <a  class="btn green" href="javascript:uploadFile()">
-                        职务变动导入
+                        <i class="icon-circle-arrow-up"></i>导入
                     </a>
                     <a  class="btn green" href="javascript:download()">
-                        职务变动导出
+                        <i class="icon-circle-arrow-down"></i>导出
                     </a>
                     <form action="" id="uploadForm">
                         <input type="file" style="display: none" name="zwbdFile" id="zwbdFile" accept = '.csv,

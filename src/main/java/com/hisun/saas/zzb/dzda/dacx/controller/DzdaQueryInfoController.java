@@ -35,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -381,6 +382,39 @@ public class DzdaQueryInfoController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dacx/bdwdalist", model);
     }
 
+    private void buildParam(DakVo queryVo,String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
+                           String daztContentQuery){
+        if(StringUtils.isNotBlank(a0101Query))
+            queryVo.setA0101(a0101Query);
+        if(StringUtils.isNotBlank(gbztCodeQuery)){
+            queryVo.setGbztCodes(gbztCodeQuery);
+            queryVo.setGbztContents(gbztContentQuery);
+        }
+        if(StringUtils.isNotBlank(daztCodeQuery)){
+            queryVo.setDaztCodes(daztCodeQuery);
+            queryVo.setDaztContents(daztContentQuery);
+        }
+
+    }
+
+    @RequestMapping(value = "/download")
+    public void download(HttpServletResponse resp,String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
+                         String daztContentQuery,
+                         @RequestParam(value = "appQueryId", required = false) String appQueryId){
+        DakVo queryVo = new DakVo();
+        if(StringUtils.isNotBlank(appQueryId)){
+            DzdaQueryInfo dzdaQueryInfo = dzdaQueryInfoService.getByPK(appQueryId);
+            queryVo = JacksonUtil.nonDefaultMapper().fromJson(dzdaQueryInfo.getQueryModel(), DakVo.class);
+        }
+
+        this.buildParam(queryVo,a0101Query,gbztCodeQuery,gbztContentQuery,daztCodeQuery,daztContentQuery);
+
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        List<A38> resultList = a38Service.list(this.a38Service.getGjcxHql(queryVo, userLoginDetails), new ArrayList<Object>(), 1, 10000);
+
+        a38Service.download(resp,resultList);
+
+    }
     @RequiresPermissions("dzda:*")
     @RequestMapping("/bdwdalistById")
     public ModelAndView bdwdalistById(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,

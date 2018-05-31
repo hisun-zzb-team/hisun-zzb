@@ -163,12 +163,15 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                 if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
                     continue;
                 }
-
+                String fileName = tpFile.getName();
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 String nameCode = decimalFormat.format(e01Z1.getE01Z104());//当前材料对应文件编号
                 String tpNameCode = "";
-                if (tpFile.getName().lastIndexOf(".") != -1) {
-                    tpNameCode = tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                String imgNo= "";
+                if (fileName.lastIndexOf(".") != -1) {
+                    tpNameCode = fileName.substring(0, fileName.lastIndexOf(".")).substring(0, 2);//上传图片文件名编号
+                    imgNo = fileName.substring(0, fileName.lastIndexOf("."));
+                    imgNo =imgNo.substring(2);
                 }
                 if (tpNameCode.equals(nameCode)) {
                     isNeedDelete = false;
@@ -180,7 +183,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
                     FileUtils.moveFileToDirectory(encryptFile, realStorePathFile,false);
                     eImages.setImgFilePath(realStorePath.substring(uploadBasePath.length(), realStorePath.length()) + encryptFile.getName());
                     FileUtils.deleteQuietly(tpFile);
-                    eImages.setImgNo(Integer.getInteger(tpFile.getName().substring(0, tpFile.getName().lastIndexOf(".")).substring(2)));
+                    eImages.setImgNo(Integer.parseInt(imgNo));
                     this.save(eImages);
                     yjz++;
                 }

@@ -111,7 +111,6 @@
 			<div class="clearfix">
 				<div class="control-group">
 					<form action="${path }/zzb/dzda/a38/list?queryType=listQuery&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm">
-						<input type="hidden" name="queryType" value="${queryType }" id="queryType">
 						<input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
 						<input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
 						<div style=" float:left;margin-top:4px">档案编号:</div>

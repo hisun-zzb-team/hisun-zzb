@@ -32,10 +32,10 @@
 						<i class="icon-plus"></i>增加欠缺材料
 					</a>
 					<a  class="btn green" href="javascript:uploadFile()">
-						职务变动导入
+						导入
 					</a>
 					<a  class="btn green" href="javascript:download()">
-						职务变动导出
+						导出
 					</a>
 					<form action="" id="uploadForm">
 						<input type="file" style="display: none" name="qqclFile" id="qqclFile" accept = '.csv,

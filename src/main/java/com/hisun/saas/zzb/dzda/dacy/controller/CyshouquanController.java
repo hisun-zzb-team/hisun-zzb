@@ -29,6 +29,7 @@ import com.hisun.saas.zzb.dzda.dacy.service.EPopedomE01Z1RelationService;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.util.DateUtil;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -322,10 +323,29 @@ public class CyshouquanController extends BaseController {
         return model;
     }
 
+    private void buildParam(CommonConditionQuery query ,String userName,String readContent,String e01Z807Name,String auditingState){
+        if(StringUtils.isNotBlank(userName)){
+            query.add(CommonRestrictions.and("a0101 like :a0101 ", "a0101","%"+ userName+"%"));
+        }
+        if(StringUtils.isNotBlank(readContent)){
+            query.add(CommonRestrictions.and("readContent like :readContent ", "readContent", "%"+readContent+"%"));
+        }
+        if(StringUtils.isNotBlank(e01Z807Name)){
+            query.add(CommonRestrictions.and("e01Z807Name = :e01Z807Name ", "e01Z807Name", e01Z807Name));
+        }
+        if(StringUtils.isNotBlank(auditingState)){
+            query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState", auditingState));
+        }
+    }
+
     @RequiresPermissions("a38:*")
     @RequestMapping("/download")
-    public void download( HttpServletResponse resp){
+    public void download( HttpServletResponse resp,  @RequestParam(value = "userName",required = false)String userName,
+                          @RequestParam(value = "readContent",required = false)String readContent,
+                          @RequestParam(value = "e01Z807Name",required = false)String e01Z807Name,
+                          @RequestParam(value = "auditingState",required = false)String auditingState){
         CommonConditionQuery query = new CommonConditionQuery();
+        this.buildParam(query,userName,readContent,e01Z807Name,auditingState);
         CommonOrderBy orderBy = new CommonOrderBy();
         List<EApplyE01Z8> resultList = eApplyE01Z8Service.list(query,orderBy);
         EApplyE01Z8Vo vo;
@@ -334,10 +354,12 @@ public class CyshouquanController extends BaseController {
         try {
             for(EApplyE01Z8 eApplyE01Z8:resultList){
                 vo = new EApplyE01Z8Vo();
-                query.add(CommonRestrictions.and("applyE01Z8.id = :eApplyE01Z8Id ", "eApplyE01Z8Id", eApplyE01Z8.getId()));
-                List<EA38Log> ea38Logs = eA38LogService.list(query,null);
+                //query.add(CommonRestrictions.and("applyE01Z8.id = :eApplyE01Z8Id ", "eApplyE01Z8Id", eApplyE01Z8.getId()));
+                List<EA38Log> ea38Logs = eApplyE01Z8.getA38Logs();
+                        //eA38LogService.list(query,null);
                 org.apache.commons.beanutils.BeanUtils.copyProperties(vo,eApplyE01Z8);
                 vo.setContent("");
+                vo.setSqsj(DateUtil.formatTimesTampDate(eApplyE01Z8.getCreateDate()));
                 if(ea38Logs!=null && !ea38Logs.isEmpty()){
                     List<EA38LogDetail> a38LogDetails = ea38Logs.get(0).getA38LogDetails();
                     if(a38LogDetails.size()>0){
@@ -355,7 +377,7 @@ public class CyshouquanController extends BaseController {
             filePath = uploadBasePath+Constants.CYGL_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
             cyjlExcelExchange.toExcelByManyPojo(eA38LogVos, uploadBasePath+Constants.CYGLMB_STORE_PATH,filePath);
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("阅档管理表.xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("授权查阅记录表.xlsx"));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             byte[] buffer = new byte[8192];

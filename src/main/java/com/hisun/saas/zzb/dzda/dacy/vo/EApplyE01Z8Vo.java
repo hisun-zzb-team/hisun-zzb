@@ -37,6 +37,15 @@ public class EApplyE01Z8Vo implements Serializable{
     private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限
     private String e01z1IdContent;//部分授权id集合
     private String content;//查阅情况
+    private String sqsj;//申请查阅时间
+
+    public String getSqsj() {
+        return sqsj;
+    }
+
+    public void setSqsj(String sqsj) {
+        this.sqsj = sqsj;
+    }
 
     public String getE01z1IdContent() {
         return e01z1IdContent;

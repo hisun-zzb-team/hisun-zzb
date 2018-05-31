@@ -58,7 +58,7 @@
                     <div class="caption">阅档记录</div>
                     <div class="clearfix fr">
                         <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
-                            输出
+                            导出
                         </a>
                     </div>
                 </div>
@@ -222,7 +222,13 @@
     }
 
   function download() {
-      window.open("${path}/zzb/dzda/dacyjl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+      var a0101=$("#a0101").val();
+      var cyrName = $("#cyrName").val();
+      var starttime = $("#starttime").val();
+      var endtime = $("#endtime").val();
+
+      window.open("${path}/zzb/dzda/dacyjl/download?a0101="+a0101+"&cyrName="+cyrName+"&starttime="+starttime+"&endtime="+endtime+
+              "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
   }
 
 </script>

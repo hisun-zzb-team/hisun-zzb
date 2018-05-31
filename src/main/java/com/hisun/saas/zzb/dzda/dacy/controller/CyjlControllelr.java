@@ -22,6 +22,7 @@ import com.hisun.saas.zzb.dzda.dacy.exchange.CyjlExcelExchange;
 import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.dacy.vo.EA38LogVo;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.util.DateUtil;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
@@ -87,18 +88,7 @@ public class CyjlControllelr extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
-        if(StringUtils.isNotBlank(cyrName)){
-            query.add(CommonRestrictions.and("cyrName = :e01Z807Name ", "e01Z807Name", cyrName));
-        }
-        if(StringUtils.isNotBlank(a0101)){
-            query.add(CommonRestrictions.and("a0101 = :a0101 ", "a0101", a0101));
-        }
-        if(StringUtils.isNotBlank(starttime)){
-            query.add(CommonRestrictions.and("cysj >= :starttime ", "starttime", new DateTime(starttime).toDate()));
-        }
-        if(StringUtils.isNotBlank(endtime)){
-            query.add(CommonRestrictions.and("cysj <= :endtime ", "endtime", new DateTime(endtime).toDate()));
-        }
+        this.buildParam(query,starttime,endtime,cyrName,a0101);
         Long total = eA38LogService.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("cysj"));
@@ -177,10 +167,30 @@ public class CyjlControllelr extends BaseController {
         return new ModelAndView("saas/zzb/dzda/ydjl/nrxqViewTime",model);
     }
 
+    private void buildParam(CommonConditionQuery query,String starttime,String endtime,String cyrName,String a0101){
+        if(StringUtils.isNotBlank(cyrName)){
+            query.add(CommonRestrictions.and("cyrName = :e01Z807Name ", "e01Z807Name", cyrName));
+        }
+        if(StringUtils.isNotBlank(a0101)){
+            query.add(CommonRestrictions.and("a0101 like :a0101 ", "a0101", "%"+a0101+"%"));
+        }
+        if(StringUtils.isNotBlank(starttime)){
+            query.add(CommonRestrictions.and("cysj >= :starttime ", "starttime", new DateTime(starttime).toDate()));
+        }
+        if(StringUtils.isNotBlank(endtime)){
+            query.add(CommonRestrictions.and("cysj <= :endtime ", "endtime", new DateTime(endtime).toDate()));
+        }
+    }
+
     @RequiresPermissions("a38:*")
     @RequestMapping("/download")
-    public void download( HttpServletResponse resp){
+    public void download( HttpServletResponse resp,
+                          @RequestParam(value = "starttime",required = false)String starttime,
+                          @RequestParam(value = "endtime",required = false)String endtime,
+                          @RequestParam(value = "cyrName",required = false)String cyrName,
+                          @RequestParam(value = "a0101",required = false)String a0101){
         CommonConditionQuery query = new CommonConditionQuery();
+        this.buildParam(query,starttime,endtime,cyrName,a0101);
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("cysj"));
         List<EA38Log> resultList = eA38LogService.list(query,orderBy);
@@ -191,6 +201,7 @@ public class CyjlControllelr extends BaseController {
             for(EA38Log eA38Log:resultList){
                 vo = new EA38LogVo();
                 org.apache.commons.beanutils.BeanUtils.copyProperties(vo,eA38Log);
+                vo.setCysjString(DateUtil.formatTimesTampDate(eA38Log.getCysj()));
                 List<EA38LogDetail> a38LogDetails = eA38Log.getA38LogDetails();
                 if(a38LogDetails.size()>0){
                     StringBuffer strB = new StringBuffer();

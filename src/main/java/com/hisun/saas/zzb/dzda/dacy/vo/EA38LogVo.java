@@ -23,6 +23,15 @@ public class EA38LogVo {
     private Integer ydzt;//是否在阅档中 1表示阅档中 0或空表示不在阅档中
     private Date zzcysj;//如果为正在阅档 则需要记录其在阅档的时间 由查阅页面不停写入查阅的时间，用于计算剩余的查阅时长
     private String readContent;//查阅内容
+    private String cysjString;//查阅时间String
+
+    public String getCysjString() {
+        return cysjString;
+    }
+
+    public void setCysjString(String cysjString) {
+        this.cysjString = cysjString;
+    }
 
     public String getId() {
         return id;

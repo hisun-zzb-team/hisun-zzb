@@ -10,13 +10,20 @@ import com.hisun.base.service.BaseService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuzj {279421824@qq.com}
  */
 public interface A38Service extends BaseService<A38,String>{
     String getGjcxHql(DakVo dakVo,UserLoginDetails userLoginDetails);
+    Map<String,Object> checkA38(A38Vo a38);
+    Map<String,Object> checkA38ExcelData(A38ExcelVo a38ExcelVo, Map<String,Object> returnMap);
+    String saveA38(A38Vo a38Vo,UserLoginDetails details);
+    String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details);
 }

@@ -782,7 +782,7 @@ public class E01Z1Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.DATPMB_STORE_PATH;
-        E01Z1ExcelVo e01Z1ExcelVo = new E01Z1ExcelVo();
+        E01Z1ExcelVo e01Z1ExcelVo;
 
         returnMap.put("isRight",false);
         returnMap.put("wrongExcelColumns",new ArrayList<WrongExcelColumn>());
@@ -791,41 +791,11 @@ public class E01Z1Controller extends BaseController {
             e01Z1ExcelVo = (E01Z1ExcelVo) mlxxExcelExchange.fromExcel(E01Z1ExcelVo.class,tempFile,filePath);
             //根据返回数据新增材料
             if(e01Z1ExcelVo!=null){
-                List<E01Z1Vo> e01Z1Vos = new ArrayList<>();
-                e01Z1Vos.addAll(e01Z1ExcelVo.getJlcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getZzcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getJdcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getXlxw());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getZyzg());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getKysp());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getPxcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getZscl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getDtcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getJlicl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getCfcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getGzcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getRmcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getCgcl());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getDbdh());
-                e01Z1Vos.addAll(e01Z1ExcelVo.getQtcl());
-                returnMap = DaUtils.checkE01z1(e01Z1Vos,returnMap);
+
+                returnMap = e01Z1Service.checkE01Z1ExcelVo(e01Z1ExcelVo);
                 if(!(boolean) returnMap.get("isRight")) {
-                    addE01z1(e01Z1ExcelVo.getJlcl(), "jlcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getZzcl(), "zzcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getJdcl(), "jdcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getXlxw(), "xlxw", a38Id);
-                    addE01z1(e01Z1ExcelVo.getZyzg(), "zyzg", a38Id);
-                    addE01z1(e01Z1ExcelVo.getKysp(), "kysp", a38Id);
-                    addE01z1(e01Z1ExcelVo.getPxcl(), "pxcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getZscl(), "zscl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getDtcl(), "dtcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getJlicl(), "jlicl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getCfcl(), "cfcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getGzcl(), "gzcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getRmcl(), "rmcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getCgcl(), "cgcl", a38Id);
-                    addE01z1(e01Z1ExcelVo.getDbdh(), "dbdh", a38Id);
-                    addE01z1(e01Z1ExcelVo.getQtcl(), "qtcl", a38Id);
+                    A38 a38 = a38Service.getByPK(a38Id);
+                    e01Z1Service.saveE01Z1S(e01Z1ExcelVo,a38);
                 }
             }
         } catch (Exception e) {
@@ -850,77 +820,6 @@ public class E01Z1Controller extends BaseController {
         Map<String,Object> map = new HashMap<>();
         map.put("datas",this.wrongExcelColumns);
         return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
-    }
-
-    /**
-     * 新增材料，将错误数据返回
-     * @param e01Z1Vos
-     * @param listStr
-     * @param a38Id
-     * @return
-     */
-    public void addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id){
-        if(e01Z1Vos.size()>0){
-            //获得材料类别
-            String catalogCode = DaUtils.getCatalogCode(listStr);//获取材料类别Code
-            CommonConditionQuery query = new CommonConditionQuery();
-            query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
-            CommonOrderBy orderBy = new CommonOrderBy();
-            List<ECatalogTypeInfo> entities = eCatalogTypeService.list(query, orderBy);
-            ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-            if(entities.size()>0){
-                eCatalogTypeInfo=entities.get(0);
-            }
-            WrongExcelColumn wrongExcelColumn;
-
-            try {
-
-                for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
-                    int sum = 0;
-                    boolean flag = false;//判断是否存在非法数据
-                    boolean flag1 = false;//判断必填数据是否全为空
-                    if (e01Z1Vo != null) {
-
-                        //拼接日期
-                        String e01Z117 = "";
-                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
-                            e01Z117 = e01Z1Vo.getYear();
-                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
-                                e01Z117 += e01Z1Vo.getMonth();
-                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
-                                    e01Z117 += e01Z1Vo.getDay();
-                                }
-                            }
-                        }
-                        e01Z1Vo.setE01Z117(e01Z117);
-
-                        int sort = e01Z1Service.getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
-                        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
-                        E01Z1 e01Z1 = new E01Z1();
-                        org.springframework.beans.BeanUtils.copyProperties(e01Z1Vo, e01Z1);
-                        e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
-                        e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
-                        e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
-                        e01Z1.setYjztps(0);
-                        if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {
-                            e01Z1.setA38(a38Service.getByPK(a38Id));
-                        }
-                        EntityWrapper.wrapperSaveBaseProperties(e01Z1, userLoginDetails);
-                        int newSort = e01Z1.getE01Z104();
-                        if (newSort < sort) {
-                            e01Z1Service.updateSortBeforSave(e01Z1, sort);
-                        }
-                        e01Z1Service.save(e01Z1);
-                    }
-                }
-            }catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

@@ -232,6 +232,7 @@
                     return;
                 }
             }
+            myLoading.show();
             $("#uploadForm").ajaxSubmit({
                 type:"POST",
                 url:"${path}/zzb/dzda/e01z2/uploadFile",
@@ -251,11 +252,12 @@
                             },
                             dataType : "html",
                             success : function(html){
-                                $('#e01z2Div').html(html);
-
-                                $('#e01z2Modal').modal({backdrop: 'static', keyboard: false});
+                                myLoading.hide();
+                                $('#wrongDiv').html(html);
+                                $('#wrongModal').modal({backdrop: 'static', keyboard: false});
                             },
                             error : function(){
+                                myLoading.hide();
                                 showTip("提示","出错了请联系管理员", 1500);
                             }
                         });
@@ -273,6 +275,7 @@
                                 'a38Id':"${a38Id}"
                             },
                             success:function(html){
+                                myLoading.hide();
                                 var view = $("#tab_show");
                                 view.html(html);
                             },
@@ -291,7 +294,6 @@
         $("#close1").on("click",function(){
             pagehref("","");
         });
-
     </script>
 </body>
 </html>

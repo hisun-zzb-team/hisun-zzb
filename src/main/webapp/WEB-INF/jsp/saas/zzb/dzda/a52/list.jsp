@@ -225,6 +225,7 @@
                   return;
               }
           }
+          myLoading.show();
           $("#uploadForm").ajaxSubmit({
               type:"POST",
               url:"${path}/zzb/dzda/a52/uploadFile",
@@ -244,11 +245,13 @@
                           },
                           dataType : "html",
                           success : function(html){
-                              $('#a52Div').html(html);
+                              myLoading.hide();
+                              $('#wrongDiv').html(html);
 
-                              $('#a52Modal').modal({backdrop: 'static', keyboard: false});
+                              $('#wrongModal').modal({backdrop: 'static', keyboard: false});
                           },
                           error : function(){
+                              myLoading.hide();
                               showTip("提示","出错了请联系管理员", 1500);
                           }
                       });
@@ -266,6 +269,7 @@
                               'a38Id':"${a38Id}"
                           },
                           success:function(html){
+                              myLoading.hide();
                               var view = $("#tab_show");
                               view.html(html);
                           },

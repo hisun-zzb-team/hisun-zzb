@@ -12,15 +12,25 @@ import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
+import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.tenant.tenant.entity.Tenant;
+import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.dao.E01Z1Dao;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
+import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
+import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
+import com.hisun.util.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +57,10 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
     private E01Z1Dao e01Z1Dao;
     @Resource
     private EImagesService eImagesService;
+    @Resource
+    private ECatalogTypeService eCatalogTypeService;
+    @Resource
+    private A38Service a38Service;
 
     @Resource
     public void setBaseDao(BaseDao<E01Z1, String> baseDao) {
@@ -329,5 +343,197 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                 + userLoginDetails.getTenantId() + File.separator
                 + a38Id.substring(a38Id.length() - 1, a38Id.length()) + File.separator
                 + a38Id + File.separator;
+    }
+
+    public Map<String,Object> checkE01Z1ExcelVo(E01Z1ExcelVo e01Z1ExcelVo){
+        Map<String,Object> returnMap = new HashMap<>();
+        List<E01Z1Vo> e01Z1Vos = new ArrayList<>();
+        e01Z1Vos.addAll(e01Z1ExcelVo.getJlcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getZzcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getJdcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getXlxw());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getZyzg());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getKysp());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getPxcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getZscl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getDtcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getJlicl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getCfcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getGzcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getRmcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getCgcl());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getDbdh());
+        e01Z1Vos.addAll(e01Z1ExcelVo.getQtcl());
+        return checkE01z1(e01Z1Vos,returnMap);
+    }
+
+    public static Map<String,Object> checkE01z1(List<E01Z1Vo> e01Z1Vos, Map<String,Object> returnMap){
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        returnMap.put("isRight",false);
+        if(e01Z1Vos.size()>0){
+            WrongExcelColumn wrongExcelColumn;
+
+            try {
+
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
+                    int sum = 0;
+                    boolean flag = false;//判断是否存在非法数据
+                    boolean flag1 = false;//判断必填数据是否全为空
+                    if (e01Z1Vo != null) {
+
+                        //判断必填材料是否为空
+                        if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("F"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("页数不能为空且大于0");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
+                            flag = true;
+                            sum++;
+                        }
+                        if(StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            wrongExcelColumn = new WrongExcelColumn();
+                            wrongExcelColumn.setLines("B"+e01Z1Vo.getRow());
+                            wrongExcelColumn.setReason("材料名称不能为空");
+                            wrongExcelColumn.setWrongExcel("干部档案目录表");
+                            wrongExcelColumns.add(wrongExcelColumn);
+                            flag = true;
+                            sum++;
+                        }
+
+                        //拼接日期
+                        String e01Z117 = "";
+                        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+                            e01Z117 = e01Z1Vo.getYear();
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                                e01Z117 += e01Z1Vo.getMonth();
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                                    e01Z117 += e01Z1Vo.getDay();
+                                }
+                            }
+                            if(DaUtils.isNotDate(e01Z117)){
+                                wrongExcelColumn = new WrongExcelColumn();
+                                wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
+                                wrongExcelColumn.setReason("日期格式错误");
+                                wrongExcelColumn.setWrongExcel("干部档案目录表");
+                                wrongExcelColumns.add(wrongExcelColumn);
+                                flag = true;
+                                sum++;
+                            }
+                        }
+
+                        if((e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0)
+                                &&(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0)
+                                &&StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                            flag1 = true;
+                        }
+
+                        if(flag){
+                            if(flag1){
+                                for(int j=0;j<sum;j++){
+                                    wrongExcelColumns.remove(wrongExcelColumns.size()-1);
+                                }
+                            }else {
+                                returnMap.put("isRight",true);
+                            }
+                            continue;
+                        }
+                    }
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        return returnMap;
+    }
+
+    @Override
+    public void saveE01Z1S(E01Z1ExcelVo e01Z1ExcelVo, A38 a38) {
+        addE01z1(e01Z1ExcelVo.getJlcl(), "jlcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getZzcl(), "zzcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getJdcl(), "jdcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getXlxw(), "xlxw", a38.getId());
+        addE01z1(e01Z1ExcelVo.getZyzg(), "zyzg", a38.getId());
+        addE01z1(e01Z1ExcelVo.getKysp(), "kysp", a38.getId());
+        addE01z1(e01Z1ExcelVo.getPxcl(), "pxcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getZscl(), "zscl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getDtcl(), "dtcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getJlicl(), "jlicl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getCfcl(), "cfcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getGzcl(), "gzcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getRmcl(), "rmcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getCgcl(), "cgcl", a38.getId());
+        addE01z1(e01Z1ExcelVo.getDbdh(), "dbdh", a38.getId());
+        addE01z1(e01Z1ExcelVo.getQtcl(), "qtcl", a38.getId());
+    }
+
+    /**
+     * 新增材料
+     * @param e01Z1Vos
+     * @param listStr
+     * @param a38Id
+     * @return
+     */
+    public void addE01z1(List<E01Z1Vo> e01Z1Vos, String listStr, String a38Id){
+        if(e01Z1Vos.size()>0){
+            //获得材料类别
+            String catalogCode = DaUtils.getCatalogCode(listStr);//获取材料类别Code
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" catalogCode = :catalogCode ", "catalogCode", catalogCode));
+            CommonOrderBy orderBy = new CommonOrderBy();
+            List<ECatalogTypeInfo> entities = eCatalogTypeService.list(query, orderBy);
+            ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
+            if(entities.size()>0){
+                eCatalogTypeInfo=entities.get(0);
+            }
+
+            try {
+
+                for(E01Z1Vo e01Z1Vo:e01Z1Vos) {
+                    boolean flag1 = true;
+                    if((e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0)
+                            &&(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0)
+                            &&StringUtils.isEmpty(e01Z1Vo.getE01Z111())){
+                        flag1 = false;
+                    }
+
+                    if (e01Z1Vo != null) {
+                        if(flag1){
+
+                            //拼接日期
+                            String e01Z117 = "";
+                            if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+                                e01Z117 = e01Z1Vo.getYear();
+                                if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                                    e01Z117 += e01Z1Vo.getMonth();
+                                    if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                                        e01Z117 += e01Z1Vo.getDay();
+                                    }
+                                }
+                            }
+                            e01Z1Vo.setE01Z117(e01Z117);
+
+                            int sort = getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
+                            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+                            E01Z1 e01Z1 = new E01Z1();
+                            org.springframework.beans.BeanUtils.copyProperties(e01Z1Vo, e01Z1);
+                            e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
+                            e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
+                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+                            e01Z1.setYjztps(0);
+                            e01Z1.setE01Z104(sort);
+                            if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {
+                                e01Z1.setA38(a38Service.getByPK(a38Id));
+                            }
+                            EntityWrapper.wrapperSaveBaseProperties(e01Z1, userLoginDetails);
+                            save(e01Z1);
+                        }
+                    }
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

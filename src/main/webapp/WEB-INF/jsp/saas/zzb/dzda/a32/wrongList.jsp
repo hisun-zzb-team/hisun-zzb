@@ -48,6 +48,8 @@
 </div>
 <script type="text/javascript">
     function closeWrongPage(){
+        $('#wrongModal').modal('hide');
+        $('#wrongDiv').html("");
         pagehref("","");
     }
 </script>

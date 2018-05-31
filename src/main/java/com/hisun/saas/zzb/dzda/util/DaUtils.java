@@ -1,48 +1,11 @@
 package com.hisun.saas.zzb.dzda.util;
 
-import com.hisun.base.dao.util.CommonConditionQuery;
-import com.hisun.base.dao.util.CommonOrder;
-import com.hisun.base.dao.util.CommonOrderBy;
-import com.hisun.base.dao.util.CommonRestrictions;
-import com.hisun.base.entity.TombstoneEntity;
-import com.hisun.saas.sys.admin.dictionary.entity.DictionaryItem;
 import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
-import com.hisun.saas.sys.admin.dictionary.service.impl.DictionaryItemServiceImpl;
-import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
-import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
-import com.hisun.saas.sys.admin.dzda.service.impl.ECatalogTypeServiceImpl;
-import com.hisun.saas.sys.auth.UserLoginDetails;
-import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.util.EntityWrapper;
-import com.hisun.saas.zzb.dzda.a32.entity.A32;
-import com.hisun.saas.zzb.dzda.a32.service.A32Service;
-import com.hisun.saas.zzb.dzda.a32.service.impl.A32ServiceImpl;
-import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
-import com.hisun.saas.zzb.dzda.a38.entity.A38;
-import com.hisun.saas.zzb.dzda.a38.service.A38Service;
-import com.hisun.saas.zzb.dzda.a38.service.impl.A38ServiceImpl;
-import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
-import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
-import com.hisun.saas.zzb.dzda.a52.entity.A52;
-import com.hisun.saas.zzb.dzda.a52.service.A52Service;
-import com.hisun.saas.zzb.dzda.a52.service.impl.A52ServiceImpl;
-import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
-import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
-import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
-import com.hisun.saas.zzb.dzda.e01z2.service.impl.E01z2ServiceImpl;
-import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
-import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
-import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
-import com.hisun.saas.zzb.dzda.mlcl.service.impl.E01Z1ServiceImpl;
-import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1Vo;
 import com.hisun.util.StringUtils;
-import org.springframework.beans.BeanUtils;
 
 import javax.annotation.Resource;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -142,15 +105,6 @@ public class DaUtils {
                     if (e01Z1Vo != null) {
 
                         //判断必填材料是否为空
-                        if(e01Z1Vo.getE01Z104()==null||e01Z1Vo.getE01Z104() == 0){
-                            wrongExcelColumn = new WrongExcelColumn();
-                            wrongExcelColumn.setLines("A"+e01Z1Vo.getRow());
-                            wrongExcelColumn.setReason("序号不能为空且大于0");
-                            wrongExcelColumn.setWrongExcel("干部档案目录表");
-                            wrongExcelColumns.add(wrongExcelColumn);
-                            flag = true;
-                            sum++;
-                        }
                         if(e01Z1Vo.getE01Z114()==null||e01Z1Vo.getE01Z114() == 0){
                             wrongExcelColumn = new WrongExcelColumn();
                             wrongExcelColumn.setLines("F"+e01Z1Vo.getRow());

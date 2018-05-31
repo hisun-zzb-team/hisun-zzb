@@ -29,6 +29,21 @@
 		</div>
 	</div>
 </div>
+
+<div id="wrongModal" class="modal container hide fade" tabindex="-1" data-width="600">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button data-dismiss="modal" class="close" id="closeml" type="button"></button>
+				<h3 class="modal-title" id="wrongTitle" >
+					导入文件错误列表
+				</h3>
+			</div>
+			<div class="modal-body" id="wrongDiv">
+			</div>
+		</div>
+	</div>
+</div>
 <div id="viewA01Modal" class="modal container hide fade" tabindex="-1" data-width="600">
 	<div class="modal-dialog">
 		<div class="modal-content">

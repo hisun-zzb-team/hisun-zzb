@@ -7,12 +7,20 @@
 package com.hisun.saas.zzb.dzda.a32.service;
 
 import com.hisun.base.service.BaseService;
+import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
+import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marco {854476391@qq.com}
  */
 public interface A32Service extends BaseService<A32,String> {
-    public Integer getMaxSort(String a38Id);
+    Integer getMaxSort(String a38Id);
     void updatePx(int oldPx,int newPx,String a38Id);
+    Map<String,Object> checkA32Vos(List<A32Vo> a32Vos);
+    void saveA32S(List<A32Vo> a32Vos, A38 a38, UserLoginDetails details);
 }

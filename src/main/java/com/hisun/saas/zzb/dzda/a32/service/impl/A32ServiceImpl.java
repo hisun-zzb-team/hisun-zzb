@@ -10,12 +10,21 @@ import com.hisun.base.dao.BaseDao;
 import com.hisun.base.service.impl.BaseServiceImpl;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.dao.A32Dao;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
+import com.hisun.util.StringUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +83,75 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
         } else {
             Integer maxSort = ((Number) maxSorts.get(0).get("sort")).intValue();
             return maxSort;
+        }
+    }
+
+    @Override
+    public Map<String,Object> checkA32Vos(List<A32Vo> a32Vos){
+        boolean isRight = false;
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        Map<String,Object> returnMap = new HashMap<>();
+        WrongExcelColumn wrongExcelColumn;
+        for(int i=0;i<a32Vos.size();i++) {
+            int sum = 0;
+            boolean flag = false;//判断是否存在非法数据
+            boolean flag1 = false;//判断是否存在非法数据
+            A32Vo a32Vo = (A32Vo) a32Vos.get(i);
+
+            if (StringUtils.isEmpty(a32Vo.getGzbm())) {
+                wrongExcelColumn = new WrongExcelColumn();
+                wrongExcelColumn.setLines("A" + a32Vo.getRow());
+                wrongExcelColumn.setReason("工作部门不能为空");
+                wrongExcelColumn.setWrongExcel("工资变动登记表");
+                wrongExcelColumns.add(wrongExcelColumn);
+                flag = true;
+                sum++;
+            }
+            if (DaUtils.isNotDate(a32Vo.getA3207())) {
+                wrongExcelColumn = new WrongExcelColumn();
+                wrongExcelColumn.setLines("E" + a32Vo.getRow());
+                wrongExcelColumn.setReason("日期格式错误");
+                wrongExcelColumn.setWrongExcel("工资变动登记表");
+                wrongExcelColumns.add(wrongExcelColumn);
+                flag = true;
+                sum++;
+            }
+
+            if (StringUtils.isEmpty(a32Vo.getGzbm()) && StringUtils.isEmpty(a32Vo.getA3207())) {
+                flag1 = true;
+            }
+
+            if (flag) {
+                if (flag1) {
+                    for (int j = 0; j < sum; j++) {
+                        wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
+                    }
+                }else {
+                    isRight = true;
+                }
+            }
+        }
+        returnMap.put("isRight",isRight);
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        return returnMap;
+    }
+
+    public void saveA32S(List<A32Vo> a32Vos,A38 a38,UserLoginDetails details){
+        for (int i = 0; i < a32Vos.size(); i++) {
+            Integer oldPxInteger = getMaxSort(a38.getId());
+            A32 a32 = new A32();
+            A32Vo a32Vo = a32Vos.get(i);
+            try {
+                BeanUtils.copyProperties(a32, a32Vo);
+                a32.setA38(a38);
+                a32.setPx(oldPxInteger);
+                EntityWrapper.wrapperSaveBaseProperties(a32, details);
+                save(a32);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

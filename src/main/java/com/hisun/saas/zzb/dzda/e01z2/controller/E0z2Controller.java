@@ -239,6 +239,7 @@ public class E0z2Controller extends BaseController {
     @RequestMapping("/uploadFile")
     public @ResponseBody Map<String,Object> uploadFile (String a38Id , @RequestParam(value="cljsFile",required = false) MultipartFile cljsFile , HttpServletResponse resp) throws IOException {
         Map<String,Object> map = new HashMap<>();
+        Map<String,Object> returnMap;
         boolean isRight = false;
         String filePath = "";
         File storePathFile = new File(Constants.CLJS_STORE_PATH);
@@ -268,89 +269,23 @@ public class E0z2Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.CLJSMB_STORE_PATH;
-        List<Object> e01z2Vos=new ArrayList<>();
+        List<Object> e01z2Vos;
+        List<E01z2Vo> e01z2Vox=new ArrayList<>();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         try {
             e01z2Vos = cljsExcelExchange.fromExcel2ManyPojoWithLines(E01z2Vo.class,tempFile,filePath);
-            boolean flag = false;//判断是否存在非法数据
-            boolean flag1 = false;//判断是否存在非法数据
-            WrongExcelColumn wrongExcelColumn;
             if(e01z2Vos.size()>0){
-                for(int i=0;i<e01z2Vos.size();i++) {
-                    flag = false;//判断是否存在非法数据
-                    flag1 = false;//判断是否存在非法数据
-                    int sum = 0;
-                    E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
-                    if (StringUtils.isEmpty(e01z2Vo.getE01Z204A())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("A" + e01z2Vo.getRow());
-                        wrongExcelColumn.setReason("来件单位不能为空");
-                        wrongExcelColumn.setWrongExcel("材料接收表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-                    if (StringUtils.isEmpty(e01z2Vo.getE01Z221A())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("E" + e01z2Vo.getRow());
-                        wrongExcelColumn.setReason("材料名称不能为空");
-                        wrongExcelColumn.setWrongExcel("材料接收表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-                    if (DaUtils.isNotDate(e01z2Vo.getE01Z201())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("B" + e01z2Vo.getRow());
-                        wrongExcelColumn.setReason("收件日期格式错误");
-                        wrongExcelColumn.setWrongExcel("材料接收表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-                    if (DaUtils.isNotDate(e01z2Vo.getE01Z227())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("G" + e01z2Vo.getRow());
-                        wrongExcelColumn.setReason("材料制成日期格式错误");
-                        wrongExcelColumn.setWrongExcel("材料接收表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-
-                    if (StringUtils.isEmpty(e01z2Vo.getE01Z204A()) && StringUtils.isEmpty(e01z2Vo.getE01Z221A())
-                            && StringUtils.isEmpty(e01z2Vo.getE01Z201()) && StringUtils.isEmpty(e01z2Vo.getE01Z227())) {
-                        flag1 = true;
-                    }
-
-                    if (flag) {
-                        if (flag1) {
-                            for (int j = 0; j < sum; j++) {
-                                wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
-                            }
-                        }
-                        isRight = true;
-                        continue;
-                    }
+                for(int i = 0;i<e01z2Vos.size();i++){
+                    e01z2Vox.add((E01z2Vo) e01z2Vos.get(i));
                 }
-                if(isRight){
-                    for(int i=0;i<e01z2Vos.size();i++){
-                        Integer oldPxInteger = e01z2Service.getMaxSort(a38Id);
-                        E01Z2 e01z2 = new E01Z2();
-                        E01z2Vo e01z2Vo = (E01z2Vo) e01z2Vos.get(i);
-                        String e01Z237Content = e01z2Vo.getE01Z237Content();
-                        e01z2Vo.setE01Z237(getDictionaryItem(e01Z237Content,"CLCLBS-2018"));
-                        String e01Z244Content = e01z2Vo.getE01Z244Content();
-                        e01z2Vo.setE01Z244(getDictionaryItem(e01Z244Content,"SFBS-2018"));
-
-                        BeanUtils.copyProperties(e01z2,e01z2Vo);
-                        A38 a38 = this.a38Service.getByPK(a38Id);
-                        e01z2.setA38(a38);
-                        e01z2.setE01Z214(oldPxInteger);
-                        EntityWrapper.wrapperSaveBaseProperties(e01z2,details);
-                        e01z2Service.save(e01z2);
-                    }
+                returnMap = e01z2Service.checkE01z2Vos(e01z2Vox);
+                isRight= (boolean) returnMap.get("isRight");
+                if(!isRight){
+                    A38 a38 = a38Service.getByPK(a38Id);
+                    e01z2Service.saveE01z2Vos(e01z2Vox,a38,details);
+                }else {
+                    wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
                 }
             }
         } catch (Exception e) {
@@ -367,31 +302,6 @@ public class E0z2Controller extends BaseController {
             map.put("isWrong",false);
         }
         return map;
-    }
-
-    /**
-     * 反向查询获取字典项
-     * @param name
-     * @return
-     */
-    public String getDictionaryItem(String name,String Code){
-        List<DictionaryItem> dictionaryItems;
-        if(StringUtils.isEmpty(name)){
-            return "";
-        }
-        CommonConditionQuery query = new CommonConditionQuery();
-        query.add(CommonRestrictions.and(" dictionaryType.code=:typeCode ", "typeCode", Code));
-        query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
-        query.add(CommonRestrictions.and(" display=:display ", "display", DictionaryItem.DISPLAY));
-        CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.asc("sort"));
-        dictionaryItems = dictionaryItemService.list(query, orderBy);
-        for(DictionaryItem dictionaryItem:dictionaryItems){
-            if(name.equals(dictionaryItem.getName())){
-                return dictionaryItem.getCode();
-            }
-        }
-        return "";
     }
 
     @RequestMapping(value = "/ajax/cwjl")

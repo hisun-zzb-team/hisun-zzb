@@ -388,6 +388,9 @@ public class A38ExcelExchange extends AbsExcelExchange{
         }
         return jsonObject;
     }
+    protected void setValue(JSONObject jsonObject,String field,String value){
+        jsonObject.put(field, value);
+    }
 
     public  List<JSONObject> fromExcel2ManyPojo(Worksheet tpltWorksheet, Worksheet srcWorksheet) throws Exception {
         List<JSONObject> jsonObjects = new ArrayList<>();
@@ -511,8 +514,14 @@ public class A38ExcelExchange extends AbsExcelExchange{
                 if (srcCell.getRow()>=rowNumberStart
                         &&srcCell.getColumn() == tpltCell.getColumn()) {
                     if(jsonArray.length()>listIndex){
-                        realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
-                        jsonArray.getJSONObject(listIndex).put(fieldName,realValue);
+                        for(int i=0;i<jsonArray.length();i++){
+                            int jsonObjectRow = (int) jsonArray.getJSONObject(i).get("row")-1;
+                            int srcRow = srcCell.getRow();
+                            if(srcRow == jsonObjectRow){
+                                realValue = StringUtils.trimNull2Empty(srcCell.getStringValue());
+                                jsonArray.getJSONObject(i).put(fieldName,realValue);
+                            }
+                        }
                     }
                     listIndex++;
                 }

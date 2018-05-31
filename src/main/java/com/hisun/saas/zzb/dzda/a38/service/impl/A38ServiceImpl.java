@@ -9,22 +9,34 @@ package com.hisun.saas.zzb.dzda.a38.service.impl;
 import com.hisun.base.dao.BaseDao;
 import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.service.impl.BaseServiceImpl;
+import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.tenant.privilege.dao.TenantPrivilegeDao;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.sys.tenant.privilege.service.TenantPrivilegeService;
+import com.hisun.saas.sys.util.EntityWrapper;
+import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a32.vo.A32Vo;
 import com.hisun.saas.zzb.dzda.a38.dao.A38Dao;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a38.vo.A38ExcelVo;
+import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
+import com.hisun.saas.zzb.dzda.a38.vo.WrongExcelColumn;
+import com.hisun.saas.zzb.dzda.a52.service.A52Service;
+import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
+import com.hisun.saas.zzb.dzda.e01z2.service.E01z2Service;
+import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
+import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
+import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
+import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -34,6 +46,21 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         implements A38Service {
 
     private A38Dao a38Dao;
+
+    @Resource
+    private E01Z1Service e01Z1Service;
+
+    @Resource
+    private A32Service a32Service;
+
+    @Resource
+    private A52Service a52Service;
+
+    @Resource
+    private E01z2Service e01z2Service;
+
+    @Resource
+    private DictionaryItemService dictionaryItemService;
 
     @Resource
     public void setBaseDao(BaseDao<A38, String> baseDao) {
@@ -253,4 +280,155 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         return queryHql.toString();
     }
 
+    public Map<String,Object> checkA38(A38Vo a38Vo){
+        boolean isRight = false;
+        List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        Map<String,Object> returnMap = new HashMap<>();
+        WrongExcelColumn wrongExcelColumn;
+        boolean flag = false;//判断是否存在非法数据
+        if(StringUtils.isEmpty(a38Vo.getA0101())){
+            wrongExcelColumn = new WrongExcelColumn();
+            wrongExcelColumn.setLines("B2");
+            wrongExcelColumn.setReason("姓名不能为空");
+            wrongExcelColumn.setWrongExcel("基本信息");
+            wrongExcelColumns.add(wrongExcelColumn);
+            flag = true;
+        }
+
+        if (DaUtils.isNotDate(a38Vo.getA0107())) {
+            wrongExcelColumn = new WrongExcelColumn();
+            wrongExcelColumn.setLines("F2");
+            wrongExcelColumn.setReason("生日日期格式错误");
+            wrongExcelColumn.setWrongExcel("基本信息");
+            wrongExcelColumns.add(wrongExcelColumn);
+            flag = true;
+        }
+        if (flag) {
+            isRight = true;
+        }
+        returnMap.put("isRight",isRight);
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+        return returnMap;
+    }
+
+    public Map<String,Object> checkA38ExcelData(A38ExcelVo a38ExcelVo,Map<String,Object> returnMap){
+        Map<String,Object> checkMap;
+        boolean isRight = false;
+        boolean checkIsRight;
+        List<WrongExcelColumn> wrongExcelColumns=new ArrayList<>();
+        if(a38ExcelVo!=null){
+            //新增档案
+            A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
+
+            returnMap = checkA38(jbxxA38Vo);
+            checkIsRight= (boolean) returnMap.get("isRight");
+            isRight=checkIsRight;
+            if(isRight){
+                wrongExcelColumns.addAll((List<WrongExcelColumn>) returnMap.get("wrongExcelColumns"));
+            }
+
+            //新增职务变动
+            A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
+            if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
+                List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
+                checkMap=a52Service.checkA52Vos(a52Vos);
+                checkIsRight= (boolean) checkMap.get("isRight");
+                if(checkIsRight) {
+                    isRight=checkIsRight;
+                    wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
+                }
+            }
+
+            //添加工资变动记录
+            List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
+            if(gzbdList.size()>0){
+                checkMap = a32Service.checkA32Vos(gzbdList);
+                checkIsRight= (boolean) checkMap.get("isRight");
+                if(checkIsRight) {
+                    isRight=checkIsRight;
+                    wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
+                }
+            }
+
+            //添加材料接收记录
+            List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
+            if(e01z2Vos.size()>0){
+                checkMap = e01z2Service.checkE01z2Vos(e01z2Vos);
+                checkIsRight= (boolean) checkMap.get("isRight");
+                if(checkIsRight){
+                    isRight=checkIsRight;
+                    wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
+                }
+            }
+
+            //添加目录信息及材料
+            E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
+            if(e01Z1ExcelVo!=null){
+                checkMap = e01Z1Service.checkE01Z1ExcelVo(e01Z1ExcelVo);
+                checkIsRight= (boolean) checkMap.get("isRight");
+                if(checkIsRight) {
+                    isRight=checkIsRight;
+                    wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
+                }
+            }
+
+        }
+        returnMap.put("isRight",isRight);
+        returnMap.put("wrongExcelColumns",wrongExcelColumns);
+
+        return returnMap;
+    }
+
+    public String saveA38(A38Vo a38Vo,UserLoginDetails details){
+        String id;
+        A38 a38 = new A38();
+
+        String a0104Content = a38Vo.getA0104Content();
+        a38Vo.setA0104(dictionaryItemService.getDictionaryItem(a0104Content,"GB/T2261.1-2003"));
+        String gbztContent = a38Vo.getGbztContent();
+        a38Vo.setGbztCode(dictionaryItemService.getDictionaryItem(gbztContent,"SAN_GBZT"));
+
+        BeanUtils.copyProperties(a38Vo, a38);
+        a38.setId(null);
+        a38.setSjzt("1");
+        EntityWrapper.wrapperSaveBaseProperties(a38,details);
+        id = save(a38);
+        return id;
+    }
+
+    public String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details){
+        String id = "";
+        if(a38ExcelVo!=null){
+            //新增档案
+            A38Vo jbxxA38Vo = a38ExcelVo.getJbxxA38Vo();
+            id = saveA38(jbxxA38Vo,details);
+            A38 a38 = getByPK(id);
+            if(StringUtils.isNotEmpty(id)){
+                //新增职务变动
+                A38Vo a38VoForA52 = a38ExcelVo.getZwbdA38Vo();
+                if(a38VoForA52!=null&&a38VoForA52.getA52Vos().size()>0){
+                    List<A52Vo> a52Vos = a38VoForA52.getA52Vos();
+                    a52Service.saveA52S(a52Vos,a38,details);
+                }
+
+                //添加工资变动记录
+                List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
+                if(gzbdList.size()>0){
+                    a32Service.saveA32S(gzbdList,a38,details);
+                }
+
+                //添加材料接收记录
+                List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
+                if(e01z2Vos.size()>0){
+                    e01z2Service.saveE01z2Vos(e01z2Vos,a38,details);
+                }
+                //添加目录信息及材料
+                E01Z1ExcelVo e01Z1ExcelVo = a38ExcelVo.getE01Z1ExcelVo();
+                if(e01Z1ExcelVo!=null){
+                    e01Z1Service.saveE01Z1S(e01Z1ExcelVo,a38);
+                }
+            }
+        }
+        return id;
+    }
 }

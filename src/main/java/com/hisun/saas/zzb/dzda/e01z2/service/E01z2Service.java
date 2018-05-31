@@ -7,12 +7,20 @@
 package com.hisun.saas.zzb.dzda.e01z2.service;
 
 import com.hisun.base.service.BaseService;
+import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.e01z2.entity.E01Z2;
+import com.hisun.saas.zzb.dzda.e01z2.vo.E01z2Vo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Marco {854476391@qq.com}
  */
 public interface E01z2Service extends BaseService<E01Z2,String> {
-    public Integer getMaxSort(String a38Id);
+    Integer getMaxSort(String a38Id);
     void updatePx(int oldPx, int newPx, String a38Id);
+    Map<String,Object> checkE01z2Vos(List<E01z2Vo> e01z2Vos);
+    void saveE01z2Vos(List<E01z2Vo> e01z2Vos, A38 a38, UserLoginDetails details);
 }

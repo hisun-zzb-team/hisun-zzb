@@ -241,6 +241,7 @@ public class A52Controller extends BaseController {
         Map<String,Object> map = new HashMap<>();
         boolean isRight = false;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
+        Map<String,Object> returnMap;
         String filePath = "";
         File storePathFile = new File(Constants.ZWBD_STORE_PATH);
         if(!storePathFile.exists()) storePathFile.mkdirs();
@@ -269,74 +270,20 @@ public class A52Controller extends BaseController {
             }
         }
         String tempFile = uploadBasePath+Constants.ZWBDMB_STORE_PATH;
-        A38Vo a38Vo = new A38Vo();
+        A38Vo a38Vo;
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             a38Vo = (A38Vo) zwbdExcelExchange.fromExcelWithLines(A38Vo.class,tempFile,filePath);
-            WrongExcelColumn wrongExcelColumn;
             if(a38Vo!=null&&a38Vo.getA52Vos().size()>0){
                 List<A52Vo> a52Vos = a38Vo.getA52Vos();
-                for(int i=0;i<a52Vos.size();i++) {
-                    int sum = 0;
-                    Integer oldPxInteger = a52Service.getMaxSort(a38Id);
-                    boolean flag = false;//判断是否存在非法数据
-                    boolean flag1 = false;//判断必填数据是否全为空
-                    A52 a52 = new A52();
-                    A52Vo a52Vo = a52Vos.get(i);
-                    if (StringUtils.isEmpty(a52Vo.getA5204())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("C" + a52Vo.getRow());
-                        wrongExcelColumn.setReason("部门名称不能为空");
-                        wrongExcelColumn.setWrongExcel("职务变动登记表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
+                returnMap = a52Service.checkA52Vos(a52Vos);
+                isRight= (boolean) returnMap.get("isRight");
 
-                    }
-                    if (DaUtils.isNotDate(a52Vo.getA5227In())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("A" + a52Vo.getRow());
-                        wrongExcelColumn.setReason("任职时间格式错误");
-                        wrongExcelColumn.setWrongExcel("职务变动登记表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-                    if (DaUtils.isNotDate(a52Vo.getA5227Out())) {
-                        wrongExcelColumn = new WrongExcelColumn();
-                        wrongExcelColumn.setLines("B" + a52Vo.getRow());
-                        wrongExcelColumn.setReason("免职时间格式错误");
-                        wrongExcelColumn.setWrongExcel("职务变动登记表");
-                        wrongExcelColumns.add(wrongExcelColumn);
-                        flag = true;
-                        sum++;
-                    }
-                    if (StringUtils.isEmpty(a52Vo.getA5204()) && StringUtils.isEmpty(a52Vo.getA5227In()) && StringUtils.isEmpty(a52Vo.getA5227Out())) {
-                        flag1 = true;
-                    }
-
-                    if (flag) {
-                        if (flag1) {
-                            for (int j = 0; j < sum; j++) {
-                                wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
-                            }
-                        }
-                        isRight = true;
-                        continue;
-                    }
-                }
-                if(isRight) {
-                    for (int i = 0; i < a52Vos.size(); i++) {
-                        Integer oldPxInteger = a52Service.getMaxSort(a38Id);
-                        A52 a52 = new A52();
-                        A52Vo a52Vo = a52Vos.get(i);
-                        BeanUtils.copyProperties(a52, a52Vo);
-                        A38 a38 = this.a38Service.getByPK(a38Id);
-                        a52.setA38(a38);
-                        a52.setPx(oldPxInteger);
-                        EntityWrapper.wrapperSaveBaseProperties(a52, details);
-                        a52Service.save(a52);
-                    }
+                if(!isRight) {
+                    A38 a38 = a38Service.getByPK(a38Id);
+                    a52Service.saveA52S(a52Vos,a38,details);
+                }else {
+                    wrongExcelColumns = (List<WrongExcelColumn>) returnMap.get("wrongExcelColumns");
                 }
             }
         } catch (Exception e) {

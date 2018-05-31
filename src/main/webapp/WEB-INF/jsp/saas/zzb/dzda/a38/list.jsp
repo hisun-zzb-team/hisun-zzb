@@ -71,7 +71,7 @@
 					</div>
 
 					<a  class="btn green" href="javascript:gjcx()">
-						高级查询
+						<i class="icon-search"></i>高级查询
 					</a>
 					<div class="btn-group" style="padding-bottom: 0px">
 						<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
@@ -97,7 +97,7 @@
 					</div>
 					<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
 					<a class="btn green" href="javascript:download()">
-						导出
+						<i class="icon-circle-arrow-down"></i>导出
 					</a>
 					<form action="" id="uploadForm">
 						<input type="file" style="display: none" name="zbdaFile" id="zbdaFile" accept = '.csv,

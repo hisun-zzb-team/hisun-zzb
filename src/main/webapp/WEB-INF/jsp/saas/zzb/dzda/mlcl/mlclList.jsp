@@ -158,7 +158,7 @@
                         </div>
 
                         <a class="controllerClass btn green file_but" href="javascript:download()">
-                            <i class="icon-circle-arrow-down"></i>打印目录
+                            <i class="icon-circle-arrow-down"></i>导出目录
                         </a>
                         <input type="file" style="display: none" name="mlxxFile" id="mlxxFile" accept = '.csv,
              application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>

@@ -108,7 +108,7 @@
                                     <label class="control-label">来件单位名称<span class="required">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" value=""
+                                        <input type="text" class="span10 m-wrap" value=""  required
                                                id="e01Z507A" name="e01Z507A">
                                     </div>
                                 </div>

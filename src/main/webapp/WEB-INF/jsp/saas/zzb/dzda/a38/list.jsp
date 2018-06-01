@@ -195,8 +195,9 @@
 
 <%-- END PAGE CONTENT--%>
 </div>
-
+<script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
+	var myLoading = new MyLoading("${path}",{zindex : 11111});
 	(function(){
 		App.init();
 
@@ -227,6 +228,7 @@
 				return;
 			}
 		}
+		myLoading.show();
 		$("#uploadForm").ajaxSubmit({
 			type:"POST",
 			url:"${path}/zzb/dzda/a38/uploadFile",
@@ -246,20 +248,24 @@
 						},
 						dataType : "html",
 						success : function(html){
+							myLoading.hide();
 							$('#a38Div').html(html);
 
 							$('#a38Modal').modal({backdrop: 'static', keyboard: false});
 						},
 						error : function(){
+							myLoading.hide();
 							showTip("提示","出错了请联系管理员", 1500);
 						}
 					});
 				}else {
+					myLoading.hide();
 					showTip("提示","上传成功!",2000);
 					pagehref("","");
 				}
 			},
 			error : function(){
+				myLoading.hide();
 				showTip("提示","上传失败!",2000);
 			}
 		});

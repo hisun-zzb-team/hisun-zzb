@@ -201,6 +201,7 @@ public class E01Z5Controller extends BaseController {
             String filePath = "";
             if (clFile != null && !clFile.isEmpty()) {
                 File storePathFile = new File(Constants.DAJS_STORE_PATH);
+                fileName = clFile.getOriginalFilename();
                 if(!storePathFile.exists()) storePathFile.mkdirs();
                 filePath = uploadBasePath+ Constants.DAJS_STORE_PATH+ UUIDUtil.getUUID() +".xlsx";
                 File file = new File(filePath);
@@ -254,7 +255,7 @@ public class E01Z5Controller extends BaseController {
             entity.setE01Z534(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z534())? DateUtil.parseDefaultDate(vo.getE01Z534()) :null );
             entity.setA38(a38);
             entity.setName(a38.getA0101());
-            entity.setFileName((String) map.get("fileName"));
+            entity.setFileName(fileName);
             entity.setFilePath(filePath);
             entity.setId(null);
             entity.setE01Z517(details.getRealname());
@@ -329,7 +330,7 @@ public class E01Z5Controller extends BaseController {
         E01Z5 entity = e01z5Service.getByPK(id);
         try {
             resp.setContentType("multipart/form-data");
-            resp.setHeader("Content-Disposition", "attachment;fileName="+URLEncoderUtil.encode(entity.getFileName()+".xlsx"));
+            resp.setHeader("Content-Disposition", "attachment;fileName="+URLEncoderUtil.encode(entity.getFileName()));
             OutputStream output = resp.getOutputStream();
             FileInputStream fileInputStream = new FileInputStream(new File(entity.getFilePath()));
             byte[] buffer = new byte[8192];

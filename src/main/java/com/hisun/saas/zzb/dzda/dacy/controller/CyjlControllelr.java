@@ -77,6 +77,7 @@ public class CyjlControllelr extends BaseController {
     @Value("${sys.upload.absolute.path}")
     private String uploadBasePath;
 
+    @RequiresPermissions("dacyjl:*")
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
                              @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
@@ -101,6 +102,7 @@ public class CyjlControllelr extends BaseController {
         model.put("endtime",endtime);
         return new ModelAndView("saas/zzb/dzda/ydjl/list",model);
     }
+    @RequiresPermissions("dacyjl:*")
     @RequestMapping(value = "/ajax/toScxq")
     public ModelAndView toScxq(String a38LogId){
         Map<String,Object> model = Maps.newHashMap();
@@ -124,6 +126,7 @@ public class CyjlControllelr extends BaseController {
         }
         return new ModelAndView("saas/zzb/dzda/ydjl/scxq",model);
     }
+    @RequiresPermissions("dacyjl:*")
     @RequestMapping(value = "/ajax/toNrxq")
     public ModelAndView toNrxq(String a38LogId){
         Map<String,Object> model = Maps.newHashMap();
@@ -147,6 +150,7 @@ public class CyjlControllelr extends BaseController {
         }
         return new ModelAndView("saas/zzb/dzda/ydjl/nrxq",model);
     }
+    @RequiresPermissions("dacyjl:*")
     @RequestMapping(value = "/ajax/toNrxqViewTime")
     public ModelAndView toNrxqViewTime(String a38LogDetailId){
         Map<String,Object> model = Maps.newHashMap();
@@ -182,7 +186,7 @@ public class CyjlControllelr extends BaseController {
         }
     }
 
-    @RequiresPermissions("a38:*")
+    @RequiresPermissions("dacyjl:*")
     @RequestMapping("/download")
     public void download( HttpServletResponse resp,
                           @RequestParam(value = "starttime",required = false)String starttime,

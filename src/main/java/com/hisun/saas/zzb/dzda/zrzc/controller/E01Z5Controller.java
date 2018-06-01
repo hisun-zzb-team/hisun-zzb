@@ -21,6 +21,8 @@ import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
 import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.log.LogOperateType;
+import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
@@ -185,7 +187,8 @@ public class E01Z5Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/add",returnMap);
     }
 
-    // @RequiresPermissions("dajs:*")
+    @RequiresPermissions("dajs:*")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "保存材料接收记录:${vo.name}")
     @RequestMapping("/save")
     public @ResponseBody Map<String,Object> save(E01Z5Vo vo,HttpServletRequest req,
                                                  @RequestParam(value = "clFile", required = false) MultipartFile clFile){
@@ -305,6 +308,7 @@ public class E01Z5Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/view", model);
     }
     @RequiresPermissions("dajs:*")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "更新回执日期:${hzrq}")
     @RequestMapping("/updateHzrq")
     public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
                                                        @RequestParam(value = "hzrq",required = true) String hzrq){
@@ -347,6 +351,7 @@ public class E01Z5Controller extends BaseController {
     }
 
     @RequiresPermissions("dajs:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新档案接收记录:${hzrq}")
     @RequestMapping("/update")
     public @ResponseBody Map<String,Object> update(@ModelAttribute E01Z5Vo vo, HttpServletRequest request) throws GenericException{
         Map<String,Object> returnMap = new HashMap<String,Object>();
@@ -376,10 +381,10 @@ public class E01Z5Controller extends BaseController {
     }
 
     /**
-     * 租户注销
      * @param id
      * @return
      */
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除档案接收记录:${hzrq}")
     @RequiresPermissions("dajs:*")
     @RequestMapping("/delete/{id}")
     public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{

@@ -82,6 +82,7 @@ public class EApplyE01Z8Controller extends BaseController {
     private String uploadAbsolutePath;
 
     @RequestMapping(value = "/list")
+    @RequiresPermissions("cysq:*")
     public ModelAndView list(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                              @RequestParam(value = "userName", required = false) String userName,
@@ -113,12 +114,13 @@ public class EApplyE01Z8Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dacy/list", model);
     }
 
+    @RequiresPermissions("cysq:*")
     @RequestMapping(value = "/ajax/add")
     public ModelAndView add() {
         return new ModelAndView("saas/zzb/dzda/dacy/add");
     }
 
-
+    @RequiresPermissions("cysq:*")
     @RequestMapping(value = "/ajax/edit")
     public ModelAndView edit(String id) {
         Map<String, Object> map = Maps.newHashMap();
@@ -135,6 +137,7 @@ public class EApplyE01Z8Controller extends BaseController {
      * @throws GenericException
      */
     @RequestMapping("/deleteFile/{id}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "删除申请阅档材料:${id}")
     @RequiresPermissions("cysq:*")
     public
     @ResponseBody
@@ -154,6 +157,7 @@ public class EApplyE01Z8Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/getDaxx")
+    @RequiresPermissions("cysq:*")
     @ResponseBody
     public Map<String, Object> getDaxx(@RequestParam(value = "param", required = true) String param) {
         Map<String, Object> map = Maps.newHashMap();
@@ -242,7 +246,7 @@ public class EApplyE01Z8Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE, description = "增加档案申请查阅记录:${vo.a0101}")
+    @RequiresLog(operateType = LogOperateType.UPDATE, description = "更新档案申请查阅记录:${vo.a0101}")
     @RequestMapping(value = "/update")
     @RequiresPermissions("cysq:*")
     public
@@ -300,6 +304,7 @@ public class EApplyE01Z8Controller extends BaseController {
      * @return
      * @throws GenericException
      */
+    @RequiresLog(operateType = LogOperateType.DELETE, description = "更新档案申请查阅记录:${id}")
     @RequestMapping("/deleteSq/{id}")
     @RequiresPermissions("cysq:*")
     public
@@ -317,6 +322,7 @@ public class EApplyE01Z8Controller extends BaseController {
         }
         return returnMap;
     }
+    @RequiresPermissions("cysq:*")
     @RequestMapping(value = "/ajax/cyqkList")
     public ModelAndView cyqkList(@RequestParam(value = "eApplyE01Z8Id",required = true) String eApplyE01Z8Id){
         CommonConditionQuery query = new CommonConditionQuery();
@@ -352,6 +358,7 @@ public class EApplyE01Z8Controller extends BaseController {
      */
     @RequestMapping("/delete/{id}")
     @RequiresPermissions("cysq:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE, description = "更新档案申请查阅记录:${id}")
     public
     @ResponseBody
     Map<String, Object> delete(@PathVariable("id") String id) throws GenericException {
@@ -380,6 +387,7 @@ public class EApplyE01Z8Controller extends BaseController {
      * @return
      */
     @RequestMapping(value = "/ajax/liulanLog")
+    @RequiresPermissions("cysq:*")
     public
     @ResponseBody
     Map<String, Object> liulanLog(@RequestParam(value = "a38Id", required = true) String a38Id,

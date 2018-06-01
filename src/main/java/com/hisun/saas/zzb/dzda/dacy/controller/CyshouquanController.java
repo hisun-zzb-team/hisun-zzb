@@ -15,6 +15,8 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.log.LogOperateType;
+import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
@@ -80,6 +82,7 @@ public class CyshouquanController extends BaseController {
     @Resource
     private EA38LogDetailService eA38LogDetailService;
 
+    @RequiresPermissions("cyshouquan:*")
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,
                              @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
@@ -138,6 +141,8 @@ public class CyshouquanController extends BaseController {
         }
         return new ModelAndView("saas/zzb/dzda/dasq/shouquan",model);
     }
+
+    @RequiresPermissions("cyshouquan:*")
     @RequestMapping(value = "/ajax/tobfShouquan")
     public ModelAndView tobfShouquan(String a38Id,String sfzasq){
         Map<String,Object> model = Maps.newHashMap();
@@ -150,7 +155,8 @@ public class CyshouquanController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dasq/bfshouquan",model);
     }
 
-
+    @RequiresPermissions("cyshouquan:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权申请阅档:${id}")
     @RequestMapping(value = "/shouhuiQx/{id}")
     public @ResponseBody  Map<String,Object> shouhuiQx(@PathVariable("id")String id){
         Map<String,Object> model = Maps.newHashMap();
@@ -175,6 +181,8 @@ public class CyshouquanController extends BaseController {
      * @param vo
      * @return
      */
+    @RequiresPermissions("cyshouquan:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权或拒绝申请阅档:${vo.a0101}")
     @RequestMapping(value = "/shouquan")
     public @ResponseBody Map<String,Object> shouquanOrJujue(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -203,6 +211,8 @@ public class CyshouquanController extends BaseController {
      * @param vo
      * @return
      */
+    @RequiresPermissions("cyshouquan:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "再次授权申请阅档:${vo.a0101}")
     @RequestMapping(value = "/zcshouquan")
     public @ResponseBody Map<String,Object> zaicishouquan(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -230,6 +240,8 @@ public class CyshouquanController extends BaseController {
         }
         return model;
     }
+    @RequiresPermissions("cyshouquan:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "再次部分授权申请阅档:${vo.a0101}")
     @RequestMapping(value = "/zcbfshouquan")
     public @ResponseBody Map<String,Object> zcbfShouquan(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -271,6 +283,8 @@ public class CyshouquanController extends BaseController {
         return model;
     }
 
+    @RequiresPermissions("cyshouquan:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "部分授权申请阅档:${vo.a0101}")
     @RequestMapping(value = "/bfshouquan")
     public @ResponseBody Map<String,Object> bfShouquan(EApplyE01Z8Vo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
@@ -306,6 +320,7 @@ public class CyshouquanController extends BaseController {
         }
         return model;
     }
+    @RequiresPermissions("cyshouquan:*")
     @RequestMapping(value = "/getA0101")
     public @ResponseBody Map<String,Object> getA0101(@RequestParam(value = "a0101",required = true) String a0101){
         Map<String,Object> model = Maps.newHashMap();
@@ -338,7 +353,7 @@ public class CyshouquanController extends BaseController {
         }
     }
 
-    @RequiresPermissions("a38:*")
+    @RequiresPermissions("cyshouquan:*")
     @RequestMapping("/download")
     public void download( HttpServletResponse resp,  @RequestParam(value = "userName",required = false)String userName,
                           @RequestParam(value = "readContent",required = false)String readContent,

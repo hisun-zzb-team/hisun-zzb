@@ -17,6 +17,8 @@ import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.log.LogOperateType;
+import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
@@ -59,7 +61,8 @@ public class DzdaQueryInfoController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dacx/index");
     }
 
-    @RequiresPermissions("dzda:*")
+
+    @RequiresPermissions("dacx:*")
     @RequestMapping(value = "/list")
     public ModelAndView list(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
@@ -74,8 +77,8 @@ public class DzdaQueryInfoController extends BaseController {
         model.put("pager", pager);
         return new ModelAndView("saas/zzb/dzda/dacx/list", model);
     }
-
-    @RequiresPermissions("dzda:*")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除档案查询条件:${id}")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/delete/{id}")
     public
     @ResponseBody
@@ -92,7 +95,7 @@ public class DzdaQueryInfoController extends BaseController {
         return returnMap;
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping(value = "/gjcx")
     public ModelAndView loadGjcx(HttpServletRequest request,
                                  @RequestParam(value = "appQueryId", required = false) String appQueryId,
@@ -113,7 +116,8 @@ public class DzdaQueryInfoController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dacx/gjcx", map);
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "保存档案查询条件:${queryName}")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/save")
     @ResponseBody
     public Map<String, Object> save(@ModelAttribute DakVo queryVo, HttpServletRequest request,
@@ -170,8 +174,9 @@ public class DzdaQueryInfoController extends BaseController {
         return model;
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/saveById")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "保存档案查询条件:${queryName}")
     @ResponseBody
     public Map<String, Object> saveById(@RequestParam(value = "appQueryId", required = true) String appQueryId,
                                         @RequestParam(value = "queryName", required = true) String queryName,
@@ -196,7 +201,8 @@ public class DzdaQueryInfoController extends BaseController {
         return model;
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新档案查询条件:${queryName}")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/update")
     @ResponseBody
     public Map<String, Object> update(@RequestParam(value = "appQueryId", required = true) String appQueryId,
@@ -221,7 +227,8 @@ public class DzdaQueryInfoController extends BaseController {
         return model;
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新档案查询条件:${appQueryId}")
     @RequestMapping("/ajax/updateQueryType")
     @ResponseBody
     public Map<String, Object> updateQueryType(@RequestParam(value = "appQueryId", required = true) String appQueryId
@@ -240,7 +247,7 @@ public class DzdaQueryInfoController extends BaseController {
         return model;
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/ajax/getById")
     @ResponseBody
     public Map<String,Object> getById(String appQueryId){
@@ -260,7 +267,7 @@ public class DzdaQueryInfoController extends BaseController {
         EntityWrapper.wrapperSaveBaseProperties(entity, details);
         return dzdaQueryInfoService.save(entity);
     }
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/ajax/toBaocun")
     public ModelAndView toBaocun(@ModelAttribute DakVo queryVo,
                                  @RequestParam(value = "appQueryId", required = false) String appQueryId,
@@ -289,7 +296,7 @@ public class DzdaQueryInfoController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/dacx/baocun",model);
     }
 
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/bdwdalist")
     public ModelAndView bdwdalist(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                   @ModelAttribute DakVo queryVo, String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
@@ -396,7 +403,7 @@ public class DzdaQueryInfoController extends BaseController {
         }
 
     }
-
+    @RequiresPermissions("dacx:*")
     @RequestMapping(value = "/download")
     public void download(HttpServletResponse resp,String a0101Query, String gbztCodeQuery, String daztCodeQuery, String gbztContentQuery,
                          String daztContentQuery,
@@ -415,7 +422,7 @@ public class DzdaQueryInfoController extends BaseController {
         a38Service.download(resp,resultList);
 
     }
-    @RequiresPermissions("dzda:*")
+    @RequiresPermissions("dacx:*")
     @RequestMapping("/bdwdalistById")
     public ModelAndView bdwdalistById(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                       @RequestParam(value = "appQueryId", required = true) String appQueryId) throws UnsupportedEncodingException {

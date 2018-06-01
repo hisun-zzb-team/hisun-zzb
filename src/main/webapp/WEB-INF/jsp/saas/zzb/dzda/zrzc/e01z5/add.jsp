@@ -91,9 +91,9 @@
                         <input type="hidden" name="id" value="" id="id">
                         <input type="hidden" name="filePath" value="" id="filePath">
                         <div class="row-fluid">
-                            <div class="span6 ">
+                           <%-- <div class="span6 ">
                                 <div class="control-group" id="nameGroup">
-                                    <label class="control-label">档案名称<span class="required">*</span></label>
+                                    <label class="control-label">档案名称</label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" name="name" maxlength="200" id="name"
@@ -102,10 +102,10 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div>--%>
                             <div class="span6 ">
                                 <div id="e01Z507AGroup" class="control-group">
-                                    <label class="control-label">来件单位名称</label>
+                                    <label class="control-label">来件单位名称<span class="required">*</span></label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" value=""
@@ -113,30 +113,63 @@
                                     </div>
                                 </div>
                             </div>
+                               <div class="span6 ">
+                                   <div class="control-group" id="e01Z501Group">
+                                       <label class="control-label">接收日期</label>
+
+                                       <div class="controls">
+                                           <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
+                                                  id="e01Z501" readonly
+                                                  value=""/>
+                                       </div>
+                                   </div>
+                               </div>
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div class="control-group" id="e01Z501Group">
-                                    <label class="control-label">接收日期</label>
+                                <div class="control-group" id="sjlyGroup">
+                                    <label class="control-label">数据来源<span class="required">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
-                                               id="e01Z501" readonly
-                                               value=""/>
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                            <option value=""></option>
+                                            <option value="1">导入excel</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="span6 ">
-                                <div id="e01Z541Group" class="control-group">
-                                    <label class="control-label">档案位置</label>
-
+                                <div  id="clFileGroup" class="control-group">
+                                    <label id="clFilelb" class="control-label">上传接收文件<span class="required">*</span></label>
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" value=""
-                                               id="e01Z541" name="e01Z541">
+                                        <input type="file" class="default"  name="clFile" id="clFile"  fileSizeLimit="20" required  fileType="csv,xls,xlsx,CSV,XLS,XLSX"/>
+                                        <%--<p class="textprompt">上传文件支持的格式有：'csv','xls','xlsx'</p>--%>
+                                        <%--<div class="fileupload fileupload-new" data-provides="fileupload">--%>
+                                        <%--<div class="input-append">--%>
+                                        <%--<div class="uneditable-input border_radius_none heig20" style="width: 150px">--%>
+                                        <%--<i class="icon-file fileupload-exists"></i>--%>
+                                        <%--<span class="fileupload-preview"></span>--%>
+                                        <%--</div>--%>
+                                        <%--<span class="btn btn-file border_radius_none">--%>
+                                        <%--<span class="fileupload-new ">选择文件</span>--%>
+                                        <%--<span class="fileupload-exists">修改文件</span>--%>
+                                        <%--<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)"--%>
+                                        <%--accept="" />--%>
+                                        <%--</span>--%>
+                                        <%--<p class="Errorred" id="attachFileError"></p>--%>
+                                        <%--<a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row-fluid">
+
+
+
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
@@ -232,51 +265,21 @@
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div class="control-group" id="sjlyGroup">
-                                    <label class="control-label"><span class="required">*</span>数据来源</label>
+                                <div id="e01Z541Group" class="control-group">
+                                    <label class="control-label">档案位置</label>
 
                                     <div class="controls">
-                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
-                                            <option value=""></option>
-                                            <option value="1">导入excel</option>
-                                        </select>
+                                        <input type="text" class="span10 m-wrap" value=""
+                                               id="e01Z541" name="e01Z541">
                                     </div>
                                 </div>
                             </div>
-
                             <div class="span6 ">
-                                <div  id="clFileGroup" class="control-group">
-                                    <label id="clFilelb" class="control-label"><span class="required">*</span>上传接收文件</label>
-                                    <div class="controls">
-                                        <input type="file" class="default"  name="clFile" id="clFile"  fileSizeLimit="20" required  fileType="csv,xls,xlsx,CSV,XLS,XLSX"/>
-                                        <%--<p class="textprompt">上传文件支持的格式有：'csv','xls','xlsx'</p>--%>
-                                        <%--<div class="fileupload fileupload-new" data-provides="fileupload">--%>
-                                            <%--<div class="input-append">--%>
-                                                <%--<div class="uneditable-input border_radius_none heig20" style="width: 150px">--%>
-                                                    <%--<i class="icon-file fileupload-exists"></i>--%>
-                                                    <%--<span class="fileupload-preview"></span>--%>
-                                                <%--</div>--%>
-													<%--<span class="btn btn-file border_radius_none">--%>
-													<%--<span class="fileupload-new ">选择文件</span>--%>
-													<%--<span class="fileupload-exists">修改文件</span>--%>
-													<%--<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)"--%>
-                                                           <%--accept="" />--%>
-													<%--</span>--%>
-                                                <%--<p class="Errorred" id="attachFileError"></p>--%>
-                                                <%--<a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>--%>
-                                            <%--</div>--%>
-                                        <%--</div>--%>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-fluid">
-                            <div>
                                 <div id="e01Z544Group" class="control-group">
                                     <label class="control-label">备注</label>
 
                                     <div class="controls">
-                                            <textarea class="span11" rows="2" name="e01Z544" maxlength="400"
+                                            <textarea class="span10 m-wrap" rows="2" name="e01Z544" maxlength="200"
                                                       id="e01Z544" style="resize: none;"></textarea>
                                     </div>
                                 </div>
@@ -336,6 +339,7 @@ var myLoading = new MyLoading("${path}",20000);
             todayBtn: 'linked',
             language: 'zh-CN'
         });
+        $("#e01Z501").datepicker("setDate",new Date());
         $('#e01Z531').datepicker({
             format: 'yyyy-mm-dd',
             weekStart: 1,

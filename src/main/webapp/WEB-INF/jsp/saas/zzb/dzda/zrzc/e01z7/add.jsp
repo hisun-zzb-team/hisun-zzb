@@ -340,6 +340,7 @@
             todayBtn: 'linked',
             language: 'zh-CN'
         });
+        $("#e01Z701").datepicker("setDate",new Date());
     })
     var cancel= function(){
         window.location.href = "${path }/zzb/dzda/dazd/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";

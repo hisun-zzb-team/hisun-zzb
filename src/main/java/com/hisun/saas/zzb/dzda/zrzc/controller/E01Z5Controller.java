@@ -234,6 +234,17 @@ public class E01Z5Controller extends BaseController {
                 return returnMap;
             }
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            A38 a38 = a38Service.getByPK((String) map.get("a38Id"));
+            a38.setSjzt("0");
+            a38.setA3801(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
+            if(StringUtils.isNotBlank(vo.getE01Z501())){
+                a38.setA3801(DateUtil.formatDateByFormat(DateUtil.parseDefaultDate(vo.getE01Z501()),DateUtil.NOCHAR_PATTERN2));
+            }
+            a38.setJsr(details.getRealname());
+            a38.setA3834(vo.getE01Z541());
+            a38.setA3804B(vo.getE01Z507A());
+            a38.setZryy(vo.getE01Z544());
+            a38Service.update(a38);
             E01Z5 entity = new  E01Z5();
             ConvertUtils.register(new DateConverter(null), java.util.Date.class);
             BeanUtils.copyProperties(entity, vo);
@@ -241,7 +252,8 @@ public class E01Z5Controller extends BaseController {
             entity.setE01Z524(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z524())? DateUtil.parseDefaultDate(vo.getE01Z524()) :null );
             entity.setE01Z531(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z531())? DateUtil.parseDefaultDate(vo.getE01Z531()) :null );
             entity.setE01Z534(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z534())? DateUtil.parseDefaultDate(vo.getE01Z534()) :null );
-            entity.setA38(a38Service.getByPK((String) map.get("a38Id")));
+            entity.setA38(a38);
+            entity.setName(a38.getA0101());
             entity.setFileName((String) map.get("fileName"));
             entity.setFilePath(filePath);
             entity.setId(null);

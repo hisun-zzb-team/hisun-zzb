@@ -86,6 +86,11 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
         }
     }
 
+    /**
+     * 检查获得的a32Vo数据是否合法
+     * @param a32Vos
+     * @return
+     */
     @Override
     public Map<String,Object> checkA32Vos(List<A32Vo> a32Vos){
         boolean isRight = false;
@@ -143,6 +148,13 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
         return returnMap;
     }
 
+    /**
+     * 根据a32Vo保存a32
+     * @param a32Vos
+     * @param a38
+     * @param details
+     */
+    @Override
     public void saveA32S(List<A32Vo> a32Vos,A38 a38,UserLoginDetails details){
         for (int i = 0; i < a32Vos.size(); i++) {
             Integer oldPxInteger = getMaxSort(a38.getId());

@@ -86,7 +86,6 @@ public class E01Z4ServiceImpl extends BaseServiceImpl<E01Z4,String>
     }
 
     public void updateSortBeforSave(E01Z4 e01z4, Integer oldSort)  {
-        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         CommonConditionQuery query = new CommonConditionQuery();
         Integer newSort = e01z4.getPx();
         String sql="update e01z4 t set ";

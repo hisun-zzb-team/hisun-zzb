@@ -345,6 +345,12 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                 + a38Id + File.separator;
     }
 
+    /**
+     * 检查目录信息数据是否合法
+     * @param e01Z1ExcelVo
+     * @return
+     */
+    @Override
     public Map<String,Object> checkE01Z1ExcelVo(E01Z1ExcelVo e01Z1ExcelVo){
         Map<String,Object> returnMap = new HashMap<>();
         List<E01Z1Vo> e01Z1Vos = new ArrayList<>();
@@ -367,6 +373,12 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         return checkE01z1(e01Z1Vos,returnMap);
     }
 
+    /**
+     * 检查E01Z1Vo的数据是否合法
+     * @param e01Z1Vos
+     * @param returnMap
+     * @return
+     */
     public static Map<String,Object> checkE01z1(List<E01Z1Vo> e01Z1Vos, Map<String,Object> returnMap){
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         returnMap.put("isRight",false);
@@ -448,6 +460,11 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         return returnMap;
     }
 
+    /**
+     * 分类保存目录信息
+     * @param e01Z1ExcelVo
+     * @param a38
+     */
     @Override
     public void saveE01Z1S(E01Z1ExcelVo e01Z1ExcelVo, A38 a38) {
         addE01z1(e01Z1ExcelVo.getJlcl(), "jlcl", a38.getId());

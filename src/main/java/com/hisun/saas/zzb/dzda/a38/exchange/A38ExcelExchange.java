@@ -20,6 +20,16 @@ public class A38ExcelExchange extends AbsExcelExchange{
         toExcel(JacksonUtil.nonDefaultMapper().toJson(object), tmplateFile, destFile,xml, dml,map);
     }
 
+    /**
+     * 将数据写入文件中
+     * @param json
+     * @param tmplateFile
+     * @param destFile
+     * @param xml
+     * @param dml
+     * @param map
+     * @throws Exception
+     */
     public void toExcel(String json, String tmplateFile, String destFile,int xml, int dml,Map<String,Object> map) throws Exception {
         JSONObject jsonObject = new JSONObject(json);
         JSONObject jbxx = (JSONObject) jsonObject.get("jbxxA38Vo");
@@ -48,6 +58,11 @@ public class A38ExcelExchange extends AbsExcelExchange{
 
     }
 
+    /**
+     * 设置文件内容--单个对象
+     * @param worksheet
+     * @param jsonObject
+     */
     public void toExcels(Worksheet worksheet,JSONObject jsonObject){
         Cells cells = worksheet.getCells();
         for (Iterator<Cell> cellIterator = cells.iterator(); cellIterator.hasNext(); ) {
@@ -79,6 +94,12 @@ public class A38ExcelExchange extends AbsExcelExchange{
         }
     }
 
+    /**
+     * 设置文件内容--List
+     * @param worksheet
+     * @param gzbd
+     * @throws Exception
+     */
     public void toExcelByManyJson(Worksheet worksheet,JSONArray gzbd) throws Exception {
         List<JSONObject> jsonObjects = new ArrayList<>();
         for(int i=0;i<gzbd.length();i++){
@@ -111,6 +132,15 @@ public class A38ExcelExchange extends AbsExcelExchange{
         }
     }
 
+    /**
+     * 设置内容
+     * @param xml
+     * @param dml
+     * @param map
+     * @param worksheet
+     * @param jsonObject
+     * @throws Exception
+     */
     public void setLines(int xml, int dml,Map<String,Object> map,Worksheet worksheet,JSONObject jsonObject) throws Exception {
         String tmplCellValue = "";
         int tmplCellValueNumber = 0;
@@ -242,6 +272,13 @@ public class A38ExcelExchange extends AbsExcelExchange{
         }
     }
 
+    /**
+     * 设置文件位置标识
+     * @param tmplCellValue
+     * @param tmplCellValueNumber
+     * @param value
+     * @return
+     */
     public Map<String , Object> valueAndNum(String tmplCellValue, int tmplCellValueNumber, String value){
         Map<String , Object> tmpl= new HashMap<>();
         if("一".equals(value)){
@@ -309,6 +346,11 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return tmpl;
     }
 
+    /**
+     * 将获取的数据位置重新排序
+     * @param fieldMap
+     * @return
+     */
     public Map<String,Integer> sortMap(Map<String,Integer> fieldMap){
 
         Set<Map.Entry<String,Integer>> mapEntries = fieldMap.entrySet();
@@ -336,6 +378,13 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return JacksonUtil.nonDefaultMapper().fromJson(jsonObject.toString(), clazz);
     }
 
+    /**
+     * 从文件数据
+     * @param tmplateFile
+     * @param srcFile
+     * @return
+     * @throws Exception
+     */
     public JSONObject fromExcel(String tmplateFile, String srcFile) throws Exception {
         JSONObject jsonObject = new JSONObject();
         AsposeLicenseUtil.newInstance().init();
@@ -364,6 +413,13 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return jsonObject;
     }
 
+    /**
+     * 获取文件数据--单个对象
+     * @param tpltWorksheet
+     * @param srcWorksheet
+     * @return
+     * @throws Exception
+     */
     public Object fromExcel(Worksheet tpltWorksheet, Worksheet srcWorksheet) throws Exception {
         JSONObject jsonObject = new JSONObject();
         Cells tpltCells = tpltWorksheet.getCells();
@@ -392,6 +448,13 @@ public class A38ExcelExchange extends AbsExcelExchange{
         jsonObject.put(field, value);
     }
 
+    /**
+     * 获取文件内容--List
+     * @param tpltWorksheet
+     * @param srcWorksheet
+     * @return
+     * @throws Exception
+     */
     public  List<JSONObject> fromExcel2ManyPojo(Worksheet tpltWorksheet, Worksheet srcWorksheet) throws Exception {
         List<JSONObject> jsonObjects = new ArrayList<>();
         Cells tpltCells = tpltWorksheet.getCells();
@@ -413,8 +476,13 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return jsonObjects;
     }
 
-
-
+    /**
+     * 获取文件内容--目录信息
+     * @param tpltWorksheet
+     * @param srcWorksheet
+     * @return
+     * @throws Exception
+     */
     public JSONObject fromExcelForMlxx(Worksheet tpltWorksheet, Worksheet srcWorksheet) throws Exception {
         String tmplCellValue = "";
         int tmplCellValueNumber = 0;
@@ -449,6 +517,18 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return jsonObject;
     }
 
+    /**
+     * 写入数据
+     * @param jsonObject
+     * @param field
+     * @param tpltCell
+     * @param srcCells
+     * @param tmplCellValue
+     * @param tmplCellValueNumber
+     * @param rowNumberStart
+     * @param rowNumberEnd
+     * @return
+     */
     protected Map<String , Object> setListValue(JSONObject jsonObject,String field,Cell tpltCell,Cells srcCells,String tmplCellValue,int tmplCellValueNumber, int rowNumberStart, int rowNumberEnd){
         Map<String , Object> cellMap = new HashMap<>();
         String srcCellValue = "";
@@ -532,6 +612,11 @@ public class A38ExcelExchange extends AbsExcelExchange{
         return cellMap;
     }
 
+    /**
+     * 获取下一个类别
+     * @param number
+     * @return
+     */
     public String yiToOne(int number){
         String str = "";
         switch (number){

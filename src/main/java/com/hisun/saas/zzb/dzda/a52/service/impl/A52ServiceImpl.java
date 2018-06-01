@@ -87,6 +87,11 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
         }
     }
 
+    /**
+     * 检查a52Vo数据是否合法
+     * @param a52Vos
+     * @return
+     */
     @Override
     public Map<String,Object> checkA52Vos(List<A52Vo> a52Vos){
         boolean isRight = false;
@@ -153,6 +158,12 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
         return returnMap;
     }
 
+    /**
+     * 保存A52
+     * @param a52Vos
+     * @param a38
+     * @param details
+     */
     @Override
     public void saveA52S(List<A52Vo> a52Vos, A38 a38, UserLoginDetails details){
         for (int i = 0; i < a52Vos.size(); i++) {

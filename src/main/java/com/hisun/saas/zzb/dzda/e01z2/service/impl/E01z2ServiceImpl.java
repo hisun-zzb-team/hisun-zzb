@@ -87,6 +87,11 @@ public class E01z2ServiceImpl extends BaseServiceImpl<E01Z2,String> implements E
         }
     }
 
+    /**
+     * 检查接收材料
+     * @param e01z2Vos
+     * @return
+     */
     @Override
     public Map<String,Object> checkE01z2Vos(List<E01z2Vo> e01z2Vos){
         boolean isRight = false;
@@ -165,6 +170,12 @@ public class E01z2ServiceImpl extends BaseServiceImpl<E01Z2,String> implements E
         return returnMap;
     }
 
+    /**
+     * 保存接收材料
+     * @param e01z2Vos
+     * @param a38
+     * @param details
+     */
     @Override
     public void saveE01z2Vos(List<E01z2Vo> e01z2Vos, A38 a38, UserLoginDetails details){
         for(int i=0;i<e01z2Vos.size();i++){

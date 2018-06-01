@@ -20,6 +20,16 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 setLines(JacksonUtil.nonDefaultMapper().toJson(object), tmplateFile, destFile,xml, dml,map);
         }
 
+    /**
+     * 将数据写入文件中
+     * @param json
+     * @param tmplateFile
+     * @param destFile
+     * @param xml
+     * @param dml
+     * @param map
+     * @throws Exception
+     */
         public void setLines(String json, String tmplateFile, String destFile, int xml, int dml,Map<String,Object> map) throws Exception {
                 String tmplCellValue = "";
                 int tmplCellValueNumber = 0;
@@ -170,6 +180,13 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 return JacksonUtil.nonDefaultMapper().fromJson(jsonObject.toString(), clazz);
         }
 
+    /**
+     * 从Excel文件中获得数据
+     * @param tmplateFile
+     * @param srcFile
+     * @return
+     * @throws Exception
+     */
         public JSONObject fromExcel(String tmplateFile, String srcFile) throws Exception {
                 String tmplCellValue = "";
                 int tmplCellValueNumber = 0;
@@ -214,7 +231,12 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 return jsonObject;
         }
 
-        public Map<String,Integer> sortMap(Map<String,Integer> fieldMap){
+    /**
+     * 将生成的文件模板排序
+     * @param fieldMap
+     * @return
+     */
+    public Map<String,Integer> sortMap(Map<String,Integer> fieldMap){
 
                 Set<Map.Entry<String,Integer>> mapEntries = fieldMap.entrySet();
 
@@ -235,6 +257,18 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 return linkMap;
         }
 
+    /**
+     * 设置数据
+     * @param jsonObject
+     * @param field
+     * @param tpltCell
+     * @param srcCells
+     * @param tmplCellValue
+     * @param tmplCellValueNumber
+     * @param rowNumberStart
+     * @param rowNumberEnd
+     * @return
+     */
         protected Map<String , Object> setListValue(JSONObject jsonObject,String field,Cell tpltCell,Cells srcCells,String tmplCellValue,int tmplCellValueNumber, int rowNumberStart, int rowNumberEnd){
                 Map<String , Object> cellMap = new HashMap<>();
                 String srcCellValue = "";
@@ -320,7 +354,12 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 return cellMap;
         }
 
-        public String yiToOne(int number){
+    /**
+     * 获得下一个类别
+     * @param number
+     * @return
+     */
+    public String yiToOne(int number){
                 String str = "";
                 switch (number){
                         case 1:
@@ -387,6 +426,13 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                 return  str;
         }
 
+    /**
+     * 设置类别位置标识
+     * @param tmplCellValue
+     * @param tmplCellValueNumber
+     * @param value
+     * @return
+     */
         public Map<String , Object> valueAndNum(String tmplCellValue, int tmplCellValueNumber, String value){
                 Map<String , Object> tmpl= new HashMap<>();
                 if("一".equals(value)){

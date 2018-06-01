@@ -241,6 +241,7 @@ public class E0z2Controller extends BaseController {
         Map<String,Object> map = new HashMap<>();
         Map<String,Object> returnMap;
         boolean isRight = false;
+        boolean isEmpty = false;
         String filePath = "";
         File storePathFile = new File(Constants.CLJS_STORE_PATH);
         if(!storePathFile.exists()) storePathFile.mkdirs();
@@ -281,7 +282,8 @@ public class E0z2Controller extends BaseController {
                 }
                 returnMap = e01z2Service.checkE01z2Vos(e01z2Vox);
                 isRight= (boolean) returnMap.get("isRight");
-                if(!isRight){
+                isEmpty= (boolean) returnMap.get("cljsIsEmpty");
+                if(!isRight&&!isEmpty){
                     A38 a38 = a38Service.getByPK(a38Id);
                     e01z2Service.saveE01z2Vos(e01z2Vox,a38,details);
                 }else {
@@ -295,6 +297,7 @@ public class E0z2Controller extends BaseController {
         }
 
         map.put("success",true);
+        map.put("isEmpty",isEmpty);
         if(isRight){
             this.wrongExcelColumns = wrongExcelColumns;
             map.put("isWrong",true);

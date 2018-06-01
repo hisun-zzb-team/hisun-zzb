@@ -240,6 +240,7 @@ public class A52Controller extends BaseController {
     public @ResponseBody Map<String,Object> uploadFile (String a38Id , @RequestParam(value="zwbdFile",required = false) MultipartFile zwbdFile , HttpServletResponse resp) throws IOException {
         Map<String,Object> map = new HashMap<>();
         boolean isRight = false;
+        boolean isEmpty = false;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         Map<String,Object> returnMap;
         String filePath = "";
@@ -278,8 +279,8 @@ public class A52Controller extends BaseController {
                 List<A52Vo> a52Vos = a38Vo.getA52Vos();
                 returnMap = a52Service.checkA52Vos(a52Vos);
                 isRight= (boolean) returnMap.get("isRight");
-
-                if(!isRight) {
+                isEmpty= (boolean) returnMap.get("zwbdIsEmpty");
+                if(!isRight&&!isEmpty) {
                     A38 a38 = a38Service.getByPK(a38Id);
                     a52Service.saveA52S(a52Vos,a38,details);
                 }else {
@@ -292,6 +293,7 @@ public class A52Controller extends BaseController {
             file.delete();
         }
         map.put("success",true);
+        map.put("isEmpty",isEmpty);
         if(isRight){
             this.wrongExcelColumns = wrongExcelColumns;
             map.put("isWrong",true);

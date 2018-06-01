@@ -90,6 +90,7 @@ public class E01z2ServiceImpl extends BaseServiceImpl<E01Z2,String> implements E
     @Override
     public Map<String,Object> checkE01z2Vos(List<E01z2Vo> e01z2Vos){
         boolean isRight = false;
+        int emptySum = 0;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         Map<String,Object> returnMap = new HashMap<>();
         WrongExcelColumn wrongExcelColumn;
@@ -147,11 +148,17 @@ public class E01z2ServiceImpl extends BaseServiceImpl<E01Z2,String> implements E
                     for (int j = 0; j < sum; j++) {
                         wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                     }
+                    emptySum++;
                 }else {
                     isRight = true;
                 }
                 continue;
             }
+        }
+        if(e01z2Vos.size()==emptySum){
+            returnMap.put("cljsIsEmpty",true);
+        }else {
+            returnMap.put("cljsIsEmpty",false);
         }
         returnMap.put("isRight",isRight);
         returnMap.put("wrongExcelColumns",wrongExcelColumns);

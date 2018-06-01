@@ -261,7 +261,10 @@
                                 showTip("提示","出错了请联系管理员", 1500);
                             }
                         });
-                    }else {
+                    }else if(data.isEmpty){
+                        myLoading.hide();
+                        showTip("提示","文件内容为空!",2000);
+                    }else{
                         showTip("提示","上传成功!",2000);
                         $.ajax({
                             async:false,

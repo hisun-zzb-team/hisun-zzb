@@ -89,6 +89,7 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
     @Override
     public Map<String,Object> checkA32Vos(List<A32Vo> a32Vos){
         boolean isRight = false;
+        int emptySum = 0;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         Map<String,Object> returnMap = new HashMap<>();
         WrongExcelColumn wrongExcelColumn;
@@ -126,10 +127,16 @@ public class A32ServiceImpl extends BaseServiceImpl<A32,String> implements A32Se
                     for (int j = 0; j < sum; j++) {
                         wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                     }
+                    emptySum++;
                 }else {
                     isRight = true;
                 }
             }
+        }
+        if(a32Vos.size()==emptySum){
+            returnMap.put("gzbdIsEmpty",true);
+        }else {
+            returnMap.put("gzbdIsEmpty",false);
         }
         returnMap.put("isRight",isRight);
         returnMap.put("wrongExcelColumns",wrongExcelColumns);

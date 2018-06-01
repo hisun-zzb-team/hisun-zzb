@@ -90,6 +90,7 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
     @Override
     public Map<String,Object> checkA52Vos(List<A52Vo> a52Vos){
         boolean isRight = false;
+        int emptySum = 0;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         Map<String,Object> returnMap = new HashMap<>();
         WrongExcelColumn wrongExcelColumn;
@@ -135,11 +136,17 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
                     for (int j = 0; j < sum; j++) {
                         wrongExcelColumns.remove(wrongExcelColumns.size() - 1);
                     }
+                    emptySum++;
                 }else {
                     isRight = true;
                 }
                 continue;
             }
+        }
+        if(a52Vos.size()==emptySum){
+            returnMap.put("zwbdIsEmpty",true);
+        }else {
+            returnMap.put("zwbdIsEmpty",false);
         }
         returnMap.put("isRight",isRight);
         returnMap.put("wrongExcelColumns",wrongExcelColumns);

@@ -236,6 +236,7 @@ public class A32Controller extends BaseController {
     public @ResponseBody Map<String,Object> uploadFile (String a38Id ,@RequestParam(value="gzbdFile",required = false) MultipartFile gzbdFile , HttpServletResponse resp) throws IOException {
         Map<String,Object> map = new HashMap<>();
         boolean isRight = false;
+        boolean isEmpty = false;
         Map<String,Object> returnMap;
         List<WrongExcelColumn> wrongExcelColumns = new ArrayList<>();
         String filePath = "";
@@ -279,7 +280,9 @@ public class A32Controller extends BaseController {
                 }
                 returnMap = a32Service.checkA32Vos(a32Vox);
                 isRight= (boolean) returnMap.get("isRight");
-                if(!isRight) {
+                isEmpty= (boolean) returnMap.get("gzbdIsEmpty");
+
+                if(!isRight&&!isEmpty) {
                     A38 a38 = a38Service.getByPK(a38Id);
                     a32Service.saveA32S(a32Vox,a38,details);
                 }else {
@@ -292,6 +295,7 @@ public class A32Controller extends BaseController {
             file.delete();
         }
         map.put("success",true);
+        map.put("isEmpty",isEmpty);
         if(isRight){
             this.wrongExcelColumns = wrongExcelColumns;
             map.put("isWrong",true);

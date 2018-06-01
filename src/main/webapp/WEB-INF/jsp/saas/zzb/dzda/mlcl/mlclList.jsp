@@ -130,7 +130,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a onclick="fileDown('xiazaimludaorumoban')">下载目录导入模板</a>
+                                    <a onclick="downloadMB()">下载目录导入模板</a>
                                 </li>
                                 <li>
                                     <a onclick="uploadFile()">导入目录</a>
@@ -345,10 +345,6 @@
         });
     }
 
-    function fileDown(type) {
-        window.open("${path }/zzb/app/console/daDemo/ajax/down?type=" + type);
-    }
-
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
         var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
@@ -474,6 +470,9 @@
         window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     };
 
+    function downloadMB(){
+        window.open("${path}/zzb/dzda/e01z1/downloadMB/{a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+    }
 
     function uploadFile(){
         document.getElementById("mlxxFile").click();

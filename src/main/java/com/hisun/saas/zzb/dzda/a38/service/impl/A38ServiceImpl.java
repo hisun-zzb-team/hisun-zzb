@@ -330,6 +330,8 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
     public Map<String,Object> checkA38ExcelData(A38ExcelVo a38ExcelVo,Map<String,Object> returnMap){
         Map<String,Object> checkMap;
         boolean isRight = false;
+        boolean gzbdIsEmpty = false;
+        boolean cljsIsEmpty = false;
         boolean checkIsRight;
         List<WrongExcelColumn> wrongExcelColumns=new ArrayList<>();
         if(a38ExcelVo!=null){
@@ -360,6 +362,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
             if(gzbdList.size()>0){
                 checkMap = a32Service.checkA32Vos(gzbdList);
                 checkIsRight= (boolean) checkMap.get("isRight");
+                gzbdIsEmpty= (boolean) checkMap.get("gzbdIsEmpty");
                 if(checkIsRight) {
                     isRight=checkIsRight;
                     wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
@@ -371,6 +374,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
             if(e01z2Vos.size()>0){
                 checkMap = e01z2Service.checkE01z2Vos(e01z2Vos);
                 checkIsRight= (boolean) checkMap.get("isRight");
+                cljsIsEmpty= (boolean) checkMap.get("cljsIsEmpty");
                 if(checkIsRight){
                     isRight=checkIsRight;
                     wrongExcelColumns.addAll((List<WrongExcelColumn>) checkMap.get("wrongExcelColumns"));
@@ -390,6 +394,8 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
         }
         returnMap.put("isRight",isRight);
+        returnMap.put("gzbdIsEmpty",gzbdIsEmpty);
+        returnMap.put("cljsIsEmpty",cljsIsEmpty);
         returnMap.put("wrongExcelColumns",wrongExcelColumns);
 
         return returnMap;
@@ -412,7 +418,8 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         return id;
     }
 
-    public String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details){
+    @Override
+    public String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details,boolean gzbdIsEmpty,boolean cljsIsEmpty){
         String id = "";
         if(a38ExcelVo!=null){
             //新增档案
@@ -429,13 +436,13 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
                 //添加工资变动记录
                 List<A32Vo> gzbdList = a38ExcelVo.getGzbdList();
-                if(gzbdList.size()>0){
+                if(gzbdList.size()>0&&!gzbdIsEmpty){
                     a32Service.saveA32S(gzbdList,a38,details);
                 }
 
                 //添加材料接收记录
                 List<E01z2Vo> e01z2Vos = a38ExcelVo.getE01z2Vos();
-                if(e01z2Vos.size()>0){
+                if(e01z2Vos.size()>0&&!cljsIsEmpty){
                     e01z2Service.saveE01z2Vos(e01z2Vos,a38,details);
                 }
                 //添加目录信息及材料

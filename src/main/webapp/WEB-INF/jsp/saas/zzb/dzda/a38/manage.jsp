@@ -104,16 +104,16 @@
 			</a>
 			<ul class="dropdown-menu">
 				<li >
-				<a onclick="fileDown('allDa')">整本档案下载(含图片)</a>
+				<a onclick="fileDownManage('allDa')">整本档案下载(含图片)</a>
 				</li>
 				<li >
-				<a onclick="fileDown('danganxiazai')">电子表格目录</a>
+				<a onclick="fileDownManage('danganxiazai')">电子表格目录</a>
 				</li>
 				<li>
-				<a onclick="fileDown('qianquecail')">欠缺材料信息</a>
+				<a onclick="fileDownManage('qianquecail')">欠缺材料信息</a>
 				</li>
 				<li>
-				<a onclick="fileDown('dangantupianxiazai')">档案图片下载</a>
+				<a onclick="fileDownManage('dangantupianxiazai')">档案图片下载</a>
 				</li>
 			</ul>
 		</div>
@@ -395,7 +395,7 @@
 		});
 	}
 
-	function fileDown(type) {
+	function fileDownManage(type) {
 		if(type=="danganxiazai"){
 			window.open("${path}/zzb/dzda/a38/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 		}

@@ -647,8 +647,10 @@ public class A38Controller extends BaseController {
             a38ExcelVo = (A38ExcelVo) a38ExcelExchange.fromExcel(A38ExcelVo.class,tempFile,filePath);
             returnMap=a38Service.checkA38ExcelData(a38ExcelVo,returnMap);
             isRight= (boolean) returnMap.get("isRight");
+            boolean gzbdIsEmpty= (boolean) returnMap.get("gzbdIsEmpty");
+            boolean cljsIsEmpty= (boolean) returnMap.get("cljsIsEmpty");
             if(!isRight){
-                String id=a38Service.saveA38ExcelData(a38ExcelVo,details);
+                String id=a38Service.saveA38ExcelData(a38ExcelVo,details,gzbdIsEmpty,cljsIsEmpty);
                 map.put("a38Id",id);
             }
         } catch (Exception e) {

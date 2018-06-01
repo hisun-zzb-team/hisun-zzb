@@ -342,10 +342,6 @@
         });
     }
 
-    function fileDown(type) {
-        window.open("${path }/zzb/app/console/daDemo/ajax/down?type=" + type);
-    }
-
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
         var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();

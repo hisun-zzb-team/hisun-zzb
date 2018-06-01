@@ -26,7 +26,7 @@ public interface A38Service extends BaseService<A38,String>{
     Map<String,Object> checkA38(A38Vo a38);
     Map<String,Object> checkA38ExcelData(A38ExcelVo a38ExcelVo, Map<String,Object> returnMap);
     String saveA38(A38Vo a38Vo,UserLoginDetails details);
-    String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details);
+    String saveA38ExcelData(A38ExcelVo a38ExcelVo,UserLoginDetails details,boolean gzbdIsEmpty,boolean cljsIsEmpty);
     /**
      * 档案信息列表导出
      * @param resp

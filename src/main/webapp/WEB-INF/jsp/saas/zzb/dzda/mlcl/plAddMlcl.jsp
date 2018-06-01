@@ -204,16 +204,25 @@
 			},
 			success:function(html){
 				$('#a38Table').html(html);
+				App.init();
 
 				var checks = document.getElementsByName("a38Check");
 				if(checks){
+					var isAll = true;
 					for(var i=0;i<checks.length;i++){
 						var id = checks[i].value;
 						var index = indexOf(ids,id);
 						if(index>-1){
 							checks[i].checked=true;
 							checks[i].parentNode.className = "checked";
+						}else {
+							isAll = false;
 						}
+					}
+					if(isAll){
+						var allCheck = document.getElementById("allCheck");
+						allCheck.checked=true;
+						allCheck.parentNode.className = "checked";
 					}
 				}
 			},

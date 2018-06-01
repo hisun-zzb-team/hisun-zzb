@@ -34,20 +34,6 @@
 		</div>
 	</div>
 </div>
-<div id="a38Modal" class="modal container hide fade" tabindex="-1" data-width="600">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button data-dismiss="modal" class="close" id="closeA38" type="button"></button>
-				<h3 class="modal-title" id="a38Title" >
-					导入文件错误列表
-				</h3>
-			</div>
-			<div class="modal-body" id="a38Div">
-			</div>
-		</div>
-	</div>
-</div>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 responsive">
@@ -73,37 +59,10 @@
 					<a  class="btn green" href="javascript:gjcx()">
 						<i class="icon-search"></i>高级查询
 					</a>
-					<div class="btn-group" style="padding-bottom: 0px">
-						<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
-							导入<i class="icon-angle-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li >
-								<a onclick="uploadZbdaFile()">导入excel</a>
-							</li>
-							<%--<li >--%>
-								<%--<a onclick="unloadFile()">导入Lrmx</a>--%>
-							<%--</li>--%>
-							<%--<li >--%>
-								<%--<a onclick="unloadFile()">导入Lrm</a>--%>
-							<%--</li>--%>
-							<%--<li >--%>
-								<%--<a onclick="unloadFile()">导入HZB</a>--%>
-							<%--</li>--%>
-							<%--<li >--%>
-								<%--<a onclick="unloadFile()">导入7z</a>--%>
-							<%--</li>--%>
-						</ul>
-					</div>
 					<input type="file" style="display: none" name="unloadFile" id="btn-unloadFile"/>
 					<a class="btn green" href="javascript:download()">
 						<i class="icon-circle-arrow-down"></i>导出
 					</a>
-					<form action="" id="uploadForm">
-						<input type="file" style="display: none" name="zbdaFile" id="zbdaFile" accept = '.csv,
-                 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
-						<input type="hidden" id="a38Id" name="a38Id" value="${a38Id}">
-					</form>
 
 				</div>
 
@@ -213,65 +172,6 @@
 		document.getElementById("btn-unloadFile").click();
 	}
 
-	function uploadZbdaFile(){
-		document.getElementById("zbdaFile").click();
-	}
-
-	$("#zbdaFile").on("change", function (evt) {
-		var uploadFile = document.getElementById("zbdaFile");
-		var file = uploadFile.files[0];
-		if (uploadFile.files.length > 0) {
-			var name = uploadFile.files[0].name
-			var arr = name.split(".");
-			if (arr.length < 2 || !(arr[arr.length - 1] == "csv" || arr[arr.length - 1] == "xlsx" || arr[arr.length - 1] == "xls")) {
-				showTip("提示", "请上传Excel文件", 2000);
-				return;
-			}
-		}
-		myLoading.show();
-		$("#uploadForm").ajaxSubmit({
-			type:"POST",
-			url:"${path}/zzb/dzda/a38/uploadFile",
-			dataType : "json",
-			enctype : "multipart/form-data",
-			headers:{
-				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
-			},
-			success:function(data){
-				if(data.isWrong){
-					$.ajax({
-						url:"${path}/zzb/dzda/a38/ajax/cwjl",
-						type : "post",
-						data: {},
-						headers:{
-							OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-						},
-						dataType : "html",
-						success : function(html){
-							myLoading.hide();
-							$('#a38Div').html(html);
-
-							$('#a38Modal').modal({backdrop: 'static', keyboard: false});
-						},
-						error : function(){
-							myLoading.hide();
-							showTip("提示","出错了请联系管理员", 1500);
-						}
-					});
-				}else {
-					myLoading.hide();
-					showTip("提示","上传成功!",2000);
-					pagehref("","");
-				}
-			},
-			error : function(){
-				myLoading.hide();
-				showTip("提示","上传失败!",2000);
-			}
-		});
-	});
-
-
 	function pagehref (pageNum ,pageSize){
 		$("#pageNum").val(pageNum);
 		$("#pageSize").val(pageSize);
@@ -281,7 +181,6 @@
 	function searchSubmit(){
 		document.searchForm.submit();
 	}
-
 
 	var view = function(id){
 		$.ajax({
@@ -354,9 +253,6 @@
 		//window.open("${path}/zzb/dzda/a38/dagl/download?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 
-	$("#closeA38").on("click",function(){
-		pagehref("","");
-	});
 </script>
 </body>
 </html>

@@ -406,7 +406,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
         BeanUtils.copyProperties(a38Vo, a38);
         a38.setId(null);
-        a38.setSjzt("1");
+        a38.setSjzt("0");
         EntityWrapper.wrapperSaveBaseProperties(a38,details);
         id = save(a38);
         return id;

@@ -98,11 +98,11 @@
                             </div>
                             <div class="span6 ">
                                 <div id="e01Z704AGroup" class="control-group">
-                                    <label class="control-label">转往单位</label>
+                                    <label class="control-label">转往单位<span class="required">*</span></label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" value=""
-                                               id="e01Z704A" name="e01Z704A">
+                                               required  id="e01Z704A" name="e01Z704A">
                                     </div>
                                 </div>
                             </div>

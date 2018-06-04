@@ -104,7 +104,14 @@
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD width="10%"><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD width="10%">
+                                <c:if test="${vo.auditingState == 1}">
+                                    <a href="javascript:viewImageMain('${vo.a38.id}','${vo.a0101}','${vo.id}')"><c:out value="${vo.a0101}"></c:out></a>
+                                </c:if>
+                                <c:if test="${vo.auditingState != 1}">
+                                    <c:out value="${vo.a0101}"></c:out>
+                                </c:if>
+                            </TD>
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
                             <TD width="20%">

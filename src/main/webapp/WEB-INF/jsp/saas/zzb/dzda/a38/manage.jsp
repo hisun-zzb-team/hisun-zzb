@@ -103,9 +103,9 @@
 			下载<i class="icon-angle-down"></i>
 			</a>
 			<ul class="dropdown-menu">
-				<li >
+				<%--<li >
 				<a onclick="fileDownManage('allDa')">整本档案下载(含图片)</a>
-				</li>
+				</li>--%>
 				<li >
 				<a onclick="fileDownManage('danganxiazai')">电子表格目录</a>
 				</li>
@@ -401,6 +401,9 @@
 		}
 		if(type=="dangantupianxiazai"){
 			window.open("${path}/zzb/dzda/mlcl/tpcl/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
+		if(type=="qianquecail"){
+			window.open("${path}/zzb/dzda/e01z4/download/${id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 		}
 		<%--window.open("${path }/zzb/app/console/daDemo/ajax/down?type="+type);--%>
 	}

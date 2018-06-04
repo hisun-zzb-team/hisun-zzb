@@ -21,6 +21,8 @@ import com.hisun.saas.sys.admin.dzda.entity.ECatalogTypeInfo;
 import com.hisun.saas.sys.admin.dzda.service.ECatalogTypeService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.log.LogOperateType;
+import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 import com.hisun.saas.zzb.dzda.a32.service.A32Service;
@@ -286,6 +288,7 @@ public class A38Controller extends BaseController {
         }
         return map;
     }
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "添加档案:${vo.a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/save")
     public @ResponseBody Map<String,Object> save(@ModelAttribute A38Vo vo) throws GenericException {
@@ -327,7 +330,7 @@ public class A38Controller extends BaseController {
         model.put("vo", vo);
         return new ModelAndView("saas/zzb/dzda/a38/edit", model);
     }
-
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "修改档案:${vo.a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/update")
     public @ResponseBody Map<String,Object> update(@ModelAttribute A38Vo vo, HttpServletRequest request) throws GenericException{
@@ -389,6 +392,7 @@ public class A38Controller extends BaseController {
         return returnMap;
     }
 
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "添加档案:${id}")
     /**
      * 删除
      * @param id

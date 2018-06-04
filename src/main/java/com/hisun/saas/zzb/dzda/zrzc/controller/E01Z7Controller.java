@@ -523,11 +523,11 @@ public class E01Z7Controller extends BaseController {
                     org.apache.commons.beanutils.BeanUtils.copyProperties(e01Z1Vo,e01Z1);
                     String date = e01Z1Vo.getE01Z117();
                     if(date.length()>=4){
-                        e01Z1Vo.setYear(date.substring(date.length()-4,date.length()));
+                        e01Z1Vo.setYear(date.substring(0,4));
                         if(date.length()>=6){
-                            e01Z1Vo.setMonth(date.substring(date.length()-6,date.length()-4));
+                            e01Z1Vo.setMonth(date.substring(4,6));
                             if(date.length()>6){
-                                e01Z1Vo.setDay(date.substring(date.length()-8,date.length()-6));
+                                e01Z1Vo.setDay(date.substring(6,8));
                             }
                         }
                     }else {

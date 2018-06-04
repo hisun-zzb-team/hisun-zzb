@@ -17,6 +17,10 @@
         form {
             margin: 0 0 0px;
         }
+        ul.ztree{margin-bottom: 10px; background: #f1f3f6 !important;}
+        .portlet.box.grey.mainleft{background-color: #f1f3f6;overflow: hidden; padding: 0px !important; margin-bottom: 0px;}
+        .main_left{float:left; width:220px;  margin-right:10px; background-color: #f1f3f6; }
+        .main_right{display: table-cell; width:2000px;}
     </style>
 </head>
 <body>

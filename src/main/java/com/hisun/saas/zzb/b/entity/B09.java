@@ -18,39 +18,109 @@ import java.io.Serializable;
 @Entity
 @Table(name = "b05")
 public class B09 extends TombstoneEntity implements Serializable {
+    /** 主键 */
     private String b0900;
+
+    /** 从属单位id */
+    private String b0100;
+
+    /** 查询职务名称 */
     private String b0901A;
+
+    /** 查询职务名称代码ZB08-2006/ZWMC */
     private String b0901B;
+
+    /** 职务类别ZB42-2006/ZWLB */
     private String b0904;
+
+    /** 职务类别名称 */
     private String b0904A;
+
+    /** 职级ZB09-2006/ZWJB */
     private String b0907;
+
+    /** 职务级别名称 */
     private String b0907A;
+
+    /** 职数 */
     private Integer b0911;
+
+    /** 现配职数 */
     private Integer b0914;
+
+    /** 超编原因 */
     private String b0917;
+
+    /** 缺编原因 */
     private String b0921;
+
+    /** 职务排序 */
     private Integer bPx;
+
+    /** 单位职务名称 */
     private String bDwzwmc;
+
+    /** 职数管理名称 */
     private String bZsglmc;
+
+    /** 是否存在兼任，1－存在，0－不存在 */
     private String bSfjr;
+
+    /** 是否能存在包含，1－存在，0－不存在 */
     private String bSfbh;
+
+    /** 是否占编制，1－占用，0－不占用 */
     private String bSfzb;
+
+    /** 是否领导职务，1－是，0－否,默认1 */
     private String bSfldzw;
+
+    /** 是否班子成员，1－是，0－否  */
     private String bSfbzcy;
+
+    /** 是否需要试用 */
     private String bSfsy;
+
+    /** 试用时长 */
     private Integer bSysc;
+
+    /** 试用时长单位,1－月，2－年 */
     private String bSyscdw;
+
+    /** 退休年龄,格式(60,60) */
     private String bTxnl;
+
+    /** 该职务是否存在多职级，1－是，0－否  */
     private String bSfdzj;
+
+    /** 是否在本单位名册中显示此职务，1－是，0－否。默认为是 */
     private String bSfmcxs;
+
+    /** 管理类别，单位管理类别:01－中央管理，02－省级党委管理，03－市级党委管理，04－县级党委管理，05－其他 */
     private String bGllbB;
+
+    /** 管理类别说明，单位管理类别:01－中央管理，02－省级党委管理，03－市级党委管理，04－县级党委管理，05－其他 */
     private String bGllbA;
+
+    /** 是否统计职数:0-不统计,1-统计 */
     private String bSftjzs;
+
+    /** 编制性质ZB61-2006/BZXZ */
     private String bBzxzB;
+
+    /** 所属编制性质名字 */
     private String bBzxzA;
+
+    /** 排序参照职务id */
     private String bCzpxzwB;
+
+    /** 排序参照职务名称 */
     private String bCzpxzwA;
+
+    /** 职务状态1-在编，0-撤销，默认1 */
     private String bZwztB;
+
+    /** 职务状态内容 */
     private String bZwztA;
     private B01 b01;
     @ManyToOne(fetch = FetchType.LAZY)

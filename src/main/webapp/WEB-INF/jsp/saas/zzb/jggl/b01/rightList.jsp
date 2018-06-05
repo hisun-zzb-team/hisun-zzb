@@ -124,7 +124,7 @@
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <td><a href=""><c:out value="${vo.b0101}"></c:out></a></td>
+                            <td><a href="javascript:edit('${vo.b0100}')"><c:out value="${vo.b0101}"></c:out></a></td>
                             <td><a href=""><c:out value="${vo.b0104}"></c:out></a></td>
                                 <%--<td><c:out value="${vo.b0101}"></c:out></td>--%>
                             <td><c:out value="${vo.b0131A}"></c:out></td>
@@ -152,6 +152,10 @@
     var myLoading = new MyLoading("${path}", {zindex: 11111});
     function nsjg() {
         alert("1111")
+    }
+
+    function edit(id) {
+        window.location.href = "${path}/zzb/jggl/b01/manage?bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
     $(function () {
     })

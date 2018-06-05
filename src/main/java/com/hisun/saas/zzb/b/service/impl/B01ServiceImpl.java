@@ -69,12 +69,12 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
     @Override
     public Integer getMaxSort(String parentId) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String hql = "select max(t.b_px)+1 as sort from B01 t ";
+        String hql = "select max(t.bPx)+1 as sort from B01 t ";
         if (parentId != null && !parentId.equals("")) {
-            hql = hql + "where t.b_sjjg =:parentId";
-            map.put("a38Id", parentId);
+            hql = hql + "where t.parentB01.id =:parentId";
+            map.put("parentId", parentId);
         } else {
-            hql = hql + "where t.b_sjjg is null";
+            hql = hql + "where t.parentB01.id is null";
         }
         List<Map> maxSorts = this.b01Dao.list(hql, map);
         if (maxSorts.get(0).get("sort") == null) {

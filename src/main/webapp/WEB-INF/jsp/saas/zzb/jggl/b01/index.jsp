@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
-<%@include file="/WEB-INF/jsp/inc/taglib.jsp"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@include file="/WEB-INF/jsp/inc/servlet.jsp" %>
+<%@include file="/WEB-INF/jsp/inc/taglib.jsp" %>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
   ~ http://www.hn-hisun.com
@@ -29,7 +29,7 @@
 		<div class="main_left">
 			<div class="portlet box grey mainleft">
 				<div class="portlet-body leftbody">
-					<input type="hidden" id="cuaB01Id"  name="cuaB01Id" value="" />
+					<input type="hidden" id="b01Id"  name="b01Id" value="" />
 					<input type="hidden" id="b0101"  name="b0101" value="" />
 					<input type="hidden" id="parentB01Id"  name="parentB01Id" value="" />
 					<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
@@ -56,19 +56,18 @@
 	}
 
 	function onClickByTree (event, treeId, treeNode){
-		$("#cuaB01Id").val(treeNode.id);//赋值
+		$("#b01Id").val(treeNode.id);//赋值
 		$("#b0101").val(treeNode.name);//赋值
 		$("#parentB01Id").val(treeNode.pId);//赋值
 		$.ajax({
 			url: "${path}/zzb/jggl/b01/ajax/list",
 			type : "get",
-			data : null,
 			dataType : "html",
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 			},
 			data:{
-				"cuaB01Id":treeNode.id,
+				"b01Id":treeNode.id,
 				"parentB01Id":treeNode.pId,
 				"b0101":treeNode.name
 			},
@@ -85,14 +84,14 @@
 		App.init();//必须，不然导航栏及其菜单无法折叠
 		var zTree = $.fn.zTree.getZTreeObj("leftB01Tree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
-		var cuaB01Id ;
+		var b01Id ;
 		var parentB01Id ;
 		var b0101 ;
 		if(node!=null){
-			$("#cuaB01Id").val(node.id);//赋值
+			$("#b01Id").val(node.id);//赋值
 			$("#b0101").val(node.name);//赋值
 			$("#parentB01Id").val(node.pId);//赋值
-			cuaB01Id =node.id;
+            b01Id =node.id;
 			parentB01Id =node.pId;
 			b0101 =node.name;
 		}
@@ -102,7 +101,7 @@
 			type: 'POST',
 			dataType : "html",
 			data:{
-				"cuaB01Id":cuaB01Id,
+				"b01Id":b01Id,
 				"parentB01Id":parentB01Id,
 				"b0101":b0101
 			},
@@ -128,7 +127,7 @@
 	}
 	function selectNodeTree(){
 		var zTree1 = $.fn.zTree.getZTreeObj("leftB01Tree");
-		var id = $("#cuaB01Id").val();
+		var id = $("#b01Id").val();
 		var node = zTree1.getNodeByParam('id',id);// 获取id为-1的点
 		zTree1.selectNode(node);
 		zTree1.expandNode(node, true, false , true);

@@ -18,31 +18,83 @@ import java.io.Serializable;
 @Entity
 @Table(name = "b02")
 public class B02 extends TombstoneEntity implements Serializable {
+    /** 编制情况信息id */
     private String b0200;
+
+    /** 编制批准日期 */
     private String b0201;
+
+    /** 编制批准文号 */
     private String b0204;
+
+    /** 编制文号,关联文件库 */
     private String b0204A;
+
+    /** 编制批准机关名称 */
     private String b0207A;
+
+    /** 编制批准机关代码ZB02-2006/JGMC */
     private String b0207B;
+
+    /** 内设单位数 */
     private Integer b0211;
+
+    /** 内设单位名称 */
     private String b0214;
+
+    /** 内设单位级别 */
     private String b0217;
+
+    /** 编制性质ZB61-2006/BZXZ */
     private String b0221;
+
+    /** 编制性质名称 */
     private String b0221A;
+
+    /** 批准编制总数 */
     private Integer b0224;
+
+    /** 行政编制数 */
     private Integer b0227;
+
+    /** 事业编制数 */
     private Integer b0231;
+
+    /** 企业编制数 */
     private Integer b0234;
+
+    /** 社团编制数 */
     private Integer b0237;
+
+    /** 单位领导职数 */
     private Integer b0241;
+
+    /** 领导同级非领导职务职数 */
     private Integer b0244;
+
+    /** 内设第一级单位领导职数 */
     private Integer b0247;
+
+    /** 内设第一级单位领导同级非领导职数 */
     private Integer b0251;
+
+    /** 业务人员编制数 */
     private Integer b0254;
+
+    /** 工勤人员编制数 */
     private Integer b0257;
+
+    /** 使用全额拨款人数 */
     private Integer b0261;
+
+    /** 使用差额拨款人数 */
     private Integer b0264;
+
+    /** 使用自筹资金人数 */
     private Integer b0267;
+
+    /** 编制摘要说明 */
+    private String bBzzysm;
     private B01 b01;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "b0100")
@@ -328,8 +380,6 @@ public class B02 extends TombstoneEntity implements Serializable {
     public void setB0267(Integer b0267) {
         this.b0267 = b0267;
     }
-
-    private String bBzzysm;
 
     @Basic
     @javax.persistence.Column(name = "b_bzzysm", nullable = true, length = 2000)

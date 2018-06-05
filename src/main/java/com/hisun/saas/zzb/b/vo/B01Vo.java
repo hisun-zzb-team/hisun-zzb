@@ -19,57 +19,178 @@ import java.util.List;
  * @author liuzj {279421824@qq.com}
  */
 public class B01Vo  {
+    /** 主键值 */
     private String b0100;
+
+    /** 单位名称 */
     private String b0101;
+
+    /** 单位简称 */
     private String b0104;
+
+    /** 单位缩名 */
     private String b0107;
+
+    /** 单位代码ZB02-2006/JGMC */
     private String b0111;
+
+    /** 组织单位代码 */
     private String b0114;
+
+    /** 单位所在地区ZB01-2006/GQMC */
     private String b0117;
+
+    /** 单位隶属关系ZB87-2006/DWLS */
     private String b0124;
+
+    /** 单位级别ZB03-1994/DWJB */
     private String b0127;
+
+    /** 单位级别内容 */
     private String b0127A;
+
+    /** 单位性质类别ZB04-2006/DWXZ */
     private String b0131;
+
+    /** 单位性质类别内容 */
     private String b0131A;
+
+    /** 单位所属行业GB/T4754-2002 */
     private String b0134;
+
+    /** 单位工作职能 */
     private String b0137;
+
+    /** 隶属单位名称 */
     private String b0144A;
+
+    /** 隶属单位代码ZB02-2006/JGMC */
     private String b0144B;
+
+    /** 领导班子主管单位名称 */
     private String b0151A;
+
+    /** 领导班子主管单位代码ZB02-2006/JGMC */
     private String b0151B;
+
+    /** 领导班子协管单位名称 */
     private String b0154A;
+
+    /** 领导班子协管单位代码ZB02-2006/JGMC */
     private String b0154B;
+
+    /** 归口管理单位名称 */
     private String b0157A;
+
+    /** 归口管理单位代码ZB02-2006/JGMC */
     private String b0157B;
+
+    /** 单位负责人 */
     private String b0161;
+
+    /** 单位成立批准日期 */
     private String b0164;
+
+    /** 单位成立批准文号 */
     private String b0167;
+
+    /** 单位成立批准机关名称 */
     private String b0171A;
+
+    /** 单位成立批准机关代码ZB02-2006/JGMC */
     private String b0171B;
+
+    /** 有中共党员标识,1-有，0-无。默认1 */
     private String b0174;
+
+    /** 有中共组织标识,0-无；1-党委；2-党总支部；3-党支部；4-党小组 */
     private String b0177;
+
+    /** 单位撤销批准日期 */
     private String b0181;
+
+    /** 单位撤销批准文号 */
     private String b0184;
+
+    /** 单位撤销批准机关名称 */
     private String b0187A;
+
+    /** 单位撤销批准机关代码ZB02-2006/JGMC */
     private String b0187B;
+
+    /** 法人单位代码 */
     private String b0191;
+
+    /** 法人单位标识，1-是，2-否，与b_sjlx同步 */
     private String b0194;
+
+    /** 单位说明 */
     private String b0197;
+
+    /** 单位状态，01－当前，02－撤销，02001-撤销单位,02002-撤销并入其他单位,03－取消级别 */
     private String bDwztB;
+
+    /** 状态名称 */
     private String bDwztA;
+
+    /** 是否为临时单位,0－否，1-是 */
     private String bSfls;
+
+    /** 单位管理类别:01－中央管理，02－省级党委管理，03－市级党委管理，04－县级党委管理，05－其他 */
     private String bGllbB;
+
+    /** 单位管理类别内容 */
     private String bGllbA;
+
+    /** 是否统计职数，默认是-1，否-0 */
     private String bSftjzs;
+
+    /** 该单位下最高正职职务级别 */
     private String bZgzzjbB;
+
+    /** 该单位下最高正职职务名称 */
     private String bZgzzjbA;
+
+    /** 单位最高副职级别 */
     private String bZgfzjbB;
+
+    /** 单位最高副职级别名称 */
     private String bZgfzjbA;
-    private Integer bPx;
-    private String bCxbm;
-    private String bSjlx;
-    private String bSfgwytj;
+
+    /** 上级机构 */
     private String parentId;
+
+    /** 排序 */
+    private Integer bPx;
+
+    /** 查询编码 */
+    private String bCxbm;
+
+    /** 数据类型0-法人机构，1-内设机构，2-机构分组 */
+    private String bSjlx;
+
+    /** 计入公务员统计,默认是-1，0-否 */
+    private String bSfgwytj;
+    /**  备注*/
+    private String remark;
+    //新增 和修改标识
+    private String B01Id;
+
+    public String getB01Id() {
+        return B01Id;
+    }
+
+    public void setB01Id(String b01Id) {
+        B01Id = b01Id;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getB0100() {
         return b0100;

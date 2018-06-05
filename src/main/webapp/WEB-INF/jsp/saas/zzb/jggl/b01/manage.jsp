@@ -162,7 +162,7 @@
 
     function zwglLoad(){
         $.ajax({
-            url : "${path }/zzb/dzda/e01z4/ajax/list",
+            url : "${path }/zzb/jggl/b09/ajax/zwgl",
             type : "post",
             data : {"b01Id":"${b01Id}"},
             dataType : "html",

@@ -98,19 +98,15 @@ public class B01Controller extends BaseController {
         B01 entity = new B01();
         try {
             if (StringUtils.isNotBlank(vo.getB0100())) {
-                 entity = b01Service.getByPK(vo.getB0100());
+                entity = b01Service.getByPK(vo.getB0100());
+                String oldPid = entity.getB0100();
                 BeanUtils.copyProperties(vo,entity);
-                EntityWrapper.wrapperUpdateBaseProperties(entity,details);
-                b01Service.update(entity);
+                entity.setParentB01(b01Service.getByPK(vo.getParentId()));
+                this.b01Service.updateB01(entity,oldPid);
             }else {
-                BeanUtils.copyProperties(vo,entity);
-                entity.setB0100(null);
-                B01 parentB01 = b01Service.getByPK(vo.getB01Id());
-                entity.setParentB01(parentB01);
-                DecimalFormat decimalFormat = new DecimalFormat("000");
-                entity.setbCxbm(parentB01.getbCxbm()+decimalFormat.format(vo.getbPx()));
-                EntityWrapper.wrapperSaveBaseProperties(entity,details);
-                b01Service.save(entity);
+                String currentId = "";
+                currentId = b01Service.saveB01(vo);
+                map.put("currentId",currentId);
             }
             map.put("code", 1);
         } catch (Exception e) {
@@ -121,12 +117,12 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/manage")
-    public ModelAndView mangePage(String bSjlx, String b01Id,String id,String isAdd) {
+    public ModelAndView mangePage(String bSjlx, String b01Id,String currentId,String isAdd) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("bSjlx", bSjlx);
             map.put("b01Id", b01Id);
-            map.put("id", id);
+            map.put("currentId", currentId);
             map.put("isAdd",isAdd);
             map.put("success", true);
         } catch (Exception e) {
@@ -137,11 +133,11 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/jbxx")
-    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String id,String isAdd) {
+    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String currentId,String isAdd) {
         Map<String, Object> map = Maps.newHashMap();
         try {
-            if(StringUtils.isNotBlank(id)){
-                B01 entity = b01Service.getByPK(id);
+            if(StringUtils.isNotBlank(currentId)){
+                B01 entity = b01Service.getByPK(currentId);
                 B01Vo vo = new B01Vo();
                 BeanUtils.copyProperties(entity,vo);
                 vo.setParentId(entity.getParentB01().getB0100());

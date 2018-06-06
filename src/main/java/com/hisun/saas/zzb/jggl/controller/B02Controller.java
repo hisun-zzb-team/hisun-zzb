@@ -46,13 +46,13 @@ public class B02Controller extends BaseController {
     @Resource
     private B01Service b01Service;
     @RequestMapping(value = "/ajax/bzqk")
-    public ModelAndView bzqk(String id) {
+    public ModelAndView bzqk(String currentId) {
         Map<String, Object> map = Maps.newHashMap();
         try {
-            if(StringUtils.isNotBlank(id)){
+            if(StringUtils.isNotBlank(currentId)){
                 B02Vo vo = new B02Vo();
                 CommonConditionQuery query = new CommonConditionQuery();
-                query.add(CommonRestrictions.and(" b01.id = :id ", "id", id));
+                query.add(CommonRestrictions.and(" b01.id = :currentId ", "currentId", currentId));
                 List<B02> resultList = b02Service.list(query,null);
                 if(resultList!=null && !resultList.isEmpty()){
                     BeanUtils.copyProperties(resultList.get(0),vo);
@@ -70,7 +70,7 @@ public class B02Controller extends BaseController {
     }
     @RequestMapping(value = "/updateOrSave")
     @ResponseBody
-    public Map<String, Object> updateOrSave(B02Vo vo,String b01Id) {
+    public Map<String, Object> updateOrSave(B02Vo vo,String currentId) {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         B02 entity = new B02();
@@ -83,7 +83,7 @@ public class B02Controller extends BaseController {
             }else {
                 BeanUtils.copyProperties(vo,entity);
                 EntityWrapper.wrapperSaveBaseProperties(entity,details);
-                entity.setB01(b01Service.getByPK(b01Id));
+                entity.setB01(b01Service.getByPK(currentId));
                 b02Service.save(entity);
             }
             map.put("code", 1);

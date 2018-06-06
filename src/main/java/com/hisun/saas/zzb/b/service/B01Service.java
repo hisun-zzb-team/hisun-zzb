@@ -10,6 +10,7 @@ import com.hisun.base.service.BaseService;
 import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.zzb.b.entity.B01;
 import com.hisun.saas.zzb.b.vo.B01TreeNode;
+import com.hisun.saas.zzb.b.vo.B01Vo;
 import com.hisun.saas.zzb.dzda.a32.entity.A32;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface B01Service extends BaseService<B01,String> {
     public Integer getMaxSort(String parentId);
     void updatePx(int oldPx, int newPx, String parentId);
     List<B01TreeNode> getB01TreeVoList()throws Exception;
+
+    String saveB01(B01Vo vo) throws Exception;
+    void updatePxAndCxbm(B01 b01,B01 parentB01,Integer oldSort)throws Exception;
+
+    void updateB01(B01 b01,
+                         String oldPid) throws Exception;
 }

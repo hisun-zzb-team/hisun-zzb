@@ -40,7 +40,7 @@
         <li><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
     </ul>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
-        <input type="hidden" id="id" name="id" value="${id}">
+        <input type="hidden" id="currentId" name="currentId" value="${currentId}">
         <div class="tab-pane active" id="tab_show">
         </div>
     </div>
@@ -89,9 +89,9 @@
         });
     });
     function b02tabSave(e) {
-        var b01Id = $("#id").val();
+        var currentId = $("#currentId").val();
         $.ajax({
-            url : "${path }/zzb/jggl/b02/updateOrSave?b01Id="+b01Id,
+            url : "${path }/zzb/jggl/b02/updateOrSave?currentId="+currentId,
             type : "post",
             data : $("#b02Form").serialize(),
             headers:{
@@ -143,6 +143,10 @@
             dataType : "json",
             success : function(json){
                 if(json.code==1){
+                    var currentId = "${currentId}";
+                    if(currentId!="" && currentId!=undefined){
+                        $("#currentId").val(currentId);
+                    }
                     myLoading.hide();
                     tabIndex = $(e.target).attr('id');
                     if($(e.target).attr('id')=="#tab_1_2"){
@@ -177,11 +181,13 @@
 
     //基本信息
     function baseLoad(){
+        debugger
+        var currentId = $("#currentId").val();
         myLoading.show();
         $.ajax({
             url : "${path}/zzb/jggl/b01/ajax/jbxx",
             type : "post",
-            data : {"b01Id":"${b01Id}","bSjlx":"${bSjlx}","id":"${id}","isAdd":"${isAdd}"},
+            data : {"b01Id":"${b01Id}","bSjlx":"${bSjlx}","currentId":currentId,"isAdd":"${isAdd}"},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -197,10 +203,11 @@
         });
     }
     function bzqkLoad(){
+        var currentId = $("#currentId").val();
         $.ajax({
             url : "${path }/zzb/jggl/b02/ajax/bzqk",
             type : "post",
-            data : {"b01Id":"${b01Id}","id":"${id}"},
+            data : {"b01Id":"${b01Id}","currentId":"currentId"},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"

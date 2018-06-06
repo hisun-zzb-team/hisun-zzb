@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +107,8 @@ public class B01Controller extends BaseController {
                 entity.setB0100(null);
                 B01 parentB01 = b01Service.getByPK(vo.getB01Id());
                 entity.setParentB01(parentB01);
-                entity.setbCxbm(parentB01.getbCxbm()+"00"+vo.getbPx());
+                DecimalFormat decimalFormat = new DecimalFormat("000");
+                entity.setbCxbm(parentB01.getbCxbm()+decimalFormat.format(vo.getbPx()));
                 EntityWrapper.wrapperSaveBaseProperties(entity,details);
                 b01Service.save(entity);
             }
@@ -119,11 +121,13 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/manage")
-    public ModelAndView mangePage(String bSjlx, String b01Id) {
+    public ModelAndView mangePage(String bSjlx, String b01Id,String id,String isAdd) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("bSjlx", bSjlx);
             map.put("b01Id", b01Id);
+            map.put("id", id);
+            map.put("isAdd",isAdd);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);
@@ -133,10 +137,19 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/jbxx")
-    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx) {
+    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String id,String isAdd) {
         Map<String, Object> map = Maps.newHashMap();
         try {
+            if(StringUtils.isNotBlank(id)){
+                B01 entity = b01Service.getByPK(id);
+                B01Vo vo = new B01Vo();
+                BeanUtils.copyProperties(entity,vo);
+                vo.setParentId(entity.getParentB01().getB0100());
+                vo.setParentName(entity.getParentB01().getB0101());
+                map.put("vo",vo);
+            }
             Integer sort = b01Service.getMaxSort(b01Id);
+            map.put("isAdd",isAdd);
             map.put("sort",sort);
             map.put("bSjlx",bSjlx);
             map.put("b0101", b0101);

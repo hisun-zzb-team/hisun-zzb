@@ -40,6 +40,7 @@
         <li><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
     </ul>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
+        <input type="hidden" id="id" name="id" value="${id}">
         <div class="tab-pane active" id="tab_show">
         </div>
     </div>
@@ -61,7 +62,17 @@
                     return false;
                 }
                 tabSaveData(e);
-            }else{
+            }else if($(e.target).attr('id')!='#tab_1_2'&& tabIndex=="#tab_1_2"){
+                var myVld = new EstValidate("b02Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if(!bool){
+                    myLoading.hide();
+                    return false;
+                }
+                b02tabSave(e);
+            }
+            else{
                 if($(e.target).attr('id')=="#tab_1_1") {
                     baseLoad();
                 }else if($(e.target).attr('id')=="#tab_1_2"){
@@ -77,6 +88,50 @@
             }
         });
     });
+    function b02tabSave(e) {
+        var b01Id = $("#id").val();
+        $.ajax({
+            url : "${path }/zzb/jggl/b02/updateOrSave?b01Id="+b01Id,
+            type : "post",
+            data : $("#b02Form").serialize(),
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "json",
+            success : function(json){
+                if(json.code==1){
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    if($(e.target).attr('id')=="#tab_1_1"){
+                        $("[id='#tab_1_1']").tab('show');
+                        baseLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_3"){
+                        $("[id='#tab_1_3']").tab('show');
+                        zwglLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_4"){
+                        $("[id='#tab_1_4']").tab('show');
+                        hjxxLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_5"){
+                        $("[id='#tab_1_5']").tab('show');
+                        txxxLoad();
+                    }
+                }else{
+                    $("[id='#tab_1_2']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error : function(){
+                $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示","出错了,请检查网络!",2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+
     function tabSaveData(e){
         $.ajax({
             url : "${path }/zzb/jggl/b01/updateOrSave",
@@ -126,7 +181,7 @@
         $.ajax({
             url : "${path}/zzb/jggl/b01/ajax/jbxx",
             type : "post",
-            data : {"b01Id":"${b01Id}","bSjlx":"${bSjlx}"},
+            data : {"b01Id":"${b01Id}","bSjlx":"${bSjlx}","id":"${id}","isAdd":"${isAdd}"},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -145,7 +200,7 @@
         $.ajax({
             url : "${path }/zzb/jggl/b02/ajax/bzqk",
             type : "post",
-            data : {"b01Id":"${b01Id}"},
+            data : {"b01Id":"${b01Id}","id":"${id}"},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"

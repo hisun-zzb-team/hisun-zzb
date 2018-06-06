@@ -155,14 +155,14 @@
     }
 
     function edit(id) {
-        window.location.href = "${path}/zzb/jggl/b01/manage?bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        window.location.href = "${path}/zzb/jggl/b01/manage?bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&id="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
     $(function () {
     })
 
     function addfrjg() {
         var bSjlx = '0';
-        window.location.href = "${path}/zzb/jggl/b01/manage?bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
 

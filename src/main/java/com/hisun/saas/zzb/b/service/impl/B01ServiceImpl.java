@@ -11,29 +11,24 @@ import com.hisun.base.dao.BaseDao;
 import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
+import com.hisun.base.dao.util.CommonRestrictions;
+import com.hisun.base.entity.TombstoneEntity;
 import com.hisun.base.service.impl.BaseServiceImpl;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
-import com.hisun.saas.sys.taglib.treeTag.TreeNode;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.b.dao.B01Dao;
 import com.hisun.saas.zzb.b.entity.B01;
 import com.hisun.saas.zzb.b.service.B01Service;
 import com.hisun.saas.zzb.b.vo.B01TreeNode;
 import com.hisun.saas.zzb.b.vo.B01Vo;
-import com.hisun.saas.zzb.dzda.a32.dao.A32Dao;
-import com.hisun.saas.zzb.dzda.a32.entity.A32;
-import com.hisun.saas.zzb.dzda.a32.service.A32Service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuzj {279421824@qq.com}
@@ -92,35 +87,85 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
         }
     }
     @Override
-    public List<B01TreeNode> getB01TreeVoList()throws Exception{
+    public List<B01TreeNode> getB01TreeVoList(String id,String param,String defaultkeys)throws Exception{
         CommonConditionQuery query = new CommonConditionQuery();
-        CommonOrderBy orderBy = new CommonOrderBy();
+        if (id == null || id.equals("")) {
+            if(param!=null && !param.equals("")){
+                query.add(CommonRestrictions.and(" b0101 like:param ", "param", "%"+param+"%"));
+                query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+            }else {
+                query.add(CommonRestrictions.and(" b_sjjg='' and tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+            }
+        } else {
+            query.add(CommonRestrictions.and(" parentB01.b0100=:parentNodeId ", "parentNodeId", id));
+            query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+        }
 
+        CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.asc("bCxbm"));
-//        orderBy.add(CommonOrder.asc("parentB01.id"));
-//        orderBy.add(CommonOrder.asc("px"));
         List<B01> appBsetB01s = this.b01Dao.list(query, orderBy);
         List<B01TreeNode> b01TreeVoList = Lists.newArrayList();
         if(appBsetB01s != null) {
             for (B01 b01 : appBsetB01s) {
                 B01TreeNode b01TreeNode = new B01TreeNode();
                 b01TreeNode.setId(b01.getB0100());
+                if(param==null || param.equals("")) {
+                    if (b01.getChildB01s() != null && b01.getChildB01s().size() > 0) {
+                        b01TreeNode.setIsParent(true);
+                    }
+                }
+                b01TreeNode.setName(b01.getB0101());
+                b01TreeNode.setbSjlx(b01.getbSjlx());
+                b01TreeNode.setKey(b01.getB0100());
                 if(b01.getParentB01()!= null) {
                     b01TreeNode.setpId(b01.getParentB01().getB0100());
-                    b01TreeNode.setName(b01.getB0101());
-                    b01TreeNode.setbSjlx(b01.getbSjlx());
-                    b01TreeNode.setKey(b01.getB0100());
                 }else{
                     b01TreeNode.setpId("");
-                    b01TreeNode.setName(b01.getB0101());
-                    b01TreeNode.setbSjlx(b01.getbSjlx());
-                    b01TreeNode.setOpen(true);
-                    b01TreeNode.setKey(b01.getB0100());
+//                    b01TreeNode.setOpen(true);
                 }
                 b01TreeVoList.add(b01TreeNode);
             }
         }
         return b01TreeVoList;
+    }
+
+    /**
+     * 根据默认值得到及节点及其父节点
+     * @param defaultkeys
+     * @return
+     */
+    private List<String> getB01sByDefaultkeys(String defaultkeys){
+        List<String> b01Ids = new ArrayList<String>();
+        if(defaultkeys!=null && !defaultkeys.equals("")){
+            String str[] = defaultkeys.split(",");
+            List idList =  Arrays.asList(str);
+
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and(" b0100 in (:idList) ", "idList",idList));
+            CommonOrderBy orderBy = new CommonOrderBy();
+            orderBy.add(CommonOrder.asc("code"));
+            List<B01> b01s = b01Dao.list(query, orderBy);//得到默认值的对象
+            for(B01 b01 : b01s){
+                this.getParentB01(b01Ids,b01);
+
+            }
+        }
+        return b01Ids;
+    }
+
+    //递归取得所有的父节点及兄弟节点（如果不取得兄弟节点则不会再加载）
+    private void getParentB01(List<String> b01Ids ,B01 b01){
+        if(b01.getParentB01()!=null){
+            b01Ids.add(b01.getB0100());
+            this.getParentB01(b01Ids,b01.getParentB01());
+            List<B01> xdB01s = b01.getParentB01().getChildB01s();
+            for(B01 xdB01 : xdB01s){
+                b01Ids.add(xdB01.getB0100());
+            }
+        }else{
+            b01Ids.add(b01.getB0100());
+            return;
+        }
     }
 
     @Override

@@ -69,9 +69,9 @@
                                             value="${b0101Query}" style="width: 100px;"/>
                                 &nbsp; &nbsp; &nbsp; &nbsp;所属机构：
                                 <Tree:tree id="bSjjg" valueName="bSjjgContentQuery" selectClass="span2 m-wrap"
-                                           treeUrl="${path}/zzb/jggl/b01Api/load/tree"
-                                           token="${sessionScope.OWASP_CSRFTOKEN}"
-                                           submitType="get" dataType="json" isSearch="false"
+                                           treeUrl="${path}/api/b01/dtjz/tree"
+                                           token="${sessionScope.OWASP_CSRFTOKEN}" dtjz="true"
+                                           submitType="get" dataType="json" isSearch="true"
                                            checkedByTitle="true" isSelectTree="true" defaultkeys="${bSjjg}"
                                            defaultvalues="${bSjjg}"/>
                                 机构级别：<SelectTag:SelectTag id="b0127" needNullValue="true" valueName="b0127Content"

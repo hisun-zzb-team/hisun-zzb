@@ -15,6 +15,7 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.exception.GenericException;
 import com.hisun.saas.zzb.b.service.B01Service;
 import com.hisun.saas.zzb.b.vo.B01TreeNode;
+import com.hisun.util.JacksonUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,31 +32,30 @@ import java.util.Map;
  * @author Rocky {rockwithyou@126.com}
  */
 @Controller
-@RequestMapping("/zzb/jggl/b01Api")
-public class B01Api extends BaseController {
+@RequestMapping("/api/b01")
+public class B01Api {
     @Resource
     private B01Service b01Service;
 
     /**
      * 对外使用的机构树
-     * @param request
+     * @param response
      * @return
      * @throws GenericException
      */
-    @RequestMapping(value="/load/tree")
-    public @ResponseBody
-    Map<String,Object> loadTree(HttpServletRequest request)throws GenericException {
+    @RequestMapping(value="/dtjz/tree")
+    public void loadTree(HttpServletRequest request,HttpServletResponse response, String id, String param, String defaultkeys) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList();
-            map.put("data", nodes);
-            map.put("success", true);
+            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(id,param,defaultkeys);
+            String json= JacksonUtil.nonDefaultMapper().toJson(nodes);
+            response.getWriter().print(json);
+//            map.put("data", nodes);
+//            map.put("success", true);
         } catch (Exception e) {
-            logger.error(e,e);
             map.put("success", false);
             map.put("message", "服务器忙，请稍后再试！");
         }
-        return map;
     }
 
 }

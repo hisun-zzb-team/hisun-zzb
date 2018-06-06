@@ -21,7 +21,7 @@ import java.util.List;
 public interface B01Service extends BaseService<B01,String> {
     public Integer getMaxSort(String parentId);
     void updatePx(int oldPx, int newPx, String parentId);
-    List<B01TreeNode> getB01TreeVoList()throws Exception;
+    List<B01TreeNode> getB01TreeVoList(String id,String param,String defaultkeys)throws Exception;
 
     String saveB01(B01Vo vo) throws Exception;
     void updatePxAndCxbm(B01 b01,B01 parentB01,Integer oldSort)throws Exception;

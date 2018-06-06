@@ -32,8 +32,10 @@
 					<input type="hidden" id="b01Id"  name="b01Id" value="" />
 					<input type="hidden" id="b0101"  name="b0101" value="" />
 					<input type="hidden" id="parentB01Id"  name="parentB01Id" value="" />
-					<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>
+					<%--<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+							   <%--onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>--%>
+					<Tree:tree id="leftB01Tree"  treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
+							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false" isSelectTree="false" dtjz="true"/>
 				</div>
 			</div>
 		</div>

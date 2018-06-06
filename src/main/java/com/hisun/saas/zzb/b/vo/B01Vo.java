@@ -159,12 +159,14 @@ public class B01Vo  {
 
     /** 上级机构 */
     private String parentId;
+    /** 上级机构名称 */
+    private String parentName;
 
     /** 排序 */
     private Integer bPx;
 
-    /** 查询编码 */
-    private String bCxbm;
+/*    *//** 查询编码 *//*
+    private String bCxbm;*/
 
     /** 数据类型0-法人机构，1-内设机构，2-机构分组 */
     private String bSjlx;
@@ -175,6 +177,14 @@ public class B01Vo  {
     private String remark;
     //新增 和修改标识
     private String B01Id;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public String getB01Id() {
         return B01Id;
@@ -568,13 +578,13 @@ public class B01Vo  {
         this.bPx = bPx;
     }
 
-    public String getbCxbm() {
+/*    public String getbCxbm() {
         return bCxbm;
     }
 
     public void setbCxbm(String bCxbm) {
         this.bCxbm = bCxbm;
-    }
+    }*/
 
     public String getbSjlx() {
         return bSjlx;

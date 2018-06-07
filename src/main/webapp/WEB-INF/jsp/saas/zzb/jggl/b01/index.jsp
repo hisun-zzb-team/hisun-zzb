@@ -32,6 +32,7 @@
 					<input type="hidden" id="b01Id"  name="b01Id" value="" />
 					<input type="hidden" id="b0101"  name="b0101" value="" />
 					<input type="hidden" id="parentB01Id"  name="parentB01Id" value="" />
+					<input type="hidden" id="cuaNodeId" name="cuaNodeId" value=""/>
 					<%--<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
 							   <%--onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>--%>
 					<Tree:tree id="leftB01Tree"  treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
@@ -98,6 +99,7 @@
 			b0101 =node.name;
 		}
 
+
 		$.ajax({
 			cache:false,
 			type: 'POST',
@@ -121,20 +123,9 @@
 		zTree.selectNode(node);//默认选中
 		zTree.expandNode(node, true, false , true);//展开
 	});
-
 	function refreshTree() {
-		$("#leftB01Tree").empty();
-		refreshTreeTag("leftB01Tree",setting_leftB01Tree,"");
-		selectNodeTree();
+        refreshTreeTagByDt("leftB01Tree","4028839263d8e2710163d9256b400005");
 	}
-	function selectNodeTree(){
-		var zTree1 = $.fn.zTree.getZTreeObj("leftB01Tree");
-		var id = $("#b01Id").val();
-		var node = zTree1.getNodeByParam('id',id);// 获取id为-1的点
-		zTree1.selectNode(node);
-		zTree1.expandNode(node, true, false , true);
-	}
-
 
 </script>
 </body>

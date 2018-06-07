@@ -100,11 +100,11 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
             query.add(CommonRestrictions.and(" parentB01.b0100=:parentNodeId ", "parentNodeId", id));
             query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
         }
-      /*  //加载默认值的节点及其父节点
+       //加载默认值的节点及其父节点
         if(defaultkeys!=null && !defaultkeys.equals("")) {
             List defaultkeysList = this.getB01sByDefaultkeys(defaultkeys);
             query.add(CommonRestrictions.or(" b0100 in (:defaultkeysList) ", "defaultkeysList",defaultkeysList));
-        }*/
+        }
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.asc("bCxbm"));
         List<B01> appBsetB01s = this.b01Dao.list(query, orderBy);
@@ -147,11 +147,10 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and(" b0100 in (:idList) ", "idList",idList));
             CommonOrderBy orderBy = new CommonOrderBy();
-            orderBy.add(CommonOrder.asc("code"));
+            orderBy.add(CommonOrder.asc("bCxbm"));
             List<B01> b01s = b01Dao.list(query, orderBy);//得到默认值的对象
             for(B01 b01 : b01s){
                 this.getParentB01(b01Ids,b01);
-
             }
         }
         return b01Ids;
@@ -159,13 +158,16 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
 
     //递归取得所有的父节点及兄弟节点（如果不取得兄弟节点则不会再加载）
     private void getParentB01(List<String> b01Ids ,B01 b01){
-        if(b01.getParentB01()!=null){
+        B01 parentB01 = b01.getParentB01();
+        if(parentB01!=null&&parentB01.getB0100()!=null&&!parentB01.getB0100().equals("")){
+            System.out.println("parentB01.getB0100()=="+parentB01.getB0100());
+            System.out.println("parentB01.getB0101()=="+parentB01.getB0101());
             b01Ids.add(b01.getB0100());
-            this.getParentB01(b01Ids,b01.getParentB01());
-            List<B01> xdB01s = b01.getParentB01().getChildB01s();
+            List<B01> xdB01s = parentB01.getChildB01s();
             for(B01 xdB01 : xdB01s){
                 b01Ids.add(xdB01.getB0100());
             }
+            this.getParentB01(b01Ids,parentB01);
         }else{
             b01Ids.add(b01.getB0100());
             return;

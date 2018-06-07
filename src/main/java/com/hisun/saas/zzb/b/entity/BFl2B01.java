@@ -6,20 +6,22 @@
 
 package com.hisun.saas.zzb.b.entity;
 
+import com.hisun.base.entity.TombstoneEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author liuzj {279421824@qq.com}
  */
 @Entity
 @Table(name = "b_fl_2_b01")
-public class BFl2B01 {
-    private String id;
-    private Integer px;
-    private BFl bfl;
-    private B01 b01;
+public class BFl2B01 implements Serializable {
+    private String id;//主键
+    private Integer px;//排序
+    private BFl bfl;//分类id
+    private B01 b01;//机构id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "b0100")
     public B01 getB01() {
@@ -30,7 +32,7 @@ public class BFl2B01 {
         this.b01 = b01;
     }
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flId")
+    @JoinColumn(name = "fl_id")
     public BFl getBfl() {
         return bfl;
     }

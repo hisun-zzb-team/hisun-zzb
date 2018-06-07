@@ -20,10 +20,10 @@ import java.util.List;
 @Entity
 @Table(name = "b_fl")
 public class BFl extends TenantEntity implements Serializable {
-    private String id;
-    private String fl;
-    private Integer px;
-    private BFl parentBFl;
+    private String id;//主键
+    private String fl;//分类名称
+    private Integer px;//排序
+    private BFl parentBFl;//上级分类
     private List<BFl> childFls;
     private List<BFl2B01> bFl2B01s;
     @Id
@@ -47,7 +47,7 @@ public class BFl extends TenantEntity implements Serializable {
         this.childFls = childFls;
     }
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId")
+    @JoinColumn(name = "parent_id")
     public BFl getParentBFl() {
         return parentBFl;
     }

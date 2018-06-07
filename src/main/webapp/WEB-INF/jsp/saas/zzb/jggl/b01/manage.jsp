@@ -228,7 +228,7 @@
         $.ajax({
             url : "${path }/zzb/jggl/b09/ajax/zwgl",
             type : "post",
-            data : {"b01Id":"${b01Id}","currentId":currentId},
+            data : {"b01Id":currentId},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"

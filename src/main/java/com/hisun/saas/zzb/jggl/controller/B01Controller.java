@@ -54,34 +54,67 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/list")
-    public ModelAndView getList(String parentB01Id, String b01Id, String b0101,
+    public ModelAndView getList(String parentB01Id, String b01Id,String b0101,
                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                                @RequestParam(value = "b0101Query", required = false)String b0101Query,
+                                @RequestParam(value = "parentIdQuery", required = false)String parentIdQuery,
+                                @RequestParam(value = "parentNameQuery", required = false)String parentNameQuery,
+                                @RequestParam(value = "b0127Query", required = false)String b0127Query,
+                                @RequestParam(value = "b0127AQuery", required = false)String b0127AQuery,
+                                @RequestParam(value = "bGllbBQuery", required = false)String bGllbBQuery,
+                                @RequestParam(value = "bGllbAQuery", required = false)String bGllbAQuery
+                                ) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             CommonConditionQuery query = new CommonConditionQuery();
-            if (!StringUtils.isNotBlank(parentB01Id))
-                parentB01Id = b01Id;
-            B01 b01 = this.b01Service.getByPK(b01Id);
-            b0101 = b01.getB0101();
-            query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm",  b01.getbCxbm()+"%" ));
-            Long total = b01Service.count(query);
+            List<B01> resultList = Lists.newArrayList();
             CommonOrderBy orderBy = new CommonOrderBy();
+            Long total =0L;
+            B01 b01 = new B01();
+            if(StringUtils.isBlank(b0101Query) && StringUtils.isBlank(parentIdQuery) && StringUtils.isBlank(b0127Query) &&
+                    StringUtils.isBlank(bGllbBQuery)){
+                 b01 = this.b01Service.getByPK(b01Id);
+                b0101 = b01.getB0101();
+                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm",  b01.getbCxbm()+"%" ));
+
+            }else {
+                if(StringUtils.isNotBlank(b0101Query)){
+                    query.add(CommonRestrictions.and(" b0101 like :b0101 ", "b0101", "%"+b0101Query+"%" ));
+                }
+                if(StringUtils.isNotBlank(parentIdQuery)){
+                    b01 = this.b01Service.getByPK(parentIdQuery);
+                    query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm",  b01.getbCxbm()+"%" ));
+                }
+                if(StringUtils.isNotBlank(b0127Query)){
+                    query.add(CommonRestrictions.and(" b0127 = :b0127 ", "b0127",  b0127Query ));
+                }
+                if(StringUtils.isNotBlank(bGllbBQuery)){
+                    query.add(CommonRestrictions.and(" bGllbB = :bGllbB ", "bGllbB",  bGllbBQuery ));
+                }
+            }
+            total = b01Service.count(query);
             orderBy.add(CommonOrder.asc("bCxbm"));
-            List<B01> resultList = b01Service.list(query, orderBy, pageNum, pageSize);
-            List<B01Vo> a38Vos = new ArrayList<B01Vo>();
+            resultList = b01Service.list(query, orderBy, pageNum, pageSize);
+            List<B01Vo> b01Vos = new ArrayList<B01Vo>();
             B01Vo vo = new B01Vo();
             for (B01 entity : resultList) {
                 vo = new B01Vo();
                 BeanUtils.copyProperties(entity, vo);
-                a38Vos.add(vo);
+                b01Vos.add(vo);
             }
-            PagerVo<B01Vo> pager = new PagerVo<B01Vo>(a38Vos, total.intValue(), pageNum, pageSize);
+            PagerVo<B01Vo> pager = new PagerVo<B01Vo>(b01Vos, total.intValue(), pageNum, pageSize);
+            map.put("b0101Query",b0101Query);
+            map.put("parentIdQuery",parentIdQuery);
+            map.put("parentNameQuery",parentNameQuery);
+            map.put("b0127Query",b0127Query);
+            map.put("b0127AQuery",b0127AQuery);
+            map.put("bGllbBQuery",bGllbBQuery);
+            map.put("bGllbAQuery",bGllbAQuery);
             map.put("pager", pager);
             map.put("b01Id", b01Id);
             map.put("parentB01Id", parentB01Id);
             map.put("b0101", b0101);
-
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);

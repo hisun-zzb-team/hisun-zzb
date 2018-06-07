@@ -57,29 +57,31 @@
             <div class="clearfix">
                 <div class="control-group">
                     <div id="query" style="float: left;">
-                        <form action="${path }/zzb/app/console/bset/ajax/list" method="POST" id="searchForm"
+                        <form action="${path }/zzb/jggl/b01/ajax/list" method="POST" id="searchForm"
                               name="searchForm">
-                            <input type="hidden" id="queryId" name="queryId" value="${queryId}"/>
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
-                            <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
-                            <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
+                         <%--   <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
+                            <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">--%>
+                            <input type="hidden" name="b01Id" value="${b01Id }" id="b01Id">
+                            <input type="hidden" name="b0101" value="${b0101 }" id="b0101">
+                            <%--<input type="hidden" name="pageNum" value="${ }" id="pageNum">--%>
                             <div style=" float:left;margin-top:4px">机构名称：</div>
                             <div style=" float:left;">
                             <input type="text" class="span2 m-wrap" name="b0101Query" id="b0101Query"
                                             value="${b0101Query}" style="width: 100px;"/>
                             </div>
                             <div style=" float:left;margin-top:4px">所属机构：</div>
-                            <div style="float:left;width: 160px;"><Tree:tree id="bSjjg" valueName="bSjjgContentQuery" selectClass="span12 m-wrap"
+                            <div style="float:left;width: 160px;"><Tree:tree id="parentIdQuery" valueName="parentNameQuery" selectClass="span12 m-wrap"
                                            treeUrl="${path}/api/b01/dtjz/tree"
                                            token="${sessionScope.OWASP_CSRFTOKEN}" dtjz="true"
                                            submitType="get" dataType="json" isSearch="true"
-                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${bSjjg}"
-                                           defaultvalues="${bSjjg}"/>
+                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${parentIdQuery}"
+                                           defaultvalues="${parentNameQuery}"/>
                             </div>
                             <div style=" float:left;margin-top:4px">机构级别：</div>
-                            <div style="float:left;width: 120px;"><SelectTag:SelectTag id="b0127" needNullValue="true" valueName="b0127Content"
-                                                          defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                          defaultvalues=""
+                            <div style="float:left;width: 120px;"><SelectTag:SelectTag id="b0127Query" needNullValue="true" valueName="b0127AQuery"
+                                                          defaultkeys="${b0127Query}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                          defaultvalues="${b0127AQuery}"
                                                           textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                           selectUrl="${path}/api/dictionary/select?typeCode=ZB03-1994/DWJB"/>
                             </div>
@@ -93,9 +95,9 @@
                             <%--</div>--%>
                             <div style=" float:left;margin-top:4px">机构管理类别：</div>
                             <div style="float:left;width: 120px;">
-                                <SelectTag:SelectTag id="bGllbB" needNullValue="true" valueName="bGllbBContent"
-                                                            defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                            defaultvalues=""
+                                <SelectTag:SelectTag id="bGllbBQuery" needNullValue="true" valueName="bGllbAQuery"
+                                                            defaultkeys="${bGllbBQuery}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                            defaultvalues="${bGllbAQuery}"
                                                             textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                             selectUrl="${path}/api/dictionary/select?typeCode=2018-JGGLLB"/>
                             </div>
@@ -164,23 +166,17 @@
 
 
     function pagehref(pageNum, pageSize) {
-        <%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
         $.ajax({
             async: false,
             type: "POST",
-            url: "${path}/zzb/app/console/bset/ajax/list",
+            url: "${path}/zzb/jggl/b01/ajax/list?pageNum="+pageNum+"&pageSize="+pageSize,
             dataType: "html",
             headers: {
                 "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
             },
-            data: {
-                'queryId': "${queryId}",
-                'pageNum': pageNum,
-                'pageSize': pageSize
-            },
+            data: $("#searchForm").serialize(),
             success: function (html) {
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
+                $("#rightList").html(html);
             },
             error: function () {
                 myLoading.hide();
@@ -194,15 +190,14 @@
         $.ajax({
             async: false,
             type: "POST",
-            url: "${path}/zzb/app/console/bset/ajax/list",
+            url: "${path}/zzb/jggl/b01/ajax/list",
             dataType: "html",
             headers: {
                 "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
             },
             data: $("#searchForm").serialize(),
             success: function (html) {
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
+                $("#rightList").html(html);
             },
             error: function () {
                 myLoading.hide();

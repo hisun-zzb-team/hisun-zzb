@@ -64,45 +64,44 @@
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                            <div style=" float:left;margin-top:4px">
-                                机构名称：<input type="text" class="span2 m-wrap" name="b0101Query" id="b0101Query"
+                            <div style=" float:left;margin-top:4px">机构名称：</div>
+                            <div style=" float:left;">
+                            <input type="text" class="span2 m-wrap" name="b0101Query" id="b0101Query"
                                             value="${b0101Query}" style="width: 100px;"/>
-                                &nbsp; &nbsp; &nbsp; &nbsp;所属机构：
-                                <Tree:tree id="bSjjg" valueName="bSjjgContentQuery" selectClass="span2 m-wrap"
+                            </div>
+                            <div style=" float:left;margin-top:4px">所属机构：</div>
+                            <div style="float:left;width: 160px;"><Tree:tree id="bSjjg" valueName="bSjjgContentQuery" selectClass="span12 m-wrap"
                                            treeUrl="${path}/api/b01/dtjz/tree"
                                            token="${sessionScope.OWASP_CSRFTOKEN}" dtjz="true"
                                            submitType="get" dataType="json" isSearch="true"
                                            checkedByTitle="true" isSelectTree="true" defaultkeys="${bSjjg}"
                                            defaultvalues="${bSjjg}"/>
-                                机构级别：<SelectTag:SelectTag id="b0127" needNullValue="true" valueName="b0127Content"
+                            </div>
+                            <div style=" float:left;margin-top:4px">机构级别：</div>
+                            <div style="float:left;width: 120px;"><SelectTag:SelectTag id="b0127" needNullValue="true" valueName="b0127Content"
                                                           defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"
                                                           defaultvalues=""
-                                                          textClass="span2 m-wrap" radioOrCheckbox="radio"
+                                                          textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                           selectUrl="${path}/api/dictionary/select?typeCode=ZB03-1994/DWJB"/>
-                                <%--
-                                  <input type="text" class="m-wrap" name="b0127" id="b0127"
-                                              value="${b0101Query}" style="width: 100px;"/>--%>
-                                <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             </div>
-                            <div>
-                                机构性质：<Tree:tree id="b0131Query" valueName="b0131ContentQuery" selectClass="span2 m-wrap"
-                                                treeUrl="${path}/api/dictionary/tree?typeCode=ZB04-2006/DWXZ"
-                                                token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                submitType="get" dataType="json" isSearch="false"
-                                                checkedByTitle="true" isSelectTree="true" defaultkeys="${b0131Query}"
-                                                defaultvalues="${b0131Query}"/>
-                                机构管理类别：<SelectTag:SelectTag id="bGllbB" needNullValue="true" valueName="bGllbBContent"
+                            <%--<div style=" float:left;margin-top:4px">机构性质：</div>--%>
+                            <%--<div style="float:left;width: 120px;"><Tree:tree id="b0131Query" valueName="b0131ContentQuery" selectClass="span12 m-wrap"--%>
+                                                <%--treeUrl="${path}/api/dictionary/tree?typeCode=ZB04-2006/DWXZ"--%>
+                                                <%--token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+                                                <%--submitType="get" dataType="json" isSearch="false"--%>
+                                                <%--checkedByTitle="true" isSelectTree="true" defaultkeys="${b0131Query}"--%>
+                                                <%--defaultvalues="${b0131Query}"/>--%>
+                            <%--</div>--%>
+                            <div style=" float:left;margin-top:4px">机构管理类别：</div>
+                            <div style="float:left;width: 120px;">
+                                <SelectTag:SelectTag id="bGllbB" needNullValue="true" valueName="bGllbBContent"
                                                             defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"
                                                             defaultvalues=""
-                                                            textClass="span2 m-wrap" radioOrCheckbox="radio"
+                                                            textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                             selectUrl="${path}/api/dictionary/select?typeCode=2018-JGGLLB"/>
-                                机构状态：<Tree:tree id="bDwztBQuery" valueName="bDwztBContentQuery" selectClass="span2 m-wrap"
-                                                treeUrl="${path}/api/dictionary/tree?typeCode=2018-JGZT"
-                                                token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                submitType="get" dataType="json" isSearch="false"
-                                                checkedByTitle="true" isSelectTree="true" defaultkeys="${bDwztBQuery}"
-                                                defaultvalues="${bDwztBQuery}"/>
-
+                            </div>
+                            <div style="float:left;margin-left: 5px">
+                                <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                                 <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                             </div>
                         </form>

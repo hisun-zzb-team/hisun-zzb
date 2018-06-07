@@ -16,13 +16,10 @@ import java.io.Serializable;
  * @author liuzj {279421824@qq.com}
  */
 @Entity
-@Table(name = "b05")
+@Table(name = "b09")
 public class B09 extends TombstoneEntity implements Serializable {
     /** 主键 */
     private String b0900;
-
-    /** 从属单位id */
-    private String b0100;
 
     /** 查询职务名称 */
     private String b0901A;
@@ -122,7 +119,9 @@ public class B09 extends TombstoneEntity implements Serializable {
 
     /** 职务状态内容 */
     private String bZwztA;
+
     private B01 b01;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "b0100")
     public B01 getB01() {

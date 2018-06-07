@@ -197,5 +197,19 @@ public class B01Controller extends BaseController {
         }
         return new ModelAndView("saas/zzb/jggl/b01/jbxx", map);
     }
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public Map<String,Object> delete(String id){
+        Map<String, Object> map = Maps.newHashMap();
+        try{
+            b01Service.deleteByPK(id);
+            map.put("success", true);
+        }catch (Exception e){
+            logger.error(e);
+            map.put("message","删除失败");
+            map.put("success", false);
+        }
+        return map;
+    }
 
 }

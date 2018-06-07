@@ -119,17 +119,21 @@
                         <th width="80px">机构性质</th>
                         <th width="80px">机构级别</th>
                         <th width="80px">机构状态</th>
+                        <th width="80px">操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
                             <td><a href="javascript:edit('${vo.b0100}')"><c:out value="${vo.b0101}"></c:out></a></td>
-                            <td><a href=""><c:out value="${vo.b0104}"></c:out></a></td>
-                                <%--<td><c:out value="${vo.b0101}"></c:out></td>--%>
+                            <td><c:out value="${vo.b0104}"></c:out></td>
                             <td><c:out value="${vo.b0131A}"></c:out></td>
                             <td><c:out value="${vo.b0127A}"></c:out></td>
                             <td><c:out value="${vo.bDwztA}"></c:out></td>
+                            <td>
+                                <a href="javascript:edit('${vo.b0100}')" class="">修改</a>|
+                                <a href="javascript:deleteB01('${vo.b0100}','${vo.b0101}')" class="">删除</a>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -205,41 +209,22 @@
             }
         });
     }
+    var deleteB01 = function(id,name){
+        var title = "您确定要删除["+name+"]吗？";
+        var msg = "此操作将删除该机构及其下所有的法人机构、分组和内设机构。";
+        var tip = "请输入要删除的机构名称";
+        myLoading.show();
+        showPrompModal2(title,name,msg,tip,"${path}/zzb/jggl/b01/delete?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id,null, function(json){
 
-
-    var view = function (id) {
-        $.ajax({
-            async: false,
-            type: "POST",
-            url: "${path}/zzb/app/console/appGbcxA01/ajax/view",
-            dataType: "html",
-            headers: {
-                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
-            },
-            data: {
-                'id': id
-            },
-            success: function (html) {
-                $("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
-            },
-            error: function () {
+            if(json.success == true){
                 myLoading.hide();
-                showTip("提示", "出错了,请检查网络!", 2000);
+                showTip("提示","删除成功", 1500);
+            }else{
+                myLoading.hide();
+                showTip("提示", json.message, 2000);
             }
-        });
-    }
-    var del = function (id, itemName) {
-        actionByConfirm1(itemName, "${path}/zzb/app/console/appGbcxA01/delete/" + id, {}, function (data, status) {
-            if (data.success == true) {
-                showTip("提示", "删除成功", 2000);
-                setTimeout(function () {
-                    window.location.href = "${path}/zzb/app/console/appGbcxA01/list?b01Id=${b01Id}&mcid=${mcid}"
-                }, 2000);
-            } else {
-                showTip("提示", data.message, 2000);
-            }
-        });
+
+        })
     };
     function uploadFile(fileName) {
         document.getElementById("btn-" + fileName).click();

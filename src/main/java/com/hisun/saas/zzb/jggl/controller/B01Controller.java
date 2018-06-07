@@ -96,18 +96,22 @@ public class B01Controller extends BaseController {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         B01 entity = new B01();
+        B01 oldB01 = new B01();
+        String bSjlx = vo.getbSjlx();
         try {
-            if (StringUtils.isNotBlank(vo.getB0100())) {
-                entity = b01Service.getByPK(vo.getB0100());
-                String oldPid = entity.getB0100();
-                BeanUtils.copyProperties(vo,entity);
-                entity.setParentB01(b01Service.getByPK(vo.getParentId()));
-                this.b01Service.updateB01(entity,oldPid);
-            }else {
-                String currentId = "";
-                currentId = b01Service.saveB01(vo);
-                map.put("currentId",currentId);
-            }
+            //法人机构
+                if (StringUtils.isNotBlank(vo.getB0100())) {
+                    entity = b01Service.getByPK(vo.getB0100());
+                    String oldPid = entity.getB0100();
+                    BeanUtils.copyProperties(entity,oldB01);
+                    BeanUtils.copyProperties(vo,entity);
+                    entity.setParentB01(b01Service.getByPK(vo.getParentId()));
+                    this.b01Service.updateB01(entity,oldB01,oldPid);
+                }else {
+                    String currentId = "";
+                    currentId = b01Service.saveB01(vo);
+                    map.put("currentId",currentId);
+                }
             map.put("code", 1);
         } catch (Exception e) {
             logger.error(e, e);
@@ -136,20 +140,23 @@ public class B01Controller extends BaseController {
     public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String currentId,String isAdd) {
         Map<String, Object> map = Maps.newHashMap();
         try {
+            B01Vo vo = new B01Vo();
+            vo.setbSjlx(bSjlx);
+            vo.setB01Id(b01Id);
             if(StringUtils.isNotBlank(currentId)){
                 B01 entity = b01Service.getByPK(currentId);
-                B01Vo vo = new B01Vo();
                 BeanUtils.copyProperties(entity,vo);
                 vo.setParentId(entity.getParentB01().getB0100());
                 vo.setParentName(entity.getParentB01().getB0101());
-                map.put("vo",vo);
+            }else{
+                vo.setParentId(b01Id);
+                vo.setParentName( b01Service.getByPK(b01Id).getB0101());
             }
+            map.put("vo",vo);
             Integer sort = b01Service.getMaxSort(b01Id);
+
             map.put("isAdd",isAdd);
             map.put("sort",sort);
-            map.put("bSjlx",bSjlx);
-            map.put("b0101", b0101);
-            map.put("b01Id", b01Id);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);

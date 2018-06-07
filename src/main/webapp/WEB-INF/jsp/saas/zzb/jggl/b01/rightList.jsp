@@ -27,7 +27,6 @@
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <form class="" id="importForm" enctype="multipart/form-data">
-                <input type="hidden" name="queryId" value="${queryId}"/>
                 <div class="portlet-title">
                     <div class="caption">${b0101}</div>
                     <div class="clearfix fr">
@@ -40,13 +39,13 @@
                                 <a onclick="fileDownManage('allDa')">整本档案下载(含图片)</a>
                                 </li>--%>
                                 <li>
-                                    <a onclick="addfrjg()">法人机构</a>
+                                    <a onclick="add('0')">法人机构</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:nsjg()">内设机构</a>
+                                    <a onclick="add('1')">内设机构</a>
                                 </li>
                                 <li>
-                                    <a onclick="fileDownManage('dangantupianxiazai')">机构分组</a>
+                                    <a onclick="add('2')">机构分组</a>
                                 </li>
                             </ul>
                         </div>
@@ -154,14 +153,13 @@
     }
 
     function edit(id) {
-        window.location.href = "${path}/zzb/jggl/b01/manage?bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&currentId="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        window.location.href = "${path}/zzb/jggl/b01/manage?b01Id=${b01Id}&b0101=${b0101}&currentId="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
     $(function () {
     })
 
-    function addfrjg() {
-        var bSjlx = '0';
-        window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx=0&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    function add(bSjlx) {
+        window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx="+bSjlx+"&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
 

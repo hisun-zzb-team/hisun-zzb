@@ -22,11 +22,13 @@
                     </div>
                 </div>
                 <form action="" class="form-horizontal" id="b01Form" method="post">
-                    <input type="hidden" name="b01Id" value="${b01Id}" id="b01Id"/> <%--当前点击节点的b01Id--%>
-                    <input type="hidden" name="bSjlx" value="${bSjlx}" id="bSjlx"/>
-                    <input type="hidden" name="b0100" value="${vo.b0100 }"/>
-                    <dl class="dlattrbute">
-                        <dd>
+                    <%--法人机构--%>
+                        <input type="hidden" name="b01Id" value="${vo.b01Id}" id="b01Id"/> <%--当前点击节点的b01Id--%>
+                        <input type="hidden" name="bSjlx" value="${vo.bSjlx}" id="bSjlx"/>
+                        <input type="hidden" name="b0100" value="${vo.b0100 }"/>
+                        <dl class="dlattrbute">
+                            <dd>
+                            <c:if test='${vo.bSjlx=="0"}'>
                             <div class="row-fluid">
                                 <div class="span6 ">
                                     <div id="b0101Group" class="control-group">
@@ -44,7 +46,7 @@
                                         <label class="control-label">机构简称</label>
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
-                                                   maxlength="128" value="${vo.b0104}" onblur="checkSmxh(this)"/>
+                                                   maxlength="128" value="${vo.b0104}" onblur=""/>
                                         </div>
                                     </div>
                                 </div>
@@ -128,15 +130,15 @@
                             </div>
                             <div class="row-fluid">
                                 <div class="span6 ">
-                                    <div id="parentIdGroup" class="control-group">
+                                    <div id="parentNameGroup" class="control-group">
                                         <label class="control-label"><span class="Required">*</span>所属机构</label>
                                         <div class="controls">
                                             <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
-                                                       treeUrl="${path}/zzb/jggl/b01Api/load/tree"
+                                                       treeUrl="${path}/api/b01/dtjz/tree"
                                                        token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                       submitType="get" dataType="json" isSearch="false" required=""
-                                                       checkedByTitle="true" isSelectTree="true" defaultkeys=""
-                                                       defaultvalues=""/>
+                                                       submitType="get" dataType="json" isSearch="false" required="true"
+                                                       checkedByTitle="true" isSelectTree="true" defaultkeys="${vo.parentId }"
+                                                       defaultvalues="${vo.parentName}" dtjz="true"/>
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +147,7 @@
                                         <label class="control-label"><span class="Required">*</span>排序</label>
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" id="bPx" name="bPx" maxlength="64"
-                                                   value="<c:if test="${empty vo}">${sort}</c:if><c:if test="${!empty vo}">${vo.bPx}</c:if>" number="true" required/>
+                                                   value="<c:if test="${empty vo.b0100}">${sort}</c:if><c:if test="${!empty vo.b0100}">${vo.bPx}</c:if>" number="true" required/>
                                         </div>
                                     </div>
                                 </div>
@@ -267,12 +269,190 @@
                                     <div id="remarkGroup" class="control-group">
                                         <label class="control-label">备注</label>
                                         <div class="controls">
-                                            <textarea id="remark" name="remark" class="span14 m-wrap" maxlength="512" value="${vo.remark}"
+                                            <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
                                                       rows="2" style="resize: none;"></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            </c:if>
+                            <c:if test='${vo.bSjlx=="1"}'>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="b0101Group" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>机构名称</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" id="b0101" name="b0101"
+                                                       maxlength="128" value="${vo.b0101}" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="b0104Group" class="control-group">
+                                            <label class="control-label">机构简称</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
+                                                       maxlength="128" value="${vo.b0104}" onblur="checkSmxh(this)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="b0111Group" class="control-group">
+                                            <label class="control-label">机构代码</label>
+                                            <div class="controls">
+                                                <Tree:tree id="b0111" valueName="b0111Name"
+                                                           selectClass="span10 m-wrap"
+                                                           treeUrl="${path}/api/dictionary/tree?typeCode=ZB02-2006/JGMC"
+                                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                           submitType="get" dataType="json" isSearch="false"
+                                                           checkedByTitle="true" isSelectTree="true"
+                                                           defaultkeys="${vo.b0111}"
+                                                           defaultvalues="${vo.b0111}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="bPxGroup" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>排序</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" id="bPx" name="bPx" maxlength="64"
+                                                       value="<c:if test="${empty vo.b0100}">${sort}</c:if><c:if test="${!empty vo.b0100}">${vo.bPx}</c:if>" number="true" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="parentNameGroup" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>所属机构</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" id="parentName" name="parentName" readonly
+                                                       maxlength="128" value="${vo.parentName}" required/>
+                                                <input type="hidden" name="parentId" value="${vo.parentId}">
+                                               <%-- <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
+                                                           treeUrl="${path}/api/b01/dtjz/tree"
+                                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                           submitType="get" dataType="json" isSearch="false" required="true"
+                                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${vo.parentId}"
+                                                           defaultvalues="${vo.parentName}" dtjz="true"/>--%>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="b0127Group" class="control-group">
+                                            <label class="control-label">机构级别</label>
+                                            <div class="controls">
+                                                <SelectTag:SelectTag id="b0127" needNullValue="true"
+                                                                     valueName="b0127A"
+                                                                     defaultkeys="${vo.b0127}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                                     defaultvalues="${vo.b0127A}"
+                                                                     textClass="span10 m-wrap" radioOrCheckbox="radio"
+                                                                     selectUrl="${path}/api/dictionary/select?typeCode=ZB03-1994/DWJB"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="b0131Group" class="control-group">
+                                            <label class="control-label">机构性质</label>
+                                            <div class="controls">
+                                                <Tree:tree id="b0131" valueName="b0131A"
+                                                           selectClass="span10 m-wrap"
+                                                           treeUrl="${path}/api/dictionary/tree?typeCode=ZB04-2006/DWXZ"
+                                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                           submitType="get" dataType="json" isSearch="false"
+                                                           checkedByTitle="true" isSelectTree="true"
+                                                           defaultkeys="${vo.b0131}"
+                                                           defaultvalues="${vo.b0131A}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="remarkGroup" class="control-group">
+                                            <label class="control-label">备注</label>
+                                            <div class="controls">
+                                            <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
+                                                      rows="2" style="resize: none;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test='${vo.bSjlx=="2"}'>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="b0101Group" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>机构名称</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" id="b0101" name="b0101"
+                                                       maxlength="128" value="${vo.b0101}" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="b0104Group" class="control-group">
+                                            <label class="control-label">机构简称</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
+                                                       maxlength="128" value="${vo.b0104}" onblur="checkSmxh(this)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="b0111Group" class="control-group">
+                                            <label class="control-label">机构代码</label>
+                                            <div class="controls">
+                                                <SelectTag:SelectTag id="b0111" needNullValue="true"
+                                                                     valueName="b0127A"
+                                                                     defaultkeys="${vo.b0127}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                                     defaultvalues="${vo.b0127A}"
+                                                                     textClass="span10 m-wrap" radioOrCheckbox="radio"
+                                                                     selectUrl="${path}/api/dictionary/select?typeCode=ZB02-2006/JGMC"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="bPxGroup" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>排序</label>
+                                            <div class="controls">
+                                                <input type="text" class="span10 m-wrap" id="bPx" name="bPx" maxlength="64"
+                                                       value="<c:if test="${empty vo.b0100}">${sort}</c:if><c:if test="${!empty vo.b0100}">${vo.bPx}</c:if>" number="true" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span6 ">
+                                        <div id="parentNameGroup" class="control-group">
+                                            <label class="control-label"><span class="Required">*</span>所属机构</label>
+                                            <div class="controls">
+                                                <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
+                                                           treeUrl="${path}/api/b01/dtjz/tree"
+                                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                           submitType="get" dataType="json" isSearch="false" required=""
+                                                           checkedByTitle="true" isSelectTree="true" defaultkeys=""
+                                                           defaultvalues="" dtjz="true"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6 ">
+                                        <div id="remarkGroup" class="control-group">
+                                            <label class="control-label">备注</label>
+                                            <div class="controls">
+                                            <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
+                                                      rows="2" style="resize: none;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                         </dd>
                     </dl>
                 </form>

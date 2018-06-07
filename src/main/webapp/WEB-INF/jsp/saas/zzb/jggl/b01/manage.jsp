@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%--
@@ -36,8 +37,8 @@
         <li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">基本信息</a></li>
         <li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">编制情况</a></li>
         <li><a id="#tab_1_3" href="#tab_1_1" data-toggle="tab">职务管理</a></li>
-        <li><a id="#tab_1_4" href="#tab_1_1" data-toggle="tab">换届信息</a></li>
-        <li><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
+        <li style='<c:if test="${bSjlx !=0}"> display: none</c:if>'> <a id="#tab_1_4" href="#tab_1_1" data-toggle="tab">换届信息</a></li>
+        <li style='<c:if test="${bSjlx !=0}"> display: none</c:if>'><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
     </ul>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
         <input type="hidden" id="currentId" name="currentId" value="${currentId}">
@@ -89,6 +90,7 @@
         });
     });
     function b02tabSave(e) {
+        debugger
         var currentId = $("#currentId").val();
         $.ajax({
             url : "${path }/zzb/jggl/b02/updateOrSave?currentId="+currentId,
@@ -143,7 +145,7 @@
             dataType : "json",
             success : function(json){
                 if(json.code==1){
-                    var currentId = "${currentId}";
+                    var currentId = json.currentId;
                     if(currentId!="" && currentId!=undefined){
                         $("#currentId").val(currentId);
                     }
@@ -181,7 +183,6 @@
 
     //基本信息
     function baseLoad(){
-        debugger
         var currentId = $("#currentId").val();
         myLoading.show();
         $.ajax({
@@ -207,7 +208,7 @@
         $.ajax({
             url : "${path }/zzb/jggl/b02/ajax/bzqk",
             type : "post",
-            data : {"b01Id":"${b01Id}","currentId":"currentId"},
+            data : {"b01Id":"${b01Id}","currentId":currentId},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -223,10 +224,11 @@
     }
 
     function zwglLoad(){
+        var currentId = $("#currentId").val();
         $.ajax({
             url : "${path }/zzb/jggl/b09/ajax/zwgl",
             type : "post",
-            data : {"b01Id":"${b01Id}"},
+            data : {"b01Id":"${b01Id}","currentId":currentId},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"

@@ -26,6 +26,6 @@ public interface B01Service extends BaseService<B01,String> {
     String saveB01(B01Vo vo) throws Exception;
     void updatePxAndCxbm(B01 b01,B01 parentB01,Integer oldSort)throws Exception;
 
-    void updateB01(B01 b01,
+    void updateB01(B01 b01,B01 oldB01,
                          String oldPid) throws Exception;
 }

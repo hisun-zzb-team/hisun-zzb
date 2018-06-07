@@ -100,7 +100,11 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
             query.add(CommonRestrictions.and(" parentB01.b0100=:parentNodeId ", "parentNodeId", id));
             query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
         }
-
+      /*  //加载默认值的节点及其父节点
+        if(defaultkeys!=null && !defaultkeys.equals("")) {
+            List defaultkeysList = this.getB01sByDefaultkeys(defaultkeys);
+            query.add(CommonRestrictions.or(" b0100 in (:defaultkeysList) ", "defaultkeysList",defaultkeysList));
+        }*/
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.asc("bCxbm"));
         List<B01> appBsetB01s = this.b01Dao.list(query, orderBy);
@@ -171,7 +175,7 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
     @Override
     public String saveB01(B01Vo vo) throws Exception {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-        Integer oldPx = this.getMaxSort(vo.getB01Id());
+        Integer oldPx = this.getMaxSort(vo.getParentId());
         Integer newPx = vo.getbPx();
         int retval = 0;
         if(oldPx!=null){
@@ -182,7 +186,7 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
             newPx = oldPx;
         }
         String cxbm = "";
-        B01 parentB01 = this.getByPK(vo.getB01Id());
+        B01 parentB01 = this.getByPK(vo.getParentId());
         DecimalFormat decimalFormat = new DecimalFormat("000");
         if(!StringUtils.equals("1", vo.getParentId())){
             if(parentB01!=null){
@@ -206,8 +210,9 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
     }
 
     @Override
-    public void updateB01(B01 b01, String oldPid) throws Exception {
-        B01 oldB01 = b01Dao.getByPK(b01.getB0100());
+    public void updateB01(B01 b01, B01 oldB01,String oldPid) throws Exception {
+        //B01 oldB01 = new B01();
+        //oldB01 = b01Dao.getByPK(b01.getB0100());
         String parentId = b01.getParentB01().getB0100();
         int newSort = b01.getbPx();
         int maxSort = this.getMaxSort(parentId);

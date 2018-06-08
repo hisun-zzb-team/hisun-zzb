@@ -262,5 +262,16 @@ public class B01Controller extends BaseController {
         }
         return map;
     }
+    @RequestMapping(value = "/ajax/toGjcx")
+    public ModelAndView toGjcx() {
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+
+        } catch (Exception e) {
+            logger.error(e, e);
+            map.put("success", false);
+        }
+        return new ModelAndView("saas/zzb/jggl/b01/gjcx", map);
+    }
 
 }

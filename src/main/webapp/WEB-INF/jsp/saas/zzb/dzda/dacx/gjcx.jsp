@@ -372,16 +372,12 @@
         </div>
     </div>
 </div>
-</div>
-</div>
-<%-- END PAGE CONTENT--%>
-</div>
 <script type="text/javascript">
-    //        jQuery(document).ready(function () {
-    //
-    //            App.init();//必须，不然导航栏及其菜单无法折叠
-    //
-    //        });
+          jQuery(document).ready(function () {
+
+               App.init();//必须，不然导航栏及其菜单无法折叠
+
+           });
     $(function () {
         var editFlag = "${editFlag}";
         /*  if(editFlag == "edit"){

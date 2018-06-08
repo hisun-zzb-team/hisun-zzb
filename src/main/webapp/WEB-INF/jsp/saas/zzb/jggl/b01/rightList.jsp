@@ -49,7 +49,16 @@
                                 </li>
                             </ul>
                         </div>
-
+                    <%--    <div class="btn-group">
+                            <a class="btn green" href="javascript:gjcx()">
+                                高级查询
+                            </a>
+                        </div>--%>
+                        <div class="btn-group">
+                            <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
+                                导出
+                            </a>
+                        </div>
                     </div>
 
                 </div>
@@ -149,13 +158,44 @@
         <%-- 表格结束 --%>
     </div>
 </div>
-
+<div id="queryModelModal" class="modal container hide fade" tabindex="-1" data-width="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="title1">
+                    高级查询
+                </h3>
+                <%-- <input type="hidden" name="appQueryId" value="" id="appQueryId">--%>
+            </div>
+            <div class="modal-body" id="queryModelDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <%-- END PAGE CONTENT--%>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
     var myLoading = new MyLoading("${path}", {zindex: 11111});
-    function nsjg() {
-        alert("1111")
+    function gjcx() {
+        $.ajax({
+            url: "${path }/zzb/jggl/b01/ajax/toGjcx",
+            type: "post",
+            data: {},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                $("#queryModelDiv").html(html);
+                $('#queryModelModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "查询失败");
+            }
+        });
     }
 
     function edit(id) {
@@ -180,8 +220,6 @@
         });
         //window.location.href = "${path}/zzb/jggl/b01/manage?b01Id=${b01Id}&b0101=${b0101}&currentId="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
-    $(function () {
-    })
 
     function add(bSjlx) {
         $.ajax({
@@ -266,8 +304,8 @@
 
         })
     };
-    function uploadFile(fileName) {
-        document.getElementById("btn-" + fileName).click();
+    function download() {
+
     }
     function clearData() {
         window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"

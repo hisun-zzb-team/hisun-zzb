@@ -11,6 +11,7 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.service.impl.BaseServiceImpl;
 import com.hisun.saas.sys.admin.dictionary.service.DictionaryItemService;
 import com.hisun.saas.sys.auth.UserLoginDetails;
+import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.tenant.privilege.dao.TenantPrivilegeDao;
 import com.hisun.saas.sys.tenant.privilege.entity.TenantPrivilege;
 import com.hisun.saas.sys.tenant.privilege.service.TenantPrivilegeService;
@@ -36,6 +37,9 @@ import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import com.hisun.util.URLEncoderUtil;
 import com.hisun.util.UUIDUtil;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,9 +47,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.*;
 
 /**
@@ -512,5 +519,130 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
             e.printStackTrace();
         }
         return  filePath;
+    }
+
+    public int saveFromGzslws(DataSource dataSource)throws Exception{
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //处理了多少条
+        int order = 0;
+        Connection conn = dataSource.getConnection();
+        QueryRunner queryRunner = new QueryRunner();
+
+        int count =0;
+        List<Map<String, Object>> countList = queryRunner.query(conn,
+                "select count(*) as count from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001'  " , new MapListHandler(),(Object[]) null);
+        for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
+            Map<String, Object> m = li.next();
+            for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
+                Map.Entry<String, Object> e = mi.next();
+                Object value = e.getValue();
+                count = ((BigDecimal)value).intValue();
+            }
+        }
+
+        Map<String,Object> attMaps = getSavaAttMaps();
+
+        //每次处理400条
+        int dealCount = count/400;
+        for(int i=0;i<=dealCount;i++){
+            int num1 = i*400;
+            int num2 = (i+1)*400;
+            String sql = "select * from (select a38.*,rownum rn from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001'\n" +
+                    "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38) where rn >"+num1+" and rn<"+num2+" ";
+
+            List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
+            for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {
+                Map<String, Object> m = li.next();
+                StringBuffer fields = new StringBuffer();
+                fields.append("insert into a38 (");
+                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date ");
+                StringBuffer values = new StringBuffer();
+                values.append(") values (");
+                values.append(" 0 ");
+                values.append(",'").append(userLoginDetails.getTenant().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUser().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUsername()).append("'")
+                         .append(",").append("now()").append("");
+
+                for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
+                    Map.Entry<String, Object> e = mi.next();
+                    String key = e.getKey();
+                    Object value = e.getValue()==null?"":e.getValue();
+
+                    Iterator it = attMaps.entrySet().iterator();
+                    boo:while (it.hasNext()) {
+                        Map.Entry entry = (Map.Entry) it.next();
+                        Object attKey = entry.getKey();
+                        Object attValue = entry.getValue();
+                        if(key.equalsIgnoreCase(attKey.toString())){
+                            if("NAME_WORDCOUNT".equalsIgnoreCase(attKey.toString())){
+                                fields.append("," + attValue);
+                                values.append("," + value);
+                            }else{
+                                fields.append("," + attValue);
+                                values.append(",'" + value + "'");
+                            }
+                            break boo;
+                        }
+                    }
+                }
+                values.append(")");
+                List<Object> paramList = new ArrayList<Object>();
+                this.a38Dao.executeNativeBulk(fields.append(values).toString(),paramList);
+                order++;
+            }
+        }
+
+        DbUtils.close(conn);
+        return order;
+    }
+
+    private Map<String,Object> getSavaAttMaps(){
+        Map<String,Object> attMaps = new HashMap<String,Object>();
+        attMaps.put("PK_A38","id");
+        attMaps.put("PK_A01","a01_id");//人员主键
+        attMaps.put("A0101","a0101");//姓名
+        attMaps.put("A_SCAN_CODE","smxh");//扫描序号
+        attMaps.put("A_ARCHIVES_CODE","dabh");//档案编号
+        attMaps.put("A0104","a0104");//性别字典代码
+        attMaps.put("A0104_CONTENT","a0104_content");//性别字典内容
+        attMaps.put("A0107","a0107");//出生日期
+        attMaps.put("A0111B","a0111B");//籍贯字典代码
+        attMaps.put("A0111A","a0111A");//籍贯内容
+        attMaps.put("A_CADRE_STATE_CODE","gbzt_code");//干部状态字典代码
+        attMaps.put("A_CADRE_STATE_CONTENT","gbzt_content");//干部状态字典内容
+        attMaps.put("A_ARCHIVES_STATE_CODE","dazt_code");//档案状态字典代码
+        attMaps.put("A_ARCHIVES_STATE_CONTENT","dazt_content");//档案状态字典内容
+        attMaps.put("A0157","a0157");//单位与职务
+        attMaps.put("A3801","a3801");//档案接收日期
+        attMaps.put("RECEIVER","jsr");//接收人，默认当前用户
+        attMaps.put("A3804B","a3804B");//档案来处id
+        attMaps.put("A3804B","a3804A");//档案来处名称（转入单位名称）
+        attMaps.put("A3807B","a3807B");//转出单位id，即档案管理单位id
+        attMaps.put("A3807A","a3807A");//转出单位名称，即档案管理单位名称
+        attMaps.put("A3814","a3814");//档案版本类别
+        attMaps.put("A3834","a3834");//档案位置
+        attMaps.put("A_DEATH_DATE","swrq");//死亡日期
+        attMaps.put("A3824","a3824");//档案备注
+        attMaps.put("A3817","a3817");//档案转出日期
+        attMaps.put("A3821","a3821");//转去单位
+        attMaps.put("A_OUT_REASON","zcyy");//转出原因
+        attMaps.put("A_HANDLEOR_ID","jbr_id");//档案转递时的经办人id
+        attMaps.put("A_HANDLEOR","jbr_xm");//档案转递时的经办人
+        attMaps.put("A_OUT_REMARK","rcbz");//档案转出信息备注
+        attMaps.put("A_STATE","sjzt");//数据状态。0：待审核(未审核)；1：已审核(正式数据)
+        attMaps.put("A_COME_REASON","zryy");//转入原因
+        attMaps.put("OUT_TO_UNIT_ID","zc_tenant_id");//转出单位id
+        attMaps.put("OUT_TO_UNIT_NAME","zc_tenant_name");//转出单位名称
+        attMaps.put("DATA_FROM","dasjly");//数据来源：add：从电子档案系统中新增；frompi：来源于干部系统；fromdr:导入产生
+        attMaps.put("DUTY_LEVEL_TIME","xzjsj");//现职级时间
+        attMaps.put("SURNAME_CODE","surname_code");//姓氏编码
+        attMaps.put("NAME_WORDCOUNT","name_wordcount");//姓名字数
+        attMaps.put("PERSONALNAME_CODE","personalname_code");//名编码
+        attMaps.put("PERSONALNAME_NONECODE","personalname_nonecode");//无编码汉字
+        attMaps.put("DUTY_LEVEL_CODE","duty_level_code");//职务级别code
+        attMaps.put("DUTY_LEVEL_VALUE","duty_level_value");//职务级别
+        attMaps.put("DUTY_LEVEL_TIME_BASE","duty_level_time_base");//职级时间
+        return attMaps;
     }
 }

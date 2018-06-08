@@ -12,6 +12,7 @@ import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.vo.E01Z1ExcelVo;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,10 @@ public interface E01Z1Service extends BaseService<E01Z1,String>{
     void deleteE01Z1(E01Z1 e01Z1) throws Exception;
     Map<String,Object> checkE01Z1ExcelVo(E01Z1ExcelVo e01Z1ExcelVo);
     void saveE01Z1S(E01Z1ExcelVo e01Z1ExcelVo, A38 a38);
+    /**
+     * 从广州三零系统导入数据
+     * @param dataSource
+     * @return
+     */
+    int saveFromGzslws(DataSource dataSource)throws Exception;
 }

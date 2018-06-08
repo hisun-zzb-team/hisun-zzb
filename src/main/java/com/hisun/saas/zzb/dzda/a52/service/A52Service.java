@@ -12,6 +12,7 @@ import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a52.entity.A52;
 import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -23,4 +24,10 @@ public interface A52Service extends BaseService<A52,String> {
     void updatePx(int oldPx,int newPx,String a38Id);
     Map<String,Object> checkA52Vos(List<A52Vo> a52Vos);
     void saveA52S(List<A52Vo> a52Vos, A38 a38, UserLoginDetails details);
+    /**
+     * 从广州三零系统导入数据
+     * @param dataSource
+     * @return
+     */
+    int saveFromGzslws(DataSource dataSource)throws Exception;
 }

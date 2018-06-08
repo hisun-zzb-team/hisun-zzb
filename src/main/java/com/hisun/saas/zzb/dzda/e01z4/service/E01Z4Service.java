@@ -9,6 +9,8 @@ package com.hisun.saas.zzb.dzda.e01z4.service;
 import com.hisun.base.service.BaseService;
 import com.hisun.saas.zzb.dzda.e01z4.entity.E01Z4;
 
+import javax.sql.DataSource;
+
 /**
  * @author zhout {605144321@qq.com}
  */
@@ -16,4 +18,10 @@ public interface E01Z4Service extends BaseService<E01Z4,String>{
     Integer getMaxSort(String ad8Id);
     void updateE01Z4(E01Z4 e01z4, Integer oldSort);
     void updateSortBeforSave(E01Z4 e01z4, Integer oldSort);
+    /**
+     * 从广州三零系统导入数据
+     * @param dataSource
+     * @return
+     */
+    int saveFromGzslws(DataSource dataSource)throws Exception;
 }

@@ -15,6 +15,7 @@ import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dak.vo.DakVo;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
@@ -35,4 +36,10 @@ public interface A38Service extends BaseService<A38,String>{
      */
     String download(HttpServletResponse resp, List<A38> resultList);
 
+    /**
+     * 从广州三零系统导入数据
+     * @param dataSource
+     * @return
+     */
+    int saveFromGzslws(DataSource dataSource)throws Exception;
 }

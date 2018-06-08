@@ -28,6 +28,11 @@ import com.hisun.saas.zzb.app.console.exchange.entity.ExchangeActuator;
 import com.hisun.saas.zzb.app.console.exchange.service.ExchangeActuatorService;
 import com.hisun.saas.zzb.app.console.exchange.vo.ExchangeActuatorVo;
 import com.hisun.saas.sys.util.BeanTrans;
+import com.hisun.saas.zzb.dzda.a32.service.A32Service;
+import com.hisun.saas.zzb.dzda.a38.service.A38Service;
+import com.hisun.saas.zzb.dzda.a52.service.A52Service;
+import com.hisun.saas.zzb.dzda.e01z4.service.E01Z4Service;
+import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.C3p0Util;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +69,16 @@ public class ExchangeActuatorController extends BaseController {
     private AppAsetA02Service appAsetA02Service;
     @Resource
     private AppAsetA36Service appAsetA36Service;
+    @Resource
+    private A38Service a38Service;
+    @Resource
+    private A32Service a32Service;
+    @Resource
+    private A52Service a52Service;
+    @Resource
+    private E01Z1Service e01Z1Service;
+    @Resource
+    private E01Z4Service e01Z4Service;
 
     @RequestMapping("/")
     public ModelAndView list(HttpServletRequest req, String identificationQuery, String statusQuery,
@@ -264,7 +279,16 @@ public class ExchangeActuatorController extends BaseController {
                 this.appAsetA02Service.saveFromZdwx(dataSource);
                 this.appAsetA36Service.saveFromZdwx(dataSource);
             } else if (sourceType == ExchangeActuator.source_zzzhywpt) {//从组织综合业务平台(广州三零)
-
+                DataSource dataSource = C3p0Util.getOracleDataSource(exchangeActuator.getIp(),
+                        exchangeActuator.getPort(),
+                        exchangeActuator.getDatabaseName(),
+                        exchangeActuator.getUserName(), exchangeActuator.getPassword());
+                this.a38Service.saveFromGzslws(dataSource);
+                this.e01Z1Service.saveFromGzslws(dataSource);
+                this.a32Service.saveFromGzslws(dataSource);
+                this.a52Service.saveFromGzslws(dataSource);
+                this.e01Z4Service.saveFromGzslws(dataSource);
+                //a38 a32 a52 e01z1 z01z4
             } else if (sourceType == ExchangeActuator.source_gbglxt) {//从干部管理系统(长沙远望)
                 DataSource dataSource = C3p0Util.getSqlServerDataSource(exchangeActuator.getIp(),
                         exchangeActuator.getPort(),
@@ -293,6 +317,7 @@ public class ExchangeActuatorController extends BaseController {
             }
             map.put("success", true);
         } catch (Exception e) {
+            e.printStackTrace();
             map.put("success", false);
             map.put("message", "导入出错");
             throw new GenericException(e);

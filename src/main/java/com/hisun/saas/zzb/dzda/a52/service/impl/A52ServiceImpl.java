@@ -20,14 +20,17 @@ import com.hisun.saas.zzb.dzda.a52.vo.A52Vo;
 import com.hisun.saas.zzb.dzda.util.DaUtils;
 import com.hisun.util.StringUtils;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.*;
 
 /**
  * @author Marco {854476391@qq.com}
@@ -188,5 +191,96 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
                 e.printStackTrace();
             }
         }
+    }
+    public int saveFromGzslws(DataSource dataSource)throws Exception{
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //处理了多少条
+        int order = 0;
+        Connection conn = dataSource.getConnection();
+        QueryRunner queryRunner = new QueryRunner();
+
+        int count =0;
+        List<Map<String, Object>> countList = queryRunner.query(conn,
+                "select count(*) as count from a52 where PK_A38 in(" +
+                        "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001')" , new MapListHandler(),(Object[]) null);
+        for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
+            Map<String, Object> m = li.next();
+            for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
+                Map.Entry<String, Object> e = mi.next();
+                Object value = e.getValue();
+                count = ((BigDecimal)value).intValue();
+            }
+        }
+
+        Map<String,Object> attMaps = getSavaAttMaps();
+
+        //每次处理400条
+        int dealCount = count/400;
+        for(int i=0;i<=dealCount;i++){
+            int num1 = i*400;
+            int num2 = (i+1)*400;
+            String sql = "select * from (select a52.*,rownum rn from a52 where PK_A38 in(" +
+                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001') " +
+                    "order by a52.PK_A52) where rn >"+num1+" and rn<"+num2+" ";
+
+            List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
+            for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {
+                Map<String, Object> m = li.next();
+                StringBuffer fields = new StringBuffer();
+                fields.append("insert into a52 (");
+                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date ");
+                StringBuffer values = new StringBuffer();
+                values.append(") values (");
+                values.append(" 0 ");
+                values.append(",'").append(userLoginDetails.getTenant().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUser().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUsername()).append("'")
+                        .append(",").append("now()").append("");
+
+                for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
+                    Map.Entry<String, Object> e = mi.next();
+                    String key = e.getKey();
+                    Object value = e.getValue()==null?"":e.getValue();
+
+                    Iterator it = attMaps.entrySet().iterator();
+                    boo:while (it.hasNext()) {
+                        Map.Entry entry = (Map.Entry) it.next();
+                        Object attKey = entry.getKey();
+                        Object attValue = entry.getValue();
+                        if(key.equalsIgnoreCase(attKey.toString())){
+                            if("A52_ORDER".equalsIgnoreCase(attKey.toString())){
+                                fields.append("," + attValue);
+                                values.append("," + value);
+                            }else{
+                                fields.append("," + attValue);
+                                values.append(",'" + value + "'");
+                            }
+                            break boo;
+                        }
+                    }
+                }
+                values.append(")");
+                List<Object> paramList = new ArrayList<Object>();
+                this.a52Dao.executeNativeBulk(fields.append(values).toString(),paramList);
+                order++;
+            }
+        }
+
+        DbUtils.close(conn);
+        return order;
+    }
+
+    private Map<String,Object> getSavaAttMaps(){
+        Map<String,Object> attMaps = new HashMap<String,Object>();
+        attMaps.put("PK_A52","id");
+        attMaps.put("PK_A38","a38_id");//外键，人员档案主健
+        attMaps.put("A5204","a5204");//任职机构
+        attMaps.put("A5211","a5211");//职务名称
+        attMaps.put("A5227_IN","a5227_in");//任职时间
+        attMaps.put("A5227_OUT","a5227_Out");//免职时间
+        attMaps.put("A0245","a0245");//任职文号
+        attMaps.put("A0267","a0267");//免职文号
+        attMaps.put("A52_ORDER","px");//职务变动排序
+        return attMaps;
     }
 }

@@ -132,7 +132,6 @@ public class B01Controller extends BaseController {
         B01 oldB01 = new B01();
         String bSjlx = vo.getbSjlx();
         try {
-            //法人机构
                 if (StringUtils.isNotBlank(vo.getB0100())) {
                     entity = b01Service.getByPK(vo.getB0100());
                     String oldPid = entity.getB0100();
@@ -141,6 +140,14 @@ public class B01Controller extends BaseController {
                     entity.setParentB01(b01Service.getByPK(vo.getParentId()));
                     this.b01Service.updateB01(entity,oldB01,oldPid);
                 }else {
+                    //第一個節點
+                    if(!StringUtils.isNotBlank(vo.getB01Id())){
+                        BeanUtils.copyProperties(vo,entity);
+                        entity.setbCxbm("001");
+                        b01Service.save(entity);
+                        map.put("code", 1);
+                        return map;
+                    }
                     String currentId = "";
                     currentId = b01Service.saveB01(vo);
                     map.put("currentId",currentId);
@@ -153,14 +160,15 @@ public class B01Controller extends BaseController {
         return map;
     }
 
-    @RequestMapping(value = "/manage")
-    public ModelAndView mangePage(String bSjlx, String b01Id,String currentId,String isAdd) {
+    @RequestMapping(value = "/ajax/manage")
+    public ModelAndView mangePage(String bSjlx, String b01Id,String currentId,String isAdd,String isAddOne) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("bSjlx", bSjlx);
             map.put("b01Id", b01Id);
             map.put("currentId", currentId);
             map.put("isAdd",isAdd);
+            map.put("isAddOne",isAddOne);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);
@@ -170,7 +178,7 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/jbxx")
-    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String currentId,String isAdd) {
+    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String currentId,String isAdd,String isAddOne) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             B01Vo vo = new B01Vo();
@@ -183,12 +191,16 @@ public class B01Controller extends BaseController {
                 vo.setParentName(entity.getParentB01().getB0101());
             }else{
                 vo.setParentId(b01Id);
-                vo.setParentName( b01Service.getByPK(b01Id).getB0101());
+                if(StringUtils.isNotBlank(b01Id))
+                    vo.setParentName( b01Service.getByPK(b01Id).getB0101());
             }
             map.put("vo",vo);
-            Integer sort = b01Service.getMaxSort(b01Id);
-
+            Integer sort =1;
+            //第一个节点
+            if(StringUtils.isNotBlank(b01Id))
+                sort= b01Service.getMaxSort(b01Id);
             map.put("isAdd",isAdd);
+            map.put("isAddOne",isAddOne);
             map.put("sort",sort);
             map.put("success", true);
         } catch (Exception e) {
@@ -203,6 +215,22 @@ public class B01Controller extends BaseController {
         Map<String, Object> map = Maps.newHashMap();
         try{
             b01Service.deleteByPK(id);
+            map.put("success", true);
+        }catch (Exception e){
+            logger.error(e);
+            map.put("message","删除失败");
+            map.put("success", false);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/updatePx")
+    @ResponseBody
+    public Map<String,Object> updatePx(String parentId){
+        Map<String, Object> map = Maps.newHashMap();
+        try{
+            Integer sort = b01Service.getMaxSort(parentId);
+            map.put("px",sort);
             map.put("success", true);
         }catch (Exception e){
             logger.error(e);

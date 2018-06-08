@@ -46,7 +46,7 @@
                                         <label class="control-label">机构简称</label>
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
-                                                   maxlength="128" value="${vo.b0104}" onblur=""/>
+                                                   maxlength="128" value="${vo.b0104}" />
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@
                                         <div class="controls">
                                             <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
                                                        treeUrl="${path}/api/b01/dtjz/tree"
-                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}" onChange="updatePx()"
                                                        submitType="get" dataType="json" isSearch="false" required="true"
                                                        checkedByTitle="true" isSelectTree="true" defaultkeys="${vo.parentId }"
                                                        defaultvalues="${vo.parentName}" dtjz="true"/>
@@ -292,7 +292,7 @@
                                             <label class="control-label">机构简称</label>
                                             <div class="controls">
                                                 <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
-                                                       maxlength="128" value="${vo.b0104}" onblur="checkSmxh(this)"/>
+                                                       maxlength="128" value="${vo.b0104}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -398,7 +398,7 @@
                                             <label class="control-label">机构简称</label>
                                             <div class="controls">
                                                 <input type="text" class="span10 m-wrap" name="b0104" id="b0104"
-                                                       maxlength="128" value="${vo.b0104}" onblur="checkSmxh(this)"/>
+                                                       maxlength="128" value="${vo.b0104}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -409,12 +409,14 @@
                                         <div id="b0111Group" class="control-group">
                                             <label class="control-label">机构代码</label>
                                             <div class="controls">
-                                                <SelectTag:SelectTag id="b0111" needNullValue="true"
-                                                                     valueName="b0127A"
-                                                                     defaultkeys="${vo.b0127}" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                     defaultvalues="${vo.b0127A}"
-                                                                     textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                     selectUrl="${path}/api/dictionary/select?typeCode=ZB02-2006/JGMC"/>
+                                                <Tree:tree id="b0111" valueName="b0111Name"
+                                                           selectClass="span10 m-wrap"
+                                                           treeUrl="${path}/api/dictionary/tree?typeCode=ZB02-2006/JGMC"
+                                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                           submitType="get" dataType="json" isSearch="false"
+                                                           checkedByTitle="true" isSelectTree="true"
+                                                           defaultkeys="${vo.b0111}"
+                                                           defaultvalues="${vo.b0111}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -436,9 +438,9 @@
                                                 <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
                                                            treeUrl="${path}/api/b01/dtjz/tree"
                                                            token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                           submitType="get" dataType="json" isSearch="false" required=""
-                                                           checkedByTitle="true" isSelectTree="true" defaultkeys=""
-                                                           defaultvalues="" dtjz="true"/>
+                                                           submitType="get" dataType="json" isSearch="false" required="true"
+                                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${vo.parentId}"
+                                                           defaultvalues="${vo.parentName}" dtjz="true"/>
                                             </div>
                                         </div>
                                     </div>
@@ -462,6 +464,37 @@
 </div>
 <script type="text/javascript" src="${path }/js/common/DataValidate.js"></script>
 <script type="text/javascript">
+  /*  function dealValue() {
+        debugger
+        var b0101 = $("#b0101").val();
+        $("#b0104").val(b0101);
+    }
+*/
+    function updatePx() {
+        $.ajax({
+            url : "${path }/zzb/jggl/b01/updatePx",
+            type : "post",
+            data : {"parentId":$("#parentId").val()},
+            dataType : "json",
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success : function(json){
+                $("#bPx").val(json.px);
+            },
+            error : function(){
+            }
+        });
+        $
+    }
     $(function () {
+        $('#b0104').keyup(function(){
+            $("#b0101").unbind();
+        });
+
+        $('#b0101').keyup(function(){
+            var b0101 = $("#b0101").val();
+            $("#b0104").val(b0101);
+        });
     })
 </script>

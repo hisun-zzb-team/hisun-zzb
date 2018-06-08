@@ -73,6 +73,16 @@
                 }
                 b02tabSave(e);
             }
+            else if($(e.target).attr('id')!='#tab_1_4'&& tabIndex=="#tab_1_4"){
+                var myVld = new EstValidate("b10Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if(!bool){
+                    myLoading.hide();
+                    return false;
+                }
+                b10tabSave(e);
+            }
             else if($(e.target).attr('id')!='#tab_1_5'&& tabIndex=="#tab_1_5"){
                 var myVld = new EstValidate("b04Form");
                 myLoading.show();
@@ -171,6 +181,49 @@
                     }
                 }else{
                     $("[id='#tab_1_5']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error : function(){
+                $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示","出错了,请检查网络!",2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+    function b10tabSave(e) {
+        var currentId = $("#currentId").val();
+        $.ajax({
+            url : "${path }/zzb/jggl/b10/updateOrSave?currentId="+currentId,
+            type : "post",
+            data : $("#b10Form").serialize(),
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "json",
+            success : function(json){
+                if(json.code==1){
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    if($(e.target).attr('id')=="#tab_1_1"){
+                        $("[id='#tab_1_1']").tab('show');
+                        baseLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_2"){
+                        $("[id='#tab_1_2']").tab('show');
+                        bzqkLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_3"){
+                        $("[id='#tab_1_3']").tab('show');
+                        zwglLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_5"){
+                        $("[id='#tab_1_5']").tab('show');
+                        txxxLoad();
+                    }
+                }else{
+                    $("[id='#tab_1_4']").tab('show');
                     myLoading.hide();
                     showTip("提示", json.message, 2000);
                     return false;
@@ -357,6 +410,25 @@
                url : "${path }/zzb/jggl/b02/updateOrSave?currentId="+currentId,
                type : "post",
                data : $("#b02Form").serialize(),
+               headers:{
+                   OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType : "json",
+               success : function(json){
+                   if(json.code==1) {
+                       showTip("提示","保存成功",1500)
+                       setTimeout(function(){cancel()},1500);
+                   }
+               },
+               error : function(){
+               }
+           });
+       }else if(tabIndex=="#tab_1_4"){
+           var currentId = $("#currentId").val();
+           $.ajax({
+               url : "${path }/zzb/jggl/b10/updateOrSave?currentId="+currentId,
+               type : "post",
+               data : $("#b10Form").serialize(),
                headers:{
                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                },

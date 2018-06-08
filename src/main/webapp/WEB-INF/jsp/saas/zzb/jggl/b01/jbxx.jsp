@@ -424,19 +424,20 @@
                                         <div id="bPxGroup" class="control-group">
                                             <label class="control-label"><span class="Required">*</span>排序</label>
                                             <div class="controls">
-                                                <input type="text" class="span10 m-wrap" id="bPx" name="bPx" maxlength="64"
+                                                <input type="text" class="span10 m-wrap" id="bPx" name="bPx" maxlength="64" <c:if test="${isAddOne == 'addOne'}">readonly</c:if>
                                                        value="<c:if test="${empty vo.b0100}">${sort}</c:if><c:if test="${!empty vo.b0100}">${vo.bPx}</c:if>" number="true" required/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row-fluid">
+                                    <c:if test="${isAddOne == 'addOne'}">
                                     <div class="span6 ">
                                         <div id="parentNameGroup" class="control-group">
                                             <label class="control-label"><span class="Required">*</span>所属机构</label>
                                             <div class="controls">
                                                 <Tree:tree id="parentId" valueName="parentName" selectClass="span10 m-wrap"
-                                                           treeUrl="${path}/api/b01/dtjz/tree"
+                                                           treeUrl="${path}/api/b01/dtjz/tree" onChange="updatePx()"
                                                            token="${sessionScope.OWASP_CSRFTOKEN}"
                                                            submitType="get" dataType="json" isSearch="false" required="true"
                                                            checkedByTitle="true" isSelectTree="true" defaultkeys="${vo.parentId}"
@@ -444,6 +445,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </c:if>
                                     <div class="span6 ">
                                         <div id="remarkGroup" class="control-group">
                                             <label class="control-label">备注</label>
@@ -474,18 +476,27 @@
         $.ajax({
             url : "${path }/zzb/jggl/b01/updatePx",
             type : "post",
-            data : {"parentId":$("#parentId").val()},
+            data : {"parentId":$("#parentId").val(),"b0100":"${vo.b0100 }"},
             dataType : "json",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
             },
             success : function(json){
-                $("#bPx").val(json.px);
+                if(json.success){
+                    if(!json.checkValue){
+                        refreshTreeTagByDt("parentId_tree",json.oldParentId)
+                        $("#parentId").val(json.oldParentId);
+                        $("#parentName").val(json.oldParentName);
+                        showTip("提示",json.message,1500);
+                        return;
+                    }
+                    $("#bPx").val(json.px);
+                }
+
             },
             error : function(){
             }
         });
-        $
     }
     $(function () {
         $('#b0104').keyup(function(){

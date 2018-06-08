@@ -18,12 +18,12 @@ import java.io.Serializable;
 @Entity
 @Table(name = "b10")
 public class B10 extends TombstoneEntity implements Serializable {
-    private String b1000;
-    private Integer b1001;
-    private String b1004;
-    private String b1007;
-    private Integer bHjnx;
-    private B01 b01;
+    private String b1000;//换届信息集id
+    private Integer b1001;//届次
+    private String b1004;//换届日期
+    private String b1007;//换届原因
+    private Integer bHjnx;//换届年限
+    private B01 b01;//单位信息id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "b0100")
     public B01 getB01() {

@@ -54,43 +54,43 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/list")
-    public ModelAndView getList(String parentB01Id, String b01Id,String b0101,
+    public ModelAndView getList(String parentB01Id, String b01Id, String b0101,
                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                                @RequestParam(value = "b0101Query", required = false)String b0101Query,
-                                @RequestParam(value = "parentIdQuery", required = false)String parentIdQuery,
-                                @RequestParam(value = "parentNameQuery", required = false)String parentNameQuery,
-                                @RequestParam(value = "b0127Query", required = false)String b0127Query,
-                                @RequestParam(value = "b0127AQuery", required = false)String b0127AQuery,
-                                @RequestParam(value = "bGllbBQuery", required = false)String bGllbBQuery,
-                                @RequestParam(value = "bGllbAQuery", required = false)String bGllbAQuery
-                                ) {
+                                @RequestParam(value = "b0101Query", required = false) String b0101Query,
+                                @RequestParam(value = "parentIdQuery", required = false) String parentIdQuery,
+                                @RequestParam(value = "parentNameQuery", required = false) String parentNameQuery,
+                                @RequestParam(value = "b0127Query", required = false) String b0127Query,
+                                @RequestParam(value = "b0127AQuery", required = false) String b0127AQuery,
+                                @RequestParam(value = "bGllbBQuery", required = false) String bGllbBQuery,
+                                @RequestParam(value = "bGllbAQuery", required = false) String bGllbAQuery
+    ) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             CommonConditionQuery query = new CommonConditionQuery();
             List<B01> resultList = Lists.newArrayList();
             CommonOrderBy orderBy = new CommonOrderBy();
-            Long total =0L;
+            Long total = 0L;
             B01 b01 = new B01();
-            if(StringUtils.isBlank(b0101Query) && StringUtils.isBlank(parentIdQuery) && StringUtils.isBlank(b0127Query) &&
-                    StringUtils.isBlank(bGllbBQuery)){
-                 b01 = this.b01Service.getByPK(b01Id);
+            if (StringUtils.isBlank(b0101Query) && StringUtils.isBlank(parentIdQuery) && StringUtils.isBlank(b0127Query) &&
+                    StringUtils.isBlank(bGllbBQuery)) {
+                b01 = this.b01Service.getByPK(b01Id);
                 b0101 = b01.getB0101();
-                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm",  b01.getbCxbm()+"%" ));
+                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
 
-            }else {
-                if(StringUtils.isNotBlank(b0101Query)){
-                    query.add(CommonRestrictions.and(" b0101 like :b0101 ", "b0101", "%"+b0101Query+"%" ));
+            } else {
+                if (StringUtils.isNotBlank(b0101Query)) {
+                    query.add(CommonRestrictions.and(" b0101 like :b0101 ", "b0101", "%" + b0101Query + "%"));
                 }
-                if(StringUtils.isNotBlank(parentIdQuery)){
+                if (StringUtils.isNotBlank(parentIdQuery)) {
                     b01 = this.b01Service.getByPK(parentIdQuery);
-                    query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm",  b01.getbCxbm()+"%" ));
+                    query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
                 }
-                if(StringUtils.isNotBlank(b0127Query)){
-                    query.add(CommonRestrictions.and(" b0127 = :b0127 ", "b0127",  b0127Query ));
+                if (StringUtils.isNotBlank(b0127Query)) {
+                    query.add(CommonRestrictions.and(" b0127 = :b0127 ", "b0127", b0127Query));
                 }
-                if(StringUtils.isNotBlank(bGllbBQuery)){
-                    query.add(CommonRestrictions.and(" bGllbB = :bGllbB ", "bGllbB",  bGllbBQuery ));
+                if (StringUtils.isNotBlank(bGllbBQuery)) {
+                    query.add(CommonRestrictions.and(" bGllbB = :bGllbB ", "bGllbB", bGllbBQuery));
                 }
             }
             total = b01Service.count(query);
@@ -104,13 +104,13 @@ public class B01Controller extends BaseController {
                 b01Vos.add(vo);
             }
             PagerVo<B01Vo> pager = new PagerVo<B01Vo>(b01Vos, total.intValue(), pageNum, pageSize);
-            map.put("b0101Query",b0101Query);
-            map.put("parentIdQuery",parentIdQuery);
-            map.put("parentNameQuery",parentNameQuery);
-            map.put("b0127Query",b0127Query);
-            map.put("b0127AQuery",b0127AQuery);
-            map.put("bGllbBQuery",bGllbBQuery);
-            map.put("bGllbAQuery",bGllbAQuery);
+            map.put("b0101Query", b0101Query);
+            map.put("parentIdQuery", parentIdQuery);
+            map.put("parentNameQuery", parentNameQuery);
+            map.put("b0127Query", b0127Query);
+            map.put("b0127AQuery", b0127AQuery);
+            map.put("bGllbBQuery", bGllbBQuery);
+            map.put("bGllbAQuery", bGllbAQuery);
             map.put("pager", pager);
             map.put("b01Id", b01Id);
             map.put("parentB01Id", parentB01Id);
@@ -123,6 +123,7 @@ public class B01Controller extends BaseController {
         return new ModelAndView("saas/zzb/jggl/b01/rightList", map);
 
     }
+
     @RequestMapping(value = "/updateOrSave")
     @ResponseBody
     public Map<String, Object> updateOrSave(B01Vo vo) {
@@ -132,19 +133,26 @@ public class B01Controller extends BaseController {
         B01 oldB01 = new B01();
         String bSjlx = vo.getbSjlx();
         try {
-            //法人机构
-                if (StringUtils.isNotBlank(vo.getB0100())) {
-                    entity = b01Service.getByPK(vo.getB0100());
-                    String oldPid = entity.getB0100();
-                    BeanUtils.copyProperties(entity,oldB01);
-                    BeanUtils.copyProperties(vo,entity);
-                    entity.setParentB01(b01Service.getByPK(vo.getParentId()));
-                    this.b01Service.updateB01(entity,oldB01,oldPid);
-                }else {
-                    String currentId = "";
-                    currentId = b01Service.saveB01(vo);
-                    map.put("currentId",currentId);
+            if (StringUtils.isNotBlank(vo.getB0100())) {
+                entity = b01Service.getByPK(vo.getB0100());
+                String oldPid = entity.getB0100();
+                BeanUtils.copyProperties(entity, oldB01);
+                BeanUtils.copyProperties(vo, entity);
+                entity.setParentB01(b01Service.getByPK(vo.getParentId()));
+                this.b01Service.updateB01(entity, oldB01, oldPid);
+            } else {
+                //第一個節點
+                if (!StringUtils.isNotBlank(vo.getB01Id())) {
+                    BeanUtils.copyProperties(vo, entity);
+                    entity.setbCxbm("001");
+                    b01Service.save(entity);
+                    map.put("code", 1);
+                    return map;
                 }
+                String currentId = "";
+                currentId = b01Service.saveB01(vo);
+                map.put("currentId", currentId);
+            }
             map.put("code", 1);
         } catch (Exception e) {
             logger.error(e, e);
@@ -153,14 +161,15 @@ public class B01Controller extends BaseController {
         return map;
     }
 
-    @RequestMapping(value = "/manage")
-    public ModelAndView mangePage(String bSjlx, String b01Id,String currentId,String isAdd) {
+    @RequestMapping(value = "/ajax/manage")
+    public ModelAndView mangePage(String bSjlx, String b01Id, String currentId, String isAdd, String isAddOne) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             map.put("bSjlx", bSjlx);
             map.put("b01Id", b01Id);
             map.put("currentId", currentId);
-            map.put("isAdd",isAdd);
+            map.put("isAdd", isAdd);
+            map.put("isAddOne", isAddOne);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);
@@ -170,26 +179,30 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/jbxx")
-    public ModelAndView jbxx(String b01Id,String b0101,String bSjlx,String currentId,String isAdd) {
+    public ModelAndView jbxx(String b01Id, String b0101, String bSjlx, String currentId, String isAdd, String isAddOne) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             B01Vo vo = new B01Vo();
             vo.setbSjlx(bSjlx);
             vo.setB01Id(b01Id);
-            if(StringUtils.isNotBlank(currentId)){
+            if (StringUtils.isNotBlank(currentId)) {
                 B01 entity = b01Service.getByPK(currentId);
-                BeanUtils.copyProperties(entity,vo);
+                BeanUtils.copyProperties(entity, vo);
                 vo.setParentId(entity.getParentB01().getB0100());
                 vo.setParentName(entity.getParentB01().getB0101());
-            }else{
+            } else {
                 vo.setParentId(b01Id);
-                vo.setParentName( b01Service.getByPK(b01Id).getB0101());
+                if (StringUtils.isNotBlank(b01Id))
+                    vo.setParentName(b01Service.getByPK(b01Id).getB0101());
             }
-            map.put("vo",vo);
-            Integer sort = b01Service.getMaxSort(b01Id);
-
-            map.put("isAdd",isAdd);
-            map.put("sort",sort);
+            map.put("vo", vo);
+            Integer sort = 1;
+            //第一个节点
+            if (StringUtils.isNotBlank(b01Id))
+                sort = b01Service.getMaxSort(b01Id);
+            map.put("isAdd", isAdd);
+            map.put("isAddOne", isAddOne);
+            map.put("sort", sort);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e, e);
@@ -197,16 +210,50 @@ public class B01Controller extends BaseController {
         }
         return new ModelAndView("saas/zzb/jggl/b01/jbxx", map);
     }
+
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public Map<String,Object> delete(String id){
+    public Map<String, Object> delete(String id) {
         Map<String, Object> map = Maps.newHashMap();
-        try{
+        try {
             b01Service.deleteByPK(id);
             map.put("success", true);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e);
-            map.put("message","删除失败");
+            map.put("message", "删除失败");
+            map.put("success", false);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/updatePx")
+    @ResponseBody
+    public Map<String, Object> updatePx(String parentId, String b0100) {
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+            if (StringUtils.isNotBlank(b0100)) {
+                CommonConditionQuery query = new CommonConditionQuery();
+                B01 b01 = this.b01Service.getByPK(b0100);
+                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
+                List<B01> resultList = b01Service.list(query, null);
+                for (B01 b : resultList) {
+                    if (parentId.equals(b.getB0100())) {
+                        map.put("checkValue",false);
+                        map.put("oldParentId",b01.getParentB01().getB0100());
+                        map.put("oldParentName",b01.getParentB01().getB0101());
+                        map.put("success", true);
+                        map.put("message", "不能选择本身及其以下节点");
+                        return map;
+                    }
+                }
+            }
+            Integer sort = b01Service.getMaxSort(parentId);
+            map.put("checkValue",true);
+            map.put("px", sort);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            map.put("message", "加载失败");
             map.put("success", false);
         }
         return map;

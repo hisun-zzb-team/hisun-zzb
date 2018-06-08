@@ -30,7 +30,7 @@
 			<div class="portlet box grey mainleft">
 				<div class="portlet-body leftbody">
 					<input type="hidden" id="b01Id"  name="b01Id" value="" />
-					<input type="hidden" id="b0101"  name="b0101" value="" />
+					<input type="hidden"  name="b0101" value="" />
 					<input type="hidden" id="parentB01Id"  name="parentB01Id" value="" />
 					<input type="hidden" id="cuaNodeId" name="cuaNodeId" value=""/>
 					<%--<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
@@ -87,6 +87,28 @@
 		App.init();//必须，不然导航栏及其菜单无法折叠
 		var zTree = $.fn.zTree.getZTreeObj("leftB01Tree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
+		if(node=="" || node ==null ||node==undefined){
+            $.ajax({
+                url: "${path}/zzb/jggl/b01/ajax/manage",
+                type : "get",
+                dataType : "html",
+                headers: {
+                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                data:{
+                    "isAdd":"add",
+                    "bSjlx":"2"
+                },
+                success : function(html){
+                    $("#rightList").html(html);
+                },
+                error : function(){
+
+                }
+            });
+		}
+
+
 		var b01Id ;
 		var parentB01Id ;
 		var b0101 ;

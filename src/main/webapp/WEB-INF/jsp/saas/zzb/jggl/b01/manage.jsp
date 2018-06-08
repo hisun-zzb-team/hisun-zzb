@@ -22,11 +22,11 @@
 
         <i class="icon-reorder"></i>
 
-        <span class="hidden-480">添加机构</span>
+        <span class="hidden-480"><c:if test="${isAdd=='add'}">添加</c:if><c:if test="${isAdd!='add'}">修改</c:if>机构</span>
 
     </div>
     <div class="clearfix fr">
-        <button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 保存 </button>
+        <button type="button" class="btn green" onclick="formSave()"><i class="icon-ok"></i> 保存 </button>
         <a class="btn"  onclick="cancel()"><i class="icon-remove-sign"></i> 取消</a>
     </div>
 </div>
@@ -35,10 +35,10 @@
 <div class="tabbable tabbable-custom" style="margin-bottom: 0px">
     <ul class="nav nav-tabs" style="font-size: 14px;font-weight: bold;" id="tabs">
         <li class="active"><a id="#tab_1_1" href="#tab_1_1" data-toggle="tab">基本信息</a></li>
-        <li ><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">编制情况</a></li>
-        <li><a id="#tab_1_3" href="#tab_1_1" data-toggle="tab">职务管理</a></li>
-        <li style='<c:if test="${bSjlx !=0}"> display: none</c:if>'> <a id="#tab_1_4" href="#tab_1_1" data-toggle="tab">换届信息</a></li>
-        <li style='<c:if test="${bSjlx !=0}"> display: none</c:if>'><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
+        <li style='<c:if test="${bSjlx ==2}"> display: none</c:if>'><a id="#tab_1_2" href="#tab_1_1" data-toggle="tab">编制情况</a></li>
+        <li style='<c:if test="${bSjlx ==2}"> display: none</c:if>'><a id="#tab_1_3" href="#tab_1_1" data-toggle="tab">职务管理</a></li>
+        <li style='<c:if test="${bSjlx ==2 ||bSjlx ==1}"> display: none</c:if>'> <a id="#tab_1_4" href="#tab_1_1" data-toggle="tab">换届信息</a></li>
+        <li style='<c:if test="${bSjlx ==2 ||bSjlx ==1}"> display: none</c:if>'><a id="#tab_1_5" href="#tab_1_1" data-toggle="tab">通信信息</a></li>
     </ul>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
         <input type="hidden" id="currentId" name="currentId" value="${currentId}">
@@ -73,6 +73,26 @@
                 }
                 b02tabSave(e);
             }
+            else if($(e.target).attr('id')!='#tab_1_4'&& tabIndex=="#tab_1_4"){
+                var myVld = new EstValidate("b10Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if(!bool){
+                    myLoading.hide();
+                    return false;
+                }
+                b10tabSave(e);
+            }
+            else if($(e.target).attr('id')!='#tab_1_5'&& tabIndex=="#tab_1_5"){
+                var myVld = new EstValidate("b04Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if(!bool){
+                    myLoading.hide();
+                    return false;
+                }
+                b04tabSave(e);
+            }
             else{
                 if($(e.target).attr('id')=="#tab_1_1") {
                     baseLoad();
@@ -90,7 +110,6 @@
         });
     });
     function b02tabSave(e) {
-        debugger
         var currentId = $("#currentId").val();
         $.ajax({
             url : "${path }/zzb/jggl/b02/updateOrSave?currentId="+currentId,
@@ -133,7 +152,92 @@
             }
         });
     }
-
+    function b04tabSave(e) {
+        var currentId = $("#currentId").val();
+        $.ajax({
+            url : "${path }/zzb/jggl/b04/updateOrSave?currentId="+currentId,
+            type : "post",
+            data : $("#b04Form").serialize(),
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "json",
+            success : function(json){
+                if(json.code==1){
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    if($(e.target).attr('id')=="#tab_1_1"){
+                        $("[id='#tab_1_1']").tab('show');
+                        baseLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_2"){
+                        $("[id='#tab_1_2']").tab('show');
+                        bzqkLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_3"){
+                        $("[id='#tab_1_3']").tab('show');
+                        zwglLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_4"){
+                        $("[id='#tab_1_4']").tab('show');
+                        hjxxLoad();
+                    }
+                }else{
+                    $("[id='#tab_1_5']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error : function(){
+                $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示","出错了,请检查网络!",2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+    function b10tabSave(e) {
+        var currentId = $("#currentId").val();
+        $.ajax({
+            url : "${path }/zzb/jggl/b10/updateOrSave?currentId="+currentId,
+            type : "post",
+            data : $("#b10Form").serialize(),
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "json",
+            success : function(json){
+                if(json.code==1){
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    if($(e.target).attr('id')=="#tab_1_1"){
+                        $("[id='#tab_1_1']").tab('show');
+                        baseLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_2"){
+                        $("[id='#tab_1_2']").tab('show');
+                        bzqkLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_3"){
+                        $("[id='#tab_1_3']").tab('show');
+                        zwglLoad();
+                    }else if($(e.target).attr('id')=="#tab_1_5"){
+                        $("[id='#tab_1_5']").tab('show');
+                        txxxLoad();
+                    }
+                }else{
+                    $("[id='#tab_1_4']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error : function(){
+                $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示","出错了,请检查网络!",2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
     function tabSaveData(e){
         $.ajax({
             url : "${path }/zzb/jggl/b01/updateOrSave",
@@ -243,10 +347,11 @@
         });
     }
     function hjxxLoad(){
+        var currentId = $("#currentId").val();
         $.ajax({
-            url : "${path }/zzb/dzda/a52/ajax/list",
+            url : "${path }/zzb/jggl/b10/ajax/hjxx",
             type : "post",
-            data : {"b01Id":"${b01Id}"},
+            data : {"b01Id":"${b01Id}","currentId":currentId},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -262,10 +367,11 @@
     }
 
     function txxxLoad(){
+        var currentId = $("#currentId").val();
         $.ajax({
-            url : "${path }/zzb/dzda/a32/ajax/list",
+            url : "${path }/zzb/jggl/b04/ajax/txxx",
             type : "post",
-            data : {"b01Id":"${b01Id}"},
+            data : {"b01Id":"${b01Id}","currentId":currentId},
             dataType : "html",
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -282,121 +388,103 @@
 
 
     function formSave(sjzt){
-        var bool = true;
-        var isSave = false;
-        if($("#tabs li[class='active']").find("a").attr("id")=="#tab_1_1"){
-            isSave = true;
-            bool = a38Form.form();
-        }
-        if(isSave == true){
-            if(bool){
-                $("#sjzt").val(sjzt);
-                var value=$("#smxh").val();
-                if(value!=""){
-                    localPost("${path}/zzb/dzda/a38/smxh/check",{
-                        "smxh":$("#smxh").val(),
-                        "id":$("#id").val()
-                    },function(data) {
-                        if (!data.success) {
-                            showTip("提示", "扫描序号“"+value+"”已经存在，请重新输入！");
-                            setTimeout(function(){
-                                $("#smxh").focus();
-                            },510);
-                        }else{
-                            saveA38(sjzt);
-                        }
-                    },"json", {"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"});
-                }else {
-                    saveA38(sjzt);
-                }
-            }
-        }else{
-            myLoading.show();
-            $.ajax({
-                url : "${path }/zzb/dzda/a38/update/Sjzt",
-                type : "post",
-                data : {
-                    "a38Ids":"${id}",
-                    "sjzt":sjzt
-                },
-                headers:{
-                    OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-                },
-                dataType : "json",
-                success : function(json){
-                    if(json.code==1){
-                        myLoading.hide();
-                        if(sjzt=="0"){
-                            window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
-                        }else{
-                            window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
-                        }
-                    }else{
-                        myLoading.hide();
-                        showTip("提示", json.message, 2000);
-                        return false;
-                    }
-                },
-                error : function(){
-                    showTip("提示","出错了,请检查网络!",2000);
-                    myLoading.hide();
-                    return false;
-                }
-            });
-        }
+       if(tabIndex=="#tab_1_1"){
+           $.ajax({
+               url : "${path }/zzb/jggl/b01/updateOrSave",
+               type : "post",
+               data : $("#b01Form").serialize(),
+               headers:{
+                   OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType : "json",
+               success : function(json){
+                   showTip("提示","保存成功",1500)
+                   setTimeout(function(){cancel()},1500);
+               },
+               error : function(){
+               }
+           });
+       }else if(tabIndex=="#tab_1_2"){
+           var currentId = $("#currentId").val();
+           $.ajax({
+               url : "${path }/zzb/jggl/b02/updateOrSave?currentId="+currentId,
+               type : "post",
+               data : $("#b02Form").serialize(),
+               headers:{
+                   OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType : "json",
+               success : function(json){
+                   if(json.code==1) {
+                       showTip("提示","保存成功",1500)
+                       setTimeout(function(){cancel()},1500);
+                   }
+               },
+               error : function(){
+               }
+           });
+       }else if(tabIndex=="#tab_1_4"){
+           var currentId = $("#currentId").val();
+           $.ajax({
+               url : "${path }/zzb/jggl/b10/updateOrSave?currentId="+currentId,
+               type : "post",
+               data : $("#b10Form").serialize(),
+               headers:{
+                   OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType : "json",
+               success : function(json){
+                   if(json.code==1) {
+                       showTip("提示","保存成功",1500)
+                       setTimeout(function(){cancel()},1500);
+                   }
+               },
+               error : function(){
+               }
+           });
+       }else if(tabIndex=="#tab_1_5"){
+           var currentId = $("#currentId").val();
+           $.ajax({
+               url : "${path }/zzb/jggl/b04/updateOrSave?currentId="+currentId,
+               type : "post",
+               data : $("#b04Form").serialize(),
+               headers:{
+                   OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType : "json",
+               success : function(json){
+                   if(json.code==1) {
+                       showTip("提示","保存成功",1500)
+                       setTimeout(function(){cancel()},1500);
+                   }
+               },
+               error : function(){
+               }
+           });
+       }
     }
-
-    function saveA38(sjzt){
-        myLoading.show();
-        $.ajax({
-            url : "${path }/zzb/dzda/a38/update",
-            type : "post",
-            data : $("#a38Form").serialize(),
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "json",
-            success : function(json){
-                if(json.code==1){
-                    myLoading.hide();
-                    if(sjzt=="0"){
-                        window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
-                    }else{
-                        window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
-                    }
-                }else{
-                    myLoading.hide();
-                    showTip("提示", json.message, 2000);
-                    return false;
-                }
-            },
-            error : function(){
-                showTip("提示","出错了,请检查网络!",2000);
-                myLoading.hide();
-                return false;
-            }
-        });
-    }
-
-    var delA38ByManage = function(){
-        var id = "${id}";
-        var itemName = "${a0101}";
-        actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){
-            if (data.code == "1") {
-                showTip("提示","删除成功", 2000);
-                if("${listType}"=="shList"){
-                    setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/shList?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
-                }else{
-                    setTimeout(function(){window.location.href = "${path}/zzb/dzda/a38/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},2000);
-                }
-            }else{
-                showTip("提示", data.message, 2000);
-            }
-        });
-    };
 
     function cancel(){
-        window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+
+        $.ajax({
+            url: "${path}/zzb/jggl/b01/ajax/list",
+            type : "get",
+            dataType : "html",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data:{
+                "b01Id":"${b01Id}"
+            },
+            success : function(html){
+              refreshTreeTagByDt("leftB01Tree","${b01Id}");
+                $("#rightList").html(html);
+            },
+            error : function(){
+
+            }
+        });
+       // window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
     }
 </script>
 </body>

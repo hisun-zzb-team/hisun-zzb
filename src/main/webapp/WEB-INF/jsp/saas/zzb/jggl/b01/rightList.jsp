@@ -159,13 +159,52 @@
     }
 
     function edit(id) {
-        window.location.href = "${path}/zzb/jggl/b01/manage?b01Id=${b01Id}&b0101=${b0101}&currentId="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        $.ajax({
+            url: "${path}/zzb/jggl/b01/ajax/manage",
+            type : "get",
+            dataType : "html",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data:{
+                "b01Id":"${b01Id}",
+                "b0101":"${b0101}",
+                "currentId":id
+            },
+            success : function(html){
+                $("#rightList").html(html);
+            },
+            error : function(){
+
+            }
+        });
+        //window.location.href = "${path}/zzb/jggl/b01/manage?b01Id=${b01Id}&b0101=${b0101}&currentId="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
     $(function () {
     })
 
     function add(bSjlx) {
-        window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx="+bSjlx+"&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+        $.ajax({
+            url: "${path}/zzb/jggl/b01/ajax/manage",
+            type : "get",
+            dataType : "html",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data:{
+                "b01Id":"${b01Id}",
+                "b0101":"${b0101}",
+                "isAdd":"add",
+                "bSjlx":bSjlx
+            },
+            success : function(html){
+                $("#rightList").html(html);
+            },
+            error : function(){
+
+            }
+        });
+      //  window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx="+bSjlx+"&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
 
@@ -219,6 +258,7 @@
             if(json.success == true){
                 myLoading.hide();
                 showTip("提示","删除成功", 1500);
+                setTimeout(function(){window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"},1500);
             }else{
                 myLoading.hide();
                 showTip("提示", json.message, 2000);

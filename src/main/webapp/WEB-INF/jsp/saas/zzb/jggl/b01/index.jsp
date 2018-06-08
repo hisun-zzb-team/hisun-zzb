@@ -97,7 +97,8 @@
                 },
                 data:{
                     "isAdd":"add",
-                    "bSjlx":"2"
+                    "bSjlx":"2",
+					"isAddOne":"addOne"
                 },
                 success : function(html){
                     $("#rightList").html(html);

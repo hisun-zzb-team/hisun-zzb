@@ -165,6 +165,10 @@ public class B01Controller extends BaseController {
     public ModelAndView mangePage(String bSjlx, String b01Id, String currentId, String isAdd, String isAddOne) {
         Map<String, Object> map = Maps.newHashMap();
         try {
+            if(StringUtils.isNotBlank(currentId)){
+                B01 b01 = b01Service.getByPK(currentId);
+                bSjlx = b01.getbSjlx();
+            }
             map.put("bSjlx", bSjlx);
             map.put("b01Id", b01Id);
             map.put("currentId", currentId);

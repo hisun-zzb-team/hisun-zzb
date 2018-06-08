@@ -431,7 +431,7 @@
                                     </div>
                                 </div>
                                 <div class="row-fluid">
-                                    <c:if test="${isAddOne == 'addOne'}">
+                                    <c:if test="${isAddOne != 'addOne'}">
                                     <div class="span6 ">
                                         <div id="parentNameGroup" class="control-group">
                                             <label class="control-label"><span class="Required">*</span>所属机构</label>
@@ -484,7 +484,11 @@
             success : function(json){
                 if(json.success){
                     if(!json.checkValue){
-                        refreshTreeTagByDt("parentId_tree",json.oldParentId)
+                        //refreshTreeTagByDt("parentId_tree",json.oldParentId)
+                        var zTree1 = $.fn.zTree.getZTreeObj("parentId_tree");
+                        var node = zTree1.getNodeByParam('id',json.oldParentId);// 获取id为-1的点
+                        zTree1.selectNode(node);
+                        zTree1.expandNode(node, true, false , true);
                         $("#parentId").val(json.oldParentId);
                         $("#parentName").val(json.oldParentName);
                         showTip("提示",json.message,1500);

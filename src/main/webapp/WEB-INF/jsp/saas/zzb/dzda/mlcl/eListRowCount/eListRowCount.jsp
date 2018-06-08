@@ -13,7 +13,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>档案阅档申请</title>
+    <title>设置类间空行数</title>
     <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css" />
     <script src="${path}/js/bootstrap-fileupload.js"  type="text/javascript"></script>
 </head>

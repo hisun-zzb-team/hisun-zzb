@@ -6,25 +6,30 @@
 
 package com.hisun.saas.zzb.b.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author Marco {854476391@qq.com}
  */
 @Entity
 @Table(name = "b_b09_bh_jr_info")
-public class BB09BhJrInfo {
+public class BB09BhJrInfo implements Serializable {
     private String id;
-    private String b0900;
-    private String b0100;
-    private int sfbdwzw;
-    private String glB0900;
-    private String b0901A;
-    private Integer lx;
-    private Integer zs;
+    private B09 b09;//当前职务
+    private B01 b01;//当前机构
+    private int sfbdwzw;//是否本单位职务 1：是 0：否
+    private String b0901A;//关联的职务名称
+    private String glB0900;//关联的职务id
+    private Integer lx;//类型 1：兼任 2：包含
+    private Integer zs;//职数
 
     @Id
-    @Column(name = "id", nullable = false, length = 32)
+    @GenericGenerator(name = "generator", strategy = "uuid")
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id", nullable = false, unique = true, length = 32)
     public String getId() {
         return id;
     }
@@ -33,24 +38,24 @@ public class BB09BhJrInfo {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "b0900", nullable = false, length = 32)
-    public String getB0900() {
-        return b0900;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "b0900")
+    public B09 getB09() {
+        return b09;
     }
 
-    public void setB0900(String b0900) {
-        this.b0900 = b0900;
+    public void setB09(B09 b09) {
+        this.b09 = b09;
     }
 
-    @Basic
-    @Column(name = "b0100", nullable = false, length = 32)
-    public String getB0100() {
-        return b0100;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "b0100")
+    public B01 getB01() {
+        return b01;
     }
 
-    public void setB0100(String b0100) {
-        this.b0100 = b0100;
+    public void setB01(B01 b01) {
+        this.b01 = b01;
     }
 
     @Basic
@@ -112,8 +117,8 @@ public class BB09BhJrInfo {
 
         if (sfbdwzw != that.sfbdwzw) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (b0900 != null ? !b0900.equals(that.b0900) : that.b0900 != null) return false;
-        if (b0100 != null ? !b0100.equals(that.b0100) : that.b0100 != null) return false;
+        if (b09 != null ? !b09.equals(that.b09) : that.b09 != null) return false;
+        if (b01 != null ? !b01.equals(that.b01) : that.b01 != null) return false;
         if (glB0900 != null ? !glB0900.equals(that.glB0900) : that.glB0900 != null) return false;
         if (b0901A != null ? !b0901A.equals(that.b0901A) : that.b0901A != null) return false;
         if (lx != null ? !lx.equals(that.lx) : that.lx != null) return false;
@@ -125,8 +130,8 @@ public class BB09BhJrInfo {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (b0900 != null ? b0900.hashCode() : 0);
-        result = 31 * result + (b0100 != null ? b0100.hashCode() : 0);
+        result = 31 * result + (b09 != null ? b09.hashCode() : 0);
+        result = 31 * result + (b01 != null ? b01.hashCode() : 0);
         result = 31 * result + sfbdwzw;
         result = 31 * result + (glB0900 != null ? glB0900.hashCode() : 0);
         result = 31 * result + (b0901A != null ? b0901A.hashCode() : 0);

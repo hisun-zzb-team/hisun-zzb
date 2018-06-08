@@ -44,10 +44,10 @@ public class B01Api {
      * @throws GenericException
      */
     @RequestMapping(value="/dtjz/tree")
-    public void loadTree(HttpServletRequest request,HttpServletResponse response, String id, String param, String defaultkeys) {
+    public void loadTree(HttpServletRequest request,HttpServletResponse response, String id, String param, String defaultkeys,String bSjlx) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(id,param,defaultkeys);
+            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(id,param,defaultkeys,bSjlx);
             String json= JacksonUtil.nonDefaultMapper().toJson(nodes);
             response.getWriter().print(json);
 //            map.put("data", nodes);

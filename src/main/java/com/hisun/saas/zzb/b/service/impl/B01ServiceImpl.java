@@ -87,7 +87,7 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
         }
     }
     @Override
-    public List<B01TreeNode> getB01TreeVoList(String id,String param,String defaultkeys)throws Exception{
+    public List<B01TreeNode> getB01TreeVoList(String id,String param,String defaultkeys,String noLoadNsjg)throws Exception{
         CommonConditionQuery query = new CommonConditionQuery();
         if (id == null || id.equals("")) {
             if(param!=null && !param.equals("")){
@@ -99,6 +99,9 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
         } else {
             query.add(CommonRestrictions.and(" parentB01.b0100=:parentNodeId ", "parentNodeId", id));
             query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+        }
+        if(noLoadNsjg!=null && noLoadNsjg.equals("true")){
+            query.add(CommonRestrictions.and(" bSjlx<>:bSjlx ", "bSjlx", 1));
         }
        //加载默认值的节点及其父节点
         if(defaultkeys!=null && !defaultkeys.equals("")) {

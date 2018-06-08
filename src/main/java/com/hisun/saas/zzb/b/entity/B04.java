@@ -18,14 +18,14 @@ import java.io.Serializable;
 @Entity
 @Table(name = "b04")
 public class B04 extends TombstoneEntity implements Serializable {
-    private String b0400;
-    private String b0401;
-    private String b0404;
-    private String b0407;
-    private String b0411;
-    private String b0417;
-    private String b0421;
-    private B01 b01;
+    private String b0400;//通信信息集id
+    private String b0401;//单位邮政编码
+    private String b0404;//地址
+    private String b0407;//电话号码
+    private String b0411;//传真号码
+    private String b0417;//单位网址
+    private String b0421;//电子邮箱
+    private B01 b01;//所属单位id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "b0100")
     public B01 getB01() {

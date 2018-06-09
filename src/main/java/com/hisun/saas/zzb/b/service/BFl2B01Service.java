@@ -14,6 +14,7 @@ import com.hisun.saas.zzb.b.entity.BFl2B01;
  * @author liuzj {279421824@qq.com}
  */
 public interface BFl2B01Service extends BaseService<BFl2B01,String> {
-//    Integer getMaxSort();
-//    void updateBFl(BFl bFl, Integer oldSort, String parentId)  throws Exception;
+    Integer getMaxSort();
+    void delBFl2B01(BFl2B01 bFl2B01);
+    void updatePx(int oldPx,int newPx,String bFl00);
 }

@@ -40,7 +40,7 @@
                                    <%--onClick="" radioOrCheckbox="checkbox" submitType="post" dataType="json" isSearch="true" checkedByTitle="true" chkboxType="'Y': 's', 'N': 's'"/>--%>
 
                         <Tree:tree id="jgQuery" treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}" isSearch="true" checkedByTitle="true"
-                                   chkboxType="'Y': 's', 'N': 's'" onClick="onClickByTree" submitType="post" dataType="json" isSelectTree="false" dtjz="true" valueName="jgNameQuery"
+                                   chkboxType="'Y': 's', 'N': 's'" submitType="post" dataType="json" isSelectTree="false" dtjz="true" valueName="jgNameQuery"
                                    defaultkeys="${jgQuery}" radioOrCheckbox="checkbox" defaultvalues="${jgNameQuery}"/>
                         <%--<Tree:tree id="jgQuery" valueName="jgQuery"  selectClass="span8 m-wrap" height="30px" treeUrl="${path}/zzb/jggl/fl/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
                                    <%--submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${jgQuery}" defaultvalues="${jgQuery}"/>--%>

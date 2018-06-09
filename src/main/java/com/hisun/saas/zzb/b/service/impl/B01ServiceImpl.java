@@ -101,7 +101,7 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
             query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
         }
         if(noLoadNsjg!=null && noLoadNsjg.equals("true")){
-            query.add(CommonRestrictions.and(" bSjlx<>:bSjlx ", "bSjlx", 1));
+            query.add(CommonRestrictions.and(" bSjlx<>:bSjlx ", "bSjlx", "1"));
         }
        //加载默认值的节点及其父节点
         if(defaultkeys!=null && !defaultkeys.equals("")) {

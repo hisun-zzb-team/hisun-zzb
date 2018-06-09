@@ -19,4 +19,5 @@ import java.util.List;
 public interface BFlService extends BaseService<BFl,String> {
     Integer getMaxSort();
     void updateBFl(BFl bFl, Integer oldSort,String parentId)  throws Exception;
+    void updatePx(int oldPx,int newPx,String parentId);
 }

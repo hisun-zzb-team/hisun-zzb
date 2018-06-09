@@ -167,9 +167,9 @@ public class BFlController  extends BaseController {
             bFl.setParentBFl(this.bFlService.getByPK(bflId));
             EntityWrapper.wrapperSaveBaseProperties(bFl,userLoginDetails);
             int newSort = bFl.getPx();
-//            if(newSort<sort){
-//                bFlService.updateSortBeforSave(bFl,sort);
-//            }
+            if(newSort<sort){
+                bFlService.updatePx(sort,newSort,bFl.getParentBFl().getId());
+            }
             bFlService.save(bFl);
             map.put("success", true);
         } catch (Exception e) {
@@ -347,21 +347,29 @@ public class BFlController  extends BaseController {
                     query.add(CommonRestrictions.and(" b01.b0100 = :b01Id ", "b01Id", id));
                     List<BFl2B01> bFl2B01ListDel = this.bFl2B01Service.list(query,orderBy);
                     if(bFl2B01ListDel.size()>0){
-                        this.bFl2B01Service.deleteList(bFl2B01ListDel);
+                        for(BFl2B01 bFl2B01 :bFl2B01ListDel){
+                            this.bFl2B01Service.delBFl2B01(bFl2B01);
+                        }
                     }
                 }
             }
 
             if(addIds.length>0){
+                int sort = this.bFl2B01Service.getMaxSort();
                 for(String id:addIds){
                     if(StringUtils.isEmpty(id)){
                         break;
                     }
                     B01 b01 = this.b01Service.getByPK(id);
+                    if("2".equals(b01.getbSjlx())){
+                        continue;
+                    }
                     BFl2B01 bFl2B01 = new BFl2B01();
                     bFl2B01.setB01(b01);
                     bFl2B01.setBfl(bFl);
+                    bFl2B01.setPx(sort);
                     this.bFl2B01Service.save(bFl2B01);
+                    sort++;
                 }
             }
 
@@ -386,6 +394,9 @@ public class BFlController  extends BaseController {
                 return null;
             }
             BFl2B01 bFl2B01 = this.bFl2B01Service.getByPK(id);
+            int oldPx = bFl2B01.getPx();
+            int newPx = this.bFl2B01Service.getMaxSort();
+            this.bFl2B01Service.updatePx(oldPx,newPx,bFl2B01.getBfl().getId());
             this.bFl2B01Service.delete(bFl2B01);
             map.put("success", true);
         } catch (Exception e) {
@@ -404,7 +415,7 @@ public class BFlController  extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
             orderBy.add(CommonOrder.asc("px"));
             List<BFl> bFlList = this.bFlService.list(query,orderBy);
-            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(null,null,null,null);
+            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(null,null,null,"true");
             List<TreeNode> treeNodes = new ArrayList<TreeNode>();
             TreeNode treeNode = new TreeNode();
             String Pid = "";

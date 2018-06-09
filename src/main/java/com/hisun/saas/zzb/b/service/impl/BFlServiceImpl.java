@@ -54,6 +54,7 @@ public class BFlServiceImpl extends BaseServiceImpl<BFl,String> implements BFlSe
      *        如果小于，就一个个比较，当比较到大于它的就把后面大于它的全部+1；）
      * @param
      */
+    @Override
     public void updatePx(int oldPx,int newPx,String parentId){
         String sql = "UPDATE b_fl f SET ";
         if(newPx > oldPx) {
@@ -92,35 +93,4 @@ public class BFlServiceImpl extends BaseServiceImpl<BFl,String> implements BFlSe
             return maxSort;
         }
     }
-//    @Override
-//    public List<B01TreeNode> getB01TreeVoList()throws Exception{
-//        CommonConditionQuery query = new CommonConditionQuery();
-//        CommonOrderBy orderBy = new CommonOrderBy();
-//
-//        orderBy.add(CommonOrder.asc("bCxbm"));
-////        orderBy.add(CommonOrder.asc("parentB01.id"));
-////        orderBy.add(CommonOrder.asc("px"));
-//        List<B01> appBsetB01s = this.b01Dao.list(query, orderBy);
-//        List<B01TreeNode> b01TreeVoList = Lists.newArrayList();
-//        if(appBsetB01s != null) {
-//            for (B01 b01 : appBsetB01s) {
-//                B01TreeNode b01TreeNode = new B01TreeNode();
-//                b01TreeNode.setId(b01.getB0100());
-//                if(b01.getParentB01()!= null) {
-//                    b01TreeNode.setpId(b01.getParentB01().getB0100());
-//                    b01TreeNode.setName(b01.getB0101());
-//                    b01TreeNode.setbSjlx(b01.getbSjlx());
-//                    b01TreeNode.setKey(b01.getB0100());
-//                }else{
-//                    b01TreeNode.setpId("");
-//                    b01TreeNode.setName(b01.getB0101());
-//                    b01TreeNode.setbSjlx(b01.getbSjlx());
-//                    b01TreeNode.setOpen(true);
-//                    b01TreeNode.setKey(b01.getB0100());
-//                }
-//                b01TreeVoList.add(b01TreeNode);
-//            }
-//        }
-//        return b01TreeVoList;
-//    }
 }

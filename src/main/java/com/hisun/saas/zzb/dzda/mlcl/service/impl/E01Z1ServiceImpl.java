@@ -419,13 +419,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                         //拼接日期
                         String e01Z117 = "";
                         if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
-                            e01Z117 = e01Z1Vo.getYear();
-                            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
-                                e01Z117 += e01Z1Vo.getMonth();
-                                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
-                                    e01Z117 += e01Z1Vo.getDay();
-                                }
-                            }
+                            e01Z117 = getDate(e01Z1Vo);
                             if(DaUtils.isNotDate(e01Z117)){
                                 wrongExcelColumn = new WrongExcelColumn();
                                 wrongExcelColumn.setLines("C/D/E"+e01Z1Vo.getRow());
@@ -522,16 +516,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                         if(flag1){
 
                             //拼接日期
-                            String e01Z117 = "";
-                            if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
-                                e01Z117 = e01Z1Vo.getYear();
-                                if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
-                                    e01Z117 += e01Z1Vo.getMonth();
-                                    if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
-                                        e01Z117 += e01Z1Vo.getDay();
-                                    }
-                                }
-                            }
+                            String e01Z117 = getDate(e01Z1Vo);
                             e01Z1Vo.setE01Z117(e01Z117);
 
                             int sort = getMaxSort(a38Id, eCatalogTypeInfo.getCatalogCode());
@@ -556,6 +541,30 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
             }
         }
     }
+
+    public static String getDate(E01Z1Vo e01Z1Vo){
+        String e01Z117 = "";
+        if(StringUtils.isNotEmpty(e01Z1Vo.getYear())){
+            e01Z117 = e01Z1Vo.getYear();
+            if(StringUtils.isNotEmpty(e01Z1Vo.getMonth())){
+                if(e01Z1Vo.getMonth().length()==1&&Integer.parseInt(e01Z1Vo.getMonth())>0){
+                    e01Z117 += "0"+e01Z1Vo.getMonth();
+                }else {
+                    e01Z117 += e01Z1Vo.getMonth();
+                }
+                if(StringUtils.isNotEmpty(e01Z1Vo.getDay())){
+                    if(e01Z1Vo.getDay().length()==1&&Integer.parseInt(e01Z1Vo.getDay())>0){
+                        e01Z117 += "0"+e01Z1Vo.getDay();
+                    }else {
+                        e01Z117 += e01Z1Vo.getDay();
+                    }
+                }
+            }
+        }
+        return e01Z117;
+    }
+
+
     public int saveFromGzslws(DataSource dataSource)throws Exception{
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         //处理了多少条

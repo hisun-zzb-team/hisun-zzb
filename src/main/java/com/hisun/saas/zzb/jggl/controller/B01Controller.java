@@ -19,9 +19,16 @@ import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
 import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.b.entity.B01;
 import com.hisun.saas.zzb.b.service.B01Service;
+import com.hisun.saas.zzb.b.vo.B01QueryModel;
 import com.hisun.saas.zzb.b.vo.B01Vo;
+import com.hisun.saas.zzb.jggl.Constants;
+import com.hisun.saas.zzb.jggl.exchange.JgglExcelExchange;
 import com.hisun.util.StringUtils;
+import com.hisun.util.URLEncoderUtil;
+import com.hisun.util.UUIDUtil;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +37,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +49,7 @@ import java.util.Map;
 
 /**
  * @author Rocky {rockwithyou@126.com}
+ * @author Marco
  */
 @Controller
 @RequestMapping("/zzb/jggl/b01")
@@ -45,6 +57,11 @@ public class B01Controller extends BaseController {
     @Resource
     private B01Service b01Service;
 
+    @Value("${sys.upload.absolute.path}")
+    private String uploadBasePath;
+
+    @Resource
+    private JgglExcelExchange jgglExcelExchange;
     @RequestMapping(value = "/index")
     public
     @ResponseBody
@@ -54,16 +71,10 @@ public class B01Controller extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/list")
-    public ModelAndView getList(String parentB01Id, String b01Id, String b0101,
+    public ModelAndView getList(String b01Id, String b0101,
                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                                @RequestParam(value = "b0101Query", required = false) String b0101Query,
-                                @RequestParam(value = "parentIdQuery", required = false) String parentIdQuery,
-                                @RequestParam(value = "parentNameQuery", required = false) String parentNameQuery,
-                                @RequestParam(value = "b0127Query", required = false) String b0127Query,
-                                @RequestParam(value = "b0127AQuery", required = false) String b0127AQuery,
-                                @RequestParam(value = "bGllbBQuery", required = false) String bGllbBQuery,
-                                @RequestParam(value = "bGllbAQuery", required = false) String bGllbAQuery
+                                B01QueryModel queryModel
     ) {
         Map<String, Object> map = Maps.newHashMap();
         try {
@@ -72,27 +83,7 @@ public class B01Controller extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
             Long total = 0L;
             B01 b01 = new B01();
-            if (StringUtils.isBlank(b0101Query) && StringUtils.isBlank(parentIdQuery) && StringUtils.isBlank(b0127Query) &&
-                    StringUtils.isBlank(bGllbBQuery)) {
-                b01 = this.b01Service.getByPK(b01Id);
-                b0101 = b01.getB0101();
-                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
-
-            } else {
-                if (StringUtils.isNotBlank(b0101Query)) {
-                    query.add(CommonRestrictions.and(" b0101 like :b0101 ", "b0101", "%" + b0101Query + "%"));
-                }
-                if (StringUtils.isNotBlank(parentIdQuery)) {
-                    b01 = this.b01Service.getByPK(parentIdQuery);
-                    query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
-                }
-                if (StringUtils.isNotBlank(b0127Query)) {
-                    query.add(CommonRestrictions.and(" b0127 = :b0127 ", "b0127", b0127Query));
-                }
-                if (StringUtils.isNotBlank(bGllbBQuery)) {
-                    query.add(CommonRestrictions.and(" bGllbB = :bGllbB ", "bGllbB", bGllbBQuery));
-                }
-            }
+            b0101 = buildParam(b01Id, b0101, queryModel, query);
             total = b01Service.count(query);
             orderBy.add(CommonOrder.asc("bCxbm"));
             resultList = b01Service.list(query, orderBy, pageNum, pageSize);
@@ -104,16 +95,9 @@ public class B01Controller extends BaseController {
                 b01Vos.add(vo);
             }
             PagerVo<B01Vo> pager = new PagerVo<B01Vo>(b01Vos, total.intValue(), pageNum, pageSize);
-            map.put("b0101Query", b0101Query);
-            map.put("parentIdQuery", parentIdQuery);
-            map.put("parentNameQuery", parentNameQuery);
-            map.put("b0127Query", b0127Query);
-            map.put("b0127AQuery", b0127AQuery);
-            map.put("bGllbBQuery", bGllbBQuery);
-            map.put("bGllbAQuery", bGllbAQuery);
+            map.put("queryModel",queryModel);
             map.put("pager", pager);
             map.put("b01Id", b01Id);
-            map.put("parentB01Id", parentB01Id);
             map.put("b0101", b0101);
             map.put("success", true);
         } catch (Exception e) {
@@ -122,6 +106,34 @@ public class B01Controller extends BaseController {
         }
         return new ModelAndView("saas/zzb/jggl/b01/rightList", map);
 
+    }
+
+    private String buildParam(String b01Id, String b0101, B01QueryModel queryModel, CommonConditionQuery query) {
+        B01 b01;
+        if (StringUtils.isBlank(queryModel.getB0101Query()) && StringUtils.isBlank(queryModel.getParentIdQuery()) && StringUtils.isBlank(queryModel.getB0127Query()) &&
+                StringUtils.isBlank(queryModel.getbGllbBQuery())) {
+            if(StringUtils.isNotBlank(b01Id)){
+                b01 = this.b01Service.getByPK(b01Id);
+                b0101 = b01.getB0101();
+                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
+            }
+
+        } else {
+            if (StringUtils.isNotBlank(queryModel.getB0101Query())) {
+                query.add(CommonRestrictions.and(" b0101 like :b0101 ", "b0101", "%" + queryModel.getB0101Query() + "%"));
+            }
+            if (StringUtils.isNotBlank(queryModel.getParentIdQuery())) {
+                b01 = this.b01Service.getByPK(queryModel.getParentIdQuery());
+                query.add(CommonRestrictions.and(" bCxbm like :bCxbm ", "bCxbm", b01.getbCxbm() + "%"));
+            }
+            if (StringUtils.isNotBlank(queryModel.getB0127Query())) {
+                query.add(CommonRestrictions.and(" b0127 = :b0127 ", "b0127", queryModel.getB0127Query()));
+            }
+            if (StringUtils.isNotBlank(queryModel.getbGllbBQuery())) {
+                query.add(CommonRestrictions.and(" bGllbB = :bGllbB ", "bGllbB", queryModel.getbGllbBQuery()));
+            }
+        }
+        return b0101;
     }
 
     @RequestMapping(value = "/updateOrSave")
@@ -145,7 +157,9 @@ public class B01Controller extends BaseController {
                 if (!StringUtils.isNotBlank(vo.getB01Id())) {
                     BeanUtils.copyProperties(vo, entity);
                     entity.setbCxbm("001");
-                    b01Service.save(entity);
+                    String b01Id = b01Service.save(entity);
+                    map.put("oneNodeId",b01Id);
+                    map.put("oneNodeName",vo.getB0101());
                     map.put("code", 1);
                     return map;
                 }
@@ -272,6 +286,65 @@ public class B01Controller extends BaseController {
             map.put("success", false);
         }
         return new ModelAndView("saas/zzb/jggl/b01/gjcx", map);
+    }
+
+    @RequestMapping(value = "/getB01List")
+    @ResponseBody
+    public Map<String, Object> getB01List() {
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+            boolean exist = false;
+            List<B01> list = b01Service.list();
+            if(list !=null && !list.isEmpty()){
+                exist = true;
+            }
+            map.put("exist",exist);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            map.put("message", "查询失败");
+            map.put("success", false);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/download")
+    public void download(HttpServletResponse res,String b01Id,B01QueryModel queryModel){
+        CommonConditionQuery query = new CommonConditionQuery();
+        List<B01> resultList = Lists.newArrayList();
+        CommonOrderBy orderBy = new CommonOrderBy();
+        String b0101="";
+        this.buildParam(b01Id,b0101,queryModel,query);
+        resultList = b01Service.list(query,null);
+        List<B01Vo> b01Vos = new ArrayList<B01Vo>();
+        B01Vo vo = new B01Vo();
+        for (B01 entity : resultList) {
+            vo = new B01Vo();
+            BeanUtils.copyProperties(entity, vo);
+            b01Vos.add(vo);
+        }
+        String filePath="";
+        try{
+            File storePathFile = new File(Constants.JBXX_STORE_PATH);
+            if(!storePathFile.exists()) storePathFile.mkdirs();
+            filePath = uploadBasePath+Constants.JBXX_STORE_PATH+ UUIDUtil.getUUID()+".xlsx";
+            jgglExcelExchange.toExcelByManyPojo(b01Vos, uploadBasePath+Constants.JBXXMB_STORE_PATH,filePath);
+            res.setContentType("multipart/form-data");
+            res.setHeader("Content-Disposition", "attachment;fileName="+ URLEncoderUtil.encode("机构管理信息表.xlsx"));
+            OutputStream output = res.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = fileInputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            output.close();
+            fileInputStream.close();
+            FileUtils.deleteQuietly(new File(filePath));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

@@ -32,7 +32,7 @@
 					<input type="hidden" id="b01Id"  name="b01Id" value="" />
 					<input type="hidden"  name="b0101" value="" />
 					<input type="hidden" id="parentB01Id"  name="parentB01Id" value="" />
-					<input type="hidden" id="cuaNodeId" name="cuaNodeId" value=""/>
+					<input type="hidden" id="cuaNodeId" name="cuaNodeId" value=""/><!--当前节点id-->
 					<%--<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
 							   <%--onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>--%>
 					<Tree:tree id="leftB01Tree"  treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
@@ -84,31 +84,52 @@
 	}
 
 	$(document).ready(function(){
+	    var isAddOne = false;
 		App.init();//必须，不然导航栏及其菜单无法折叠
+		//判断是否已添加顶级节点
+        $.ajax({
+            async:false,
+            url: "${path}/zzb/jggl/b01/getB01List",
+            type : "get",
+            dataType : "json",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data:{},
+            success : function(json){
+                if(!json.exist){
+                    isAddOne =true;
+                    $.ajax({
+                        async:false,
+                        url: "${path}/zzb/jggl/b01/ajax/manage",
+                        type : "get",
+                        dataType : "html",
+                        headers: {
+                            "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                        },
+                        data:{
+                            "isAdd":"add",
+                            "bSjlx":"2",
+                            "isAddOne":"addOne"
+                        },
+                        success : function(html){
+                            $("#rightList").html(html);
+                        },
+                        error : function(){
+
+                        }
+                    });
+                }
+            },
+            error : function(){
+
+            }
+        });
+        if(isAddOne){
+            return;
+        }
 		var zTree = $.fn.zTree.getZTreeObj("leftB01Tree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
-		if(node=="" || node ==null ||node==undefined){
-            $.ajax({
-                url: "${path}/zzb/jggl/b01/ajax/manage",
-                type : "get",
-                dataType : "html",
-                headers: {
-                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-                },
-                data:{
-                    "isAdd":"add",
-                    "bSjlx":"2",
-					"isAddOne":"addOne"
-                },
-                success : function(html){
-                    $("#rightList").html(html);
-                },
-                error : function(){
-
-                }
-            });
-		}
-
 
 		var b01Id ;
 		var parentB01Id ;

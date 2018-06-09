@@ -77,20 +77,20 @@
                             <div style=" float:left;margin-top:4px">机构名称：</div>
                             <div style=" float:left;">
                             <input type="text" class="span2 m-wrap" name="b0101Query" id="b0101Query"
-                                            value="${b0101Query}" style="width: 100px;"/>
+                                            value="${queryModel.b0101Query}" style="width: 100px;"/>
                             </div>
                             <div style=" float:left;margin-top:4px">所属机构：</div>
                             <div style="float:left;width: 160px;"><Tree:tree id="parentIdQuery" valueName="parentNameQuery" selectClass="span12 m-wrap"
                                            treeUrl="${path}/api/b01/dtjz/tree"
                                            token="${sessionScope.OWASP_CSRFTOKEN}" dtjz="true"
                                            submitType="get" dataType="json" isSearch="true"
-                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${parentIdQuery}"
-                                           defaultvalues="${parentNameQuery}"/>
+                                           checkedByTitle="true" isSelectTree="true" defaultkeys="${queryModel.parentIdQuery}"
+                                           defaultvalues="${queryModel.parentNameQuery}"/>
                             </div>
                             <div style=" float:left;margin-top:4px">机构级别：</div>
                             <div style="float:left;width: 120px;"><SelectTag:SelectTag id="b0127Query" needNullValue="true" valueName="b0127AQuery"
-                                                          defaultkeys="${b0127Query}" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                          defaultvalues="${b0127AQuery}"
+                                                          defaultkeys="${queryModel.b0127Query}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                          defaultvalues="${queryModel.b0127AQuery}"
                                                           textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                           selectUrl="${path}/api/dictionary/select?typeCode=ZB03-1994/DWJB"/>
                             </div>
@@ -105,8 +105,8 @@
                             <div style=" float:left;margin-top:4px">机构管理类别：</div>
                             <div style="float:left;width: 120px;">
                                 <SelectTag:SelectTag id="bGllbBQuery" needNullValue="true" valueName="bGllbAQuery"
-                                                            defaultkeys="${bGllbBQuery}" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                            defaultvalues="${bGllbAQuery}"
+                                                            defaultkeys="${queryModel.bGllbBQuery}" token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                            defaultvalues="${queryModelbGllbAQuery}"
                                                             textClass="span12 m-wrap" radioOrCheckbox="radio"
                                                             selectUrl="${path}/api/dictionary/select?typeCode=2018-JGGLLB"/>
                             </div>
@@ -305,7 +305,14 @@
         })
     };
     function download() {
+        var b01Id = "${b01Id}";
+        var b0101Query = $("#b0101Query").val();
+        var parentIdQuery = $("#parentIdQuery").val();
+        var b0127Query = $("#b0127Query").val();
+        var bGllbBQuery = $("#bGllbBQuery").val();
 
+        window.open("${path}/zzb/jggl/b01/download?b01Id="+b01Id+"&b0101Query="+b0101Query+"&parentIdQuery="+parentIdQuery+"&b0127Query="+b0127Query+
+            "&bGllbBQuery="+bGllbBQuery+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     }
     function clearData() {
         window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"

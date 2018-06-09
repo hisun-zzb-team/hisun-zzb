@@ -9,8 +9,11 @@ package com.hisun.saas.zzb.jggl;
 import java.io.File;
 
 /**
- * @author zhout {605144321@qq.com}
+ * @author Marco
  */
 public class Constants {
-
+    //机构管理表存储路径
+    public static final String JBXX_STORE_PATH = File.separator+"b01"+File.separator;
+    //机构管理表模板存储路径
+    public static final String JBXXMB_STORE_PATH = JBXX_STORE_PATH+"jggl.xlsx";
 }

@@ -17,67 +17,126 @@
 
             <div class="portlet box grey">
                 <div class="portlet-title">
+                    <div class="clearfix fr">
+                        <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
+                            <i class="icon-plus"></i> 添加
+                        </a>
 
-                    <div class="relationbetTop_but">
                     </div>
                 </div>
-                <form action="" class="form-horizontal" id="b10Form" method="post">
-                    <input type="hidden" name="b1000" value="${vo.b1000 }"/>
-                    <dl class="dlattrbute">
-                        <dd>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div id="b1001Group" class="control-group">
-                                        <label class="control-label"><span class="Required">*</span>届次</label>
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="b1001" id="b1001" required
-                                                 number="true"  maxlength="128" value="${vo.b1001 }"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="b1004Group" class="control-group">
-                                        <label class="control-label">换届日期</label>
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap"
-                                                   placeholder="日期格式 例如：2018或201801或20180101" isDate="true"
-                                                   dateformat="yyyy,yyyymm,yyyymmdd"
-                                                   value="${vo.b1004 }" name="b1004"
-                                                   id="b1004"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-
-                                <div class="span6 ">
-                                    <div id="bHjnxGroup" class="control-group">
-                                        <label class="control-label">换届年限</label>
-                                        <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="bHjnx" id="bHjnx" number="true"
-                                                   maxlength="128" value="${vo.bHjnx }"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="b1007Group" class="control-group">
-                                        <label class="control-label">换届原因</label>
-                                        <div class="controls">
-                                            <textarea id="b1007" name="b1007" class="span10 m-wrap" maxlength="512" value="${vo.b1007}"
-                                                      rows="2" style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </dd>
-                    </dl>
-                </form>
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover dataTable table-set">
+                        <thead>
+                        <tr>
+                            <th width="90px">届次</th>
+                            <th width="60px">换届日期</th>
+                            <th width="80px">换届年限</th>
+                            <th width="80px">换届原因</th>
+                            <th width="80px">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${pager.datas}" var="vo">
+                            <tr style="text-overflow:ellipsis;">
+                                <td><a href="javascript:edit('${vo.b1000}')"><c:out value="${vo.b1001}"></c:out></a>
+                                </td>
+                                <td><c:out value="${vo.b1004}"></c:out></td>
+                                <td><c:out value="${vo.bHjnx}"></c:out></td>
+                                <td><c:out value="${vo.b1007}"></c:out></td>
+                                <td>
+                                    <a href="javascript:edit('${vo.b1000}')" class="">修改</a>|
+                                    <a href="javascript:deleteB10('${vo.b1000}')" class="">删除</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <jsp:include page="/WEB-INF/jsp/common/page.jsp">
+                        <jsp:param value="${pager.total }" name="total"/>
+                        <jsp:param value="${pager.pageCount }" name="endPage"/>
+                        <jsp:param value="${pager.pageSize }" name="pageSize"/>
+                        <jsp:param value="${pager.pageNum }" name="page"/>
+                    </jsp:include>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
 <script type="text/javascript" src="${path }/js/common/DataValidate.js"></script>
 <script type="text/javascript">
-    $(function () {
-    })
+    function add() {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/jggl/b10/ajax/add",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {
+                "b01Id": "${currentId}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+    }
+    function edit(id) {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/jggl/b10/ajax/edit",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {
+                "b1000": id,
+                "b01Id": "${currentId}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+    }
+    function deleteB10(id) {
+        debugger
+        actionByConfirm1('',"${path}/zzb/jggl/b10/delete/"+id,null,function(json){
+            if(json.success){
+                showTip("提示","操作成功");
+                setTimeout(function(){
+                    $.ajax({
+                        url : "${path }/zzb/jggl/b10/ajax/hjxx",
+                        type : "post",
+                        data : {"currentId":"${currentId}"},
+                        dataType : "html",
+                        headers:{
+                            OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                        },
+                        success : function(html){
+                            var view = $("#tab_show");
+                            view.html(html);
+                        },
+                        error : function(arg1, arg2, arg3){
+                            showTip("提示","换届信息加载失败");
+                        }
+                    });
+                },1500);
+
+            }else{
+                showTip("提示", json.message, 2000);
+            }
+        },"删除")
+    }
 </script>

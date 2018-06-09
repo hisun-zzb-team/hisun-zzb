@@ -270,7 +270,7 @@
                                         <label class="control-label">备注</label>
                                         <div class="controls">
                                             <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
-                                                      rows="2" style="resize: none;"></textarea>
+                                                      rows="2" style="resize: none;">${vo.remark}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -376,7 +376,7 @@
                                             <label class="control-label">备注</label>
                                             <div class="controls">
                                             <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
-                                                      rows="2" style="resize: none;"></textarea>
+                                                      rows="2" style="resize: none;">${vo.remark}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -451,7 +451,7 @@
                                             <label class="control-label">备注</label>
                                             <div class="controls">
                                             <textarea id="remark" name="remark" class="span10 m-wrap" maxlength="512" value="${vo.remark}"
-                                                      rows="2" style="resize: none;"></textarea>
+                                                      rows="2" style="resize: none;">${vo.remark}</textarea>
                                             </div>
                                         </div>
                                     </div>

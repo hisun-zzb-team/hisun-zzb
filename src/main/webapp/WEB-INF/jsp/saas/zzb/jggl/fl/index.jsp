@@ -94,10 +94,7 @@
 		var fl = "${fl}";
 		var key = "${key}";
 		var nodesFlag = 0;
-		if(node!=null&&(bflId==null||bflId==="")
-				&&(parentBFlId==null||parentBFlId==="")
-				&&(fl==null||fl==="")
-				&&(key==null||key==="")){
+		if(node!=null&&(bflId==null||bflId==="")){
 			$("#bflId").val(node.id);//赋值
 			$("#fl").val(node.name);//赋值
 			$("#parentBFlId").val(node.pId);//赋值
@@ -140,6 +137,10 @@
 					zTree.selectNode(childrenNode);//默认选中
 				}
 			}
+			$("#bflId").val(bflId);//赋值
+			$("#fl").val(fl);//赋值
+			$("#parentBFlId").val(parentBFlId);//赋值
+			$("#key").val(key);//赋值
 		}
 		zTree.expandNode(node, true, false , true);//展开
 	});

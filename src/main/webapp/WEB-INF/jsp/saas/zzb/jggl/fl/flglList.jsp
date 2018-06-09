@@ -66,26 +66,14 @@
 						<tr>
 							<th>分类名称</th>
 							<th>排序</th>
-							<%--<th width="100">专业技<br>术职务--%>
-							<%--</th>--%>
-							<%--<th width="65">任现职<br>务时间--%>
-							<%--</th>--%>
-							<%--<th width="100">任现职<br>级时间--%>
-							<%--</th>--%>
 							<th width="40">操作</th>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${pager.datas}" var="vo">
 							<tr style="text-overflow:ellipsis;">
-								<%--<td title="${vo.xm}"><a href="${path}/zzb/app/console/appGbcxA01/view?id=${vo.id }"><c:out value="${vo.xm}"></c:out></a></td>--%>
-								<%--<td><a href="${path }/zzb/app/console/bset/addOrEditManage?dataType=0&parentId=${queryId}"><c:out value="${vo.b0101}"></c:out></a></td>--%>
-								<%--&lt;%&ndash;<td><c:out value="${vo.b0101}"></c:out></td>&ndash;%&gt;--%>
-								<%--<td>&nbsp;</td><td>&nbsp;</td>--%>
 								<td><a href="javascript:edit('${vo.id}')" class="">${vo.fl}</a></td>
 								<td><c:out value="${vo.px}"></c:out></td>
-								<%--<td><c:out value="${vo.xrzwsj}"></c:out></td>--%>
-								<%--<td title="${vo.xrzjsj}"><c:out value="${vo.xrzjsj}"></c:out></td>--%>
 								<td class="Left_alignment">
 									<a href="javascript:del('${vo.id}','${vo.fl}')" class="">删除</a>
 								</td>
@@ -112,18 +100,26 @@
 var myLoading = new MyLoading("${path}",{zindex : 11111});
 	function pagehref (pageNum ,pageSize){
 		<%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
+		var bflId = $("#bflId").val();
+		var fl = $("#fl").val();
+		var parentBFlId = $("#parentBFlId").val();
+		var flQuery = $("#flQuery").val();
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/bset/ajax/list",
+			url:"${path}/zzb/jggl/fl/ajax/list",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
 			data:{
-				'queryId':"${queryId}",
 				'pageNum':pageNum,
-				'pageSize':pageSize
+				'pageSize':pageSize,
+				"fl":fl,
+				"bflId":bflId,
+				"parentBFlId":parentBFlId,
+				"key":"1",
+				"flQuery":flQuery
 			},
 			success:function(html){
 				$("#rightList").html(html);

@@ -61,7 +61,7 @@ public class BFlController  extends BaseController {
     }
 
     @RequestMapping(value = "/ajax/list")
-    public @ResponseBody ModelAndView list(HttpServletRequest request,String parentBFlId,String key,String bflId,String flQuery,String b0101Query,
+    public @ResponseBody ModelAndView list(HttpServletRequest request,String parentBFlId,String key,String bflId,String flQuery,String b0101Query,String fl,
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,
                                                @RequestParam(value="pageSize",defaultValue="10") int pageSize) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
@@ -86,7 +86,7 @@ public class BFlController  extends BaseController {
                 }
                 orderBy.add(CommonOrder.asc("px"));
                 total = this.bFlService.count(query);
-                List<BFl> bFlList = this.bFlService.list(query,orderBy);
+                List<BFl> bFlList = this.bFlService.list(query,orderBy, pageNum, pageSize);
                 List<BFlVo> vos = new ArrayList<>();
                 if(bFlList!=null){
                     BFlVo vo;
@@ -107,7 +107,7 @@ public class BFlController  extends BaseController {
                 query.add(CommonRestrictions.and(" bfl.id = :id ", "id", bflId));
                 orderBy.add(CommonOrder.asc("px"));
                 total = this.bFl2B01Service.count(query);
-                List<BFl2B01> bFl2B01List = this.bFl2B01Service.list(query,orderBy);
+                List<BFl2B01> bFl2B01List = this.bFl2B01Service.list(query,orderBy, pageNum, pageSize);
                 List<BFl2B01Vo> vos = new ArrayList<>();
                 if(bFl2B01List!=null){
                     BFl2B01Vo vo;
@@ -128,6 +128,7 @@ public class BFlController  extends BaseController {
                 PagerVo<BFl2B01Vo> pager = new PagerVo<BFl2B01Vo>(vos, total.intValue(), pageNum, pageSize);
                 map.put("pager", pager);
                 map.put("b0101Query", b0101Query);
+                map.put("fl", fl);
                 map.put("total",total);
             }
         }catch (Exception e){

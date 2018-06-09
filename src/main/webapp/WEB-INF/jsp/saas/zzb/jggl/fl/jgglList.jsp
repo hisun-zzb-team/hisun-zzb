@@ -47,12 +47,11 @@
 		<div class="span12 responsive">
 			<%-- 表格开始 --%>
 			<form class=""id="importForm" enctype="multipart/form-data">
-				<input type="hidden" name="queryId" value="${queryId}"/>
 				<div class="portlet-title">
-					<div class="caption">${flmc}</div>
+					<div class="caption">${fl}</div>
 					<div class="clearfix fr">
 						<a id="sample_editable_1_new" class="btn green" href="javascript:add()">
-							<i class="icon-plus"></i> 添加
+							<i class="icon-plus"></i> 选择机构
 						</a>
 
 					</div>
@@ -84,24 +83,11 @@
 							<th>机构简称</th>
 							<th>单位性质</th>
 							<th width="40">操作</th>
-
-
-							<%--<th width="100">专业技<br>术职务--%>
-							<%--</th>--%>
-							<%--<th width="65">任现职<br>务时间--%>
-							<%--</th>--%>
-							<%--<th width="100">任现职<br>级时间--%>
-							<%--</th>--%>
-							<%--<th width="40">操作</th>--%>
 						</tr>
 						</thead>
 						<tbody>
 						<c:forEach items="${pager.datas}" var="vo">
 							<tr style="text-overflow:ellipsis;">
-								<%--<td title="${vo.xm}"><a href="${path}/zzb/app/console/appGbcxA01/view?id=${vo.id }"><c:out value="${vo.xm}"></c:out></a></td>--%>
-								<%--<td><a href="${path }/zzb/app/console/bset/addOrEditManage?dataType=0&parentId=${queryId}"><c:out value="${vo.b0101}"></c:out></a></td>--%>
-								<%--&lt;%&ndash;<td><c:out value="${vo.b0101}"></c:out></td>&ndash;%&gt;--%>
-								<%--<td>&nbsp;</td><td>&nbsp;</td>--%>
 								<td><c:out value="${vo.px}"></c:out></td>
 								<td><c:out value="${vo.b01Vo.b0101}"></c:out></td>
 								<td><c:out value="${vo.b01Vo.b0104}"></c:out></td>
@@ -109,12 +95,6 @@
 								<td class="Left_alignment">
 									<a href="javascript:del('${vo.id }','${vo.b01Vo.b0101}')" class="">删除</a>
 								</td>
-								<%--<td><c:out value="${vo.zyjszw}"></c:out></td>--%>
-								<%--<td><c:out value="${vo.xrzwsj}"></c:out></td>--%>
-								<%--<td title="${vo.xrzjsj}"><c:out value="${vo.xrzjsj}"></c:out></td>--%>
-								<%--<td class="Left_alignment">--%>
-									<%--<a href="javascript:del('${vo.id }','${vo.xm}')" class="">删除</a>--%>
-								<%--</td>--%>
 							</tr>
 						</c:forEach>
 						</tbody>
@@ -149,7 +129,7 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/bset/ajax/list",
+			url:"${path}/zzb/jggl/fl/ajax/list",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
@@ -157,7 +137,7 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 			data:{
 				'pageNum':pageNum,
 				'pageSize':pageSize,
-				"flQuery":fl,
+				"fl":fl,
 				"bflId":bflId,
 				"parentBFlId":parentBFlId,
 				"key":"2",

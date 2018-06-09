@@ -117,12 +117,15 @@ public class B09Vo {
     private String jrB0901a1;
     private String jrGlB09001;
     private Integer zs1;//职数
-//    private String jrB0901a2;
-//    private String jrGlB09002;
-//    private int zs2;//职数
-//    private String jrB0901a3;
-//    private String jrGlB09003;
-//    private int zs3;//职数
+    private String jrB0901a2;
+    private String jrGlB09002;
+    private Integer zs2;//职数
+    private int isZs2;
+    private String jrB0901a3;
+    private String jrGlB09003;
+    private Integer zs3;//职数
+    private int isZs3;
+    private int isGd;//是否展示更多按钮
 
     private B01Vo b01Vo;
 
@@ -464,51 +467,75 @@ public class B09Vo {
         this.zs1 = zs1;
     }
 
-    //    public String getJrB0901a2() {
-//        return jrB0901a2;
-//    }
-//
-//    public void setJrB0901a2(String jrB0901a2) {
-//        this.jrB0901a2 = jrB0901a2;
-//    }
-//
-//    public String getJrGlB09002() {
-//        return jrGlB09002;
-//    }
-//
-//    public void setJrGlB09002(String jrGlB09002) {
-//        this.jrGlB09002 = jrGlB09002;
-//    }
-//
-//    public int getZs2() {
-//        return zs2;
-//    }
-//
-//    public void setZs2(int zs2) {
-//        this.zs2 = zs2;
-//    }
-//
-//    public String getJrB0901a3() {
-//        return jrB0901a3;
-//    }
-//
-//    public void setJrB0901a3(String jrB0901a3) {
-//        this.jrB0901a3 = jrB0901a3;
-//    }
-//
-//    public String getJrGlB09003() {
-//        return jrGlB09003;
-//    }
-//
-//    public void setJrGlB09003(String jrGlB09003) {
-//        this.jrGlB09003 = jrGlB09003;
-//    }
-//
-//    public int getZs3() {
-//        return zs3;
-//    }
-//
-//    public void setZs3(int zs3) {
-//        this.zs3 = zs3;
-//    }
+    public String getJrB0901a2() {
+        return jrB0901a2;
+    }
+
+    public void setJrB0901a2(String jrB0901a2) {
+        this.jrB0901a2 = jrB0901a2;
+    }
+
+    public String getJrGlB09002() {
+        return jrGlB09002;
+    }
+
+    public void setJrGlB09002(String jrGlB09002) {
+        this.jrGlB09002 = jrGlB09002;
+    }
+
+    public Integer getZs2() {
+        return zs2;
+    }
+
+    public void setZs2(Integer zs2) {
+        this.zs2 = zs2;
+    }
+
+    public int getIsZs2() {
+        return isZs2;
+    }
+
+    public void setIsZs2(int isZs2) {
+        this.isZs2 = isZs2;
+    }
+
+    public String getJrB0901a3() {
+        return jrB0901a3;
+    }
+
+    public void setJrB0901a3(String jrB0901a3) {
+        this.jrB0901a3 = jrB0901a3;
+    }
+
+    public String getJrGlB09003() {
+        return jrGlB09003;
+    }
+
+    public void setJrGlB09003(String jrGlB09003) {
+        this.jrGlB09003 = jrGlB09003;
+    }
+
+    public Integer getZs3() {
+        return zs3;
+    }
+
+    public void setZs3(Integer zs3) {
+        this.zs3 = zs3;
+    }
+
+    public int getIsZs3() {
+        return isZs3;
+    }
+
+    public void setIsZs3(int isZs3) {
+        this.isZs3 = isZs3;
+    }
+
+    public int getIsGd() {
+        return isGd;
+    }
+
+    public void setIsGd(int isGd) {
+        this.isGd = isGd;
+    }
 }

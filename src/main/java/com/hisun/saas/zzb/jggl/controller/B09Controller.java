@@ -128,15 +128,11 @@ public class B09Controller extends BaseController {
             }
             String b0900=b09Service.save(b09);
             if("1".equals(b09.getbSfjr())){
-                BB09BhJrInfo bb09BhJrInfo = new BB09BhJrInfo();
-                if(StringUtils.isNotEmpty(vo.getJrB0901a1())&&StringUtils.isNotEmpty(vo.getJrGlB09001())){
-                    bb09BhJrInfo.setB09(b09Service.getByPK(b0900));
-                    bb09BhJrInfo.setB01(b01);
-                    bb09BhJrInfo.setB0901A(vo.getJrB0901a1());
-                    bb09BhJrInfo.setGlB0900(vo.getJrGlB09001());
-                    bb09BhJrInfo.setLx(1);
-                    bb09BhJrInfo.setZs(vo.getZs1());
-                    bB09BhJrInfoService.save(bb09BhJrInfo);
+                List<BB09BhJrInfo> bb09BhJrInfos = getkJr(b01,vo,b0900);
+                if(bb09BhJrInfos!=null&&bb09BhJrInfos.size()>0){
+                    for(BB09BhJrInfo bb09BhJrInfo : bb09BhJrInfos){
+                        bB09BhJrInfoService.save(bb09BhJrInfo);
+                    }
                 }
             }
             map.put("success", true);
@@ -149,6 +145,42 @@ public class B09Controller extends BaseController {
         return map;
     }
 
+    public List<BB09BhJrInfo> getkJr (B01 b01,B09Vo vo,String b0900){
+        List<BB09BhJrInfo> bb09BhJrInfoList = new ArrayList<>();
+        BB09BhJrInfo bb09BhJrInfo = new BB09BhJrInfo();
+        if(StringUtils.isNotEmpty(vo.getJrB0901a1())&&StringUtils.isNotEmpty(vo.getJrGlB09001())){
+            bb09BhJrInfo.setB09(b09Service.getByPK(b0900));
+            bb09BhJrInfo.setB01(b01);
+            bb09BhJrInfo.setB0901A(vo.getJrB0901a1());
+            bb09BhJrInfo.setGlB0900(vo.getJrGlB09001());
+            bb09BhJrInfo.setLx(1);
+            bb09BhJrInfo.setZs(vo.getZs1());
+            bb09BhJrInfoList.add(bb09BhJrInfo);
+//            bB09BhJrInfoService.save(bb09BhJrInfo);
+        }
+        if(vo.getIsZs2()==1){
+            bb09BhJrInfo = new BB09BhJrInfo();
+            bb09BhJrInfo.setB09(b09Service.getByPK(b0900));
+            bb09BhJrInfo.setB01(b01);
+            bb09BhJrInfo.setB0901A(vo.getJrB0901a2());
+            bb09BhJrInfo.setGlB0900(vo.getJrGlB09002());
+            bb09BhJrInfo.setLx(1);
+            bb09BhJrInfo.setZs(vo.getZs2());
+            bb09BhJrInfoList.add(bb09BhJrInfo);
+        }
+        if(vo.getIsZs3()==1){
+            bb09BhJrInfo = new BB09BhJrInfo();
+            bb09BhJrInfo.setB09(b09Service.getByPK(b0900));
+            bb09BhJrInfo.setB01(b01);
+            bb09BhJrInfo.setB0901A(vo.getJrB0901a3());
+            bb09BhJrInfo.setGlB0900(vo.getJrGlB09003());
+            bb09BhJrInfo.setLx(1);
+            bb09BhJrInfo.setZs(vo.getZs3());
+            bb09BhJrInfoList.add(bb09BhJrInfo);
+        }
+        return bb09BhJrInfoList;
+    }
+
     @RequestMapping(value = "/ajax/edit")
     public @ResponseBody ModelAndView edit(HttpServletRequest request,String id){
         Map<String, Object> map = Maps.newHashMap();
@@ -158,6 +190,8 @@ public class B09Controller extends BaseController {
         B01Vo b01Vo = new B01Vo();
         try {
             if("1".equals(b09.getbSfjr())){
+                vo.setbSfjr("1");
+                int sum=0;
                 CommonConditionQuery query = new CommonConditionQuery();
                 query.add(CommonRestrictions.and(" b09.b0900 = :b09Id ", "b09Id", b09.getB0900()));
                 List<BB09BhJrInfo> bb09BhJrInfos = this.bB09BhJrInfoService.list(query,null);
@@ -166,7 +200,24 @@ public class B09Controller extends BaseController {
                     vo.setJrGlB09001(bb09BhJrInfos.get(0).getGlB0900());
                     vo.setZs1(bb09BhJrInfos.get(0).getZs());
                 }
+                if(bb09BhJrInfos.size()>1){
+                    vo.setJrB0901a2(bb09BhJrInfos.get(1).getB0901A());
+                    vo.setJrGlB09002(bb09BhJrInfos.get(1).getGlB0900());
+                    vo.setZs2(bb09BhJrInfos.get(1).getZs());
+                    vo.setIsZs2(1);
+                    sum++;
+                }
+                if(bb09BhJrInfos.size()>2){
+                    vo.setJrB0901a3(bb09BhJrInfos.get(2).getB0901A());
+                    vo.setJrGlB09003(bb09BhJrInfos.get(2).getGlB0900());
+                    vo.setZs3(bb09BhJrInfos.get(2).getZs());
+                    vo.setIsZs3(1);
+                    sum++;
+                }
 
+                if(sum==2){
+                    vo.setIsGd(1);
+                }
             }
             BeanUtils.copyProperties(vo, b09);
             BeanUtils.copyProperties(b01Vo, b09.getB01());
@@ -191,21 +242,15 @@ public class B09Controller extends BaseController {
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
             B09 b09 = this.b09Service.getByPK(vo.getB0900());
             int sort = b09.getbPx();
+            List<BB09BhJrInfo> bb09BhJrInfoList = new ArrayList<>();
             if("1".equals(b09.getbSfjr())){
                 CommonConditionQuery query = new CommonConditionQuery();
                 query.add(CommonRestrictions.and(" b09.b0900 = :b09Id ", "b09Id", b09.getB0900()));
                 List<BB09BhJrInfo> bb09BhJrInfos = this.bB09BhJrInfoService.list(query,null);
                 if(bb09BhJrInfos!=null&&bb09BhJrInfos.size()>0){
-                    this.bB09BhJrInfoService.delete(bb09BhJrInfos.get(0));
+                    this.bB09BhJrInfoService.deleteList(bb09BhJrInfos);
                 }
-                if(StringUtils.isNotEmpty(vo.getJrB0901a1())&&StringUtils.isNotEmpty(vo.getJrGlB09001())){
-                    bb09BhJrInfo.setB01(b09.getB01());
-                    bb09BhJrInfo.setB0901A(vo.getJrB0901a1());
-                    bb09BhJrInfo.setGlB0900(vo.getJrGlB09001());
-                    bb09BhJrInfo.setLx(1);
-                    bb09BhJrInfo.setZs(vo.getZs1());
-//                    bB09BhJrInfoService.save(bb09BhJrInfo);
-                }
+                bb09BhJrInfoList=getkJr(b09.getB01(),vo,b09.getB0900());
             }
             BeanUtils.copyProperties(b09, vo);
             if("0".equals(b09.getbSfsy())){
@@ -213,7 +258,7 @@ public class B09Controller extends BaseController {
                 b09.setbSyscdw(null);
             }
             EntityWrapper.wrapperSaveBaseProperties(b09,userLoginDetails);
-            b09Service.updateB09(b09,sort,bb09BhJrInfo);
+            b09Service.updateB09(b09,sort,bb09BhJrInfoList);
             map.put("success", true);
         } catch (Exception e) {
             e.printStackTrace();

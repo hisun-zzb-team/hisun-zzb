@@ -111,14 +111,17 @@
 						<div id="bSfjrGroup" class="control-group">
 							<label class="control-label" >由其他职务兼任</label>
 							<div class="controls" style="margin-left: 200px">
-								<label class="radio">
+								<label class="radio" style="float:left;margin-top: 5px">
 									<input type="radio" name="bSfjr" value="1" onclick="addHtml()" <c:if test="${vo.bSfjr =='1'}">checked</c:if>/>
 									是&nbsp;&nbsp;&nbsp;
 								</label>
-								<label class="radio">
+								<label class="radio" style="float:left;margin-left:20px;margin-top: 5px">
 									<input type="radio" name="bSfjr" value="0" onclick="delHtml()" <c:if test="${vo.bSfjr =='0'}">checked</c:if>/>
 									否
 								</label>
+								<div id="sfjrGdDiv" style="float:left;display:<c:if test="${vo.isGd =='1'}">none</c:if>;margin-top: 7px;">
+									&nbsp;&nbsp;<a href="javascript:gd()" class="">更多</a>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -137,32 +140,110 @@
 					</div>
 				</div>
 
-				<div id="addhtml" style="display:<c:if test="${vo.bSfjr=='0'}"> none</c:if>">
-					<div class="row-fluid">
-						<div class="span6 ">
-							<div id="jrB0901a1Group" class="control-group">
-								<label class="control-label" >兼任职务</label>
-								<div class="controls" >
-									<SelectTag:SelectTag id="jrGlB09001" needNullValue="true"
-														 valueName="jrB0901a1"
-														 defaultkeys="${vo.jrGlB09001}" token="${sessionScope.OWASP_CSRFTOKEN}"
-														 defaultvalues="${vo.jrB0901a1}"
-														 textClass="span9 m-wrap" radioOrCheckbox="radio"
-														 selectUrl="${path}/zzb/jggl/b09/select?typeCode=pxczzw&b01Id=${vo.b01Vo.b0100}&b09Id=${vo.b0900}"/>
-								</div>
+				<%--<div class="row-fluid">--%>
+					<%--<div class="span6 ">--%>
+						<%--<div id="jrB0901a1Group" class="control-group">--%>
+							<%--<label class="control-label" >兼任职务</label>--%>
+							<%--<div class="controls" >--%>
+								<%--<SelectTag:SelectTag id="jrGlB09001" needNullValue="true"--%>
+													 <%--valueName="jrB0901a1"--%>
+													 <%--defaultkeys="${vo.jrGlB09001}" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+													 <%--defaultvalues="${vo.jrB0901a1}"--%>
+													 <%--textClass="span9 m-wrap" radioOrCheckbox="radio"--%>
+													 <%--selectUrl="${path}/zzb/jggl/b09/select?typeCode=pxczzw&b01Id=${vo.b01Vo.b0100}&b09Id=${vo.b0900}"/>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+					<%--</div>--%>
+					<%--<div class="span6 ">--%>
+						<%--<div id="zs1Group" class="control-group">--%>
+							<%--<label class="control-label" >兼任职数</label>--%>
+							<%--<div class="controls" >--%>
+								<%--<input type="text" class="span9 m-wrap" name="zs1" number="true" maxlength="128" id="zs1" value="${vo.zs1}" />--%>
+							<%--</div>--%>
+						<%--</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<div class="row-fluid" id="addDiv" style="display: <c:if test="${vo.bSfjr =='0'}">none</c:if>">
+					<div class="span6 ">
+						<div id="jrB0901a1Group" class="control-group">
+							<label class="control-label" >兼任职务</label>
+							<div class="controls">
+								<SelectTag:SelectTag id="jrGlB09001" needNullValue="true"
+													 valueName="jrB0901a1"
+													 defaultkeys="${vo.jrGlB09001}" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 defaultvalues="${vo.jrB0901a1}"
+													 textClass="span9 m-wrap" radioOrCheckbox="radio"
+													 selectUrl="${path}/zzb/jggl/b09/select?typeCode=pxczzw&b01Id=${vo.b01Vo.b0100}&b09Id=${vo.b0900}"/>
 							</div>
 						</div>
-						<div class="span6 ">
-							<div id="zs1Group" class="control-group">
-								<label class="control-label" >兼任职数</label>
-								<div class="controls" >
-									<input type="text" class="span9 m-wrap" name="zs1" number="true" maxlength="128" id="zs1" value="${vo.zs1}" />
+					</div>
+					<div class="span6 ">
+						<div id="zs1Group" class="control-group">
+							<label class="control-label" >兼任职数</label>
+							<div class="controls">
+								<input type="text" class="span9 m-wrap" name="zs1" number="true" maxlength="128" id="zs1" value="${vo.zs1}" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row-fluid" id="addDiv2" style="display: <c:if test="${vo.isZs2 =='0'}">none</c:if>">
+					<div class="span6 ">
+						<div id="jrB0901a2Group" class="control-group">
+							<label class="control-label" >兼任职务</label>
+							<div class="controls">
+								<SelectTag:SelectTag id="jrGlB09002" needNullValue="true"
+													 valueName="jrB0901a2"
+													 defaultkeys="${vo.jrGlB09002}" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 defaultvalues="${vo.jrB0901a2}"
+													 textClass="span9 m-wrap" radioOrCheckbox="radio"
+													 selectUrl="${path}/zzb/jggl/b09/select?typeCode=pxczzw&b01Id=${vo.b01Vo.b0100}&b09Id=${vo.b0900}"/>
+							</div>
+						</div>
+					</div>
+					<div class="span6 ">
+						<div id="zs2Group" class="control-group">
+							<label class="control-label" >兼任职数</label>
+							<div class="controls">
+								<input type="text" class="span8 m-wrap" name="zs2" number="true" maxlength="128" id="zs2" value="${vo.zs2}" />
+								<input type="hidden" id="isZs2" name="isZs2" value="${vo.isZs2}"/>
+								<div style="float: right;margin-top: 7px;margin-right: 84px;">
+									&nbsp;&nbsp;<a href="javascript:delDiv(2)" class="">删除</a>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
+
+				<div class="row-fluid" id="addDiv3" style="display: <c:if test="${vo.isZs3 =='0'}">none</c:if>">
+					<div class="span6 ">
+						<div id="jrB0901a3Group" class="control-group">
+							<label class="control-label" >兼任职务</label>
+							<div class="controls">
+								<SelectTag:SelectTag id="jrGlB09003" needNullValue="true"
+													 valueName="jrB0901a3"
+													 defaultkeys="${vo.jrGlB09003}" token="${sessionScope.OWASP_CSRFTOKEN}"
+													 defaultvalues="${vo.jrB0901a3}"
+													 textClass="span9 m-wrap" radioOrCheckbox="radio"
+													 selectUrl="${path}/zzb/jggl/b09/select?typeCode=pxczzw&b01Id=${vo.b01Vo.b0100}&b09Id=${vo.b0900}"/>
+							</div>
+						</div>
+					</div>
+					<div class="span6 ">
+						<div id="zs3Group" class="control-group">
+							<label class="control-label" >兼任职数</label>
+							<div class="controls">
+								<input type="text" class="span8 m-wrap" name="zs3" number="true" maxlength="128" id="zs3" value="${vo.zs3}" />
+								<input type="hidden" id="isZs3" name="isZs3" value="${vo.isZs3}"/>
+								<div style="float: right;margin-top: 7px;margin-right: 84px;">
+									&nbsp;&nbsp;<a href="javascript:delDiv(3)" class="">删除</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
 
 				<div class="row-fluid">
 					<div class="span6 ">
@@ -305,16 +386,47 @@
 		var myLoading = new MyLoading("${path}",{zindex : 11111});
 
 		function addHtml(){
-			$("#addhtml").css("display","block");
-		}
-
-		function addHtmla(){
-			var div=document.getElementById("addhtml");
-			$("#addhtml").html();
+			$("#addDiv").css("display","block");
+			$("#sfjrGdDiv").css("display","block");
 		}
 
 		function delHtml(){
-			$("#addhtml").css("display","none");
+			$("#addDiv").css("display","none");
+			$("#addDiv2").css("display","none");
+			$("#addDiv3").css("display","none");
+			$("#sfjrGdDiv").css("display","none");
+		}
+
+		var divNum = 0;
+		function gd(){
+			if(divNum==0){
+				$("#addDiv2").css("display","block");
+				$("#isZs2").val(1);
+				divNum++;
+			}else if(divNum==1){
+				$("#addDiv3").css("display","block");
+				$("#sfjrGdDiv").css("display","none");
+				$("#isZs3").val(1);
+				divNum++;
+			}
+		}
+
+		function delDiv(divNumber){
+			if(divNumber==2){
+				$("#addDiv2").css("display","none");
+				$("#sfjrGdDiv").css("display","block");
+				$("#isZs2").val(0);
+				divNum=0;
+			}else if(divNumber==3){
+				$("#addDiv3").css("display","none");
+				$("#sfjrGdDiv").css("display","block");
+				$("#isZs3").val(0);
+				divNum=1;
+			}
+
+			if($("#addDiv2").css('display')=='none'&&$("#addDiv3").css('display')=='none'){
+				divNum=0;
+			}
 		}
 
 		var flag=0;

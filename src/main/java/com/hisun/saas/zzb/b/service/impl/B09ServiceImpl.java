@@ -42,14 +42,15 @@ public class B09ServiceImpl extends BaseServiceImpl<B09,String> implements B09Se
     }
 
     @Override
-    public void updateB09(B09 b09, Integer oldSort, BB09BhJrInfo bB09BhJrInfo){
+    public void updateB09(B09 b09, Integer oldSort, List<BB09BhJrInfo> bb09BhJrInfoList){
         if(b09.getbPx()!=oldSort) {
             this.updatePx(oldSort,b09.getbPx(),b09.getB01().getB0100());
         }
         this.b09Dao.update(b09);
-        if("1".equals(b09.getbSfjr())){
-            bB09BhJrInfo.setB09(b09);
-            this.bB09BhJrInfoService.save(bB09BhJrInfo);
+        if("1".equals(b09.getbSfjr())&&bb09BhJrInfoList.size()>0){
+            for(BB09BhJrInfo bB09BhJrInfo : bb09BhJrInfoList){
+                this.bB09BhJrInfoService.save(bB09BhJrInfo);
+            }
         }
     }
 

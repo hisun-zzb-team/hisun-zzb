@@ -11,11 +11,13 @@ import com.hisun.saas.zzb.b.entity.B09;
 import com.hisun.saas.zzb.b.entity.BB09BhJrInfo;
 import com.hisun.saas.zzb.b.entity.BFl2B01;
 
+import java.util.List;
+
 /**
  * @author liuzj {279421824@qq.com}
  */
 public interface B09Service extends BaseService<B09,String> {
    Integer getMaxSort();
-   void updateB09(B09 b09, Integer oldSort, BB09BhJrInfo bB09BhJrInfo);
+   void updateB09(B09 b09, Integer oldSort, List<BB09BhJrInfo> bb09BhJrInfoList);
    void updatePx(int oldPx,int newPx,String b01Id);
 }

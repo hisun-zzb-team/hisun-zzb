@@ -73,12 +73,13 @@
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
                             姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
                             查阅申请内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="${readContent}" style="width: 80px;" />
-                             <select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
+                              申请状态：<select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
                                     <option value="" >全部</option>
-                                    <option value="0" >待审</option>
-                                    <option value="1" >已审</option>
+                                    <option value="0" >待授权</option>
+                                    <option value="1" >同意阅档</option>
                                     <option value="2" >拒绝授权</option>
-                                    <option value="3" >收回权限</option>
+                                    <option value="3" >已收回</option>
+                                    <option value="4" >已结束</option>
                              </select>
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>

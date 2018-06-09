@@ -240,7 +240,7 @@
 
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
-            showTip("提示","请选择要查阅和人档案",2000);
+            showTip("提示","请选择要查阅何人档案",2000);
             return;
         }
         $.ajax({
@@ -274,7 +274,7 @@
         $("#auditingState").val(status);
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
-            showTip("提示","请选择要查阅和人档案",2000);
+            showTip("提示","请选择要查阅何人档案",2000);
             return;
         }
         var bool = form1.form();
@@ -314,7 +314,7 @@
     function zcformSubmit(){
         var a38 = $("#a38Id").val();
         if(a38 == "" || a38 == null){
-            showTip("提示","请选择要查阅和人档案",2000);
+            showTip("提示","请选择要查阅何人档案",2000);
             return;
         }
         var bool = form1.form();

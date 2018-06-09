@@ -208,7 +208,7 @@ public class A38Controller extends BaseController {
         }
         Long total = a38Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
-        orderBy.add(CommonOrder.desc("smxh"));
+        orderBy.add(CommonOrder.desc(" COALESCE((case when smxh='' then '9999' else smxh END),'9999')"));
         orderBy.add(CommonOrder.asc("a0101"));
         List<A38> resultList = a38Service.list(query,orderBy,pageNum,pageSize);
         List<A38Vo> a38Vos = new ArrayList<A38Vo>();

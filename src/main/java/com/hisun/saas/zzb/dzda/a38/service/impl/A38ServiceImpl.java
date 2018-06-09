@@ -296,7 +296,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         }
         queryHql.append(a38Hql);
         queryHql.append(e01z1Hql);
-        queryHql.append(" order by a38.smxh desc , a38.a0101 asc ");
+        queryHql.append(" order by COALESCE((case when a38.smxh='' then '9999' else a38.smxh END),'9999') , a38.a0101 asc ");
 
 //        Map<String,Object> paramMap = new HashMap<>();
 //        List<A38> a38List = a38Dao.list(queryHql.toString(),paramMap,pageNum, pageSize);

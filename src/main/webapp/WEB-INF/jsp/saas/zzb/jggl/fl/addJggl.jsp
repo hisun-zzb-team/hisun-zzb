@@ -36,9 +36,12 @@
                         <input type="hidden" name="jgIds" id="jgIds" value="${jgIds }">
                         <input type="hidden" name="jgNames" id="jgNames" value="${jgNames }">
 
-                        <Tree:tree id="jgQuery" treeUrl="${path}/zzb/jggl/fl/tree" token="${sessionScope.OWASP_CSRFTOKEN}" defaultkeys="${jgQuery}" defaultvalues="${jgNameQuery}"
-                                   onClick="" radioOrCheckbox="checkbox" submitType="post" dataType="json" isSearch="true" checkedByTitle="true" chkboxType="'Y': 's', 'N': 's'"/>
+                        <%--<Tree:tree id="jgQuery" treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}" defaultkeys="${jgQuery}" defaultvalues="${jgNameQuery}"--%>
+                                   <%--onClick="" radioOrCheckbox="checkbox" submitType="post" dataType="json" isSearch="true" checkedByTitle="true" chkboxType="'Y': 's', 'N': 's'"/>--%>
 
+                        <Tree:tree id="jgQuery" treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}" isSearch="true" checkedByTitle="true"
+                                   chkboxType="'Y': 's', 'N': 's'" onClick="onClickByTree" submitType="post" dataType="json" isSelectTree="false" dtjz="true" valueName="jgNameQuery"
+                                   defaultkeys="${jgQuery}" radioOrCheckbox="checkbox" defaultvalues="${jgNameQuery}"/>
                         <%--<Tree:tree id="jgQuery" valueName="jgQuery"  selectClass="span8 m-wrap" height="30px" treeUrl="${path}/zzb/jggl/fl/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
                                    <%--submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox" checkedByTitle="true" isSelectTree="true" defaultkeys="${jgQuery}" defaultvalues="${jgQuery}"/>--%>
 
@@ -91,7 +94,8 @@
         }
 
         var bflId = $("#bflId").val();
-
+        var fl = $("#fl").val();
+        var parentBFlId = $("#parentBFlId").val();
         var bool = form1.form();
         if(bool){
             $("#form1").ajaxSubmit({
@@ -104,12 +108,34 @@
                 },
                 data : {
                     "idString":idString,
-                    "bflId":bflId
                 },
                 success:function(json){
                     showTip("提示","设置成功!",2000);
                     $('#addModal').modal('hide');
                     $('#addDiv').html("");
+
+                    $.ajax({
+                        async:false,
+                        type:"POST",
+                        url:"${path}/zzb/jggl/fl/ajax/list",
+                        dataType : "html",
+                        headers:{
+                            "OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
+                        },
+                        data : {
+                            "flQuery":fl,
+                            "bflId":bflId,
+                            "parentBFlId":parentBFlId,
+                            "key":"2"
+                        },
+                        success:function(html){
+                            $("#rightList").html(html);
+                        },
+                        error : function(){
+                            myLoading.hide();
+                            showTip("提示","出错了,请检查网络!",2000);
+                        }
+                    });
                 },
                 error : function(){
                     showTip("提示","设置失败!",2000);

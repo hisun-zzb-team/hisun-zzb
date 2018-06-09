@@ -18,6 +18,8 @@ import com.hisun.saas.zzb.b.entity.BFl2B01;
 import com.hisun.saas.zzb.b.service.B01Service;
 import com.hisun.saas.zzb.b.service.BFl2B01Service;
 import com.hisun.saas.zzb.b.service.BFlService;
+import com.hisun.saas.zzb.b.vo.B01TreeNode;
+import com.hisun.saas.zzb.b.vo.B01Vo;
 import com.hisun.saas.zzb.b.vo.BFl2B01Vo;
 import com.hisun.saas.zzb.b.vo.BFlVo;
 import com.hisun.util.StringUtils;
@@ -49,13 +51,17 @@ public class BFlController  extends BaseController {
 
     @RequestMapping(value = "/flManage")
     public @ResponseBody
-    ModelAndView index(HttpServletRequest request){
+    ModelAndView index(HttpServletRequest request,String parentBFlId,String key,String bflId,String fl){
         Map<String, Object> map = Maps.newHashMap();
+        map.put("bflId",bflId);
+        map.put("fl",fl);
+        map.put("parentBFlId",parentBFlId);
+        map.put("key",key);
         return new ModelAndView("saas/zzb/jggl/fl/index",map);
     }
 
     @RequestMapping(value = "/ajax/list")
-    public @ResponseBody ModelAndView list(HttpServletRequest request,String parentBFlId,String key,String bflId,String flQuery,String jgglQuery,
+    public @ResponseBody ModelAndView list(HttpServletRequest request,String parentBFlId,String key,String bflId,String flQuery,String b0101Query,
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,
                                                @RequestParam(value="pageSize",defaultValue="10") int pageSize) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
@@ -95,8 +101,8 @@ public class BFlController  extends BaseController {
                 map.put("flQuery", flQuery);
                 map.put("total",total);
             }else {
-                if(StringUtils.isNotEmpty(jgglQuery)){
-                    query.add(CommonRestrictions.and(" b01.a0101 like :jgglQuery ", "jgglQuery", "%" + jgglQuery + "%") );
+                if(StringUtils.isNotEmpty(b0101Query)){
+                    query.add(CommonRestrictions.and(" b01.b0101 like :b0101Query ", "b0101Query", "%" + b0101Query + "%") );
                 }
                 query.add(CommonRestrictions.and(" bfl.id = :id ", "id", bflId));
                 orderBy.add(CommonOrder.asc("px"));
@@ -108,12 +114,20 @@ public class BFlController  extends BaseController {
                     for(BFl2B01 entity : bFl2B01List){
                         vo = new BFl2B01Vo();
                         BeanUtils.copyProperties(vo,entity);
+                        B01 b01=entity.getB01();
+                        B01Vo b01Vo = new B01Vo();
+                        BeanUtils.copyProperties(b01Vo,b01);
+                        vo.setB01Vo(b01Vo);
+                        BFl bFl = entity.getBfl();
+                        BFlVo bFlVo = new BFlVo();
+                        BeanUtils.copyProperties(bFlVo,bFl);
+                        vo.setBflVo(bFlVo);
                         vos.add(vo);
                     }
                 }
                 PagerVo<BFl2B01Vo> pager = new PagerVo<BFl2B01Vo>(vos, total.intValue(), pageNum, pageSize);
                 map.put("pager", pager);
-                map.put("flQuery", flQuery);
+                map.put("b0101Query", b0101Query);
                 map.put("total",total);
             }
         }catch (Exception e){
@@ -248,19 +262,34 @@ public class BFlController  extends BaseController {
         orderBy.add(CommonOrder.asc("px"));
         List<BFl2B01> bFl2B01List = this.bFl2B01Service.list(query,orderBy);
         BFlVo vo = new BFlVo();
+        String b01Ids = "";
+        String b01Names = "";
 
+        if(bFl2B01List.size()>0){
+            for(int i=0;i<bFl2B01List.size();i++){
+                if(i==bFl2B01List.size()-1){
+                    b01Ids+=bFl2B01List.get(i).getB01().getB0100();
+                    b01Names+=bFl2B01List.get(i).getB01().getB0101();
+                }else {
+                    b01Ids+=bFl2B01List.get(i).getB01().getB0100()+",";
+                    b01Names+=bFl2B01List.get(i).getB01().getB0101()+",";
+                }
+            }
+        }
         int sort = this.bFlService.getMaxSort();
 
         map.put("bflId",bflId);
         map.put("fl",fl);
-        map.put("vo",vo);
+        map.put("jgQuery",b01Ids);
+        map.put("jgNameQuery",b01Names);
         return new ModelAndView("saas/zzb/jggl/fl/addJggl",map);
     }
 
 //    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加材料:${vo.e01Z111}")
 //    @RequiresPermissions("a38:*")
     @RequestMapping(value = "/saveJg", method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> saveJg(HttpServletRequest request,String idString,String jgNameQuery,String bflId) throws GenericException {
+    public @ResponseBody Map<String, Object> saveJg(HttpServletRequest request,String idString,String jgQuery
+            ,String jgNameQuery,String bflId) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         String [] ids = idString.split(",");
         String [] addIds = new String[ids.length];
@@ -274,26 +303,34 @@ public class BFlController  extends BaseController {
             List<BFl2B01> bFl2B01List = this.bFl2B01Service.list(query,orderBy);
             String [] delIds = new String[bFl2B01List.size()];
             int s = 0;
+            boolean flag;
             for(int i=0;i<ids.length;i++){
+                flag=true;
                 for(int j=0;j<bFl2B01List.size();j++){
-                    if(ids[i].equals(bFl2B01List.get(j).getId())){
+                    if(ids[i].equals(bFl2B01List.get(j).getB01().getB0100())){
+                        flag=false;
                         break;
                     }
                     if(j==bFl2B01List.size()-1){
                         addIds[s] = ids[i];
                         s++;
+                        flag=false;
                     }
+                }
+                if(flag){
+                    addIds[s] = ids[i];
+                    s++;
                 }
             }
 
             s = 0;
             for(int i=0;i<bFl2B01List.size();i++){
                 for(int j=0;j<ids.length;j++){
-                    if(ids[i].equals(bFl2B01List.get(j).getId())){
+                    if(ids[j].equals(bFl2B01List.get(i).getB01().getB0100())){
                         break;
                     }
-                    if(j==ids.length){
-                        delIds[s] = ids[i];
+                    if(j==ids.length-1){
+                        delIds[s] = bFl2B01List.get(i).getB01().getB0100();
                         s++;
                     }
                 }
@@ -301,9 +338,12 @@ public class BFlController  extends BaseController {
 
             if(delIds.length>0){
                 for(String id:delIds){
+                    if(StringUtils.isEmpty(id)){
+                        break;
+                    }
                     query = new CommonConditionQuery();
-                    query.add(CommonRestrictions.and(" bfl.id = :id ", "id", bflId));
-                    query.add(CommonRestrictions.and(" b01.id = :id ", "id", id));
+                    query.add(CommonRestrictions.and(" bfl.id = :bflId ", "bflId", bflId));
+                    query.add(CommonRestrictions.and(" b01.b0100 = :b01Id ", "b01Id", id));
                     List<BFl2B01> bFl2B01ListDel = this.bFl2B01Service.list(query,orderBy);
                     if(bFl2B01ListDel.size()>0){
                         this.bFl2B01Service.deleteList(bFl2B01ListDel);
@@ -313,6 +353,9 @@ public class BFlController  extends BaseController {
 
             if(addIds.length>0){
                 for(String id:addIds){
+                    if(StringUtils.isEmpty(id)){
+                        break;
+                    }
                     B01 b01 = this.b01Service.getByPK(id);
                     BFl2B01 bFl2B01 = new BFl2B01();
                     bFl2B01.setB01(b01);
@@ -341,8 +384,8 @@ public class BFlController  extends BaseController {
             if(StringUtils.isEmpty(id)){
                 return null;
             }
-            B01 b01 = this.b01Service.getByPK(id);
-            this.b01Service.delete(b01);
+            BFl2B01 bFl2B01 = this.bFl2B01Service.getByPK(id);
+            this.bFl2B01Service.delete(bFl2B01);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e);
@@ -360,21 +403,32 @@ public class BFlController  extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
             orderBy.add(CommonOrder.asc("px"));
             List<BFl> bFlList = this.bFlService.list(query,orderBy);
+            List<B01TreeNode> nodes = this.b01Service.getB01TreeVoList(null,null,null,null);
             List<TreeNode> treeNodes = new ArrayList<TreeNode>();
             TreeNode treeNode = new TreeNode();
-            treeNode = new TreeNode();
-            treeNode.setId("1");
-            treeNode.setName("湘西州");
-            treeNode.setpId("0");
-            treeNode.setKey("1");
-            treeNodes.add(treeNode);
+            String Pid = "";
+            if(nodes!=null&&nodes.size()>0){
+                for(B01TreeNode b01TreeNode:nodes){
+                    if(b01TreeNode.getIsParent()){
+                        treeNode = new TreeNode();
+                        treeNode.setId(b01TreeNode.getId());
+                        treeNode.setName(b01TreeNode.getName());
+                        treeNode.setpId(b01TreeNode.getpId());
+                        treeNode.setKey("1");
+                        treeNodes.add(treeNode);
+                        Pid=b01TreeNode.getId();
+                        break;
+                    }
+                }
+            }
+
             TreeNode childTreeNode=null;
             for (BFl bFl : bFlList) {
                 childTreeNode = new TreeNode();
                 childTreeNode.setId(bFl.getId());
                 childTreeNode.setName(bFl.getFl());
                 childTreeNode.setKey("2");
-                childTreeNode.setpId("1");
+                childTreeNode.setpId(Pid);
                 treeNodes.add(childTreeNode);
             }
             map.put("success", true);

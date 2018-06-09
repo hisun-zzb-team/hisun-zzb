@@ -8,8 +8,8 @@ import com.hisun.saas.zzb.b.entity.BFl;
  */
 public class BFl2B01Vo {
     private Integer px;//排序
-    private BFl bfl;//分类id
-    private B01 b01;//机构id
+    private BFlVo bflVo;//分类
+    private B01Vo b01Vo;//机构
     private String id;//主键
 
     public String getId() {
@@ -28,20 +28,19 @@ public class BFl2B01Vo {
         this.px = px;
     }
 
-    public BFl getBfl() {
-        return bfl;
+    public BFlVo getBflVo() {
+        return bflVo;
     }
 
-    public void setBfl(BFl bfl) {
-        this.bfl = bfl;
+    public void setBflVo(BFlVo bflVo) {
+        this.bflVo = bflVo;
     }
 
-    public B01 getB01() {
-        return b01;
+    public B01Vo getB01Vo() {
+        return b01Vo;
     }
 
-    public void setB01(B01 b01) {
-        this.b01 = b01;
+    public void setB01Vo(B01Vo b01Vo) {
+        this.b01Vo = b01Vo;
     }
-
 }

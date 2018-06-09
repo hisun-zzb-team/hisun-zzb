@@ -124,6 +124,14 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
                 b01TreeNode.setName(b01.getB0101());
                 b01TreeNode.setbSjlx(b01.getbSjlx());
                 b01TreeNode.setKey(b01.getB0100());
+                if(defaultkeys!=null && !defaultkeys.equals("")) {
+                    String str[] = defaultkeys.split(",");
+                    for(String key :str){
+                        if(key.equals(b01.getB0100())){
+                            b01TreeNode.setChecked(true);
+                        }
+                    }
+                }
                 if(b01.getParentB01()!= null) {
                     b01TreeNode.setpId(b01.getParentB01().getB0100());
                 }else{

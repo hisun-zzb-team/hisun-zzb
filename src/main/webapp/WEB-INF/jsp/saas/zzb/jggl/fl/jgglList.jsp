@@ -102,7 +102,13 @@
 								<%--<td><a href="${path }/zzb/app/console/bset/addOrEditManage?dataType=0&parentId=${queryId}"><c:out value="${vo.b0101}"></c:out></a></td>--%>
 								<%--&lt;%&ndash;<td><c:out value="${vo.b0101}"></c:out></td>&ndash;%&gt;--%>
 								<%--<td>&nbsp;</td><td>&nbsp;</td>--%>
-								<%--<td><c:out value="${vo.px}"></c:out></td>--%>
+								<td><c:out value="${vo.px}"></c:out></td>
+								<td><c:out value="${vo.b01Vo.b0101}"></c:out></td>
+								<td><c:out value="${vo.b01Vo.b0104}"></c:out></td>
+								<td><c:out value="${vo.b01Vo.b0131A}"></c:out></td>
+								<td class="Left_alignment">
+									<a href="javascript:del('${vo.id }','${vo.b01Vo.b0101}')" class="">删除</a>
+								</td>
 								<%--<td><c:out value="${vo.zyjszw}"></c:out></td>--%>
 								<%--<td><c:out value="${vo.xrzwsj}"></c:out></td>--%>
 								<%--<td title="${vo.xrzjsj}"><c:out value="${vo.xrzjsj}"></c:out></td>--%>
@@ -136,6 +142,10 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 
 	function pagehref (pageNum ,pageSize){
 		<%--window.location.href ="${path}/zzb/app/console/gbmc/a01/list?b01Id=${b01Id}&mcid=${mcid}&pageNum="+pageNum+"&pageSize="+pageSize;--%>
+		var bflId = $("#bflId").val();
+		var fl = $("#fl").val();
+		var parentBFlId = $("#parentBFlId").val();
+		var b0101Query = $("#b0101Query").val();
 		$.ajax({
 			async:false,
 			type:"POST",
@@ -145,12 +155,16 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
 			data:{
-				'queryId':"${queryId}",
 				'pageNum':pageNum,
-				'pageSize':pageSize
+				'pageSize':pageSize,
+				"flQuery":fl,
+				"bflId":bflId,
+				"parentBFlId":parentBFlId,
+				"key":"2",
+				"b0101Query":b0101Query
 			},
 			success:function(html){
-				$("#catalogList").html(html);
+				$("#rightList").html(html);
 //				$("#treeId").val(nodeId);
 			},
 			error : function(){
@@ -162,18 +176,27 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 	}
 
 	function searchSubmit(){
+		var bflId = $("#bflId").val();
+		var fl = $("#fl").val();
+		var parentBFlId = $("#parentBFlId").val();
+		var b0101Query = $("#b0101Query").val();
 		$.ajax({
 			async:false,
 			type:"POST",
-			url:"${path}/zzb/app/console/bset/ajax/list",
+			url:"${path}/zzb/jggl/fl/ajax/list",
 			dataType : "html",
 			headers:{
 				"OWASP_CSRFTOKEN":'${sessionScope.OWASP_CSRFTOKEN}'
 			},
-			data : $("#searchForm").serialize(),
+			data : {
+				"flQuery":fl,
+				"bflId":bflId,
+				"parentBFlId":parentBFlId,
+				"key":"2",
+				"b0101Query":b0101Query
+			},
 			success:function(html){
-				$("#catalogList").html(html);
-//				$("#treeId").val(nodeId);
+				$("#rightList").html(html);
 			},
 			error : function(){
 				myLoading.hide();
@@ -213,9 +236,12 @@ var myLoading = new MyLoading("${path}",{zindex : 11111});
 	}
 
 	function del(id, voname) {
+		var bflId = $("#bflId").val();
+		var fl = $("#fl").val();
+		var parentBFlId = $("#parentBFlId").val();
 		actionByConfirm1(voname, "${path}/zzb/jggl/fl/delJg/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
 			if (data.success == true) {
-				window.location.href = "${path }/zzb/jggl/fl/flManage?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+				window.location.href = "${path }/zzb/jggl/fl/flManage?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&bflId="+bflId+"&fl="+fl+"&parentBFlId="+parentBFlId+"&key=2";
 			} else {
 				showTip("提示", data.msg, 2000);
 			}

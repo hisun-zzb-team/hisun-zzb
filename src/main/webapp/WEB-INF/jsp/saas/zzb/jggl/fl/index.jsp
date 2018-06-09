@@ -35,7 +35,7 @@
 					<input type="hidden" id="parentBFlId"  name="parentB01Id" value="" />
 					<input type="hidden" id="key"  name="key" value="" />
 					<Tree:tree id="leftBFlTree" treeUrl="${path}/zzb/jggl/fl/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>
+							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false" defaultkeys="${bflId}" defaultvalues="${fl}"/>
 				</div>
 			</div>
 		</div>
@@ -89,11 +89,15 @@
 		App.init();//必须，不然导航栏及其菜单无法折叠
 		var zTree = $.fn.zTree.getZTreeObj("leftBFlTree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
-		var bflId ;
-		var parentBFlId ;
-		var fl ;
-		var key ;
-		if(node!=null){
+		var bflId = "${bflId}";
+		var parentBFlId = "${parentBFlId}";
+		var fl = "${fl}";
+		var key = "${key}";
+		var nodesFlag = 0;
+		if(node!=null&&(bflId==null||bflId==="")
+				&&(parentBFlId==null||parentBFlId==="")
+				&&(fl==null||fl==="")
+				&&(key==null||key==="")){
 			$("#bflId").val(node.id);//赋值
 			$("#fl").val(node.name);//赋值
 			$("#parentBFlId").val(node.pId);//赋值
@@ -101,6 +105,7 @@
 			fl =node.name;
 			parentBFlId =node.pId;
 			key =node.key;
+			nodesFlag=1;
 		}
 
 		$.ajax({
@@ -122,9 +127,20 @@
 			},
 			success:function(html){
 				$("#rightList").html(html);
+				App.init();
 			}
 		});
-		zTree.selectNode(node);//默认选中
+		if(nodesFlag==1){
+			zTree.selectNode(node);//默认选中
+		}else {
+			var children = node.children;
+			for(var i=0;i<children.length;i++){
+				var childrenNode = children[i];
+				if(bflId ==childrenNode.id){
+					zTree.selectNode(childrenNode);//默认选中
+				}
+			}
+		}
 		zTree.expandNode(node, true, false , true);//展开
 	});
 

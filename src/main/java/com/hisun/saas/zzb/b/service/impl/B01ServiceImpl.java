@@ -94,7 +94,7 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
                 query.add(CommonRestrictions.and(" b0101 like:param ", "param", "%"+param+"%"));
                 query.add(CommonRestrictions.and(" tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
             }else {
-                query.add(CommonRestrictions.and(" b_sjjg='' and tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
+                query.add(CommonRestrictions.and(" b_sjjg='' or b_sjjg is null and tombstone=:tombstone ", "tombstone", TombstoneEntity.TOMBSTONE_FALSE));
             }
         } else {
             query.add(CommonRestrictions.and(" parentB01.b0100=:parentNodeId ", "parentNodeId", id));
@@ -132,10 +132,10 @@ public class B01ServiceImpl extends BaseServiceImpl<B01,String> implements B01Se
                         }
                     }
                 }
-                if(b01.getParentB01()!= null) {
+                if(b01.getParentB01()!= null&&b01.getParentB01().getB0100()!=null&&!b01.getParentB01().getB0100().equals("")) {
                     b01TreeNode.setpId(b01.getParentB01().getB0100());
                 }else{
-                    b01TreeNode.setpId("");
+                    b01TreeNode.setpId(null);
 //                    b01TreeNode.setOpen(true);
                 }
                 b01TreeVoList.add(b01TreeNode);

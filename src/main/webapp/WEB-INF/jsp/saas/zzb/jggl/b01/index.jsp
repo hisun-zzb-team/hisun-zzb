@@ -36,7 +36,7 @@
 					<%--<Tree:tree id="leftB01Tree" treeUrl="${path}/zzb/jggl/b01Api/load/tree" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
 							   <%--onClick="onClickByTree" submitType="post" dataType="json" isSearch="false"/>--%>
 					<Tree:tree id="leftB01Tree"  treeUrl="${path}/api/b01/dtjz/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-							   onClick="onClickByTree" submitType="post" dataType="json" isSearch="false" isSelectTree="false" dtjz="true"/>
+							   onClick="onClickByTree" shjz="true" submitType="post" dataType="json" isSearch="false" isSelectTree="false" dtjz="true"/>
 				</div>
 			</div>
 		</div>

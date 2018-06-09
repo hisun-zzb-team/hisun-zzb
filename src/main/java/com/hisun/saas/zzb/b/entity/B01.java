@@ -35,6 +35,9 @@ public class B01 extends TombstoneEntity  implements Serializable {
     /** 单位代码ZB02-2006/JGMC */
     private String b0111;
 
+    /** 单位代码名称 */
+    private String b0111A;
+
     /** 组织单位代码 */
     private String b0114;
 
@@ -293,6 +296,16 @@ public class B01 extends TombstoneEntity  implements Serializable {
     }
     public void setB0111(String b0111) {
         this.b0111 = b0111;
+    }
+
+    @Basic
+    @javax.persistence.Column(name = "b0111a", nullable = true, length = 256)
+    public String getB0111A() {
+        return b0111A;
+    }
+
+    public void setB0111A(String b0111A) {
+        this.b0111A = b0111A;
     }
 
     @Basic

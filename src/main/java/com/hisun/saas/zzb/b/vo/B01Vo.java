@@ -34,6 +34,9 @@ public class B01Vo  {
     /** 单位代码ZB02-2006/JGMC */
     private String b0111;
 
+    /** 单位代码名称 */
+    private String b0111A;
+
     /** 组织单位代码 */
     private String b0114;
 
@@ -204,6 +207,14 @@ public class B01Vo  {
 
     public String getB0100() {
         return b0100;
+    }
+
+    public String getB0111A() {
+        return b0111A;
+    }
+
+    public void setB0111A(String b0111A) {
+        this.b0111A = b0111A;
     }
 
     public void setB0100(String b0100) {

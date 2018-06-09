@@ -206,8 +206,10 @@ public class B01Controller extends BaseController {
             if (StringUtils.isNotBlank(currentId)) {
                 B01 entity = b01Service.getByPK(currentId);
                 BeanUtils.copyProperties(entity, vo);
-                vo.setParentId(entity.getParentB01().getB0100());
-                vo.setParentName(entity.getParentB01().getB0101());
+                if(entity.getParentB01()!=null){
+                    vo.setParentId(entity.getParentB01().getB0100());
+                    vo.setParentName(entity.getParentB01().getB0101());
+                }
             } else {
                 vo.setParentId(b01Id);
                 if (StringUtils.isNotBlank(b01Id))

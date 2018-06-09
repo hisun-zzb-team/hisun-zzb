@@ -607,8 +607,8 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         attMaps.put("A0104","a0104");//性别字典代码
         attMaps.put("A0104_CONTENT","a0104_content");//性别字典内容
         attMaps.put("A0107","a0107");//出生日期
-        attMaps.put("A0111B","a0111B");//籍贯字典代码
-        attMaps.put("A0111A","a0111A");//籍贯内容
+        attMaps.put("A0111B","a0111A");//籍贯字典代码
+//        attMaps.put("A0111A","a0111A");//籍贯内容
         attMaps.put("A_CADRE_STATE_CODE","gbzt_code");//干部状态字典代码
         attMaps.put("A_CADRE_STATE_CONTENT","gbzt_content");//干部状态字典内容
         attMaps.put("A_ARCHIVES_STATE_CODE","dazt_code");//档案状态字典代码
@@ -617,7 +617,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         attMaps.put("A3801","a3801");//档案接收日期
         attMaps.put("RECEIVER","jsr");//接收人，默认当前用户
         attMaps.put("A3804B","a3804B");//档案来处id
-        attMaps.put("A3804B","a3804A");//档案来处名称（转入单位名称）
+        attMaps.put("A3804A","a3804A");//档案来处名称（转入单位名称）
         attMaps.put("A3807B","a3807B");//转出单位id，即档案管理单位id
         attMaps.put("A3807A","a3807A");//转出单位名称，即档案管理单位名称
         attMaps.put("A3814","a3814");//档案版本类别

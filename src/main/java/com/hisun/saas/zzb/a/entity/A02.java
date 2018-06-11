@@ -3,12 +3,13 @@ package com.hisun.saas.zzb.a.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
 @Table(name = "a02")
-public class A02 {
+public class A02 implements Serializable {
     /** 现任职务主键 */
     private String a0200;
 

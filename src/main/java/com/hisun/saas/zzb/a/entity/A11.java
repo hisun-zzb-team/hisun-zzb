@@ -3,11 +3,12 @@ package com.hisun.saas.zzb.a.entity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "a11")
-public class A11 {
+public class A11 implements Serializable {
     /** 培训情况主键 */
     private String a1100;
 

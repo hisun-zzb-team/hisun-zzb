@@ -90,7 +90,7 @@
                                                                      valueName="bGllbA"
                                                                      defaultkeys="${vo.bGllbB}"
                                                                      token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                     defaultvalues="${vo.bGllbA}"
+                                                                     defaultvalues="${vo.bGllbA}" required="true"
                                                                      textClass="span10 m-wrap" radioOrCheckbox="radio"
                                                                      selectUrl="${path}/api/dictionary/select?typeCode=2018-JGGLLB"/>
                                             </div>

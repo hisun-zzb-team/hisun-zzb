@@ -30,7 +30,7 @@
                                     <div id="b0404Group" class="control-group">
                                         <label class="control-label"><span class="Required">*</span>机构地址</label>
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="b0404" id="b0404" required
+                                            <input type="text" class="span10 m-wrap" name="b0404" id="b0404"
                                                     maxlength="128" value="${vo.b0404 }"/>
                                         </div>
                                     </div>

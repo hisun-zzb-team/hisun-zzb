@@ -34,15 +34,5 @@
         <property name="hibernate.connection.autocommit">true</property>
         <!-- 将Session与线程绑定=> 只有配置了该配置,才能使用getCurrentSession -->
         <property name="hibernate.current_session_context_class">thread</property>
-        <mapping class="com.hisun.saas.zzb.a.entity.A01"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A02"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A05"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A08"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A17"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A14Z2"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A14Z3"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A11"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A36"/>
-        <mapping class="com.hisun.saas.zzb.a.entity.A37"/>
     </session-factory>
 </hibernate-configuration>

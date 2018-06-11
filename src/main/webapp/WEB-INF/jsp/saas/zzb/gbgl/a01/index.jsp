@@ -86,48 +86,6 @@
 	$(document).ready(function(){
 	    var isAddOne = false;
 		App.init();//必须，不然导航栏及其菜单无法折叠
-		//判断是否已添加顶级节点
-        $.ajax({
-            async:false,
-            url: "${path}/zzb/jggl/b01/getB01List",
-            type : "get",
-            dataType : "json",
-            headers: {
-                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            data:{},
-            success : function(json){
-                if(!json.exist){
-                    isAddOne =true;
-                    $.ajax({
-                        async:false,
-                        url: "${path}/zzb/jggl/b01/ajax/manage",
-                        type : "get",
-                        dataType : "html",
-                        headers: {
-                            "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-                        },
-                        data:{
-                            "isAdd":"add",
-                            "bSjlx":"2",
-                            "isAddOne":"addOne"
-                        },
-                        success : function(html){
-                            $("#rightList").html(html);
-                        },
-                        error : function(){
-
-                        }
-                    });
-                }
-            },
-            error : function(){
-
-            }
-        });
-        if(isAddOne){
-            return;
-        }
 		var zTree = $.fn.zTree.getZTreeObj("leftB01Tree");//取得树对象
 		var node = zTree.getNodes()[0];// 获取第一个点
 
@@ -149,14 +107,11 @@
 			type: 'POST',
 			dataType : "html",
 			data:{
-				"b01Id":b01Id,
-				"parentB01Id":parentB01Id,
-				"b0101":b0101
 			},
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
 			},
-			url: "${path}/zzb/jggl/b01/ajax/list",// 请求的action路径
+			url: "${path}/zzb/gbgl/a01/ajax/list",// 请求的action路径
 			error: function () {// 请求失败处理函数
 				alert('请求失败');
 			},

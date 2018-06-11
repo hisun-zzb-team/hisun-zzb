@@ -1,16 +1,17 @@
-package com.hisun.saas.zzb.a.entity;
+/*
+ * Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
+ * http://www.hn-hisun.com
+ * 注意:本内容知识产权属于湖南海数互联信息技术有限公司所有,除非取得商业授权,否则不得用于商业目的.
+ */
 
-import com.hisun.base.entity.TombstoneEntity;
-import org.hibernate.annotations.GenericGenerator;
+package com.hisun.saas.zzb.a.vo;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
 
-@Entity
-@Table(name = "a01")
-public class A01 extends TombstoneEntity implements Serializable {
+/**
+ * @author Marco {854476391@qq.com}
+ */
+public class A01Vo {
     /** 人员基本信息主键 */
     private String a0100;
 
@@ -284,10 +285,6 @@ public class A01 extends TombstoneEntity implements Serializable {
     /** 科研成果、著作发明 */
     private String aKycgqk;
 
-    @Id
-    @GenericGenerator(name = "generator", strategy = "uuid")
-    @GeneratedValue(generator = "generator")
-    @Column(name = "a0100", nullable = false, length = 64)
     public String getA0100() {
         return a0100;
     }
@@ -296,8 +293,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0100 = a0100;
     }
 
-    @Basic
-    @Column(name = "a0101", nullable = true, length = 100)
     public String getA0101() {
         return a0101;
     }
@@ -306,8 +301,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0101 = a0101;
     }
 
-    @Basic
-    @Column(name = "a0102", nullable = true, length = 6)
     public String getA0102() {
         return a0102;
     }
@@ -316,8 +309,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0102 = a0102;
     }
 
-    @Basic
-    @Column(name = "a0104", nullable = true, length = 128)
     public String getA0104() {
         return a0104;
     }
@@ -326,8 +317,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0104 = a0104;
     }
 
-    @Basic
-    @Column(name = "a0104a", nullable = true, length = 4)
     public String getA0104A() {
         return a0104A;
     }
@@ -336,8 +325,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0104A = a0104A;
     }
 
-    @Basic
-    @Column(name = "a0107", nullable = true, length = 8)
     public String getA0107() {
         return a0107;
     }
@@ -346,8 +333,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0107 = a0107;
     }
 
-    @Basic
-    @Column(name = "a0111a", nullable = true, length = 64)
     public String getA0111A() {
         return a0111A;
     }
@@ -356,8 +341,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0111A = a0111A;
     }
 
-    @Basic
-    @Column(name = "a0111b", nullable = true, length = 128)
     public String getA0111B() {
         return a0111B;
     }
@@ -366,8 +349,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0111B = a0111B;
     }
 
-    @Basic
-    @Column(name = "a0114a", nullable = true, length = 128)
     public String getA0114A() {
         return a0114A;
     }
@@ -376,8 +357,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0114A = a0114A;
     }
 
-    @Basic
-    @Column(name = "a0114b", nullable = true, length = 128)
     public String getA0114B() {
         return a0114B;
     }
@@ -386,8 +365,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0114B = a0114B;
     }
 
-    @Basic
-    @Column(name = "a0115a", nullable = true, length = 128)
     public String getA0115A() {
         return a0115A;
     }
@@ -396,8 +373,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0115A = a0115A;
     }
 
-    @Basic
-    @Column(name = "a0115b", nullable = true, length = 128)
     public String getA0115B() {
         return a0115B;
     }
@@ -406,8 +381,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0115B = a0115B;
     }
 
-    @Basic
-    @Column(name = "a0117", nullable = true, length = 128)
     public String getA0117() {
         return a0117;
     }
@@ -416,8 +389,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0117 = a0117;
     }
 
-    @Basic
-    @Column(name = "a0117a", nullable = true, length = 32)
     public String getA0117A() {
         return a0117A;
     }
@@ -426,8 +397,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0117A = a0117A;
     }
 
-    @Basic
-    @Column(name = "a0127", nullable = true, length = 128)
     public String getA0127() {
         return a0127;
     }
@@ -436,8 +405,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0127 = a0127;
     }
 
-    @Basic
-    @Column(name = "a0127a", nullable = true, length = 256)
     public String getA0127A() {
         return a0127A;
     }
@@ -446,8 +413,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0127A = a0127A;
     }
 
-    @Basic
-    @Column(name = "a0128", nullable = true, length = 60)
     public String getA0128() {
         return a0128;
     }
@@ -456,8 +421,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0128 = a0128;
     }
 
-    @Basic
-    @Column(name = "a0131", nullable = true, length = 128)
     public String getA0131() {
         return a0131;
     }
@@ -466,8 +429,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0131 = a0131;
     }
 
-    @Basic
-    @Column(name = "a0131a", nullable = true, length = 16)
     public String getA0131A() {
         return a0131A;
     }
@@ -476,8 +437,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0131A = a0131A;
     }
 
-    @Basic
-    @Column(name = "a_cjgzdw", nullable = true, length = 512)
     public String getaCjgzdw() {
         return aCjgzdw;
     }
@@ -486,8 +445,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aCjgzdw = aCjgzdw;
     }
 
-    @Basic
-    @Column(name = "a0134", nullable = true, length = 8)
     public String getA0134() {
         return a0134;
     }
@@ -496,8 +453,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0134 = a0134;
     }
 
-    @Basic
-    @Column(name = "a0137", nullable = true, precision = 2)
     public BigDecimal getA0137() {
         return a0137;
     }
@@ -506,8 +461,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0137 = a0137;
     }
 
-    @Basic
-    @Column(name = "a0141", nullable = true, length = 2)
     public String getA0141() {
         return a0141;
     }
@@ -516,8 +469,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0141 = a0141;
     }
 
-    @Basic
-    @Column(name = "a0144", nullable = true, length = 8)
     public String getA0144() {
         return a0144;
     }
@@ -526,8 +477,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0144 = a0144;
     }
 
-    @Basic
-    @Column(name = "a0151", nullable = true, length = 2)
     public String getA0151() {
         return a0151;
     }
@@ -536,8 +485,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0151 = a0151;
     }
 
-    @Basic
-    @Column(name = "a0154", nullable = true, length = 8)
     public String getA0154() {
         return a0154;
     }
@@ -546,8 +493,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0154 = a0154;
     }
 
-    @Basic
-    @Column(name = "a0157a", nullable = true, length = 60)
     public String getA0157A() {
         return a0157A;
     }
@@ -556,8 +501,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0157A = a0157A;
     }
 
-    @Basic
-    @Column(name = "a0157b", nullable = true, length = 15)
     public String getA0157B() {
         return a0157B;
     }
@@ -566,8 +509,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0157B = a0157B;
     }
 
-    @Basic
-    @Column(name = "a0161", nullable = true, length = 6)
     public String getA0161() {
         return a0161;
     }
@@ -576,8 +517,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0161 = a0161;
     }
 
-    @Basic
-    @Column(name = "a0164", nullable = true, length = 2)
     public String getA0164() {
         return a0164;
     }
@@ -586,8 +525,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0164 = a0164;
     }
 
-    @Basic
-    @Column(name = "a0167", nullable = true, length = 3)
     public String getA0167() {
         return a0167;
     }
@@ -596,8 +533,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0167 = a0167;
     }
 
-    @Basic
-    @Column(name = "a0171", nullable = true, length = 3)
     public String getA0171() {
         return a0171;
     }
@@ -606,8 +541,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0171 = a0171;
     }
 
-    @Basic
-    @Column(name = "a0174", nullable = true, length = 5)
     public String getA0174() {
         return a0174;
     }
@@ -616,8 +549,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0174 = a0174;
     }
 
-    @Basic
-    @Column(name = "a0177", nullable = true, length = 1)
     public String getA0177() {
         return a0177;
     }
@@ -626,8 +557,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0177 = a0177;
     }
 
-    @Basic
-    @Column(name = "a0181a", nullable = true, length = 6)
     public String getA0181A() {
         return a0181A;
     }
@@ -636,8 +565,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0181A = a0181A;
     }
 
-    @Basic
-    @Column(name = "a0181b", nullable = true, length = 15)
     public String getA0181B() {
         return a0181B;
     }
@@ -646,8 +573,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0181B = a0181B;
     }
 
-    @Basic
-    @Column(name = "a0183", nullable = true, length = 1)
     public String getA0183() {
         return a0183;
     }
@@ -656,8 +581,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0183 = a0183;
     }
 
-    @Basic
-    @Column(name = "a0184", nullable = true, length = 30)
     public String getA0184() {
         return a0184;
     }
@@ -666,8 +589,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0184 = a0184;
     }
 
-    @Basic
-    @Column(name = "a0187a", nullable = true, length = 256)
     public String getA0187A() {
         return a0187A;
     }
@@ -676,8 +597,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0187A = a0187A;
     }
 
-    @Basic
-    @Column(name = "a0187b", nullable = true, length = 1024)
     public String getA0187B() {
         return a0187B;
     }
@@ -686,8 +605,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0187B = a0187B;
     }
 
-    @Basic
-    @Column(name = "a0191", nullable = true, length = 1)
     public String getA0191() {
         return a0191;
     }
@@ -696,8 +613,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0191 = a0191;
     }
 
-    @Basic
-    @Column(name = "a_zpgs", nullable = true, length = 32)
     public String getaZpgs() {
         return aZpgs;
     }
@@ -706,8 +621,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZpgs = aZpgs;
     }
 
-    @Basic
-    @Column(name = "a_zpdx", nullable = true, precision = 2)
     public BigDecimal getaZpdx() {
         return aZpdx;
     }
@@ -716,8 +629,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZpdx = aZpdx;
     }
 
-    @Basic
-    @Column(name = "a_zplj", nullable = true, length = 256)
     public String getaZplj() {
         return aZplj;
     }
@@ -726,8 +637,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZplj = aZplj;
     }
 
-    @Basic
-    @Column(name = "a0501a", nullable = true, length = 30)
     public String getA0501A() {
         return a0501A;
     }
@@ -736,8 +645,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0501A = a0501A;
     }
 
-    @Basic
-    @Column(name = "a0501b", nullable = true, length = 4)
     public String getA0501B() {
         return a0501B;
     }
@@ -746,8 +653,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0501B = a0501B;
     }
 
-    @Basic
-    @Column(name = "a0504", nullable = true, length = 8)
     public String getA0504() {
         return a0504;
     }
@@ -756,8 +661,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.a0504 = a0504;
     }
 
-    @Basic
-    @Column(name = "a_zjsm", nullable = true, length = 128)
     public String getaZjsm() {
         return aZjsm;
     }
@@ -766,8 +669,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZjsm = aZjsm;
     }
 
-    @Basic
-    @Column(name = "axzwcca", nullable = true, length = 30)
     public String getAxzwcca() {
         return axzwcca;
     }
@@ -776,8 +677,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.axzwcca = axzwcca;
     }
 
-    @Basic
-    @Column(name = "a_xzwccb", nullable = true, length = 4)
     public String getaXzwccb() {
         return aXzwccb;
     }
@@ -786,8 +685,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aXzwccb = aXzwccb;
     }
 
-    @Basic
-    @Column(name = "a_xzwccsj", nullable = true, length = 8)
     public String getaXzwccsj() {
         return aXzwccsj;
     }
@@ -796,8 +693,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aXzwccsj = aXzwccsj;
     }
 
-    @Basic
-    @Column(name = "a_sfgwy", nullable = true, length = 1)
     public String getaSfgwy() {
         return aSfgwy;
     }
@@ -806,8 +701,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfgwy = aSfgwy;
     }
 
-    @Basic
-    @Column(name = "a_gwydjsj", nullable = true, length = 8)
     public String getaGwydjsj() {
         return aGwydjsj;
     }
@@ -816,8 +709,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGwydjsj = aGwydjsj;
     }
 
-    @Basic
-    @Column(name = "a_gbztb", nullable = true, length = 8)
     public String getaGbztb() {
         return aGbztb;
     }
@@ -826,8 +717,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGbztb = aGbztb;
     }
 
-    @Basic
-    @Column(name = "a_gbzta", nullable = true, length = 256)
     public String getaGbzta() {
         return aGbzta;
     }
@@ -836,8 +725,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGbzta = aGbzta;
     }
 
-    @Basic
-    @Column(name = "a_jrdqdwsj", nullable = true, length = 8)
     public String getaJrdqdwsj() {
         return aJrdqdwsj;
     }
@@ -846,8 +733,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aJrdqdwsj = aJrdqdwsj;
     }
 
-    @Basic
-    @Column(name = "a_gblya", nullable = true, length = 512)
     public String getaGblya() {
         return aGblya;
     }
@@ -856,8 +741,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGblya = aGblya;
     }
 
-    @Basic
-    @Column(name = "a_gblyb", nullable = true, length = 128)
     public String getaGblyb() {
         return aGblyb;
     }
@@ -866,8 +749,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGblyb = aGblyb;
     }
 
-    @Basic
-    @Column(name = "a_gllb_b", nullable = true, length = 128)
     public String getaGllbB() {
         return aGllbB;
     }
@@ -876,8 +757,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGllbB = aGllbB;
     }
 
-    @Basic
-    @Column(name = "a_gllb_a", nullable = true, length = 128)
     public String getaGllbA() {
         return aGllbA;
     }
@@ -886,8 +765,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aGllbA = aGllbA;
     }
 
-    @Basic
-    @Column(name = "a_sfydzda", nullable = true, length = 128)
     public String getaSfydzda() {
         return aSfydzda;
     }
@@ -896,8 +773,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfydzda = aSfydzda;
     }
 
-    @Basic
-    @Column(name = "a_sfysh", nullable = true, length = 1)
     public String getaSfysh() {
         return aSfysh;
     }
@@ -906,8 +781,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfysh = aSfysh;
     }
 
-    @Basic
-    @Column(name = "a_sfhbgb", nullable = true, length = 1)
     public String getaSfhbgb() {
         return aSfhbgb;
     }
@@ -916,8 +789,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfhbgb = aSfhbgb;
     }
 
-    @Basic
-    @Column(name = "a_sfyshxlxw", nullable = true, length = 2)
     public String getaSfyshxlxw() {
         return aSfyshxlxw;
     }
@@ -926,8 +797,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfyshxlxw = aSfyshxlxw;
     }
 
-    @Basic
-    @Column(name = "a_sfzgdy", nullable = false, length = 4)
     public String getaSfzgdy() {
         return aSfzgdy;
     }
@@ -936,8 +805,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aSfzgdy = aSfzgdy;
     }
 
-    @Basic
-    @Column(name = "a_zzxlb", nullable = true, length = 20)
     public String getaZzxlb() {
         return aZzxlb;
     }
@@ -946,8 +813,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZzxlb = aZzxlb;
     }
 
-    @Basic
-    @Column(name = "a_zzxla", nullable = true, length = 64)
     public String getaZzxla() {
         return aZzxla;
     }
@@ -956,8 +821,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZzxla = aZzxla;
     }
 
-    @Basic
-    @Column(name = "a_zzxwb", nullable = true, length = 20)
     public String getaZzxwb() {
         return aZzxwb;
     }
@@ -966,8 +829,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZzxwb = aZzxwb;
     }
 
-    @Basic
-    @Column(name = "a_zzxwa", nullable = true, length = 64)
     public String getaZzxwa() {
         return aZzxwa;
     }
@@ -976,8 +837,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZzxwa = aZzxwa;
     }
 
-    @Basic
-    @Column(name = "a_zzbyyxjzy", nullable = true, length = 256)
     public String getaZzbyyxjzy() {
         return aZzbyyxjzy;
     }
@@ -986,8 +845,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZzbyyxjzy = aZzbyyxjzy;
     }
 
-    @Basic
-    @Column(name = "a_qrzxlb", nullable = true, length = 20)
     public String getaQrzxlb() {
         return aQrzxlb;
     }
@@ -996,8 +853,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aQrzxlb = aQrzxlb;
     }
 
-    @Basic
-    @Column(name = "a_qrzxla", nullable = true, length = 64)
     public String getaQrzxla() {
         return aQrzxla;
     }
@@ -1006,8 +861,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aQrzxla = aQrzxla;
     }
 
-    @Basic
-    @Column(name = "a_qrzxwb", nullable = true, length = 20)
     public String getaQrzxwb() {
         return aQrzxwb;
     }
@@ -1016,8 +869,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aQrzxwb = aQrzxwb;
     }
 
-    @Basic
-    @Column(name = "a_qrzxwa", nullable = true, length = 64)
     public String getaQrzxwa() {
         return aQrzxwa;
     }
@@ -1026,8 +877,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aQrzxwa = aQrzxwa;
     }
 
-    @Basic
-    @Column(name = "a_qrzbyyxjzy", nullable = true, length = 256)
     public String getaQrzbyyxjzy() {
         return aQrzbyyxjzy;
     }
@@ -1036,8 +885,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aQrzbyyxjzy = aQrzbyyxjzy;
     }
 
-    @Basic
-    @Column(name = "a_zgxlb", nullable = true, length = 20)
     public String getaZgxlb() {
         return aZgxlb;
     }
@@ -1046,8 +893,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZgxlb = aZgxlb;
     }
 
-    @Basic
-    @Column(name = "a_zgxla", nullable = true, length = 64)
     public String getaZgxla() {
         return aZgxla;
     }
@@ -1056,8 +901,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZgxla = aZgxla;
     }
 
-    @Basic
-    @Column(name = "a_zgxwb", nullable = true, length = 20)
     public String getaZgxwb() {
         return aZgxwb;
     }
@@ -1066,8 +909,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZgxwb = aZgxwb;
     }
 
-    @Basic
-    @Column(name = "a_zgxwa", nullable = true, length = 64)
     public String getaZgxwa() {
         return aZgxwa;
     }
@@ -1076,8 +917,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZgxwa = aZgxwa;
     }
 
-    @Basic
-    @Column(name = "a_zgbyyxjzy", nullable = true, length = 256)
     public String getaZgbyyxjzy() {
         return aZgbyyxjzy;
     }
@@ -1086,8 +925,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aZgbyyxjzy = aZgbyyxjzy;
     }
 
-    @Basic
-    @Column(name = "a_dwjzw_mc", nullable = true, length = -1)
     public String getaDwjzwMc() {
         return aDwjzwMc;
     }
@@ -1096,8 +933,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aDwjzwMc = aDwjzwMc;
     }
 
-    @Basic
-    @Column(name = "a_dwjzw_spb", nullable = true, length = -1)
     public String getaDwjzwSpb() {
         return aDwjzwSpb;
     }
@@ -1106,8 +941,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aDwjzwSpb = aDwjzwSpb;
     }
 
-    @Basic
-    @Column(name = "a_jl", nullable = true, length = -1)
     public String getaJl() {
         return aJl;
     }
@@ -1116,8 +949,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aJl = aJl;
     }
 
-    @Basic
-    @Column(name = "a_jrshzwqk", nullable = true, length = -1)
     public String getaJrshzwqk() {
         return aJrshzwqk;
     }
@@ -1126,8 +957,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aJrshzwqk = aJrshzwqk;
     }
 
-    @Basic
-    @Column(name = "a_dxdbqk", nullable = true, length = -1)
     public String getaDxdbqk() {
         return aDxdbqk;
     }
@@ -1136,8 +965,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aDxdbqk = aDxdbqk;
     }
 
-    @Basic
-    @Column(name = "a_cgjqk", nullable = true, length = -1)
     public String getaCgjqk() {
         return aCgjqk;
     }
@@ -1146,8 +973,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aCgjqk = aCgjqk;
     }
 
-    @Basic
-    @Column(name = "a_jlqk", nullable = true, length = -1)
     public String getaJlqk() {
         return aJlqk;
     }
@@ -1156,8 +981,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aJlqk = aJlqk;
     }
 
-    @Basic
-    @Column(name = "a_cjqk", nullable = true, length = -1)
     public String getaCjqk() {
         return aCjqk;
     }
@@ -1166,8 +989,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aCjqk = aCjqk;
     }
 
-    @Basic
-    @Column(name = "a_ndkhqk", nullable = true, length = -1)
     public String getaNdkhqk() {
         return aNdkhqk;
     }
@@ -1176,8 +997,6 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aNdkhqk = aNdkhqk;
     }
 
-    @Basic
-    @Column(name = "a_pxqk", nullable = true, length = -1)
     public String getaPxqk() {
         return aPxqk;
     }
@@ -1186,117 +1005,11 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aPxqk = aPxqk;
     }
 
-    @Basic
-    @Column(name = "a_kycgqk", nullable = true, length = -1)
     public String getaKycgqk() {
         return aKycgqk;
     }
 
     public void setaKycgqk(String aKycgqk) {
         this.aKycgqk = aKycgqk;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        A01 a01 = (A01) o;
-        return Objects.equals(a0100, a01.a0100) &&
-                Objects.equals(a0101, a01.a0101) &&
-                Objects.equals(a0102, a01.a0102) &&
-                Objects.equals(a0104, a01.a0104) &&
-                Objects.equals(a0104A, a01.a0104A) &&
-                Objects.equals(a0107, a01.a0107) &&
-                Objects.equals(a0111A, a01.a0111A) &&
-                Objects.equals(a0111B, a01.a0111B) &&
-                Objects.equals(a0114A, a01.a0114A) &&
-                Objects.equals(a0114B, a01.a0114B) &&
-                Objects.equals(a0115A, a01.a0115A) &&
-                Objects.equals(a0115B, a01.a0115B) &&
-                Objects.equals(a0117, a01.a0117) &&
-                Objects.equals(a0117A, a01.a0117A) &&
-                Objects.equals(a0127, a01.a0127) &&
-                Objects.equals(a0127A, a01.a0127A) &&
-                Objects.equals(a0128, a01.a0128) &&
-                Objects.equals(a0131, a01.a0131) &&
-                Objects.equals(a0131A, a01.a0131A) &&
-                Objects.equals(aCjgzdw, a01.aCjgzdw) &&
-                Objects.equals(a0134, a01.a0134) &&
-                Objects.equals(a0137, a01.a0137) &&
-                Objects.equals(a0141, a01.a0141) &&
-                Objects.equals(a0144, a01.a0144) &&
-                Objects.equals(a0151, a01.a0151) &&
-                Objects.equals(a0154, a01.a0154) &&
-                Objects.equals(a0157A, a01.a0157A) &&
-                Objects.equals(a0157B, a01.a0157B) &&
-                Objects.equals(a0161, a01.a0161) &&
-                Objects.equals(a0164, a01.a0164) &&
-                Objects.equals(a0167, a01.a0167) &&
-                Objects.equals(a0171, a01.a0171) &&
-                Objects.equals(a0174, a01.a0174) &&
-                Objects.equals(a0177, a01.a0177) &&
-                Objects.equals(a0181A, a01.a0181A) &&
-                Objects.equals(a0181B, a01.a0181B) &&
-                Objects.equals(a0183, a01.a0183) &&
-                Objects.equals(a0184, a01.a0184) &&
-                Objects.equals(a0187A, a01.a0187A) &&
-                Objects.equals(a0187B, a01.a0187B) &&
-                Objects.equals(a0191, a01.a0191) &&
-                Objects.equals(aZpgs, a01.aZpgs) &&
-                Objects.equals(aZpdx, a01.aZpdx) &&
-                Objects.equals(aZplj, a01.aZplj) &&
-                Objects.equals(a0501A, a01.a0501A) &&
-                Objects.equals(a0501B, a01.a0501B) &&
-                Objects.equals(a0504, a01.a0504) &&
-                Objects.equals(aZjsm, a01.aZjsm) &&
-                Objects.equals(axzwcca, a01.axzwcca) &&
-                Objects.equals(aXzwccb, a01.aXzwccb) &&
-                Objects.equals(aXzwccsj, a01.aXzwccsj) &&
-                Objects.equals(aSfgwy, a01.aSfgwy) &&
-                Objects.equals(aGwydjsj, a01.aGwydjsj) &&
-                Objects.equals(aGbztb, a01.aGbztb) &&
-                Objects.equals(aGbzta, a01.aGbzta) &&
-                Objects.equals(aJrdqdwsj, a01.aJrdqdwsj) &&
-                Objects.equals(aGblya, a01.aGblya) &&
-                Objects.equals(aGblyb, a01.aGblyb) &&
-                Objects.equals(aGllbB, a01.aGllbB) &&
-                Objects.equals(aGllbA, a01.aGllbA) &&
-                Objects.equals(aSfydzda, a01.aSfydzda) &&
-                Objects.equals(aSfysh, a01.aSfysh) &&
-                Objects.equals(aSfhbgb, a01.aSfhbgb) &&
-                Objects.equals(aSfyshxlxw, a01.aSfyshxlxw) &&
-                Objects.equals(aSfzgdy, a01.aSfzgdy) &&
-                Objects.equals(aZzxlb, a01.aZzxlb) &&
-                Objects.equals(aZzxla, a01.aZzxla) &&
-                Objects.equals(aZzxwb, a01.aZzxwb) &&
-                Objects.equals(aZzxwa, a01.aZzxwa) &&
-                Objects.equals(aZzbyyxjzy, a01.aZzbyyxjzy) &&
-                Objects.equals(aQrzxlb, a01.aQrzxlb) &&
-                Objects.equals(aQrzxla, a01.aQrzxla) &&
-                Objects.equals(aQrzxwb, a01.aQrzxwb) &&
-                Objects.equals(aQrzxwa, a01.aQrzxwa) &&
-                Objects.equals(aQrzbyyxjzy, a01.aQrzbyyxjzy) &&
-                Objects.equals(aZgxlb, a01.aZgxlb) &&
-                Objects.equals(aZgxla, a01.aZgxla) &&
-                Objects.equals(aZgxwb, a01.aZgxwb) &&
-                Objects.equals(aZgxwa, a01.aZgxwa) &&
-                Objects.equals(aZgbyyxjzy, a01.aZgbyyxjzy) &&
-                Objects.equals(aDwjzwMc, a01.aDwjzwMc) &&
-                Objects.equals(aDwjzwSpb, a01.aDwjzwSpb) &&
-                Objects.equals(aJl, a01.aJl) &&
-                Objects.equals(aJrshzwqk, a01.aJrshzwqk) &&
-                Objects.equals(aDxdbqk, a01.aDxdbqk) &&
-                Objects.equals(aCgjqk, a01.aCgjqk) &&
-                Objects.equals(aJlqk, a01.aJlqk) &&
-                Objects.equals(aCjqk, a01.aCjqk) &&
-                Objects.equals(aNdkhqk, a01.aNdkhqk) &&
-                Objects.equals(aPxqk, a01.aPxqk) &&
-                Objects.equals(aKycgqk, a01.aKycgqk);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(a0100, a0101, a0102, a0104, a0104A, a0107, a0111A, a0111B, a0114A, a0114B, a0115A, a0115B, a0117, a0117A, a0127, a0127A, a0128, a0131, a0131A, aCjgzdw, a0134, a0137, a0141, a0144, a0151, a0154, a0157A, a0157B, a0161, a0164, a0167, a0171, a0174, a0177, a0181A, a0181B, a0183, a0184, a0187A, a0187B, a0191, aZpgs, aZpdx, aZplj, a0501A, a0501B, a0504, aZjsm, axzwcca, aXzwccb, aXzwccsj, aSfgwy, aGwydjsj, aGbztb, aGbzta, aJrdqdwsj, aGblya, aGblyb, aGllbB, aGllbA, aSfydzda, aSfysh, aSfhbgb, aSfyshxlxw, aSfzgdy, aZzxlb, aZzxla, aZzxwb, aZzxwa, aZzbyyxjzy, aQrzxlb, aQrzxla, aQrzxwb, aQrzxwa, aQrzbyyxjzy, aZgxlb, aZgxla, aZgxwb, aZgxwa, aZgbyyxjzy, aDwjzwMc, aDwjzwSpb, aJl, aJrshzwqk, aDxdbqk, aCgjqk, aJlqk, aCjqk, aNdkhqk, aPxqk, aKycgqk);
     }
 }

@@ -1,5 +1,6 @@
 package com.hisun.saas.zzb.a.entity;
 
+import com.hisun.base.entity.TombstoneEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "a36")
-public class A36 implements Serializable {
+public class A36 extends TombstoneEntity implements Serializable {
     /** 主键 */
     private String a3600;
 

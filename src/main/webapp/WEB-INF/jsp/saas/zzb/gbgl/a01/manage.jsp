@@ -200,9 +200,42 @@
         });
     }
     $("#saveButton").click(function () {
+        if (tabIndex == "#tab_1_1") {
+            var myVld = new EstValidate("a01Form");
+            myLoading.show();
+            var bool = myVld.form();
+            if (!bool) {
+                myLoading.hide();
+                return false;
+            }
+            $.ajax({
+                url: "${path }/zzb/gbgl/a01/updateOrSave",
+                type: "post",
+                data: $("#a01Form").serialize(),
+                headers: {
+                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                dataType: "json",
+                success: function (json) {
+                    myLoading.hide();
+                    showTip("提示", "保存成功", 1500)
+                    setTimeout(function () {
+                        toA01List()
+                    }, 1500);
+                },
+                error: function () {
+                }
+            });
+        } else if (tabIndex == "#tab_1_2") {
 
+        } else if (tabIndex == "#tab_1_4") {
+            showTip("提示", "保存成功", 1500)
+            setTimeout(function () {
+                toA01List()
+            }, 1500);
+        } else if (tabIndex == "#tab_1_5") {
+        }
     });
-
 
     $("#cancelId").click(function(){
         $.ajax({

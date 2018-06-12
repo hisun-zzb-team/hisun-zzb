@@ -29,9 +29,9 @@
                             <div class="row-fluid">
                                 <div class="span6 ">
                                     <div id="a0101Group" class="control-group">
-                                        <label class="control-label">姓名</label>
+                                        <label class="control-label"><span class="Required">*</span>姓名</label>
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" name="a0101" id="a0101"
+                                            <input type="text" class="span10 m-wrap" name="a0101" id="a0101" required
                                                    maxlength="128" value="${vo.a0101}"/>
                                         </div>
                                     </div>
@@ -86,13 +86,14 @@
                                     <div id="a0111BGroup" class="control-group">
                                         <label class="control-label">籍贯</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0111B" needNullValue="true"
-                                                                 valueName="a0111A"
-                                                                 defaultkeys="${vo.a0111B}"
-                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                 defaultvalues="${vo.a0111A}"
-                                                                 textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB01-2006/GQMC"/>
+                                            <Tree:tree id="a0111B" valueName="a0111A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=ZB01-2006/GQMC"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0111B}"
+                                                       defaultvalues="${vo.a0111A}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -111,13 +112,14 @@
                                     <div id="a0114BGroup" class="control-group">
                                         <label class="control-label">出生地</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0114B" needNullValue="true"
-                                                                 valueName="a0114A"
-                                                                 defaultkeys="${vo.a0114B}"
-                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                 defaultvalues="${vo.a0114A}"
-                                                                 textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB01-2006/GQMC"/>
+                                            <Tree:tree id="a0114B" valueName="a0114A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=ZB01-2006/GQMC"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0114B}"
+                                                       defaultvalues="${vo.a0114A}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -125,13 +127,14 @@
                                     <div id="a0115BGroup" class="control-group">
                                         <label class="control-label">成长地</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0115B" needNullValue="true"
-                                                                 valueName="a0115A"
-                                                                 defaultkeys="${vo.a0115B}"
-                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                 defaultvalues="${vo.a0115A}"
-                                                                 textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB01-2006/GQMC"/>
+                                            <Tree:tree id="a0115B" valueName="a0115A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=ZB01-2006/GQMC"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0115B}"
+                                                       defaultvalues="${vo.a0115A}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -155,13 +158,14 @@
                                     <div id="a0127Group" class="control-group">
                                         <label class="control-label">健康状况</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0127" needNullValue="true"
-                                                                 valueName="a0127A"
-                                                                 defaultkeys="${vo.a0127}"
-                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                 defaultvalues="${vo.a0127A}"
-                                                                 textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=GB/T2261.3-2003"/>
+                                            <Tree:tree id="a0127" valueName="a0127A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=GB/T2261.3-2003"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0127}"
+                                                       defaultvalues="${vo.a0127A}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -198,13 +202,21 @@
                                     <div id="a0501BGroup" class="control-group">
                                         <label class="control-label">现职级</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0501B" needNullValue="true"
+                                            <Tree:tree id="a0501B" valueName="a0501A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=ZB09-2006/ZWJB"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0501B}"
+                                                       defaultvalues="${vo.a0501A}"/>
+                                            <%--<SelectTag:SelectTag id="a0501B" needNullValue="true"
                                                                  valueName="a0501A"
                                                                  defaultkeys="${vo.a0501B}"
                                                                  token="${sessionScope.OWASP_CSRFTOKEN}"
                                                                  defaultvalues="${vo.a0501A}"
                                                                  textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB09-2006/ZWJB"/>
+                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB09-2006/ZWJB"/>--%>
                                         </div>
                                     </div>
                                 </div>
@@ -276,13 +288,14 @@
                                     <div id="a0157BGroup" class="control-group">
                                         <label class="control-label">人员管理单位</label>
                                         <div class="controls">
-                                            <SelectTag:SelectTag id="a0157B" needNullValue="true"
-                                                                 valueName="a0157A"
-                                                                 defaultkeys="${vo.a0157B}"
-                                                                 token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                                 defaultvalues="${vo.a0157A}"
-                                                                 textClass="span10 m-wrap" radioOrCheckbox="radio"
-                                                                 selectUrl="${path}/api/dictionary/select?typeCode=ZB02-2006/JGMC"/>
+                                            <Tree:tree id="a0157B" valueName="a0157A"
+                                                       selectClass="span10 m-wrap"
+                                                       treeUrl="${path}/api/dictionary/tree?typeCode=ZB02-2006/JGMC"
+                                                       token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                       submitType="get" dataType="json" isSearch="false"
+                                                       checkedByTitle="true" isSelectTree="true"
+                                                       defaultkeys="${vo.a0157B}"
+                                                       defaultvalues="${vo.a0157A}"/>
                                         </div>
                                     </div>
                                 </div>

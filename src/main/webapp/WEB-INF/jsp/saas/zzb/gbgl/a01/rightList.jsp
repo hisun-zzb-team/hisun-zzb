@@ -159,7 +159,7 @@
         $.ajax({
             async: false,
             type: "POST",
-            url: "${path}/zzb/jggl/b01/ajax/list?pageNum=" + pageNum + "&pageSize=" + pageSize,
+            url: "${path}/zzb/gbgl/a01/ajax/list?pageNum=" + pageNum + "&pageSize=" + pageSize,
             dataType: "html",
             headers: {
                 "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'

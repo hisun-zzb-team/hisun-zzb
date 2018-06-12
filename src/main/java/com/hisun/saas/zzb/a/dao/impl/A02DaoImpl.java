@@ -8,9 +8,7 @@ package com.hisun.saas.zzb.a.dao.impl;
 
 import com.hisun.base.dao.impl.BaseDaoImpl;
 import com.hisun.saas.zzb.a.dao.A02Dao;
-import com.hisun.saas.zzb.a.dao.A05Dao;
 import com.hisun.saas.zzb.a.entity.A02;
-import com.hisun.saas.zzb.a.entity.A05;
 import org.springframework.stereotype.Repository;
 
 /**

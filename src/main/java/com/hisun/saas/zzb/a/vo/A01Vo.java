@@ -7,6 +7,7 @@
 package com.hisun.saas.zzb.a.vo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Marco {854476391@qq.com}
@@ -81,6 +82,9 @@ public class A01Vo {
     /** 政治面貌：GB4762-1984 */
     private String a0141;
 
+    /** 政治面貌内容*/
+    private String a0141A;
+
     /** 参加组织日期 */
     private String a0144;
 
@@ -99,20 +103,38 @@ public class A01Vo {
     /** 人事关系所在单位所在政区：ZB01-2006/GQMC */
     private String a0161;
 
+    /** 人事关系所在单位所在政区名称 */
+    private String a0161A;
+
     /** 人事关系所在单位隶属关系：ZB87-2006/DWLS */
     private String a0164;
+
+    /** 人事关系所在单位隶属关系*/
+    private String a0164A;
 
     /** 人事关系所在单位级别：ZB03-2006/DWJB */
     private String a0167;
 
+    /** 人事关系所在单位级别 */
+    private String a0167A;
+
     /** 人事关系所在单位性质：ZB04-2006/DWXZ */
     private String a0171;
+
+    /** 人事关系所在单位性质*/
+    private String a0171A;
 
     /** 人事关系所在单位所属行业：GB/T4754-2002 */
     private String a0174;
 
+    /** 人事关系所在单位所属行业 */
+    private String a0174A;
+
     /** 户口性质：ZB07-2006/HKXZ */
     private String a0177;
+
+    /** 户口性质*/
+    private String a0177A;
 
     /** 户籍所在地：ZB01-2006/GQMC */
     private String a0181A;
@@ -285,8 +307,68 @@ public class A01Vo {
     /** 科研成果、著作发明 */
     private String aKycgqk;
 
+    /* */
+    //private List<A02Vo> a02Vos;
+
+
+    public String getA0141A() {
+        return a0141A;
+    }
+
+    public void setA0141A(String a0141A) {
+        this.a0141A = a0141A;
+    }
+
     public String getA0100() {
         return a0100;
+    }
+
+    public String getA0161A() {
+        return a0161A;
+    }
+
+    public void setA0161A(String a0161A) {
+        this.a0161A = a0161A;
+    }
+
+    public String getA0164A() {
+        return a0164A;
+    }
+
+    public void setA0164A(String a0164A) {
+        this.a0164A = a0164A;
+    }
+
+    public String getA0167A() {
+        return a0167A;
+    }
+
+    public void setA0167A(String a0167A) {
+        this.a0167A = a0167A;
+    }
+
+    public String getA0171A() {
+        return a0171A;
+    }
+
+    public void setA0171A(String a0171A) {
+        this.a0171A = a0171A;
+    }
+
+    public String getA0174A() {
+        return a0174A;
+    }
+
+    public void setA0174A(String a0174A) {
+        this.a0174A = a0174A;
+    }
+
+    public String getA0177A() {
+        return a0177A;
+    }
+
+    public void setA0177A(String a0177A) {
+        this.a0177A = a0177A;
     }
 
     public void setA0100(String a0100) {

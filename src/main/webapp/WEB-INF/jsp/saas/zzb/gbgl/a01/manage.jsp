@@ -26,8 +26,8 @@
 
     </div>
     <div class="clearfix fr">
-        <button type="button" class="btn green" onclick="formSave()"><i class="icon-ok"></i> 保存</button>
-        <a  class="btn" onclick="cancel()"><i class="icon-remove-sign"></i> 取消</a>
+        <button type="button" class="btn green" id ="saveButton" onclick="formSave()"><i class="icon-ok"></i> 保存</button>
+        <a  class="btn" onclick="cancel()" id="cancelId"><i class="icon-remove-sign"></i> 取消</a>
     </div>
 </div>
 
@@ -44,6 +44,7 @@
         <li ><a id="#tab_1_8" href="#tab_1_1" data-toggle="tab">其他信息</a></li>
         <li ><a id="#tab_1_9" href="#tab_1_1" data-toggle="tab">联系方式</a></li>
     </ul>
+    <input type="hidden" name="a01Id" id="a01Id" value="${a01Id}"/>
     <div class="tab-content" style="border:none; border-top:solid 1px #e4e4e4; padding:5px 0;">
         <div class="tab-pane active" id="tab_show">
         </div>
@@ -57,8 +58,17 @@
         App.init();
         baseLoad();
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            debugger
             if ($(e.target).attr('id') != '#tab_1_1' && tabIndex == "#tab_1_1") {
-                baseLoad();
+                var myVld = new EstValidate("a01Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if (!bool) {
+                    myLoading.hide();
+                    return false;
+                }
+                a01Save(e)
+               // baseLoad();
             }
             else {
                 if ($(e.target).attr('id') == "#tab_1_1") {
@@ -84,16 +94,79 @@
             }
         });
     });
-
+    function a01Save(e){
+        $.ajax({
+            url: "${path }/zzb/gbgl/a01/updateOrSave",
+            type: "post",
+            data: $("#a01Form").serialize(),
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "json",
+            success: function (json) {
+                if (json.code == 1) {
+                    var a01Id = json.a01Id;
+                    if (a01Id != "" && a01Id != undefined) {
+                        $("#a01Id").val(a01Id);
+                    }
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    changeTable(e);
+                } else {
+                    $("[id='#tab_1_1']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error: function () {
+                $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示", "出错了,请检查网络!", 2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+    //切换table
+    function changeTable(e) {
+        if ($(e.target).attr('id') == "#tab_1_1") {
+            $("[id='#tab_1_1']").tab('show');
+            baseLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_2") {
+            $("[id='#tab_1_2']").tab('show');
+            xrzwLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_3") {
+            $("[id='#tab_1_3']").tab('show');
+            gzjlLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_4") {
+            $("[id='#tab_1_4']").tab('show');
+            xxjlLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_5") {
+            $("[id='#tab_1_5']").tab('show');
+            jckhLoad();
+        }else if ($(e.target).attr('id') == "#tab_1_6") {
+            $("[id='#tab_1_3']").tab('show');
+            pxqkLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_7") {
+            $("[id='#tab_1_4']").tab('show');
+            shgxLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_8") {
+            $("[id='#tab_1_5']").tab('show');
+            qtxxLoad();
+        } else if ($(e.target).attr('id') == "#tab_1_9") {
+            $("[id='#tab_1_5']").tab('show');
+            lxfsLoad();
+        }
+    }
 
     //基本信息
     function baseLoad() {
-        var currentId = $("#currentId").val();
         myLoading.show();
         $.ajax({
-            url: "${path}/zzb/jggl/b01/ajax/jbxx",
+            url: "${path}/zzb/gbgl/a01/ajax/jbxx",
             type: "post",
-            data: {"b01Id": "${b01Id}", "bSjlx": "${bSjlx}", "currentId": currentId, "isAdd": "${isAdd}","isAddOne":"${isAddOne}"},
+            data: {"b01Id": "${b01Id}", "a01Id": "${a01Id}"},
             dataType: "html",
             headers: {
                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
@@ -126,14 +199,14 @@
             }
         });
     }
+    $("#saveButton").click(function () {
+
+    });
 
 
-
-
-    function cancel() {
-
+    $("#cancelId").click(function(){
         $.ajax({
-            url: "${path}/zzb/jggl/b01/ajax/list",
+            url: "${path}/zzb/gbgl/a01/ajax/list",
             type: "get",
             dataType: "html",
             headers: {
@@ -143,14 +216,32 @@
                 "b01Id": "${b01Id}"
             },
             success: function (html) {
-                refreshTreeTagByDt("leftB01Tree", "${b01Id}");
+                //refreshTreeTagByDt("leftB01Tree", "${b01Id}");
                 $("#rightList").html(html);
             },
             error: function () {
 
             }
         });
-        // window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+    });
+    function toA01List() {
+        $.ajax({
+            url: "${path}/zzb/gbgl/a01/ajax/list",
+            type: "get",
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            data: {
+                "b01Id": "${b01Id}"
+            },
+            success: function (html) {
+                $("#rightList").html(html);
+            },
+            error: function () {
+
+            }
+        });
     }
 </script>
 </body>

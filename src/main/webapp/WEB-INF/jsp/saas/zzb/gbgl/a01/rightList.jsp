@@ -49,11 +49,11 @@
                             <%--<input type="hidden" name="pageNum" value="${ }" id="pageNum">--%>
                             <div style=" float:left;margin-top:4px">姓名：</div>
                             <div style=" float:left;">
-                                <input type="text" class="span2 m-wrap" name="b0101Query" id="b0101Query"
-                                       value="" style="width: 100px;"/>
+                                <input type="text" class="span2 m-wrap" name="a0101Query" id="a0101Query"
+                                       value="${queryModel.a0101Query}" style="width: 100px;"/>
                             </div>
                             <div style=" float:left;margin-top:4px">所属机构：</div>
-                            <div style="float:left;width: 160px;"><Tree:tree id="parentIdQuery"
+                            <div style="float:left;width: 120px;"><Tree:tree id="parentIdQuery"
                                                                              valueName="parentNameQuery"
                                                                              selectClass="span12 m-wrap"
                                                                              treeUrl="${path}/api/b01/dtjz/tree"
@@ -62,14 +62,36 @@
                                                                              submitType="get" dataType="json"
                                                                              isSearch="true"
                                                                              checkedByTitle="true" isSelectTree="true"
-                                                                             defaultkeys=""
-                                                                             defaultvalues=""/>
+                                                                             defaultkeys="${queryModel.parentIdQuery}"
+                                                                             defaultvalues="${queryModel.parentNameQuery}"/>
                             </div>
-                            <div style=" float:left;margin-top:4px">机构级别：</div>
+                            <div style=" float:left;margin-top:4px">干部状态：</div>
                             <div style="float:left;width: 120px;">
+                                <SelectTag:SelectTag id="aGbztbQuery" needNullValue="true"
+                                                     valueName="aGbztaQuery"
+                                                     defaultkeys="${queryModel.aGbztbQuery}"
+                                                     token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                     defaultvalues="${queryModel.aGbztaQuery}"
+                                                     textClass="span12 m-wrap" radioOrCheckbox="radio"
+                                                     selectUrl="${path}/api/dictionary/select?typeCode=GB/T2261.3-2003"/>
                             </div>
-                            <div style=" float:left;margin-top:4px">机构管理类别：</div>
+                           <%-- <div style=" float:left;margin-top:4px">审核状态：</div>
                             <div style="float:left;width: 120px;">
+                                <select name="aSfyshQuery" style="">
+                                    <option value="0">待审</option>
+                                    <option value="1">已审</option>
+                                </select>
+                            </div>--%>
+                            <div style=" float:left;margin-top:4px">管理单位：</div>
+                            <div style="float:left;width: 160px;">
+                                <Tree:tree id="a0157BQuery" valueName="a0157AQuery"
+                                           selectClass="span12 m-wrap"
+                                           treeUrl="${path}/api/dictionary/tree?typeCode=ZB02-2006/JGMC"
+                                           token="${sessionScope.OWASP_CSRFTOKEN}"
+                                           submitType="get" dataType="json" isSearch="false"
+                                           checkedByTitle="true" isSelectTree="true"
+                                           defaultkeys="${queryModel.a0157BQuery}"
+                                           defaultvalues="${queryModel.a0157AQuery}"/>
                             </div>
                             <div style="float:left;margin-left: 5px">
                                 <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
@@ -96,6 +118,24 @@
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
+                        <tr>
+                        <td><a href="javascript:edit('${vo.a0100}')"><c:out value="${vo.a0101}"></c:out></a></td>
+                        <td><c:out value="${vo.a0104A}"></c:out></td>
+                        <td><c:out value="${vo.a0107}"></c:out></td>
+                        <td><c:out value="${vo.aGbzta}"></c:out></td>
+                        <td><c:out value=""></c:out></td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${vo.aSfysh==0}">未审核</c:when>
+                                <c:when test="${vo.aSfysh==1}">已审核</c:when>
+                            </c:choose>
+                        </td>
+                        <td><c:if test="${!empty vo.aZplj}">有</c:if><c:if test="${empty vo.aZplj}">无</c:if></td>
+                        <td>
+                            <a href="javascript:edit('${vo.a0100}')" class="">修改</a>|
+                            <a href="javascript:deleteA01('${vo.a0100}','${vo.a0101}')" class="">删除</a>
+                        </td>
+                        </tr>
                     </c:forEach>
                     </tbody>
                 </table>
@@ -156,11 +196,31 @@
         });
         //  window.location.href = "${path}/zzb/jggl/b01/manage?isAdd=add&bSjlx="+bSjlx+"&b01Id=${b01Id}&b0101=${b0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
+    var edit = function (id) {
+        myLoading.show();
+        $.ajax({
+            url: "${path}/zzb/gbgl/a01/ajax/manage",
+            type: "post",
+            data: {"b01Id": "${b01Id}", "a01Id": id},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                myLoading.hide();
+                $("#rightList").html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "基本信息加载失败");
+            }
+        });
+    }
+
     function searchSubmit() {
         $.ajax({
             async: false,
             type: "POST",
-            url: "${path}/zzb/jggl/b01/ajax/list",
+            url: "${path}/zzb/gbgl/a01/ajax/list",
             dataType: "html",
             headers: {
                 "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
@@ -175,18 +235,18 @@
             }
         });
     }
-    var deleteB01 = function (id, name) {
+    var deleteA01 = function (id, name) {
         var title = "您确定要删除[" + name + "]吗？";
-        var msg = "此操作将删除该机构及其下所有的法人机构、分组和内设机构。";
-        var tip = "请输入要删除的机构名称";
+        var msg = "此操作将删除该人员的所有信息。";
+        var tip = "请输入要删除的人员名称";
         myLoading.show();
-        showPrompModal2(title, name, msg, tip, "${path}/zzb/jggl/b01/delete?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id, null, function (json) {
+        showPrompModal2(title, name, msg, tip, "${path}/zzb/gbgl/a01/delete?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id=" + id, null, function (json) {
 
             if (json.success == true) {
                 myLoading.hide();
                 showTip("提示", "删除成功", 1500);
                 setTimeout(function () {
-                    window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+                    window.location.href = "${path}/zzb/gbgl/a01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
                 }, 1500);
             } else {
                 myLoading.hide();
@@ -206,7 +266,7 @@
             "&bGllbBQuery=" + bGllbBQuery + "&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     }
     function clearData() {
-        window.location.href = "${path}/zzb/jggl/b01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
+        window.location.href = "${path}/zzb/gbgl/a01/index?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
     }
 </script>
 </body>

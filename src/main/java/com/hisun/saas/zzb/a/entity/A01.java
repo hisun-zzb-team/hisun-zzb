@@ -1,11 +1,13 @@
 package com.hisun.saas.zzb.a.entity;
 
 import com.hisun.base.entity.TombstoneEntity;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -80,6 +82,9 @@ public class A01 extends TombstoneEntity implements Serializable {
     /** 政治面貌：GB4762-1984 */
     private String a0141;
 
+    /** 政治面貌内容*/
+    private String a0141A;
+
     /** 参加组织日期 */
     private String a0144;
 
@@ -98,20 +103,38 @@ public class A01 extends TombstoneEntity implements Serializable {
     /** 人事关系所在单位所在政区：ZB01-2006/GQMC */
     private String a0161;
 
+    /** 人事关系所在单位所在政区名称 */
+    private String a0161A;
+
     /** 人事关系所在单位隶属关系：ZB87-2006/DWLS */
     private String a0164;
 
-    /** 人事关系所在单位级别：ZB03-2006/DWJB */
+    /** 人事关系所在单位隶属关系*/
+    private String a0164A;
+
+    /** 人事关系所在单位级别ZB03-2006/DWJB */
     private String a0167;
+
+    /** 人事关系所在单位级别 */
+    private String a0167A;
 
     /** 人事关系所在单位性质：ZB04-2006/DWXZ */
     private String a0171;
 
+    /** 人事关系所在单位性质*/
+    private String a0171A;
+
     /** 人事关系所在单位所属行业：GB/T4754-2002 */
     private String a0174;
 
+    /** 人事关系所在单位所属行业 */
+    private String a0174A;
+
     /** 户口性质：ZB07-2006/HKXZ */
     private String a0177;
+
+    /** 户口性质*/
+    private String a0177A;
 
     /** 户籍所在地：ZB01-2006/GQMC */
     private String a0181A;
@@ -283,6 +306,19 @@ public class A01 extends TombstoneEntity implements Serializable {
 
     /** 科研成果、著作发明 */
     private String aKycgqk;
+
+    //职务信息
+    private List<A02> a02s;
+
+    @OneToMany(mappedBy = "a01", fetch = FetchType.LAZY)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    public List<A02> getA02s() {
+        return a02s;
+    }
+
+    public void setA02s(List<A02> a02s) {
+        this.a02s = a02s;
+    }
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -517,6 +553,16 @@ public class A01 extends TombstoneEntity implements Serializable {
     }
 
     @Basic
+    @Column(name = "a0141a", nullable = true, length = 256)
+    public String getA0141A() {
+        return a0141A;
+    }
+
+    public void setA0141A(String a0141A) {
+        this.a0141A = a0141A;
+    }
+
+    @Basic
     @Column(name = "a0144", nullable = true, length = 8)
     public String getA0144() {
         return a0144;
@@ -624,6 +670,65 @@ public class A01 extends TombstoneEntity implements Serializable {
 
     public void setA0177(String a0177) {
         this.a0177 = a0177;
+    }
+    @Basic
+    @Column(name = "a0161a", nullable = true, length = 256)
+    public String getA0161A() {
+        return a0161A;
+    }
+
+    public void setA0161A(String a0161A) {
+        this.a0161A = a0161A;
+    }
+
+    @Basic
+    @Column(name = "a0164a", nullable = true, length = 256)
+    public String getA0164A() {
+        return a0164A;
+    }
+
+    public void setA0164A(String a0164A) {
+        this.a0164A = a0164A;
+    }
+
+    @Basic
+    @Column(name = "a0167a", nullable = true, length = 256)
+    public String getA0167A() {
+        return a0167A;
+    }
+
+    public void setA0167A(String a0167A) {
+        this.a0167A = a0167A;
+    }
+
+    @Basic
+    @Column(name = "a0171a", nullable = true, length = 256)
+    public String getA0171A() {
+        return a0171A;
+    }
+
+    public void setA0171A(String a0171A) {
+        this.a0171A = a0171A;
+    }
+
+    @Basic
+    @Column(name = "a0174a", nullable = true, length = 256)
+    public String getA0174A() {
+        return a0174A;
+    }
+
+    public void setA0174A(String a0174A) {
+        this.a0174A = a0174A;
+    }
+
+    @Basic
+    @Column(name = "a0177a", nullable = true, length = 256)
+    public String getA0177A() {
+        return a0177A;
+    }
+
+    public void setA0177A(String a0177A) {
+        this.a0177A = a0177A;
     }
 
     @Basic

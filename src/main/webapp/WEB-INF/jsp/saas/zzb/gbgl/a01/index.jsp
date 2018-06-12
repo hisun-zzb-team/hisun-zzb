@@ -63,7 +63,7 @@
 		$("#b0101").val(treeNode.name);//赋值
 		$("#parentB01Id").val(treeNode.pId);//赋值
 		$.ajax({
-			url: "${path}/zzb/jggl/b01/ajax/list",
+			url: "${path}/zzb/gbgl/a01/ajax/list",
 			type : "get",
 			dataType : "html",
 			headers: {
@@ -71,7 +71,6 @@
 			},
 			data:{
 				"b01Id":treeNode.id,
-				"parentB01Id":treeNode.pId,
 				"b0101":treeNode.name
 			},
 			success : function(html){
@@ -107,6 +106,7 @@
 			type: 'POST',
 			dataType : "html",
 			data:{
+			    "b01Id":b01Id
 			},
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"

@@ -445,7 +445,7 @@
                                             <div class="controls">
                                                 <input type="text" class="span10 m-wrap" id="bPx" name="bPx"
                                                        maxlength="64"
-                                                       <c:if test="${isAddOne == 'addOne'}">readonly</c:if>
+                                                       <c:if test="${isAddOne == 'addOne' || empty vo.parentId}">readonly</c:if>
                                                        value="<c:if test="${empty vo.b0100}">${sort}</c:if><c:if test="${!empty vo.b0100}">${vo.bPx}</c:if>"
                                                        number="true" required/>
                                             </div>

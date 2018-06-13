@@ -23,7 +23,7 @@
                 </div>
                 <form action="" class="form-horizontal" id="a01Form" method="post">
                     <input type="hidden" name="b01Id" value="${b01Id}" id="b01Id"/> <%--当前点击节点的b01Id--%>
-                    <input type="hidden" name="b0100" value="${vo.a0100 }"/>
+                    <input type="hidden" name="a0100" value="${vo.a0100 }"/>
                     <dl class="dlattrbute">
                         <dd>
                             <div class="row-fluid">

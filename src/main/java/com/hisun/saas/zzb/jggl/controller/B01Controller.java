@@ -150,6 +150,12 @@ public class B01Controller extends BaseController {
                 String oldPid = entity.getB0100();
                 BeanUtils.copyProperties(entity, oldB01);
                 BeanUtils.copyProperties(vo, entity);
+                if("001".equals(entity.getbCxbm())){
+                    EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+                    b01Service.update(entity);
+                    map.put("code", 1);
+                    return  map;
+                }
                 entity.setParentB01(b01Service.getByPK(vo.getParentId()));
                 this.b01Service.updateB01(entity, oldB01, oldPid);
             } else {
@@ -206,7 +212,7 @@ public class B01Controller extends BaseController {
             if (StringUtils.isNotBlank(currentId)) {
                 B01 entity = b01Service.getByPK(currentId);
                 BeanUtils.copyProperties(entity, vo);
-                if(entity.getParentB01()!=null){
+                if(entity.getParentB01()!=null && StringUtils.isNotBlank(entity.getParentB01().getB0100())){
                     vo.setParentId(entity.getParentB01().getB0100());
                     vo.setParentName(entity.getParentB01().getB0101());
                 }

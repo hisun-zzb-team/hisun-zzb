@@ -46,7 +46,7 @@
                                 <a href="<c:if test="${editFlag=='editFlag'}">
                                 ${path}/zzb/dzda/dacx/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}
                                 </c:if><c:if test="${editFlag!='editFlag'}">${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}</c:if>"
-                                   id="fanhui" class="btn icn-only" style="height:22px;"><i class="icon-undo"></i>返回</a>
+                                   id="fanhui" class="btn icn-only" ><i class="icon-undo"></i>返回</a>
                             </div>
 
                         </div>

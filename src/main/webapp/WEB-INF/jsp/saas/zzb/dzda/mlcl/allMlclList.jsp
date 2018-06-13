@@ -108,16 +108,16 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#" id="jztpButton">加载图片</a>
+                                    <a href="javascript:jztpButton()">加载图片</a>
                                 </li>
                                 <li>
                                     <a href="javascript:viewImageMain('','','true')" >图片调整</a>
                                 </li>
                                 <li>
-                                    <a href="#" id="xztpButton">卸载图片</a>
+                                    <a href="javascript:xztpButton()">卸载图片</a>
                                 </li>
                                 <li>
-                                    <a href="#" id="downloadButton">下载图片</a>
+                                    <a href="javascript:downloadButton()">下载图片</a>
                                 </li>
                             </ul>
                         </div>
@@ -377,7 +377,7 @@
             }
         });
     }
-    $("#jztpButton").click(function(){
+    function jztpButton(){
         var divHeight = $(window).height()-100;
         var divWidth = $(window).width()-20;
         $('#jztpModal').css("width",divWidth+"px");
@@ -402,10 +402,10 @@
                 showTip("提示", "出错了请联系管理员", 1500);
             }
         });
-    });
+    }
 
 
-    $("#xztpButton").click(function(){
+    function xztpButton(){
         actionByConfirm1('',"${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.success){
                 showTip("提示", json.message, 1500);
@@ -432,11 +432,11 @@
                 <%--showTip("提示", "出错了请联系管理员", 1500);--%>
             <%--}--%>
         <%--});--%>
-    });
+    }
 
-    $("#downloadButton").click(function(){
+    function downloadButton(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
-    });
+    }
 
     function jztp(id,e01Z111){
         var divHeight = $(window).height()-300;

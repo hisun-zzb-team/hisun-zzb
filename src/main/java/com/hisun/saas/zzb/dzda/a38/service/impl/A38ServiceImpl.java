@@ -296,7 +296,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         }
         queryHql.append(a38Hql);
         queryHql.append(e01z1Hql);
-        queryHql.append(" order by COALESCE((case when a38.smxh='' then '9999' else a38.smxh END),'9999') , a38.a0101 asc ");
+        queryHql.append(" order by COALESCE((case when a38.smxh='' then '-9999' else a38.smxh END),'-9999') desc, a38.a0101 asc ");
 
 //        Map<String,Object> paramMap = new HashMap<>();
 //        List<A38> a38List = a38Dao.list(queryHql.toString(),paramMap,pageNum, pageSize);
@@ -530,7 +530,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
         int count =0;
         List<Map<String, Object>> countList = queryRunner.query(conn,
-                "select count(*) as count from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001'  " , new MapListHandler(),(Object[]) null);
+                "select count(*) as count from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'  " , new MapListHandler(),(Object[]) null);
         for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
             Map<String, Object> m = li.next();
             for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
@@ -543,13 +543,14 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         Map<String,Object> attMaps = getSavaAttMaps();
 
         //每次处理400条
-        int dealCount = count/400;
-        for(int i=0;i<=dealCount;i++){
-            int num1 = i*400;
-            int num2 = (i+1)*400;
-            String sql = "select * from (select a38.*,rownum rn from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001'\n" +
-                    "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38) where rn >"+num1+" and rn<"+num2+" ";
-
+//        int dealCount = count/400;
+//        for(int i=0;i<=dealCount;i++){
+//            int num1 = i*400;
+//            int num2 = (i+1)*400;
+//            String sql = "select * from (select a38.*,rownum rn from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'\n" +
+//                    "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38) where rn >"+num1+" and rn<"+num2+" ";
+             String sql = "select a38.* from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'\n" +
+                "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38";
             List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
             for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {
                 Map<String, Object> m = li.next();
@@ -589,9 +590,9 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
                 values.append(")");
                 List<Object> paramList = new ArrayList<Object>();
                 this.a38Dao.executeNativeBulk(fields.append(values).toString(),paramList);
-                order++;
+//                order++;
             }
-        }
+//        }
 
         DbUtils.close(conn);
         return order;

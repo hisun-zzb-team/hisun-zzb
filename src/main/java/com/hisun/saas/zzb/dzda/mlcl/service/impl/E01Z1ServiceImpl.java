@@ -575,7 +575,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         int count =0;
         List<Map<String, Object>> countList = queryRunner.query(conn,
                 "select count(*) as count from e01z1 where e01z1.A_IS_DESTROY='0' and e01z1.PK_A38 in(" +
-                        "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001') " , new MapListHandler(),(Object[]) null);
+                        "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " , new MapListHandler(),(Object[]) null);
         for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
             Map<String, Object> m = li.next();
             for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
@@ -593,7 +593,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
             int num1 = i*400;
             int num2 = (i+1)*400;
             String sql = "select * from (select e01z1.*,rownum rn from e01z1 where e01z1.A_IS_DESTROY = '0' and e01z1.PK_A38 in(" +
-                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='001') " +
+                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " +
                     "order by e01z1.PK_E01Z1) where rn >"+num1+" and rn<"+num2+" ";
 
             List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
@@ -601,14 +601,15 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                 Map<String, Object> m = li.next();
                 StringBuffer fields = new StringBuffer();
                 fields.append("insert into e01z1 (");
-                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date ");
+                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date,smys,yjztps");
                 StringBuffer values = new StringBuffer();
                 values.append(") values (");
                 values.append(" 0 ");
                 values.append(",'").append(userLoginDetails.getTenant().getId()).append("'")
                         .append(",'").append(userLoginDetails.getUser().getId()).append("'")
                         .append(",'").append(userLoginDetails.getUsername()).append("'")
-                        .append(",").append("now()").append("");
+                        .append(",").append("now()").append("")
+                        .append(",").append(0).append(",").append(0).append("");
 
                 for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
                     Map.Entry<String, Object> e = mi.next();
@@ -621,9 +622,9 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                         Object attKey = entry.getKey();
                         Object attValue = entry.getValue();
                         if(key.equalsIgnoreCase(attKey.toString())){
-                            if("NAME_WORDCOUNT".equalsIgnoreCase(attKey.toString())){
+                            if("SCAN_PAGES".equalsIgnoreCase(attKey.toString())){
                                 fields.append("," + attValue);
-                                values.append("," + value);
+                                values.append("," + 0);
                             }else{
                                 fields.append("," + attValue);
                                 values.append(",'" + value + "'");
@@ -650,17 +651,17 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         attMaps.put("E01Z111","e01z111");              //材料名称'
         attMaps.put("E01Z111_REMARK","e01z111_remark");         //材料名称备注'
         attMaps.put("E01Z117","e01z117");              //材料制成时间'
-        attMaps.put("E01Z107","e01z107");              //扫描序号（单份材料的扫描序号）'
+//        attMaps.put("E01Z107","e01z107");              //扫描序号（单份材料的扫描序号）'
         attMaps.put("E01Z101B","e01z101b");            //材料类别字典代码'
         attMaps.put("E01Z101A"," e01z101a");             //材料类别字典内容
         attMaps.put("E01Z114","e01z114");              //材料页数'
-        attMaps.put("SCAN_PAGES","smys");			     //扫描页数
+//        attMaps.put("SCAN_PAGES","smys");			     //扫描页数
         attMaps.put("E01Z124","e01z124");              //材料份数
         attMaps.put("E01Z207","e01z207");              //接收人姓名
         attMaps.put("E01Z204","e01z204");              //材料来处
         attMaps.put("E01Z201","e01z201");              //材料接收时间
         attMaps.put("E01Z231","e01z231");              //备注
-        attMaps.put("UP_PAGES","yjztps");               //已加载图片数
+//        attMaps.put("UP_PAGES","yjztps");               //已加载图片数
         attMaps.put("E01Z104","e01z104");              //排序号
 
         return attMaps;

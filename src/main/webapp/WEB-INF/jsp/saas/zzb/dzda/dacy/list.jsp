@@ -184,10 +184,30 @@
             <div class="modal-content">
                 <div class="modal-header">
                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
+                    <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px;margin-left: 10px;">
+                        <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+                            显示方式<i class="icon-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a onclick="changeViewType('19')">小图(一行5张图)</a>
+                            </li>
+                            <%--<li>--%>
+                            <%--<a onclick="changeViewType('32')">大图(一行3张图)</a>--%>
+                            <%--</li>--%>
+                            <%--<li>--%>
+                            <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
+                            <%--</li>--%>
+                            <li>
+                                <a onclick="changeViewType('99')">原始图(一行1张图)</a>
+                            </li>
+                        </ul>
+                    </div>
                    <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:jieshuyuedang()">
                         <i class=' icon-remove-sign'></i>结束阅档
                     </a>
                     <span id="daojishi"  style="display: none;float: right;font-weight: bold;margin-right: 10px;margin-top: 5px">剩余阅档时间:<span id="timespan" style="color: #C90003"></span></span>
+
                 <%--<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>--%>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
                    <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>

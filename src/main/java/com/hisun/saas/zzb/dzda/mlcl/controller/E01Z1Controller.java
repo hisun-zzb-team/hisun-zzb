@@ -106,10 +106,17 @@ public class E01Z1Controller extends BaseController {
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         String url = "saas/zzb/dzda/mlcl/mlclList";
-
+        String smxh = "";
+        String a0101 = "";
+        String jztpTitle = "";
         try{
             A38 a38 = this.a38Service.getByPK(a38Id);
-
+            smxh = a38.getSmxh();
+            a0101 = a38.getA0101();
+            jztpTitle = a0101;
+            if(smxh!=null && !smxh.equals("")){
+                jztpTitle = a0101 +"("+smxh+")";
+            }
             CommonConditionQuery query = new CommonConditionQuery();
 
             CommonOrderBy orderBy = new CommonOrderBy();
@@ -176,7 +183,10 @@ public class E01Z1Controller extends BaseController {
             map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
             map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
             map.put("a38Id",a38Id);
+            map.put("smxh",smxh);
             map.put("a0101",a38.getA0101());
+            map.put("jztpTitle",jztpTitle);
+
             map.put("total",total);
         }catch(Exception e){
             logger.error(e);

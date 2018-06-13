@@ -35,9 +35,9 @@
                         <li >
                             <a onclick="changeViewType('19')">小图(一行5张图)</a>
                         </li>
-                        <li >
-                            <a onclick="changeViewType('32')">大图(一行3张图)</a>
-                        </li>
+                        <%--<li >--%>
+                            <%--<a onclick="changeViewType('32')">大图(一行3张图)</a>--%>
+                        <%--</li>--%>
                         <%--<li>--%>
                         <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
                         <%--</li>--%>
@@ -110,6 +110,9 @@
                                 图片处理 <i class="icon-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu">
+                                <li>
+                                    <a href="javascript:jztpButtonInit()">加载图片(初始化)</a>
+                                </li>
                                 <li>
                                     <a href="javascript:jztpButton()">加载图片</a>
                                 </li>
@@ -201,7 +204,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="title" >
+                <h3 class="modal-title" id="jztpPageTitle" >
                     加载图片
                 </h3>
             </div>
@@ -384,8 +387,8 @@
     function jztp(id,e01Z111){
         var divHeight = $(window).height()-300;
         var divWidth = 800;
-        $('#jztpModal').attr("data-width",divWidth);
-        $('#jztpModal').attr("data-height",divHeight);
+        $('#jztpE01z1Modal').attr("data-width",divWidth);
+        $('#jztpE01z1Modal').attr("data-height",divHeight);
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/tpcl/ajax/list/e01z1/"+id,
             type: "post",
@@ -396,8 +399,9 @@
             dataType: "html",
             success: function (html) {
                 $('#e01z1Title').html("加载“"+e01Z111+"”图片");
-                $('#jztpPage').html(html);
-                $('#jztpModal').modal({
+                $('#jztpPage').html("");
+                $('#jztpE01z1Page').html(html);
+                $('#jztpE01z1Modal').modal({
                     keyboard: true
                 });
             },
@@ -407,11 +411,41 @@
         });
     }
 
-   function jztpButton(){
+    function jztpButtonInit(){
         var divHeight = $(window).height()-100;
-        var divWidth = $(window).width()-20;
+        var divWidth = 800;
         $('#jztpE01z1Modal').attr("data-width",divWidth);
         $('#jztpE01z1Modal').attr("data-height",divHeight);
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/tpcl/ajax/init/list/${a38Id}",
+            type: "post",
+            data: {},
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#jztpPage').html("");
+                $('#e01z1Title').html("“${jztpTitle}”加载图片");
+                $('#jztpE01z1Page').html(html);
+                $('#jztpE01z1Modal').modal({
+                    keyboard: true
+                });
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    }
+
+    function jztpButton(){
+
+        var divHeight = $(window).height()-100;
+        var divWidth = $(window).width()-20;
+        $('#jztpModal').css("width",divWidth+"px");
+//        $('#jztpModal').css("height", divHeight+"px");
+        $('#jztpModal').attr("data-width",divWidth);
+        $('#jztpModal').attr("data-height",divHeight);
         $.ajax({
             url: "${path}/zzb/dzda/mlcl/tpcl/ajax/index/${a38Id}",
             type: "post",
@@ -421,8 +455,10 @@
             },
             dataType: "html",
             success: function (html) {
-                $('#jztpE01z1Page').html(html);
-                $('#jztpE01z1Modal').modal({
+                $('#jztpE01z1Page').html("");
+                $('#jztpPageTitle').html("“${jztpTitle}”加载图片");
+                $('#jztpPage').html(html);
+                $('#jztpModal').modal({
                     keyboard: true
                 });
             },

@@ -143,6 +143,90 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
         }
     }
 
+    /**
+     * 初始化图片加载使用
+     * @param a38
+     * @param storePathFile
+     * @throws Exception
+     */
+    public void saveEImagesByJztpInit(A38 a38, File storePathFile) throws Exception {
+        //在加载图片之前,先清除原有的已加载的图片数据
+        this.deleteEImagesByA38(a38);
+        List<File> files = FileUtil.listFilesOrderByName(storePathFile);
+        Map<E01Z1, Integer> yjzTpMaps = new HashMap<>();
+        boolean isDir = false;//顶级目录是否文件夹 如果为文件夹则最后需要删除文件夹
+        File dirFile = null;
+        if(files.size()==1 && files.get(0).isDirectory()==true){
+            isDir = true;
+            dirFile = files.get(0);
+            files = FileUtil.listFilesOrderByName(files.get(0));
+        }
+        //取得当前目录下的材料
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and("a38.id=:a38Id", "a38Id", a38.getId()));
+        CommonOrderBy orderBy = new CommonOrderBy();
+        orderBy.add(CommonOrder.asc("e01Z101B"));
+        orderBy.add(CommonOrder.asc("e01Z104"));
+        List<E01Z1> e01z1s = this.e01Z1Service.list(query, orderBy);
+        //循环已上传图片文件,为对应的材料加载图片
+        List<String> addDirs = new ArrayList<String>();
+        //已经加载过的
+        List<String> e01Z1Ids = new ArrayList<String>();
+        int e01z1Index = 0;
+        int imgCount = 0;//记录每份材料已加载的图片数量
+        for (File tpFile : files) {
+            imgCount++;
+            E01Z1 e01Z1 = e01z1s.get(e01z1Index);
+            String dirName = e01Z1.getE01Z101B()+"."+e01Z1.getE01Z101A();//
+            boolean isCreateDir = true;
+            boo:for(String dirNameTmp : addDirs){
+                if(dirNameTmp.equals(dirName)){
+                    isCreateDir = false;
+                    break boo;
+                }
+            }
+            String fileSaveDirPath = storePathFile.getPath()+File.separator+dirName;
+            if(isCreateDir == true){
+                File storeRealPathFile = new File(fileSaveDirPath);
+                storeRealPathFile.mkdirs();
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("00");
+            String nameCode = decimalFormat.format(e01Z1.getE01Z104());//当前材料对应文件编号
+
+            EImages eImages = new EImages();
+            eImages.setE01z1(e01Z1);
+
+            String encryptFilePath = fileSaveDirPath+File.separator+nameCode+imgCount;
+            DESUtil.getInstance(Constants.DATP_KEY).encrypt(tpFile, new File(encryptFilePath));
+            eImages.setImgFilePath(encryptFilePath.substring(uploadBasePath.length(), encryptFilePath.length()));
+
+            FileUtils.deleteQuietly(tpFile);
+            eImages.setImgNo(imgCount);
+            this.save(eImages);
+            //记录已加载图片数
+            if (yjzTpMaps.get(e01Z1) != null) {
+                Integer count = yjzTpMaps.get(e01Z1) + 1;
+                yjzTpMaps.put(e01Z1, count);
+            } else {
+                yjzTpMaps.put(e01Z1, 1);
+            }
+
+            if(imgCount == e01Z1.getE01Z114()){//如果已加载的图片数等于定义的页数 则将已加载的图片数量设为0 e01z1集合下标+1
+                imgCount = 0;
+                e01z1Index++;
+            }
+        }
+
+        //处理已加载图片数
+        for (E01Z1 e01Z1 : yjzTpMaps.keySet()) {
+            e01Z1.setYjztps(yjzTpMaps.get(e01Z1));
+            this.e01Z1Service.update(e01Z1);
+        }
+        if(isDir == true) {
+            FileUtils.deleteDirectory(dirFile);
+        }
+    }
+
 
     public void saveEImagesByJztp(E01Z1 e01Z1, File storePathFile) throws Exception {
         this.deleteEImagesByE01ez1(e01Z1);

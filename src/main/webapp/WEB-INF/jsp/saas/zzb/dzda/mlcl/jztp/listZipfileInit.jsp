@@ -12,15 +12,15 @@
         <div class="portlet-title" style="vertical-align: middle;">
             <div class="caption">本地材料</div>
             <div class="clearfix fr">
-                <a id="checkFile" class="btn green" href="#"><i class="icon-question-sign"></i>查看检查结果</a>
-                <button type="button" id="uploadAndSaveFile" class="btn green" onclick="uploadAndSaveFile();" disabled><i class="icon-save"></i>保存</button>
+                <a id="checkFileInit" class="btn green" href="#"><i class="icon-question-sign"></i>查看检查结果</a>
+                <button type="button" id="uploadAndSaveFileInit" class="btn green" onclick="uploadAndSaveFileInit();" disabled><i class="icon-save"></i>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
             </div>
         </div>
         <div class="clearfix">
             <div class="control-group">
                 <div id="query" style="float: left;">
-                    <form action="${path}/zzb/dzda/mlcl/jztp/save" id="uploadAndSaveFileForm" style="margin: 0 0 10px;"
+                    <form action="${path}/zzb/dzda/mlcl/jztp/saveInt" id="uploadAndSaveFileForm" style="margin: 0 0 10px;"
                           method="post" enctype="multipart/form-data">
                         <input type="hidden" id="currentNodeId" name="currentNodeId" value=""/>
                         <input type="hidden" id="currentNodeName" name="currentNodeName" value=""/>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="portlet-body" style="margin-right: 15px;margin-left: 15px;max-height: 300px;overflow: auto;">
                     <table class="table table-striped table-bordered table-hover dataTable table-set" >
-                    <thead>
+                        <thead>
                         <tr>
                             <th>序号</th>
                             <th>错误信息</th>
@@ -118,85 +118,97 @@
         myLoading.show();
         $resultFilelist.html("");
         $("#isPass").val("true");
-        $("#uploadAndSaveFile").attr("disabled","disabled");
+        $("#uploadAndSaveFileInit").attr("disabled","disabled");
         var currentNodeId = $("#currentNodeId").val();
         $fileJson = [];
         function handleFile(f) {
             //var dateBefore = new Date();
             JSZip.loadAsync(f)
-                    .then(function (zip) {
-                        //var dateAfter = new Date();
-                        var index = 1;
-                        zip.forEach(function (relativePath, zipEntry) {
-                            //mac隐藏文件不显示
-                            if (zipEntry.dir == false && zipEntry.name.indexOf(".DS_Store") == -1) {
-                                var $resultTR = "";
-                                $resultTR += "<tr>";
-                                $resultTR += "<td>" + index + "</td>";
-                                $resultTR += "<td>" + zipEntry.name + "</td>";
-                                $resultTR += "<td>" + zipEntry.date.Format('yyyy-MM-dd HH:mm:ss') + "</td>";
-                                $resultTR += "<td>" + (zipEntry._data.uncompressedSize / 1048576).toFixed(2) + "M</td>";
-                                $resultTR += "</tr>";
-                                $resultFilelist.append($resultTR);
-                                var dirCode = getDirCode(zipEntry.name);
-                                var nameCode = getFileNameCode(zipEntry.name).substring(0, 2);
-                                $fileJson.push({
-                                    "fileIndex": index,
-                                    "dirCode": dirCode,
-                                    "nameCode": nameCode,
-                                    "fileName": zipEntry.name,
-                                    "fileModifyDate": zipEntry.date.Format('yyyy-MM-dd HH:mm:ss'),
-                                    "fileSize": zipEntry._data.uncompressedSize
-                                });
-                                index++;
-                            }
-                        });
-                        myLoading.hide();
-                        //初始化$aggregateFilelist
-                        for (var i = 0; i < $fileJson.length; i++) {
-                            if ($aggregateFilelist.length == 0) {//如果没有,进行初始化
-                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
-                            } else {
-                                var isAddDirCode = true;
-                                boo:for (var j = 0; j < $aggregateFilelist.length; j++) {
-                                    if ($aggregateFilelist[j].dirCode == $fileJson[i].dirCode) {
-                                        isAddDirCode = false
-                                        break boo;
-                                    }
-                                }
-                                if (isAddDirCode) {
-                                    $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
-                                }
-                            }
+                .then(function (zip) {
+                    //var dateAfter = new Date();
+                    var index = 1;
+                    debugger
+                    zip.forEach(function (relativePath, zipEntry) {
+                        //mac隐藏文件不显示
+                        if (zipEntry.dir == false && zipEntry.name.indexOf(".DS_Store") == -1) {
+                            var $resultTR = "";
+                            $resultTR += "<tr>";
+                            $resultTR += "<td>" + index + "</td>";
+                            $resultTR += "<td>" + zipEntry.name + "</td>";
+                            $resultTR += "<td>" + zipEntry.date.Format('yyyy-MM-dd HH:mm:ss') + "</td>";
+                            $resultTR += "<td>" + (zipEntry._data.uncompressedSize / 1048576).toFixed(2) + "M</td>";
+                            $resultTR += "</tr>";
+                            $resultFilelist.append($resultTR);
+                            var dirCode = getDirCode(zipEntry.name);
+                            var suffixIndex=zipEntry.name.lastIndexOf(".");
+                            var suffix=zipEntry.name.substring(suffixIndex+1).toUpperCase();
+                            var nameCode = getFileNameCode(zipEntry.name).substring(0, 2);
+                            $fileJson.push({
+                                "fileIndex": index,
+                                "dirCode": dirCode,
+                                "suffix": suffix,
+                                "nameCode": nameCode,
+                                "fileName": zipEntry.name,
+                                "fileModifyDate": zipEntry.date.Format('yyyy-MM-dd HH:mm:ss'),
+                                "fileSize": zipEntry._data.uncompressedSize
+                            });
+                            index++;
                         }
-
-                        for (var i = 0; i < $fileJson.length; i++) {
-                            var isAddNameCode = true;
-
-                            boo:for (var j = 0; j < $aggregateFilelist.length; j++) {
-                                if ($aggregateFilelist[j].dirCode == $fileJson[i].dirCode && $aggregateFilelist[j].nameCode == $fileJson[i].nameCode) {
-                                    isAddNameCode = false
-                                    break boo;
-                                }
-                            }
-                            if (isAddNameCode) {
-                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode":  $fileJson[i].dirCode, "nameCode": $fileJson[i].nameCode, "count": 1});
-                            }
-                        }
-
-                        for (var i = 0; i < $aggregateFilelist.length; i++) {
-                            var count = 0;
-                            for (var j = 0; j < $fileJson.length; j++) {
-                                if ($aggregateFilelist[i].dirCode == $fileJson[j].dirCode
-                                        && $aggregateFilelist[i].nameCode ==  $fileJson[j].nameCode) {
-                                    count++;
-                                }
-                            }
-                            $aggregateFilelist[i].count = count;
-                        }
-                    }, function (e) {
-                        showTip("提示", "解压失败!", 1500);
                     });
+                    myLoading.hide();
+                    //初始化$aggregateFilelist
+                    var imgCount=0;//图片数量
+                    var noImgCount = 0;//非图片的数量
+                    for (var i = 0; i < $fileJson.length; i++) {
+                        var isIm = false;
+                        if($fileJson[i].suffix=="BMP"||$fileJson[i].suffix=="JPG"||$fileJson[i].suffix=="JPEG"||$fileJson[i].suffix=="PNG"||$fileJson[i].suffix=="GIF"){
+                            imgCount++;
+                        }else{
+                            noImgCount++
+                        }
+                    }
+                    $aggregateFilelist.push({"imgCount":imgCount,"noImgCount": noImgCount});
+//                        for (var i = 0; i < $fileJson.length; i++) {
+//                            if ($aggregateFilelist.length == 0) {//如果没有,进行初始化
+//                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode,"suffix": $fileJson[i].suffix, "nameCode": $fileJson[i].nameCode, "count": 1});
+//                            } else {
+//                                var isAddDirCode = true;
+//                                for (var j = 0; j < $aggregateFilelist.length; j++) {
+//                                    if ($aggregateFilelist[j].dirCode == $fileJson[i].dirCode) {
+//                                        isAddDirCode = false
+//                                    }
+//                                }
+//                                if (isAddDirCode) {
+//                                    $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode": $fileJson[i].dirCode,"suffix": $fileJson[i].suffix, "nameCode": $fileJson[i].nameCode, "count": 1});
+//                                }
+//                            }
+//                        }
+//
+//                        for (var i = 0; i < $fileJson.length; i++) {
+//                            var isAddNameCode = true;
+//                            for (var j = 0; j < $aggregateFilelist.length; j++) {
+//                                if ($aggregateFilelist[j].nameCode == $fileJson[i].nameCode) {
+//                                    isAddNameCode = false
+//                                }
+//                            }
+//                            if (isAddNameCode) {
+//                                $aggregateFilelist.push({"fileName":$fileJson[i].fileName,"dirCode":  $fileJson[i].dirCode,"suffix": $fileJson[i].suffix, "nameCode": $fileJson[i].nameCode, "count": 1});
+//                            }
+//                        }
+//
+//                        for (var i = 0; i < $aggregateFilelist.length; i++) {
+//                            var count = 0;
+//                            for (var j = 0; j < $fileJson.length; j++) {
+//                                if ($aggregateFilelist[i].dirCode == $fileJson[j].dirCode
+//                                        && $aggregateFilelist[i].nameCode ==  $fileJson[j].nameCode) {
+//                                    count++;
+//                                }
+//                            }
+//                            $aggregateFilelist[i].count = count;
+//                        }
+                }, function (e) {
+                    showTip("提示", "解压失败!", 1500);
+                });
         }
 
         var files = evt.target.files;
@@ -216,7 +228,7 @@
 
     var $maxFileSize =${maxFileSize};
     var $checkResultList = $("#checkResultList");
-    $("#checkFile").click(function () {
+    $("#checkFileInit").click(function () {
         var isPass = true;
         var $checkResultJson = [];
         //如果未上传文件,则提示上传
@@ -235,7 +247,7 @@
             //检查每类材料份数
             $.ajax({
                 async: false,
-                url: "${path}/zzb/dzda/mlcl/tpcl/mlclAggregate/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/mlclAggregateInit/${a38Id}",
                 type: "get",
                 data: {},
                 dataType: "json",
@@ -244,38 +256,20 @@
                 },
                 success: function (json) {
                     if (json.success == true) {
-                        var $mlclAggregateJson = jQuery.parseJSON(json.mlclAggregateJson);
-                        $mlclAggregateJson.forEach(function (mlclAggregate) {
-                            var isExist = false;
-                            for (var i = 0; i < $aggregateFilelist.length; i++) {
-                                if ($aggregateFilelist[i].dirCode == mlclAggregate.dirCode
-                                        && $aggregateFilelist[i].nameCode == mlclAggregate.nameCode) {
-                                    isExist = true;
-                                    if ($aggregateFilelist[i].count != mlclAggregate.count) {
-                                        isPass = false
-                                        $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]设置页数为:" + mlclAggregate.count + ",实际上传图片数为:" + $aggregateFilelist[i].count});
-                                    }
-                                }
-                            }
-                            if (!isExist) {
-                                isPass = false
-                                $checkResultJson.push({"message": "材料:[" + mlclAggregate.fileName + "]设置页数为:" + mlclAggregate.count + ",实际上传图片数为:0"});
-                            }
-                        });
+                        if ($aggregateFilelist[0].imgCount != json.imgCount) {
+                            isPass = false
+                            $checkResultJson.push({"message": "该材料设置总页数为:" + json.imgCount + ",实际上传页数为:" + $aggregateFilelist[0].imgCount});
+                        }
+
+                        if ($aggregateFilelist[0].count==0) {
+                            isPass = false
+                            $checkResultJson.push({"message": "该材料设置总页数为:" + json.imgCount + ",实际上传页数为:0"});
+                        }
                         //判断已上传的文件目录是否多余实际要求的目录
-                        $fileJson.forEach(function (fileJson) {
-                            var isExist = false;
-                            for (var i = 0; i < $mlclAggregateJson.length; i++) {
-                                if ($mlclAggregateJson[i].dirCode == fileJson.dirCode
-                                        && $mlclAggregateJson[i].nameCode == fileJson.nameCode) {
-                                    isExist = true;
-                                }
-                            }
-                            if (!isExist) {
-                                isPass = false
-                                $checkResultJson.push({"message": "[" + fileJson.fileName + "]  为多余文件,请删除后再上传!"});
-                            }
-                        });
+                        if ($aggregateFilelist[0].noImgCount>0) {
+                            isPass = false
+                            $checkResultJson.push({"message": "有[" +$aggregateFilelist[0].noImgCount+ "]个文件为非图片文件,请删除后再上传!"});
+                        }
                     }
                 },
                 error: function () {
@@ -305,7 +299,7 @@
             }
             if (isPass) {
                 $("#isPass").val("true");
-                $("#uploadAndSaveFile").removeAttr("disabled");
+                $("#uploadAndSaveFileInit").removeAttr("disabled");
             }
         }
 
@@ -358,10 +352,10 @@
         });
     }
 
-   function uploadAndSaveFile(){
+    function uploadAndSaveFileInit(){
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/tpcl/save/${a38Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/saveInit/${a38Id}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

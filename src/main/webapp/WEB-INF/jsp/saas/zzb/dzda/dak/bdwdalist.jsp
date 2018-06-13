@@ -35,9 +35,9 @@
 						<li >
 							<a onclick="changeViewType('19')">小图(一行5张图)</a>
 						</li>
-						<li >
-							<a onclick="changeViewType('32')">大图(一行3张图)</a>
-						</li>
+						<%--<li >--%>
+							<%--<a onclick="changeViewType('32')">大图(一行3张图)</a>--%>
+						<%--</li>--%>
 						<%--<li>--%>
 						<%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
 						<%--</li>--%>

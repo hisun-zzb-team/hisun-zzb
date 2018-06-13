@@ -159,16 +159,17 @@
 				if(json.code == 5){
 					showTip("提示", "阅档时间已结束", 2000);
 				}
+                window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                $('#viewImgModal').modal('hide');
+                $('#viewImgDiv').html("");
+                $("#timespan").html("");
 			},
 			error: function () {
 				//myLoading.hide();
 				showTip("提示", "出错了,请检查网络!", 2000);
 			}
 		});
-		window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-		$('#viewImgModal').modal('hide');
-		$('#viewImgDiv').html("");
-		$("#timespan").html("");
+
 
 	}
 	function changeTreeDivHeight(){

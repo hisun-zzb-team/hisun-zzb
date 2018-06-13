@@ -87,7 +87,7 @@
 								<div class="image-wrap">
 									<img data-original="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
 										 src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" title="${image.imgNo}" alt="${image.imgNo}/${imagesSize}">
-									<span style="display: block; width: 40px; height: 20px; top: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; color: aliceblue">${image.imgNo}/${imagesSize}</span>
+									<span style="display: block; width: 40px; height: 20px; top: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; ">${image.imgNo}/${imagesSize}</span>
 									<%--按比例挡住图片下面的部分 但是在全屏查看有问题<span style="display: block; width:100%; height: 40%; bottom: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; color:dimgrey;background-color: #979797"></span>--%>
 									<div class="dropdownMob">
 										<div class="btn-group">

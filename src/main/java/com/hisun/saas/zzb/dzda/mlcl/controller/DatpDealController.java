@@ -184,6 +184,36 @@ public class DatpDealController extends BaseController {
         return map;
     }
 
+    @RequestMapping("/mlclAggregateInit/{a38Id}")
+    public
+    @ResponseBody
+    Map<String, Object> mlclAggregateInit(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+            A38 a38 = a38Service.getByPK(a38Id);
+            CommonConditionQuery query1 = new CommonConditionQuery();
+            query1.add(CommonRestrictions.and("a38.id=:a38Id", "a38Id", a38Id));
+            CommonOrderBy orderBy1 = new CommonOrderBy();
+            orderBy1.add(CommonOrder.asc("e01z104"));
+            List<E01Z1> e01Z1s = e01Z1Service.list(query1, orderBy1);
+            MlclAggregateVo mlclAggregateVo = null;
+            int imgCount=0;
+            for (E01Z1 e01Z1 : e01Z1s) {
+                imgCount = imgCount+e01Z1.getE01Z114();
+            }
+
+            map.put("success", true);
+            map.put("imgCount", imgCount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e, e);
+            map.put("success", false);
+        }
+        return map;
+    }
+
+
 
     @RequestMapping("/e01z1/mlclAggregate/{e01z1Id}")
     public
@@ -231,6 +261,27 @@ public class DatpDealController extends BaseController {
             throw new GenericException(e);
         }
         return new ModelAndView("saas/zzb/dzda/mlcl/jztp/listZipfile", map);
+    }
+
+    @RequestMapping("/ajax/init/list/{a38Id}")
+    public ModelAndView initList(@PathVariable(value = "a38Id") String a38Id, HttpServletRequest request) throws GenericException {
+        Map<String, Object> map = Maps.newHashMap();
+//        String currentNodeId = StringUtils.trimNull2Empty(request.getParameter("currentNodeId"));
+//        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
+//        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
+        try {
+
+
+            map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
+            map.put("currentNodeId", a38Id);
+            map.put("currentNodeName", "");
+            map.put("currentNodeParentId", "");
+            map.put("a38Id", a38Id);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return new ModelAndView("saas/zzb/dzda/mlcl/jztp/listZipfileInit", map);
     }
 
     @RequestMapping("/ajax/list/e01z1/{e01z1Id}")
@@ -314,6 +365,75 @@ public class DatpDealController extends BaseController {
                 map.put("success", false);
                 map.put("message", "目录结构错误!");
             }
+        } catch (Exception e) {
+            try {
+                //将正式目录数据清除
+                File storeRealPathFile = new File(storeRealPath);
+                if (storeRealPathFile.exists()) {
+                    FileUtils.deleteDirectory(storeRealPathFile);
+                }
+                //将临时文件还原至正式目录
+                File storeTmpRealPathFile = new File(storeTmpRealPath);
+                if (storeTmpRealPathFile.exists()) {
+                    FileUtils.moveDirectory(storeTmpRealPathFile, storeRealPathFile);
+                }
+            } catch (Exception e1) {
+
+            }
+            logger.error(e);
+            throw new GenericException(e);
+        }finally {
+
+        }
+        return map;
+    }
+
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片")
+    @RequestMapping(value = "/saveInit/{a38Id}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    Map<String, Object> saveInit(@RequestParam(value = "zipfile", required = false) MultipartFile file,
+                             @PathVariable(value = "a38Id") String a38Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);//临时目录
+        String storeRealPath = uploadBasePath + getTpStorePath(a38Id);//正式目录
+        try {
+            A38 a38 = this.a38Service.getByPK(a38Id);
+            File storeRealPathFile = new File(storeRealPath);
+            if (storeRealPathFile.exists() == false) {
+                storeRealPathFile.mkdirs();
+            } else {
+                //如果存在,现将其移到临时目录下
+                FileUtils.moveDirectory(storeRealPathFile, new File(storeTmpRealPath));
+                //重新创建存储目录
+                storeRealPathFile.mkdirs();
+            }
+            //先将zip文件存入目录
+            String zipStoreRealPath = storeRealPath + UUIDUtil.getUUID() + ".zip";
+            File zipFile = new File(zipStoreRealPath);
+            FileOutputStream zipfos = new FileOutputStream(zipFile);
+            InputStream zipis = file.getInputStream();
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = zipis.read(buffer)) != -1) {
+                zipfos.write(buffer, 0, length);
+            }
+            zipfos.flush();
+            zipfos.close();
+            zipis.close();
+            //解压zip
+            CompressUtil.unzip(zipStoreRealPath, storeRealPath);
+            FileUtils.deleteQuietly(zipFile);
+            //写入eimages
+            eImagesService.saveEImagesByJztpInit(a38, storeRealPathFile);
+            //删除临时文件
+            File storeTmpRealPathFile = new File(storeTmpRealPath);
+            if (storeTmpRealPathFile.exists()) {
+                FileUtils.deleteDirectory(storeTmpRealPathFile);
+            }
+            map.put("success", true);
+            map.put("message", "保存成功!");
         } catch (Exception e) {
             try {
                 //将正式目录数据清除
@@ -486,7 +606,6 @@ public class DatpDealController extends BaseController {
         }
         return ispass;
     }
-
 
     @RequestMapping(value = "/delete/{a38Id}")
     public

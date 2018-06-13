@@ -199,6 +199,24 @@
             }
         });
     }
+    function xxjlLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a08/ajax/xxjl",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "现任职务加载失败");
+            }
+        });
+    }
     $("#saveButton").click(function () {
         if (tabIndex == "#tab_1_1") {
             var myVld = new EstValidate("a01Form");

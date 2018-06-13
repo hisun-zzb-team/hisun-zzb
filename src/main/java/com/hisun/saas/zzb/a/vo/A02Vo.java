@@ -1,7 +1,5 @@
 package com.hisun.saas.zzb.a.vo;
 
-import java.math.BigDecimal;
-
 public class A02Vo {
     /** 现任职务主键 */
     private String a0200;
@@ -49,10 +47,10 @@ public class A02Vo {
     private String a0221;
 
     /** 多职务主次序号 */
-    private java.math.BigDecimal a0223;
+    private Integer a0223;
 
     /** 集体内排序 */
-    private java.math.BigDecimal a0225;
+    private Integer a0225;
 
     /** 分管（从事）工作 */
     private String a0229;
@@ -199,7 +197,7 @@ public class A02Vo {
     private String aSfsy;
 
     /** 试用期时长 */
-    private java.math.BigDecimal aSyq;
+    private Integer aSyq;
 
     /** 试用期时长单位.1－日，2－月，3－年 */
     private String aSyqdw;
@@ -208,7 +206,7 @@ public class A02Vo {
     private String aSyqyjsj;
 
     /** 挂职期满时长 */
-    private java.math.BigDecimal aGzq;
+    private Integer aGzq;
 
     /** 挂职期满时长时间单位,1：日；2：月；3；年；4：周 */
     private String aGzqdw;
@@ -348,19 +346,19 @@ public class A02Vo {
         this.a0221 = a0221;
     }
 
-    public BigDecimal getA0223() {
+    public Integer getA0223() {
         return a0223;
     }
 
-    public void setA0223(BigDecimal a0223) {
+    public void setA0223(Integer a0223) {
         this.a0223 = a0223;
     }
 
-    public BigDecimal getA0225() {
+    public Integer getA0225() {
         return a0225;
     }
 
-    public void setA0225(BigDecimal a0225) {
+    public void setA0225(Integer a0225) {
         this.a0225 = a0225;
     }
 
@@ -748,11 +746,11 @@ public class A02Vo {
         this.aSfsy = aSfsy;
     }
 
-    public BigDecimal getaSyq() {
+    public Integer getaSyq() {
         return aSyq;
     }
 
-    public void setaSyq(BigDecimal aSyq) {
+    public void setaSyq(Integer aSyq) {
         this.aSyq = aSyq;
     }
 
@@ -772,11 +770,11 @@ public class A02Vo {
         this.aSyqyjsj = aSyqyjsj;
     }
 
-    public BigDecimal getaGzq() {
+    public Integer getaGzq() {
         return aGzq;
     }
 
-    public void setaGzq(BigDecimal aGzq) {
+    public void setaGzq(Integer aGzq) {
         this.aGzq = aGzq;
     }
 

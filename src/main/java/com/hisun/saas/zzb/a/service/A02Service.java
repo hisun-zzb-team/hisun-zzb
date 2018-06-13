@@ -14,7 +14,7 @@ import com.hisun.saas.zzb.a.entity.A05;
  * @author zhout {6051144321@qq.com}
  */
 public interface A02Service extends BaseService<A02,String> {
-//   Integer getMaxSort();
+   Integer getMaxSort();
 //   void updateB09(B09 b09, Integer oldSort, List<BB09BhJrInfo> bb09BhJrInfoList);
-//   void updatePx(int oldPx, int newPx, String b01Id);
+   void updatePx(int oldPx, int newPx, String a01Id);
 }

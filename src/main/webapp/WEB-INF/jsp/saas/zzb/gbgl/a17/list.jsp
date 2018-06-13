@@ -253,7 +253,7 @@
                  OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
              },
              success : function(html){
-                 var view = $("#a17Div");
+                 var view = $("#tab_show");
                  view.html(html);
              },
              error : function(arg1, arg2, arg3){

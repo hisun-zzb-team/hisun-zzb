@@ -27,7 +27,7 @@
     </div>
     <div class="clearfix fr">
         <button type="button" class="btn green" id ="saveButton" onclick="formSave()"><i class="icon-ok"></i> 保存</button>
-        <a  class="btn" onclick="cancel()" id="cancelId"><i class="icon-remove-sign"></i> 取消</a>
+        <a  class="btn" id="cancelId"><i class="icon-remove-sign"></i> 取消</a>
     </div>
 </div>
 
@@ -213,7 +213,26 @@
                 view.html(html);
             },
             error: function (arg1, arg2, arg3) {
-                showTip("提示", "现任职务加载失败");
+                showTip("提示", "学习经历加载失败");
+            }
+        });
+    }
+
+    function gzjlLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a17/ajax/list",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "工作经历加载失败");
             }
         });
     }

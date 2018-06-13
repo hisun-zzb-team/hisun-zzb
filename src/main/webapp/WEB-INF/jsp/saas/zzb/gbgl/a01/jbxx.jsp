@@ -7,7 +7,7 @@
   ~ http://www.hn-hisun.com
   ~ 注意:本内容知识产权属于湖南海数互联信息技术有限公司所有,除非取得商业授权,否则不得用于商业目的.
   --%>
-<title>添加机构</title>
+<title>添加人员</title>
 <c:set var="path" value="${pageContext.request.contextPath}"></c:set>
 <div class="container-fluid">
 

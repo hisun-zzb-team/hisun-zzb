@@ -15,6 +15,7 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.a.entity.A01;
 import com.hisun.saas.zzb.a.entity.A17;
 import com.hisun.saas.zzb.a.service.A01Service;
@@ -46,7 +47,7 @@ public class A17Controller extends BaseController{
     private A17Service a17Service;
 
     @RequestMapping(value = "/ajax/list")
-    public ModelAndView getList(String a01Id,
+    public ModelAndView getList(String a01Id,String a17Id,
                                 @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize
     ) {
@@ -56,15 +57,19 @@ public class A17Controller extends BaseController{
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and(" a01.a0100 = :a01Id ", "a01Id",a01Id));
             CommonOrderBy orderBy = new CommonOrderBy();
-            Long total = 0L;
             List<A17> list = a17Service.list(query,orderBy,pageNum,pageSize);
-            total = a17Service.count(query);
+            Long total = a17Service.count(query);
             for(A17 entity :list){
                 A17Vo vo = new A17Vo();
                 BeanUtils.copyProperties(entity,vo);
                 vos.add(vo);
             }
             PagerVo<A17Vo> pager = new PagerVo<A17Vo>(vos, total.intValue(), pageNum, pageSize);
+            A17Vo vo = new A17Vo();
+            if(StringUtils.isNotBlank(a17Id)){
+                BeanUtils.copyProperties(a17Service.getByPK(a17Id),vo);
+            }
+            map.put("vo",vo);
             map.put("a01Id",a01Id);
             map.put("pager", pager);
             map.put("success", true);
@@ -75,7 +80,25 @@ public class A17Controller extends BaseController{
         return new ModelAndView("saas/zzb/gbgl/a17/list", map);
     }
 
-    @RequestMapping(value = "/updateOrSave")
+    @RequestMapping(value = "/edit")
+    @ResponseBody
+    public ModelAndView edit(String id) {
+        Map<String, Object> map = Maps.newHashMap();
+        try {
+            A17 a17 = a17Service.getByPK(id);
+            A17Vo vo = new A17Vo();
+            BeanUtils.copyProperties(a17,vo);
+            map.put("vo",vo);
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            map.put("message", "删除失败");
+            map.put("success", false);
+        }
+        return new ModelAndView("saas/zzb/gbgl/a17/editGzjl",map);
+    }
+
+    @RequestMapping(value = "/saveOrUpdate")
     @ResponseBody
     public Map<String, Object> updateOrSave(A17Vo vo) {
         Map<String, Object> map = Maps.newHashMap();
@@ -85,10 +108,12 @@ public class A17Controller extends BaseController{
             if (StringUtils.isNotBlank(vo.getA1700())) {
                 entity = a17Service.getByPK(vo.getA1700());
                 BeanUtils.copyProperties(vo,entity);
+                EntityWrapper.wrapperUpdateBaseProperties(entity,details);
                 a17Service.update(entity);
             } else {
                 BeanUtils.copyProperties(vo,entity);
                 entity.setA01(a01Service.getByPK(vo.getA01Id()));
+                EntityWrapper.wrapperSaveBaseProperties(entity,details);
                 a17Service.save(entity);
             }
             map.put("code", 1);
@@ -113,4 +138,6 @@ public class A17Controller extends BaseController{
         }
         return map;
     }
+
+
 }

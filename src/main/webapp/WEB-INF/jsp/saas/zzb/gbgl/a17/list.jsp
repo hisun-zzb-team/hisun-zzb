@@ -233,7 +233,7 @@
              },
              data: $("#searchForm").serialize(),
              success: function (html) {
-                 $("#rightList").html(html);
+                 $("#tab_show").html(html);
              },
              error: function () {
                  myLoading.hide();

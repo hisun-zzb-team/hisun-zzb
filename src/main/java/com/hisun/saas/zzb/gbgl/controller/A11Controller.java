@@ -15,13 +15,15 @@ import com.hisun.base.dao.util.CommonRestrictions;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
+import com.hisun.saas.sys.util.EntityWrapper;
 import com.hisun.saas.zzb.a.entity.A11;
 import com.hisun.saas.zzb.a.service.A01Service;
 import com.hisun.saas.zzb.a.service.A11Service;
 import com.hisun.saas.zzb.a.vo.A11Vo;
 import com.hisun.util.StringUtils;
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,9 +57,8 @@ public class A11Controller extends BaseController {
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and(" a01.a0100 = :a01Id ", "a01Id",a01Id));
             CommonOrderBy orderBy = new CommonOrderBy();
-            Long total = 0L;
             List<A11> list = a11Service.list(query,orderBy,pageNum,pageSize);
-            total = a11Service.count(query);
+            Long  total = a11Service.count(query);
             for(A11 entity :list){
                 A11Vo vo = new A11Vo();
                 BeanUtils.copyProperties(entity,vo);
@@ -74,10 +75,30 @@ public class A11Controller extends BaseController {
         }
         return new ModelAndView("saas/zzb/gbgl/a11/list", map);
     }
+    @RequestMapping(value = "/ajax/add")
+    public ModelAndView addB10(String a01Id){
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("a01Id",a01Id);
+        return new ModelAndView("saas/zzb/gbgl/a11/add",map);
+    }
 
-    @RequestMapping(value = "/updateOrSave")
+    @RequestMapping(value = "/ajax/addOrEdit")
+    public ModelAndView edit(String a1100,String a01Id){
+        Map<String,Object> map = Maps.newHashMap();
+        A11Vo vo = new A11Vo();
+        if(StringUtils.isNotBlank(a1100)){
+            A11 b10 = a11Service.getByPK(a1100);
+            BeanUtils.copyProperties(b10,vo);
+        }
+        map.put("a01Id",a01Id);
+        map.put("vo",vo);
+        return new ModelAndView("saas/zzb/gbgl/a11/addOrEdit",map);
+    }
+
+
+    @RequestMapping(value = "/saveOrUpdate")
     @ResponseBody
-    public Map<String, Object> updateOrSave(A11Vo vo) {
+    public Map<String, Object> saveOrUpdate(A11Vo vo) {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
@@ -85,10 +106,12 @@ public class A11Controller extends BaseController {
             if (StringUtils.isNotBlank(vo.getA1100())) {
                 entity = a11Service.getByPK(vo.getA1100());
                 org.springframework.beans.BeanUtils.copyProperties(vo,entity);
+                EntityWrapper.wrapperUpdateBaseProperties(entity, details);
                 a11Service.update(entity);
             } else {
                 org.springframework.beans.BeanUtils.copyProperties(vo,entity);
                 entity.setA01(a01Service.getByPK(vo.getA01Id()));
+                EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 a11Service.save(entity);
             }
             map.put("code", 1);
@@ -98,9 +121,9 @@ public class A11Controller extends BaseController {
         }
         return map;
     }
-    @RequestMapping(value = "/delete")
+    @RequestMapping(value = "/delete/{id}")
     @ResponseBody
-    public Map<String, Object> delete(String id) {
+    public Map<String, Object> delete(@PathVariable("id")String id) {
         Map<String, Object> map = Maps.newHashMap();
         try {
             a11Service.deleteByPK(id);

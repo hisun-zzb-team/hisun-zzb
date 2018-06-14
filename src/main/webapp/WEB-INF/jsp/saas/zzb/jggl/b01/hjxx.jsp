@@ -65,6 +65,7 @@
 </div>
 <script type="text/javascript" src="${path }/js/common/DataValidate.js"></script>
 <script type="text/javascript">
+
     function add() {
         $.ajax({
             async: false,
@@ -109,6 +110,26 @@
                 showTip("提示", "出错了,请检查网络!", 2000);
             }
         });
+    }
+    function pagehref(pageNum, pageSize) {
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "${path}/zzb/jggl/b10/ajax/hjxx?pageNum=" + pageNum + "&pageSize=" + pageSize,
+            dataType: "html",
+            headers: {
+                "OWASP_CSRFTOKEN": '${sessionScope.OWASP_CSRFTOKEN}'
+            },
+            data: {"currentId":"${currentId}"},
+            success: function (html) {
+                $("#rightList").html(html);
+            },
+            error: function () {
+                myLoading.hide();
+                showTip("提示", "出错了,请检查网络!", 2000);
+            }
+        });
+
     }
     function deleteB10(id) {
         debugger

@@ -73,6 +73,8 @@ public class A11 extends TombstoneEntity implements Serializable {
     /** 培训班类别:ZB31-2006/PXLB */
     private String a1134;
 
+    private String a1134A;
+
     /** 培训专业名称 */
     private String a1137;
 
@@ -334,6 +336,16 @@ public class A11 extends TombstoneEntity implements Serializable {
 
     public void setA1134(String a1134) {
         this.a1134 = a1134;
+    }
+
+    @Basic
+    @Column(name = "a1134a", nullable = true, length = 256)
+    public String getA1134A() {
+        return a1134A;
+    }
+
+    public void setA1134A(String a1134A) {
+        this.a1134A = a1134A;
     }
 
     @Basic

@@ -146,16 +146,16 @@
             $("[id='#tab_1_5']").tab('show');
             jckhLoad();
         }else if ($(e.target).attr('id') == "#tab_1_6") {
-            $("[id='#tab_1_3']").tab('show');
+            $("[id='#tab_1_6']").tab('show');
             pxqkLoad();
         } else if ($(e.target).attr('id') == "#tab_1_7") {
-            $("[id='#tab_1_4']").tab('show');
+            $("[id='#tab_1_7']").tab('show');
             shgxLoad();
         } else if ($(e.target).attr('id') == "#tab_1_8") {
-            $("[id='#tab_1_5']").tab('show');
+            $("[id='#tab_1_8']").tab('show');
             qtxxLoad();
         } else if ($(e.target).attr('id') == "#tab_1_9") {
-            $("[id='#tab_1_5']").tab('show');
+            $("[id='#tab_1_9']").tab('show');
             lxfsLoad();
         }
     }
@@ -236,7 +236,24 @@
             }
         });
     }
-
+    function pxqkLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a11/ajax/list",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "工作经历加载失败");
+            }
+        });
+    }
     function jckhLoad() {
         $.ajax({
             url: "${path }/zzb/gbgl/a14/ajax/jckh",

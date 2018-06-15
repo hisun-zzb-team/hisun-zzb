@@ -327,7 +327,7 @@
                 view.html(html);
             },
             error: function (arg1, arg2, arg3) {
-                showTip("提示", "奖惩考核加载失败");
+                showTip("提示", "社会关系加载失败");
             }
         });
     }

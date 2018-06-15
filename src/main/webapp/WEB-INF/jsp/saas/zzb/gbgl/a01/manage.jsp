@@ -272,6 +272,25 @@
             }
         });
     }
+
+    function shgxLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a36/ajax/shgx",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "奖惩考核加载失败");
+            }
+        });
+    }
     $("#saveButton").click(function () {
         if (tabIndex == "#tab_1_1") {
             var myVld = new EstValidate("a01Form");

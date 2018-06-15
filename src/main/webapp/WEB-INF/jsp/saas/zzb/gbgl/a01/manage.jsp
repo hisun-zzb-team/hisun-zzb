@@ -26,7 +26,7 @@
 
     </div>
     <div class="clearfix fr">
-        <button type="button" class="btn green" id ="saveButton" onclick="formSave()"><i class="icon-ok"></i> 保存</button>
+        <button type="button" class="btn green" id ="saveButton" ><i class="icon-ok"></i> 保存</button>
         <a  class="btn" id="cancelId"><i class="icon-remove-sign"></i> 取消</a>
     </div>
 </div>
@@ -58,7 +58,6 @@
         App.init();
         baseLoad();
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-            debugger
             if ($(e.target).attr('id') != '#tab_1_1' && tabIndex == "#tab_1_1") {
                 var myVld = new EstValidate("a01Form");
                 myLoading.show();
@@ -69,6 +68,17 @@
                 }
                 a01Save(e)
                // baseLoad();
+            }
+            if ($(e.target).attr('id') != '#tab_1_9' && tabIndex == "#tab_1_9") {
+                var myVld = new EstValidate("a37Form");
+                myLoading.show();
+                var bool = myVld.form();
+                if (!bool) {
+                    myLoading.hide();
+                    return false;
+                }
+                a37Save(e)
+                // baseLoad();
             }
             else {
                 if ($(e.target).attr('id') == "#tab_1_1") {
@@ -121,6 +131,36 @@
             },
             error: function () {
                 $("[id='#tab_1_1']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示", "出错了,请检查网络!", 2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+    function a37Save(e) {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a37/saveOrUpdate?a01Id=${a01Id}",
+            type: "post",
+            data: $("#a37Form").serialize(),
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "json",
+            success: function (json) {
+                if (json.code == 1) {
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    changeTable(e);
+                } else {
+                    $("[id='#tab_1_9']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error: function () {
+                $("[id='#tab_1_9']").tab('show');
                 console.log("我这里出错了")
                 showTip("提示", "出错了,请检查网络!", 2000);
                 myLoading.hide();
@@ -291,6 +331,25 @@
             }
         });
     }
+    function lxfsLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a37/ajax/lxfs",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "联系方式加载失败");
+            }
+        });
+    }
+
     $("#saveButton").click(function () {
         if (tabIndex == "#tab_1_1") {
             var myVld = new EstValidate("a01Form");
@@ -326,6 +385,33 @@
                 toA01List()
             }, 1500);
         } else if (tabIndex == "#tab_1_5") {
+        }
+        else if (tabIndex == "#tab_1_9") {
+            var myVld = new EstValidate("a37Form");
+            myLoading.show();
+            var bool = myVld.form();
+            if (!bool) {
+                myLoading.hide();
+                return false;
+            }
+            $.ajax({
+                url: "${path }/zzb/gbgl/a37/saveOrUpdate?a01Id=${a01Id}",
+                type: "post",
+                data: $("#a37Form").serialize(),
+                headers: {
+                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                dataType: "json",
+                success: function (json) {
+                    myLoading.hide();
+                    showTip("提示", "保存成功", 1500)
+                    setTimeout(function () {
+                        toA01List()
+                    }, 1500);
+                },
+                error: function () {
+                }
+            });
         }
     });
 

@@ -61,6 +61,16 @@ public class AZc  extends TombstoneEntity implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "a0100")
+    public A01 getA01() {
+        return a01;
+    }
+
+    public void setA01(A01 a01) {
+        this.a01 = a01;
+    }
+
     @Basic
     @Column(name = "a_zcb", nullable = true, length = 128)
     public String getaZcb() {

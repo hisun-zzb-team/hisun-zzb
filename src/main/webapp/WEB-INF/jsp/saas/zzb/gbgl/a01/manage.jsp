@@ -56,6 +56,7 @@
     var tabIndex = "#tab_1_1";
     $(function () {
         App.init();
+        debugger
         baseLoad();
         $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
             if ($(e.target).attr('id') != '#tab_1_1' && tabIndex == "#tab_1_1") {
@@ -68,6 +69,17 @@
                 }
                 a01Save(e)
                // baseLoad();
+            }
+            if ($(e.target).attr('id') != '#tab_1_8' && tabIndex == "#tab_1_8") {
+                var myVld = new EstValidate("qtxxForm");
+                myLoading.show();
+                var bool = myVld.form();
+                if (!bool) {
+                    myLoading.hide();
+                    return false;
+                }
+                qtxxSave(e)
+                // baseLoad();
             }
             if ($(e.target).attr('id') != '#tab_1_9' && tabIndex == "#tab_1_9") {
                 var myVld = new EstValidate("a37Form");
@@ -138,6 +150,41 @@
             }
         });
     }
+    function qtxxSave(e){
+        $.ajax({
+            url: "${path }/zzb/gbgl/a01/qtxxSaveOrUpdate",
+            type: "post",
+            data: $("#qtxxForm").serialize(),
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "json",
+            success: function (json) {
+                if (json.code == 1) {
+                    var a01Id = json.a01Id;
+                    if (a01Id != "" && a01Id != undefined) {
+                        $("#a01Id").val(a01Id);
+                    }
+                    myLoading.hide();
+                    tabIndex = $(e.target).attr('id');
+                    changeTable(e);
+                } else {
+                    $("[id='#tab_1_8']").tab('show');
+                    myLoading.hide();
+                    showTip("提示", json.message, 2000);
+                    return false;
+                }
+            },
+            error: function () {
+                $("[id='#tab_1_8']").tab('show');
+                console.log("我这里出错了")
+                showTip("提示", "出错了,请检查网络!", 2000);
+                myLoading.hide();
+                return false;
+            }
+        });
+    }
+
     function a37Save(e) {
         $.ajax({
             url: "${path }/zzb/gbgl/a37/saveOrUpdate?a01Id=${a01Id}",
@@ -331,6 +378,25 @@
             }
         });
     }
+    function qtxxLoad() {
+        $.ajax({
+            url: "${path }/zzb/gbgl/a01/ajax/qtxx",
+            type: "post",
+            data: {"a01Id": "${a01Id}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                var view = $("#tab_show");
+                view.html(html);
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "其他信息加载失败");
+            }
+        });
+    }
+
     function lxfsLoad() {
         $.ajax({
             url: "${path }/zzb/gbgl/a37/ajax/lxfs",
@@ -349,6 +415,7 @@
             }
         });
     }
+
 
     $("#saveButton").click(function () {
         if (tabIndex == "#tab_1_1") {
@@ -385,6 +452,33 @@
                 toA01List()
             }, 1500);
         } else if (tabIndex == "#tab_1_5") {
+        }
+        else if (tabIndex == "#tab_1_8") {
+            var myVld = new EstValidate("qtxxForm");
+            myLoading.show();
+            var bool = myVld.form();
+            if (!bool) {
+                myLoading.hide();
+                return false;
+            }
+            $.ajax({
+                url: "${path }/zzb/gbgl/a01/qtxxSaveOrUpdate",
+                type: "post",
+                data: $("#qtxxForm").serialize(),
+                headers: {
+                    OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                dataType: "json",
+                success: function (json) {
+                    myLoading.hide();
+                    showTip("提示", "保存成功", 1500)
+                    setTimeout(function () {
+                        toA01List()
+                    }, 1500);
+                },
+                error: function () {
+                }
+            });
         }
         else if (tabIndex == "#tab_1_9") {
             var myVld = new EstValidate("a37Form");

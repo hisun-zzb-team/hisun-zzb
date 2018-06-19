@@ -49,6 +49,16 @@ public class A12Vo {
     /** 出国情况 */
     private String aCgqk;
 
+    private String a01Id;
+
+    public String getA01Id() {
+        return a01Id;
+    }
+
+    public void setA01Id(String a01Id) {
+        this.a01Id = a01Id;
+    }
+
     public String getA1200() {
         return a1200;
     }

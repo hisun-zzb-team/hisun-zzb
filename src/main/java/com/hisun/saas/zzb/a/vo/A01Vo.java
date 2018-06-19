@@ -307,6 +307,9 @@ public class A01Vo {
     /** 科研成果、著作发明 */
     private String kycgqk;
 
+    /** 职称情况 */
+    private String aZcqk;
+
     /* */
     //private List<A02Vo> a02Vos;
 
@@ -1093,5 +1096,13 @@ public class A01Vo {
 
     public void setKycgqk(String kycgqk) {
         this.kycgqk = kycgqk;
+    }
+
+    public String getaZcqk() {
+        return aZcqk;
+    }
+
+    public void setaZcqk(String aZcqk) {
+        this.aZcqk = aZcqk;
     }
 }

@@ -280,4 +280,29 @@
             }
         });
     }
+    
+    function deleteA17(id) {
+        actionByConfirm1("", "${path}/zzb/gbgl/a17/delete?id=" + id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
+            if (data.success == true) {
+                $.ajax({
+                    url : "${path }/zzb/gbgl/a17/ajax/list",
+                    type : "post",
+                    data : {"a01Id":a01Id},
+                    dataType : "html",
+                    headers:{
+                        OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                    },
+                    success : function(html){
+                        var view = $("#tab_show");
+                        view.html(html);
+                    },
+                    error : function(arg1, arg2, arg3){
+                        showTip("提示","工作经历加载失败");
+                    }
+                });
+            } else {
+                showTip("提示", data.msg, 2000);
+            }
+        });
+    }
 </script>

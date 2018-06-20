@@ -284,13 +284,13 @@ public class A01Vo {
     private String aJl;
 
     /** 兼任社会职务情况 */
-    private String aJrshzwqk;
+    private String jrshzwqk;
 
     /** 当选会议代表情况 */
-    private String aDxdbqk;
+    private String dxdbqk;
 
     /** 出国境情况 */
-    private String aCgjqk;
+    private String cgjqk;
 
     /** 奖励情况 */
     private String aJlqk;
@@ -305,7 +305,10 @@ public class A01Vo {
     private String aPxqk;
 
     /** 科研成果、著作发明 */
-    private String aKycgqk;
+    private String kycgqk;
+
+    /** 职称情况 */
+    private String aZcqk;
 
     /* */
     //private List<A02Vo> a02Vos;
@@ -1031,30 +1034,6 @@ public class A01Vo {
         this.aJl = aJl;
     }
 
-    public String getaJrshzwqk() {
-        return aJrshzwqk;
-    }
-
-    public void setaJrshzwqk(String aJrshzwqk) {
-        this.aJrshzwqk = aJrshzwqk;
-    }
-
-    public String getaDxdbqk() {
-        return aDxdbqk;
-    }
-
-    public void setaDxdbqk(String aDxdbqk) {
-        this.aDxdbqk = aDxdbqk;
-    }
-
-    public String getaCgjqk() {
-        return aCgjqk;
-    }
-
-    public void setaCgjqk(String aCgjqk) {
-        this.aCgjqk = aCgjqk;
-    }
-
     public String getaJlqk() {
         return aJlqk;
     }
@@ -1087,11 +1066,43 @@ public class A01Vo {
         this.aPxqk = aPxqk;
     }
 
-    public String getaKycgqk() {
-        return aKycgqk;
+    public String getJrshzwqk() {
+        return jrshzwqk;
     }
 
-    public void setaKycgqk(String aKycgqk) {
-        this.aKycgqk = aKycgqk;
+    public void setJrshzwqk(String jrshzwqk) {
+        this.jrshzwqk = jrshzwqk;
+    }
+
+    public String getDxdbqk() {
+        return dxdbqk;
+    }
+
+    public void setDxdbqk(String dxdbqk) {
+        this.dxdbqk = dxdbqk;
+    }
+
+    public String getCgjqk() {
+        return cgjqk;
+    }
+
+    public void setCgjqk(String cgjqk) {
+        this.cgjqk = cgjqk;
+    }
+
+    public String getKycgqk() {
+        return kycgqk;
+    }
+
+    public void setKycgqk(String kycgqk) {
+        this.kycgqk = kycgqk;
+    }
+
+    public String getaZcqk() {
+        return aZcqk;
+    }
+
+    public void setaZcqk(String aZcqk) {
+        this.aZcqk = aZcqk;
     }
 }

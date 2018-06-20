@@ -307,6 +307,9 @@ public class A01 extends TombstoneEntity implements Serializable {
     /** 科研成果、著作发明 */
     private String aKycgqk;
 
+    /** 职称情况 */
+    private String aZcqk;
+
     //职务信息
     private List<A02> a02s;
 
@@ -1301,6 +1304,16 @@ public class A01 extends TombstoneEntity implements Serializable {
         this.aKycgqk = aKycgqk;
     }
 
+    @Basic
+    @Column(name = "a_zcqk", nullable = true, length = -1)
+    public String getaZcqk() {
+        return aZcqk;
+    }
+
+    public void setaZcqk(String aZcqk) {
+        this.aZcqk = aZcqk;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -1395,6 +1408,7 @@ public class A01 extends TombstoneEntity implements Serializable {
                 Objects.equals(aJlqk, a01.aJlqk) &&
                 Objects.equals(aCjqk, a01.aCjqk) &&
                 Objects.equals(aNdkhqk, a01.aNdkhqk) &&
+                Objects.equals(aZcqk, a01.aZcqk) &&
                 Objects.equals(aPxqk, a01.aPxqk) &&
                 Objects.equals(aKycgqk, a01.aKycgqk);
     }
@@ -1402,6 +1416,6 @@ public class A01 extends TombstoneEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(a0100, a0101, a0102, a0104, a0104A, a0107, a0111A, a0111B, a0114A, a0114B, a0115A, a0115B, a0117, a0117A, a0127, a0127A, a0128, a0131, a0131A, aCjgzdw, a0134, a0137, a0141, a0144, a0151, a0154, a0157A, a0157B, a0161, a0164, a0167, a0171, a0174, a0177, a0181A, a0181B, a0183, a0184, a0187A, a0187B, a0191, aZpgs, aZpdx, aZplj, a0501A, a0501B, a0504, aZjsm, axzwcca, aXzwccb, aXzwccsj, aSfgwy, aGwydjsj, aGbztb, aGbzta, aJrdqdwsj, aGblya, aGblyb, aGllbB, aGllbA, aSfydzda, aSfysh, aSfhbgb, aSfyshxlxw, aSfzgdy, aZzxlb, aZzxla, aZzxwb, aZzxwa, aZzbyyxjzy, aQrzxlb, aQrzxla, aQrzxwb, aQrzxwa, aQrzbyyxjzy, aZgxlb, aZgxla, aZgxwb, aZgxwa, aZgbyyxjzy, aDwjzwMc, aDwjzwSpb, aJl, aJrshzwqk, aDxdbqk, aCgjqk, aJlqk, aCjqk, aNdkhqk, aPxqk, aKycgqk);
+        return Objects.hash(a0100, a0101, a0102, a0104, a0104A, a0107, a0111A, a0111B, a0114A, a0114B, a0115A, a0115B, a0117, a0117A, a0127, a0127A, a0128, a0131, a0131A, aCjgzdw, a0134, a0137, a0141, a0144, a0151, a0154, a0157A, a0157B, a0161, a0164, a0167, a0171, a0174, a0177, a0181A, a0181B, a0183, a0184, a0187A, a0187B, a0191, aZpgs, aZpdx, aZplj, a0501A, a0501B, a0504, aZjsm, axzwcca, aXzwccb, aXzwccsj, aSfgwy, aGwydjsj, aGbztb, aGbzta, aJrdqdwsj, aGblya, aGblyb, aGllbB, aGllbA, aSfydzda, aSfysh, aSfhbgb, aSfyshxlxw, aSfzgdy, aZzxlb, aZzxla, aZzxwb, aZzxwa, aZzbyyxjzy, aQrzxlb, aQrzxla, aQrzxwb, aQrzxwa, aQrzbyyxjzy, aZgxlb, aZgxla, aZgxwb, aZgxwa, aZgbyyxjzy, aDwjzwMc, aDwjzwSpb, aJl, aJrshzwqk, aDxdbqk, aCgjqk, aJlqk, aCjqk, aNdkhqk, aZcqk, aPxqk, aKycgqk);
     }
 }

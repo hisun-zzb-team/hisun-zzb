@@ -32,4 +32,12 @@ public interface E01Z1Service extends BaseService<E01Z1,String>{
      * @return
      */
     int saveFromGzslws(DataSource dataSource)throws Exception;
+
+    /**
+     * 有漏的可以再次导入
+     * @param dataSource
+     * @return
+     * @throws Exception
+     */
+    int updateFromGzslws(DataSource dataSource)throws Exception;
 }

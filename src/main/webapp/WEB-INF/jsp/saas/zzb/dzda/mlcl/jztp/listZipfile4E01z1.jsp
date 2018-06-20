@@ -175,7 +175,7 @@
                         for (var i = 0; i < $fileJson.length; i++) {
                             var isAddNameCode = true;
                             for (var j = 0; j < $aggregateFilelist.length; j++) {
-                                if ($aggregateFilelist[j].nameCode == $fileJson[i].nameCode) {
+                                if ($aggregateFilelist[j].dirCode == $fileJson[i].dirCode && $aggregateFilelist[j].nameCode == $fileJson[i].nameCode) {
                                     isAddNameCode = false
                                 }
                             }

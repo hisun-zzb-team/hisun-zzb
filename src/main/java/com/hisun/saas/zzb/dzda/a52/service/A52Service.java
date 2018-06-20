@@ -30,4 +30,5 @@ public interface A52Service extends BaseService<A52,String> {
      * @return
      */
     int saveFromGzslws(DataSource dataSource)throws Exception;
+    int updateFromGzslws(DataSource dataSource)throws Exception;
 }

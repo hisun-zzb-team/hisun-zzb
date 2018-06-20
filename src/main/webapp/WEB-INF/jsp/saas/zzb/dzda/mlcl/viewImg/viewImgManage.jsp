@@ -28,7 +28,7 @@
 <div class="container-fluid" >
 	<!-- 脚本目录 -->
 	<input id="showTpWidth" type="hidden"/>
-	<div class="span6" style="width: 20%; margin: 0px;padding: 0px;background: #f1f3f6;border-right:1px solid #d8d8d8">
+	<div class="span6" style="width: 30%; margin: 0px;padding: 0px;background: #f1f3f6;border-right:1px solid #d8d8d8">
 		<input type="hidden" name="ea38LogDetailId" id="ea38LogDetailId">
 		<input type="hidden" name="eLogDetailViewTimeId" id="eLogDetailViewTimeId">
 		<input type="hidden" name="a38LogViewTimeId" id="a38LogViewTimeId">

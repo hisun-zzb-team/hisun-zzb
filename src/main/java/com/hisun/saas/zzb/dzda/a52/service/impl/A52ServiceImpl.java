@@ -270,6 +270,81 @@ public class A52ServiceImpl extends BaseServiceImpl<A52,String> implements A52Se
         return order;
     }
 
+    public int updateFromGzslws(DataSource dataSource)throws Exception{
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //处理了多少条
+        int order = 0;
+        Connection conn = dataSource.getConnection();
+        QueryRunner queryRunner = new QueryRunner();
+
+
+        Map<String,Object> attMaps = getSavaAttMaps();
+        List<A52> a52s = this.a52Dao.list();
+        //每次处理400条
+
+            String sql = "select a52.* from a52 where a52.PK_A38 in(" +
+                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " +
+                    "order by a52.PK_A52 ";
+
+            List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
+            for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {
+                Map<String, Object> m = li.next();
+                String a52Id = "";
+                StringBuffer fields = new StringBuffer();
+                fields.append("insert into a52 (");
+                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date ");
+                StringBuffer values = new StringBuffer();
+                values.append(") values (");
+                values.append(" 0 ");
+                values.append(",'").append(userLoginDetails.getTenant().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUser().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUsername()).append("'")
+                        .append(",").append("now()").append("");
+
+                for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
+                    Map.Entry<String, Object> e = mi.next();
+                    String key = e.getKey();
+                    Object value = e.getValue()==null?"":e.getValue();
+                    if ("PK_A52".equalsIgnoreCase(key)) {
+                        a52Id = value.toString();
+                    }
+                    Iterator it = attMaps.entrySet().iterator();
+                    boo:while (it.hasNext()) {
+                        Map.Entry entry = (Map.Entry) it.next();
+                        Object attKey = entry.getKey();
+                        Object attValue = entry.getValue();
+                        if(key.equalsIgnoreCase(attKey.toString())){
+
+                            if("A52_ORDER".equalsIgnoreCase(attKey.toString())){
+                                fields.append("," + attValue);
+                                values.append("," + value);
+                            }else{
+                                fields.append("," + attValue);
+                                values.append(",'" + value + "'");
+                            }
+                            break boo;
+                        }
+                    }
+                }
+                values.append(")");
+                boolean isAdd = true;
+                boo:for(A52 a52 : a52s){
+                    if(a52.getId().equals(a52Id)){
+                        isAdd = false;
+                        break boo;
+                    }
+                }
+                if(isAdd == true) {
+                    List<Object> paramList = new ArrayList<Object>();
+                    this.a52Dao.executeNativeBulk(fields.append(values).toString(), paramList);
+                    order++;
+                }
+            }
+
+        DbUtils.close(conn);
+        return order;
+    }
+
     private Map<String,Object> getSavaAttMaps(){
         Map<String,Object> attMaps = new HashMap<String,Object>();
         attMaps.put("PK_A52","id");

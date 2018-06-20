@@ -643,6 +643,85 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         DbUtils.close(conn);
         return order;
     }
+    public int updateFromGzslws(DataSource dataSource)throws Exception{
+        UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+        //处理了多少条
+        int order = 0;
+        Connection conn = dataSource.getConnection();
+        QueryRunner queryRunner = new QueryRunner();
+
+        CommonConditionQuery query = new CommonConditionQuery();
+        Map<String,Object> attMaps = getSavaAttMaps();
+
+            String sql = "select e01z1.* from e01z1 where e01z1.A_IS_DESTROY = '0' and e01z1.PK_A38 in(" +
+                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " +
+                    "order by e01z1.PK_E01Z1 ";
+
+            List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
+            for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {
+                Map<String, Object> m = li.next();
+                String e01z1Id = "";
+
+
+                StringBuffer fields = new StringBuffer();
+                fields.append("insert into e01z1 (");
+                fields.append(" tombstone,tenant_id,create_user_id,create_user_name,create_date,smys,yjztps");
+                StringBuffer values = new StringBuffer();
+                values.append(") values (");
+                values.append(" 0 ");
+                values.append(",'").append(userLoginDetails.getTenant().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUser().getId()).append("'")
+                        .append(",'").append(userLoginDetails.getUsername()).append("'")
+                        .append(",").append("now()").append("")
+                        .append(",").append(0).append(",").append(0).append("");
+
+                for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext(); ) {
+                    Map.Entry<String, Object> e = mi.next();
+                    String key = e.getKey();
+                    Object value = e.getValue() == null ? "" : e.getValue();
+                    if ("PK_E01Z1".equalsIgnoreCase(key)) {
+                        e01z1Id = value.toString();
+                    }
+                    Iterator it = attMaps.entrySet().iterator();
+                    boo:
+                    while (it.hasNext()) {
+                        Map.Entry entry = (Map.Entry) it.next();
+                        Object attKey = entry.getKey();
+                        Object attValue = entry.getValue();
+
+                        if (key.equalsIgnoreCase(attKey.toString())) {
+                            if ("SCAN_PAGES".equalsIgnoreCase(attKey.toString())) {
+                                fields.append("," + attValue);
+                                values.append("," + 0);
+                            } else {
+                                fields.append("," + attValue);
+                                values.append(",'" + value + "'");
+                            }
+                            break boo;
+                        }
+                    }
+                }
+                values.append(")");
+
+                boolean isAdd = true;
+                query = new CommonConditionQuery();
+                query.add(CommonRestrictions.and(" id = :id ", "id", e01z1Id));
+                List<E01Z1> e01z1s = this.e01Z1Dao.list();
+
+                if(e01z1s!=null && e01z1s.size()>0){
+                    isAdd = false;
+                }
+                if(isAdd == true) {
+                    List<Object> paramList = new ArrayList<Object>();
+                    this.e01Z1Dao.executeNativeBulk(fields.append(values).toString(), paramList);
+                    order++;
+                }
+
+            }
+
+        DbUtils.close(conn);
+        return order;
+    }
 
     private Map<String,Object> getSavaAttMaps(){
         Map<String,Object> attMaps = new HashMap<String,Object>();

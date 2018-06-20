@@ -327,38 +327,43 @@
      }
      function showJlqk(){
          $.ajax({
-             url : "${path }/zzb/gbgl/a14/ajax/jckh",
-             type : "post",
-             data : {"a01Id":"${a01Id}","type":"j","isShow":true},
-             dataType : "html",
-             headers:{
-                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+             url: "${path }/zzb/gbgl/a01/ajax/qtxx",
+             type: "post",
+             data: {"a01Id": "${a01Id}"},
+             dataType: "html",
+             headers: {
+                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
              },
-             success : function(html){
+             success: function (html) {
                  var view = $("#tab_show");
                  view.html(html);
+                 $('#zcqkModal').modal('hide');
+                 $('#zcqkDiv').html("");
              },
-             error : function(arg1, arg2, arg3){
-                 showTip("提示","职务管理加载失败");
+             error: function (arg1, arg2, arg3) {
+                 showTip("提示", "其他信息加载失败");
              }
          });
      }
 
      function hidJlqk(){
+         debugger;
          $.ajax({
-             url : "${path }/zzb/gbgl/a14/ajax/jckh",
-             type : "post",
-             data : {"a01Id":"${a01Id}","type":"j","isShow":false},
-             dataType : "html",
-             headers:{
-                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+             url: "${path }/zzb/gbgl/a01/ajax/qtxx",
+             type: "post",
+             data: {"a01Id": "${a01Id}"},
+             dataType: "html",
+             headers: {
+                 OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
              },
-             success : function(html){
+             success: function (html) {
                  var view = $("#tab_show");
                  view.html(html);
+                 $('#zcqkModal').modal('hide');
+                 $('#zcqkDiv').html("");
              },
-             error : function(arg1, arg2, arg3){
-                 showTip("提示","职务管理加载失败");
+             error: function (arg1, arg2, arg3) {
+                 showTip("提示", "其他信息加载失败");
              }
          });
      }

@@ -50,6 +50,20 @@
         </div>
     </div>
 </div>
+<div id="zcqkModal" class="modal container hide fade" tabindex="-1" data-width="1100">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="zcqkTitle1">
+                    职称情况
+                </h3>
+            </div>
+            <div class="modal-body" id="zcqkDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
     var myLoading = new MyLoading("${path}", {zindex: 11111});

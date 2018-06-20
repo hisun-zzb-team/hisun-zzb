@@ -37,7 +37,7 @@
                             <div class="row-fluid">
                                 <div class="span10 ">
                                     <div id="zcxxGroup" class="control-group">
-                                        <label class="control-label" style="padding-top: 30px">职称信息</label>
+                                        <label class="control-label" style="padding-top: 30px">职称信息<br><a href="javascript:zcqk()" >修改</a></label>
                                         <div class="controls">
                                             <textarea id="zcxx" name="zcxx" class="span12 m-wrap"
                                                       value=""
@@ -105,6 +105,20 @@
         </div>
     </div>
 </div>
+<div id="zcqkModal" class="modal container hide fade" tabindex="-1" data-width="1100">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="zcqkTitle1">
+                    职称情况
+                </h3>
+            </div>
+            <div class="modal-body" id="zcqkDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript" src="${path }/js/common/DataValidate.js"></script>
 <script type="text/javascript">
     function cgjqk(){
@@ -119,6 +133,26 @@
             success: function (html) {
                 $("#cgjqkDiv").html(html);
                 $('#cgjqkModal').modal({
+                    keyboard: true
+                });
+            },
+            error: function (arg1, arg2, arg3) {
+                showTip("提示", "其他信息加载失败");
+            }
+        });
+    }
+    function zcqk(){
+        $.ajax({
+            url: "${path }/zzb/gbgl/aZc/ajax/edit",
+            type: "post",
+            data: {"a01Id": "${vo.a0100}"},
+            dataType: "html",
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success: function (html) {
+                $("#zcqkDiv").html(html);
+                $('#zcqkModal').modal({
                     keyboard: true
                 });
             },

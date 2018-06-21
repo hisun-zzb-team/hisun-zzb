@@ -39,6 +39,11 @@
                             <span class="hidden-480">借阅审核</span>
 
                         </div>
+                        <div class="relationbetTop_but">
+                            <button id="submitbut" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i>审核</button>
+
+                            <a class="btn" id="cencal"><i class="icon-remove-sign"></i>取消</a>
+                        </div>
                     </div>
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" id="id" name="id" value="${vo.id}"/>
@@ -50,6 +55,13 @@
                                     <div class="controls">
                                         <input type="text" class="span9 m-wrap" required name="e01Z9Damc" maxlength="128" id="e01Z9Damc" readonly value="${vo.e01Z9Damc}"/>
                                     </div>
+                                </div>
+                                <div id="e01Z907Group" class="control-group">
+                                    <label class="control-label">借阅人</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" readonly id="e01Z907" value="${vo.e01Z907}" />
+                                    </div>
+
                                 </div>
                                 <div id="e01Z901Group" class="control-group" >
                                     <label class="control-label">借阅日期</label>
@@ -63,19 +75,12 @@
                                     <label class="control-label">借阅单位名称</label>
                                     <div class="controls">
                                         <input type="text" class="span9 m-wrap" name="e01Z904A" required maxlength="128" readonly id="e01Z904A" value="${vo.e01Z904A}"/>
-                                        <%--<SelectTag:SelectTag id="a3627" needNullValue="true"--%>
-                                                             <%--valueName="a3627A"--%>
-                                                             <%--defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
-                                                             <%--defaultvalues=""--%>
-                                                             <%--textClass="span9 m-wrap" radioOrCheckbox="radio"--%>
-                                                             <%--selectUrl="${path}/api/dictionary/select?typeCode=GB762-1984"/>--%>
-                                    </div>
-                                </div>
-
-                                <div id="e01Z907Group" class="control-group">
-                                    <label class="control-label">借阅人</label>
-                                    <div class="controls">
-                                        <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" readonly id="e01Z907" value="${vo.e01Z907}" />
+                                    <%--<SelectTag:SelectTag id="a3627" needNullValue="true"--%>
+                                    <%--valueName="a3627A"--%>
+                                    <%--defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+                                    <%--defaultvalues=""--%>
+                                    <%--textClass="span9 m-wrap" radioOrCheckbox="radio"--%>
+                                    <%--selectUrl="${path}/api/dictionary/select?typeCode=GB762-1984"/>--%>
                                     </div>
 
                                 </div>
@@ -174,14 +179,14 @@
                                 </div>
                             </dd>
                         </dl>
-                        <div class="control-group">
-                            <div class="controls mt10">
+                        <%--<div class="control-group">--%>
+                            <%--<div class="controls mt10">--%>
 
-                                <button id="submitbut" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i>审核</button>
+                                <%--<button id="submitbut" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i>审核</button>--%>
 
-                                <a class="btn" id="cencal"><i class="icon-remove-sign"></i>取消</a>
-                            </div>
-                        </div>
+                                <%--<a class="btn" id="cencal"><i class="icon-remove-sign"></i>取消</a>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                     </form>
                 </div>
             </div>
@@ -207,7 +212,7 @@
                 },
                 success : function(json){
                     showTip("提示","保存成功!",2000);
-                    window.location.href ="${path }/zzb/dzda/jygl/liste01Z9Jyzt=\"+e01Z9Jyzt+\"&?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    window.location.href ="${path }/zzb/dzda/jygl/list?e01Z9Jyzt="+e01Z9Jyzt+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                 },
                 error : function(arg1, arg2, arg3){
                     showTip("提示","出错了请联系管理员",2000);
@@ -218,7 +223,7 @@
 
     $(function(){
         $("#cencal").on("click",function(){
-            window.location.href ="${path }/zzb/dzda/jygl/list?e01Z9Jyzt=\"+e01Z9Jyzt+\"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            window.location.href ="${path }/zzb/dzda/jygl/list?e01Z9Jyzt="+e01Z9Jyzt+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
         });
     });
 

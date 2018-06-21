@@ -89,14 +89,15 @@
 
                     <TR height=28>
                         <th width=100>借阅档案名称</th>
+                        <th width=100>借阅人</th>
                         <th width=100>借阅日期</th>
                         <th >借阅单位名称</th>
-                        <th width=100>借阅人</th>
-                        <th width="120">借阅状态</th>
                         <th width=50>批准人</th>
                         <th width=60>借阅经办人</th>
+                        <th width="100">借阅审核时间</th>
+                        <th width="120">借阅状态</th>
                         <th width=60>归还经办人</th>
-                        <th >借阅理由</th>
+                        <th width="100">归还时间</th>
                         <th width="40">操作</th>
                     </thead>
                     <tbody>
@@ -105,9 +106,12 @@
                             <TD width="10%">
                                 <c:out value="${vo.e01Z9Damc}"></c:out>
                             </TD>
+                            <TD width="10%"><c:out value="${vo.e01Z907}"></c:out> </TD>
                             <TD width="10%"><c:out value="${vo.e01Z901}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.e01Z904A}"></c:out> </TD>
-                            <TD width="10%"><c:out value="${vo.e01Z907}"></c:out> </TD>
+                            <TD width="10%"><c:out value="${vo.e01Z917}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z931}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z9Shsj}"></c:out></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
@@ -123,10 +127,8 @@
                                         已拒绝
                                     </c:when>
                                 </c:choose></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z917}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z931}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.e01Z934}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z914}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z927}"></c:out></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
@@ -207,7 +209,7 @@
     function clearData(){
         $("#e01Z9Damc").val('');
         $("#e01Z907").val('');
-        $("#e01Z9Jyzt").val('');
+        $("#e01Z9Jyzt").val('x');
     }
 
 </script>

@@ -54,9 +54,11 @@ public class E01Z9JysqController extends BaseController {
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
                              String e01Z9Damc,String e01Z907,String e01Z9Jyzt) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
         query.add(CommonRestrictions.and(" isDel = :isDel ", "isDel", "1"));
+        query.add(CommonRestrictions.and("  createUserId= :createUserId ", "createUserId", details.getUserid()));
         if(StringUtils.isNotEmpty(e01Z9Damc)){
             query.add(CommonRestrictions.and(" e01Z9Damc like:e01Z9Damc ", "e01Z9Damc", "%"+e01Z9Damc+"%"));
         }

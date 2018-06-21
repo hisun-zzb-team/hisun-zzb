@@ -39,6 +39,11 @@
                             <span class="hidden-480">借阅申请</span>
 
                         </div>
+                        <div class="relationbetTop_but">
+                            <button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
+
+                            <a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>
+                        </div>
                     </div>
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" id="id" name="id" value="${vo.id}"/>
@@ -51,18 +56,18 @@
                                         <input type="text" class="span9 m-wrap" required name="e01Z9Damc" maxlength="128" id="e01Z9Damc" value="${vo.e01Z9Damc}"/>
                                     </div>
                                 </div>
+                                <div id="e01Z907Group" class="control-group">
+                                    <label class="control-label">借阅人<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" id="e01Z907" value="${vo.e01Z907}" />
+                                    </div>
+
+                                </div>
                                 <div id="e01Z901Group" class="control-group" >
                                     <label class="control-label">借阅日期</label>
                                     <div class="controls">
                                         <input type="text" class="span9 m-wrap" name="e01Z901" maxlength="128" id="e01Z901" value="${vo.e01Z901}"
                                                placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
-                                    </div>
-                                </div>
-
-                                <div id="e01Z907Group" class="control-group">
-                                    <label class="control-label">借阅人<span class="required">*</span></label>
-                                    <div class="controls">
-                                        <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" id="e01Z907" value="${vo.e01Z907}" />
                                     </div>
 
                                 </div>
@@ -139,13 +144,13 @@
                                     <%--</div>--%>
                                 <%--</div>--%>
 
-                                <div class="control-group">
-                                    <div class="controls mt10">
-                                        <button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
+                                <%--<div class="control-group">--%>
+                                    <%--<div class="controls mt10">--%>
+                                        <%--<button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>--%>
 
-                                        <a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>
-                                    </div>
-                                </div>
+                                        <%--<a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
                             </dd>
                         </dl>
                     </form>

@@ -25,7 +25,7 @@
         .main_right{display: table-cell; width:2000px;}
     </style>
     <!-- END PAGE LEVEL STYLES -->
-    <title>借阅申请</title>
+    <title>借阅管理</title>
     <style type="text/css">
         form {
             margin: 0 0 0px;
@@ -34,17 +34,28 @@
 </head>
 <body>
 
+<div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="addTitle" >
+                    借阅申请
+                </h3>
+            </div>
+            <div class="modal-body" id="addDiv">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
             <%-- 表格开始 --%>
             <form class=""id="importForm" enctype="multipart/form-data">
                 <div class="portlet-title">
-                    <div class="caption">借阅申请列表</div>
+                    <div class="caption">借阅管理列表</div>
                     <div class="clearfix fr">
-                        <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
-                            借阅申请
-                        </a>
                     </div>
 
                 </div>
@@ -52,14 +63,14 @@
             <div class="clearfix">
                 <div class="control-group">
                     <div id="query" style="float: left;">
-                        <form action="/zzb/dzda/jysq/list" method="POST" id="searchForm" name="searchForm">
+                        <form action="/zzb/dzda/jygl/list" method="POST" id="searchForm" name="searchForm">
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
                             借阅档案名称：<input type="text" class="m-wrap" name="e01Z9Damc" id="e01Z9Damc" value="${e01Z9Damc}" style="width: 80px;" />
                             借阅人<input type="text" class="m-wrap" name="e01Z907" id="e01Z907" value="${e01Z907}" style="width: 80px;" />
                             借阅状态：<select class="select_form" tabindex="-1" name="e01Z9Jyzt" id="e01Z9Jyzt" style="width: 100px; margin-bottom: 0px;" >
-                                    <option value="" <c:if test="${e01Z9Jyzt == ''}">selected</c:if>>全部</option>
+                            <option value="x" <c:if test="${e01Z9Jyzt == 'x'}">selected</c:if>>全部</option>
                                     <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>未审核</option>
                                     <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>已审核</option>
                                     <option value="2" <c:if test="${e01Z9Jyzt == '2'}">selected</c:if>>已归还</option>
@@ -91,6 +102,7 @@
                     </thead>
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
+                        <tr style="text-overflow:ellipsis;">
                             <TD width="10%">
                                 <c:out value="${vo.e01Z9Damc}"></c:out>
                             </TD>
@@ -120,13 +132,10 @@
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
-                                        <a href="javascript:edit('${vo.id}')">修改</a>
+                                        <a href="javascript:edit('${vo.id}','1')">审核</a>
                                     </c:when>
-                                    <c:when test="${vo.e01Z9Jyzt == 2}">
-                                        <a href="javascript:del('${vo.id}','${vo.e01Z9Damc}')">删除</a>
-                                    </c:when>
-                                    <c:when test="${vo.e01Z9Jyzt == 3}">
-                                        <a href="javascript:del('${vo.id}','${vo.e01Z9Damc}')">删除</a>
+                                    <c:when test="${vo.e01Z9Jyzt == 1}">
+                                        <a href="javascript:gh('${vo.id}','2')">归还</a>
                                     </c:when>
                                  </c:choose></TD>
                         </tr>
@@ -159,6 +168,7 @@
         });
 
     })();
+    var e01Z9Jyzt = "${e01Z9Jyzt}";
     $(function(){
         $("#auditingState option[value='${auditingState}']").attr("selected",
                 true);
@@ -170,12 +180,26 @@
         document.searchForm.submit();
     }
 
-    var add = function(){
-        window.location.href ="${path }/zzb/dzda/jysq/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    var edit = function(id,flag){
+        window.location.href ="${path }/zzb/dzda/jygl/edit?e01Z9Jyzt="+e01Z9Jyzt+"&id="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
-
-    var edit = function(id){
-        window.location.href ="${path }/zzb/dzda/jysq/edit?id="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    var gh = function(id,flag){
+        $.ajax({
+            url : "${path}/zzb/dzda/jygl/gh",
+            type : "post",
+            data : {"e01Z9Jyzt":"2","id":id},
+            dataType : "json",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            success : function(json){
+                showTip("提示","保存成功!",2000);
+                window.location.href ="${path }/zzb/dzda/jygl/list?e01Z9Jyzt="+e01Z9Jyzt+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+            },
+            error : function(arg1, arg2, arg3){
+                showTip("提示","出错了请联系管理员",2000);
+            }
+        });
     }
 
     function searchSubmit(){
@@ -185,17 +209,7 @@
     function clearData(){
         $("#e01Z9Damc").val('');
         $("#e01Z907").val('');
-        $("#e01Z9Jyzt").val('');
-    }
-
-    function del(id, voname) {
-        actionByConfirm1(voname, "${path}/zzb/dzda/jysq/del/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
-            if (data.success == true) {
-                document.searchForm.submit();
-            } else {
-                showTip("提示", data.msg, 2000);
-            }
-        });
+        $("#e01Z9Jyzt").val('x');
     }
 
 </script>

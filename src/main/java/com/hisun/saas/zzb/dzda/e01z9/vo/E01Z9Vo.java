@@ -30,7 +30,7 @@ public class E01Z9Vo {
     /** 借阅人电话号码 */
     private String e01Z911;
 
-    /** 借阅状态（0：申请借阅 1：未归还 2：已归还） */
+    /** 借阅状态（0：待审核 1：已审核 2：已归还 3: 已拒绝） */
     private String e01Z9Jyzt;
 
     /** 借阅理由 */
@@ -50,6 +50,12 @@ public class E01Z9Vo {
 
     /** 备注 */
     private String e01Z941;
+
+    /** 审核时间 */
+    private String e01Z9Shsj;
+
+    /** 是否删除 */
+    private String isDel;
 
     public String getId() {
         return id;
@@ -177,5 +183,21 @@ public class E01Z9Vo {
 
     public void setE01Z941(String e01Z941) {
         this.e01Z941 = e01Z941;
+    }
+
+    public String getE01Z9Shsj() {
+        return e01Z9Shsj;
+    }
+
+    public void setE01Z9Shsj(String e01Z9Shsj) {
+        this.e01Z9Shsj = e01Z9Shsj;
+    }
+
+    public String getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
     }
 }

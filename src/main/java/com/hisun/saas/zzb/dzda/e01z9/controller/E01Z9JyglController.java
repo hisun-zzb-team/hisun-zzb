@@ -26,12 +26,15 @@ import com.hisun.util.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,8 +42,8 @@ import java.util.*;
  * @author zhout {605144321@qq.com}
  */
 @Controller
-@RequestMapping("/zzb/dzda/jysq")
-public class E01Z9Controller extends BaseController {
+@RequestMapping("/zzb/dzda/jygl")
+public class E01Z9JyglController extends BaseController {
 
     @Resource
     private E01Z9Service e01Z9Service;
@@ -49,7 +52,7 @@ public class E01Z9Controller extends BaseController {
     private A38Service a38Service;
 
 
-    @RequiresPermissions("jysq:*")
+    @RequiresPermissions("jygl:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
                              String e01Z9Damc,String e01Z907,String e01Z9Jyzt) throws UnsupportedEncodingException {
@@ -81,43 +84,25 @@ public class E01Z9Controller extends BaseController {
         model.put("e01Z9Jyzt",e01Z9Jyzt);
         model.put("pager",pager);
         model.put("total",total);
-        return new ModelAndView("saas/zzb/dzda/e01z9/jysq/list",model);
+        return new ModelAndView("saas/zzb/dzda/e01z9/jygl/list",model);
     }
 
-    @RequiresPermissions("jysq:*")
-    @RequestMapping(value = "/ajax/add")
-    public ModelAndView add() {
-        Map<String, Object> map = Maps.newHashMap();
-        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(new Date());
-        E01Z9Vo vo = new E01Z9Vo();
-        vo.setE01Z907(details.getRealname());
-        vo.setE01Z901(sdf.format(new Date()));
-        map.put("vo",vo);
-        return new ModelAndView("saas/zzb/dzda/e01z9/jysq/add",map);
-    }
-
-    @RequestMapping(value = "/saveOrUpdate")
+    @RequestMapping(value = "/update")
     @ResponseBody
-    public Map<String, Object> saveOrUpdate(E01Z9Vo vo) {
+    public Map<String, Object> update(String id,String e01Z9Jyzt) {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             E01Z9 entity = new E01Z9();
-            if(StringUtils.isEmpty(vo.getId())){
-                vo.setE01Z9Jyzt("0");
-                BeanUtils.copyProperties(vo,entity);
-                entity.setA38(a38Service.getByPK(details.getUserid()));
-                EntityWrapper.wrapperSaveBaseProperties(entity,details);
-                e01Z9Service.save(entity);
+            entity = this.e01Z9Service.getByPK(id);
+            entity.setE01Z9Jyzt(e01Z9Jyzt);
+            if("2".equals(e01Z9Jyzt)){
+                entity.setE01Z934(details.getRealname());
             }else {
-                entity = this.e01Z9Service.getByPK(vo.getId());
-                vo.setE01Z9Jyzt(entity.getE01Z9Jyzt());
-                BeanUtils.copyProperties(vo,entity);
-                EntityWrapper.wrapperUpdateBaseProperties(entity,details);
-                e01Z9Service.update(entity);
+                entity.setE01Z931(details.getRealname());
             }
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            e01Z9Service.update(entity);
             map.put("code", 1);
         } catch (Exception e) {
             logger.error(e, e);
@@ -126,19 +111,20 @@ public class E01Z9Controller extends BaseController {
         return map;
     }
 
-    @RequiresPermissions("jysq:*")
+    @RequiresPermissions("jygl:*")
     @RequestMapping(value = "/ajax/edit")
-    public ModelAndView edit(String id) {
+    public ModelAndView edit(String id,String flag) {
         Map<String, Object> map = Maps.newHashMap();
         E01Z9Vo vo = new E01Z9Vo();
         E01Z9 entity = this.e01Z9Service.getByPK(id);
         BeanUtils.copyProperties(entity,vo);
         map.put("vo",vo);
-        return new ModelAndView("saas/zzb/dzda/e01z9/jysq/add",map);
+        map.put("flag",flag);
+        return new ModelAndView("saas/zzb/dzda/e01z9/jygl/edit",map);
     }
 
     @RequiresLog(operateType = LogOperateType.DELETE,description = "删除阅档申请:${id}")
-    @RequiresPermissions("jysq:*")
+    @RequiresPermissions("jygl:*")
     @RequestMapping(value = "/del/{id}")
     public @ResponseBody Map<String, Object> del(
             @PathVariable("id") String id) throws GenericException {

@@ -128,10 +128,17 @@
                         </div>
 
                         <div class="control-group">
-                            <div class="controls mt10">
-                                <button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
+                            <div class="controls mt10" style="display: <c:if test="${flag !=0}">none</c:if>">
 
-                                <a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>
+                                <button id="submitbut" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i>通过</button>
+
+                                <a class="btn" id="cencal"><i class="icon-remove-sign"></i>拒绝</a>
+                            </div>
+                            <div class="controls mt10" style="display: <c:if test="${flag ==1}">none</c:if>">
+
+                                <button id="submitbutGh" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i>归还</button>
+
+                                <a class="btn" id="cencalQx"><i class="icon-remove-sign"></i>取消</a>
                             </div>
                         </div>
                     </form>
@@ -147,38 +154,82 @@
 </div>
 <script type="text/javascript">
 
-    var myVld = new EstValidate("form1");
+    var id = "${vo.id}";
     $(function(){
-        $("#submitbutAdd").on("click",function(){
-            var bool = myVld.form();
-            if(bool){
-                $.ajax({
-                    url : "${path}/zzb/dzda/jysq/saveOrUpdate",
-                    type : "post",
-                    data : $('#form1').serialize(),
-                    dataType : "json",
-                    headers: {
-                        "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-                    },
-                    success : function(json){
-                        showTip("提示","保存成功!",2000);
-                        $('#addModal').modal('hide');
-                        $('#addDiv').html("");
-                        window.location.href ="${path }/zzb/dzda/jysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
-                    },
-                    error : function(arg1, arg2, arg3){
-                        showTip("提示","出错了请联系管理员",2000);
-                    }
-                });
-
-            }
+        $("#submitbut").on("click",function(){
+            $.ajax({
+                url : "${path}/zzb/dzda/jygl/update",
+                type : "post",
+                data : {"e01Z9Jyzt":"1","id":id},
+                dataType : "json",
+                headers: {
+                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(json){
+                    showTip("提示","保存成功!",2000);
+                    $('#addModal').modal('hide');
+                    $('#addDiv').html("");
+                    window.location.href ="${path }/zzb/dzda/jygl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","出错了请联系管理员",2000);
+                }
+            });
         });
     });
 
     $(function(){
         $("#cencal").on("click",function(){
+            $.ajax({
+                url : "${path}/zzb/dzda/jygl/update",
+                type : "post",
+                data : {"e01Z9Jyzt":"3","id":id},
+                dataType : "json",
+                headers: {
+                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(json){
+                    showTip("提示","保存成功!",2000);
+                    $('#addModal').modal('hide');
+                    $('#addDiv').html("");
+                    window.location.href ="${path }/zzb/dzda/jygl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","出错了请联系管理员",2000);
+                }
+            });
+        });
+    });
+
+
+    $(function(){
+        $("#submitbutGh").on("click",function(){
+            $.ajax({
+                url : "${path}/zzb/dzda/jygl/update",
+                type : "post",
+                data : {"e01Z9Jyzt":"2","id":id},
+                dataType : "json",
+                headers: {
+                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                success : function(json){
+                    showTip("提示","保存成功!",2000);
+                    $('#addModal').modal('hide');
+                    $('#addDiv').html("");
+                    window.location.href ="${path }/zzb/dzda/jygl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","出错了请联系管理员",2000);
+                }
+            });
+        });
+    });
+
+    $(function(){
+        $("#cencalQx").on("click",function(){
             $('#addModal').modal('hide');
             $('#addDiv').html("");
+            window.location.href ="${path }/zzb/dzda/jygl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
         });
     });
 </script>

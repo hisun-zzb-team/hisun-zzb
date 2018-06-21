@@ -25,7 +25,7 @@
         .main_right{display: table-cell; width:2000px;}
     </style>
     <!-- END PAGE LEVEL STYLES -->
-    <title>借阅申请</title>
+    <title>借阅管理</title>
     <style type="text/css">
         form {
             margin: 0 0 0px;
@@ -54,11 +54,8 @@
             <%-- 表格开始 --%>
             <form class=""id="importForm" enctype="multipart/form-data">
                 <div class="portlet-title">
-                    <div class="caption">借阅申请列表</div>
+                    <div class="caption">借阅管理列表</div>
                     <div class="clearfix fr">
-                        <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
-                            借阅申请
-                        </a>
                     </div>
 
                 </div>
@@ -66,14 +63,14 @@
             <div class="clearfix">
                 <div class="control-group">
                     <div id="query" style="float: left;">
-                        <form action="/zzb/dzda/jysq/list" method="POST" id="searchForm" name="searchForm">
+                        <form action="/zzb/dzda/jygl/list" method="POST" id="searchForm" name="searchForm">
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
                             借阅档案名称：<input type="text" class="m-wrap" name="e01Z9Damc" id="e01Z9Damc" value="${e01Z9Damc}" style="width: 80px;" />
                             借阅人<input type="text" class="m-wrap" name="e01Z907" id="e01Z907" value="${e01Z907}" style="width: 80px;" />
                             借阅状态：<select class="select_form" tabindex="-1" name="e01Z9Jyzt" id="e01Z9Jyzt" style="width: 100px; margin-bottom: 0px;" >
-                                    <option value="" <c:if test="${e01Z9Jyzt == ''}">selected</c:if>>全部</option>
+                            <option value="" <c:if test="${e01Z9Jyzt == ''}">selected</c:if>>全部</option>
                                     <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>申请借阅</option>
                                     <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>未归还</option>
                                     <option value="2" <c:if test="${e01Z9Jyzt == '2'}">selected</c:if>>已归还</option>
@@ -98,6 +95,7 @@
                         <th width="120">借阅状态</th>
                         <th width=50>批准人</th>
                         <th width=60>借阅经办人</th>
+                        <th width=60>归还经办人</th>
                         <th >借阅理由</th>
                         <th width="40">操作</th>
                     </thead>
@@ -127,17 +125,15 @@
                                 </c:choose></TD>
                             <TD width="10%"><c:out value="${vo.e01Z917}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.e01Z931}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z934}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.e01Z914}"></c:out></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
-                                        <a href="javascript:edit('${vo.id}')">修改</a>
+                                        <a href="javascript:edit('${vo.id}','1')">审核</a>
                                     </c:when>
-                                    <c:when test="${vo.e01Z9Jyzt == 2}">
-                                        <a href="javascript:del('${vo.id}','${vo.e01Z9Damc}')">删除</a>
-                                    </c:when>
-                                    <c:when test="${vo.e01Z9Jyzt == 3}">
-                                        <a href="javascript:del('${vo.id}','${vo.e01Z9Damc}')">删除</a>
+                                    <c:when test="${vo.e01Z9Jyzt == 1}">
+                                        <a href="javascript:edit('${vo.id}','2')">归还</a>
                                     </c:when>
                                  </c:choose></TD>
                         </tr>
@@ -181,33 +177,12 @@
         document.searchForm.submit();
     }
 
-    var add = function(){
+    var edit = function(id,flag){
+        debugger;
         $.ajax({
-            url:"${path}/zzb/dzda/jysq/ajax/add",
+            url:"${path}/zzb/dzda/jygl/ajax/edit",
             type : "post",
-            data: {},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "html",
-            success : function(html){
-                $('#addDiv').html(html);
-
-                $('#addModal').modal({
-                    keyboard: true
-                });
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
-            }
-        });
-    }
-
-    var edit = function(id){
-        $.ajax({
-            url:"${path}/zzb/dzda/jysq/ajax/edit",
-            type : "post",
-            data: {"id":id},
+            data: {"id":id,"flag":flag},
             headers:{
                 OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
             },

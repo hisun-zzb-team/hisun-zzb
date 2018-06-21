@@ -56,6 +56,7 @@ public class E01Z9JysqController extends BaseController {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
+        query.add(CommonRestrictions.and(" isDel = :isDel ", "isDel", "1"));
         if(StringUtils.isNotEmpty(e01Z9Damc)){
             query.add(CommonRestrictions.and(" e01Z9Damc like:e01Z9Damc ", "e01Z9Damc", "%"+e01Z9Damc+"%"));
         }
@@ -85,7 +86,7 @@ public class E01Z9JysqController extends BaseController {
     }
 
     @RequiresPermissions("jysq:*")
-    @RequestMapping(value = "/ajax/add")
+    @RequestMapping(value = "/add")
     public ModelAndView add() {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -107,6 +108,7 @@ public class E01Z9JysqController extends BaseController {
             E01Z9 entity = new E01Z9();
             if(StringUtils.isEmpty(vo.getId())){
                 vo.setE01Z9Jyzt("0");
+                vo.setIsDel("1");
                 BeanUtils.copyProperties(vo,entity);
                 entity.setA38(a38Service.getByPK(details.getUserid()));
                 EntityWrapper.wrapperSaveBaseProperties(entity,details);
@@ -114,6 +116,7 @@ public class E01Z9JysqController extends BaseController {
             }else {
                 entity = this.e01Z9Service.getByPK(vo.getId());
                 vo.setE01Z9Jyzt(entity.getE01Z9Jyzt());
+                vo.setIsDel(entity.getIsDel());
                 BeanUtils.copyProperties(vo,entity);
                 EntityWrapper.wrapperUpdateBaseProperties(entity,details);
                 e01Z9Service.update(entity);
@@ -127,7 +130,7 @@ public class E01Z9JysqController extends BaseController {
     }
 
     @RequiresPermissions("jysq:*")
-    @RequestMapping(value = "/ajax/edit")
+    @RequestMapping(value = "/edit")
     public ModelAndView edit(String id) {
         Map<String, Object> map = Maps.newHashMap();
         E01Z9Vo vo = new E01Z9Vo();
@@ -148,7 +151,8 @@ public class E01Z9JysqController extends BaseController {
                 return null;
             }
             E01Z9 entity = this.e01Z9Service.getByPK(id);
-            this.e01Z9Service.delete(entity);
+            entity.setIsDel("0");
+            this.e01Z9Service.update(entity);
             map.put("success", true);
         } catch (Exception e) {
             logger.error(e);

@@ -38,7 +38,7 @@ public class E01Z9 extends TenantEntity implements Serializable {
     /** 借阅人电话号码 */
     private String e01Z911;
 
-    /** 借阅状态（0：申请借阅 1：未归还 2：已归还 3: 拒绝借阅） */
+    /** 借阅状态（0：待审核 1：已审核 2：已归还 3: 已拒绝） */
     private String e01Z9Jyzt;
 
     /** 借阅理由 */
@@ -53,11 +53,17 @@ public class E01Z9 extends TenantEntity implements Serializable {
     /** 借阅经办人 */
     private String e01Z931;
 
+    /** 审核时间 */
+    private String e01Z9Shsj;
+
     /** 归还经办人 */
     private String e01Z934;
 
     /** 备注 */
     private String e01Z941;
+
+    /** 是否删除 */
+    private String isDel;
 
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -221,6 +227,26 @@ public class E01Z9 extends TenantEntity implements Serializable {
         this.e01Z941 = e01Z941;
     }
 
+    @Basic
+    @Column(name = "e01z9_shsj", nullable = true, length = 8)
+    public String getE01Z9Shsj() {
+        return e01Z9Shsj;
+    }
+
+    public void setE01Z9Shsj(String e01Z9Shsj) {
+        this.e01Z9Shsj = e01Z9Shsj;
+    }
+
+    @Basic
+    @Column(name = "is_del", nullable = true, length = 1)
+    public String getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -241,12 +267,14 @@ public class E01Z9 extends TenantEntity implements Serializable {
                 Objects.equals(e01Z927, that.e01Z927) &&
                 Objects.equals(e01Z931, that.e01Z931) &&
                 Objects.equals(e01Z934, that.e01Z934) &&
+                Objects.equals(e01Z9Shsj, that.e01Z9Shsj) &&
+                Objects.equals(isDel, that.isDel) &&
                 Objects.equals(e01Z941, that.e01Z941);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, a38, a0101, e01Z9Damc, e01Z901, e01Z904B, e01Z904A, e01Z907, e01Z911, e01Z9Jyzt, e01Z914, e01Z917, e01Z927, e01Z931, e01Z934, e01Z941);
+        return Objects.hash(id, a38, a0101, e01Z9Damc, e01Z901, e01Z904B, e01Z904A, e01Z907, e01Z911, e01Z9Jyzt, e01Z914, e01Z917, e01Z927, e01Z931, e01Z934, e01Z941,e01Z9Shsj,isDel);
     }
 }

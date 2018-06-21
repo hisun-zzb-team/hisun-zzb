@@ -30,110 +30,124 @@
 
                 <div class="portlet-body form">
                     <!-- BEGIN FORM-->
+                    <div class="portlet-title">
 
+                        <div class="caption">
+
+                            <i class="icon-reorder"></i>
+
+                            <span class="hidden-480">借阅申请</span>
+
+                        </div>
+                    </div>
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" id="id" name="id" value="${vo.id}"/>
-                        <div class="control-group" id="e01Z9DamcGroup">
-                            <label class="control-label">借阅档案名称<span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" required name="e01Z9Damc" required maxlength="128" id="e01Z9Damc" value="${vo.e01Z9Damc}"/>
-                            </div>
-                        </div>
-                        <div id="e01Z901Group" class="control-group" >
-                            <label class="control-label">借阅日期</label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" name="e01Z901" maxlength="128" id="e01Z901" value="${vo.e01Z901}"
-                                       placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
-                            </div>
-                        </div>
+                        <dl class="dlattrbute">
+                            <dt><a href="###">申请信息</a></dt>
+                            <dd>
+                                <div class="control-group" id="e01Z9DamcGroup">
+                                    <label class="control-label">借阅档案名称<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" required name="e01Z9Damc" maxlength="128" id="e01Z9Damc" value="${vo.e01Z9Damc}"/>
+                                    </div>
+                                </div>
+                                <div id="e01Z901Group" class="control-group" >
+                                    <label class="control-label">借阅日期</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" name="e01Z901" maxlength="128" id="e01Z901" value="${vo.e01Z901}"
+                                               placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                                    </div>
+                                </div>
 
-                        <div id="e01Z904AGroup" class="control-group" >
-                            <label class="control-label">借阅单位名称<span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" name="e01Z904A" required maxlength="128" id="e01Z904A" value="${vo.e01Z904A}"/>
-                                <%--<SelectTag:SelectTag id="a3627" needNullValue="true"--%>
-                                                     <%--valueName="a3627A"--%>
-                                                     <%--defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
-                                                     <%--defaultvalues=""--%>
-                                                     <%--textClass="span9 m-wrap" radioOrCheckbox="radio"--%>
-                                                     <%--selectUrl="${path}/api/dictionary/select?typeCode=GB762-1984"/>--%>
-                            </div>
-                        </div>
+                                <div id="e01Z907Group" class="control-group">
+                                    <label class="control-label">借阅人<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" id="e01Z907" value="${vo.e01Z907}" />
+                                    </div>
 
-                        <div id="e01Z907Group" class="control-group">
-                            <label class="control-label">借阅人<span class="required">*</span></label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" required name="e01Z907" maxlength="128" id="e01Z907" value="${vo.e01Z907}" />
-                            </div>
+                                </div>
 
-                        </div>
+                                <div id="e01Z904AGroup" class="control-group" >
+                                    <label class="control-label">借阅单位名称<span class="required">*</span></label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" name="e01Z904A" required maxlength="128" id="e01Z904A" value="${vo.e01Z904A}"/>
+                                        <%--<SelectTag:SelectTag id="a3627" needNullValue="true"--%>
+                                                             <%--valueName="a3627A"--%>
+                                                             <%--defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}"--%>
+                                                             <%--defaultvalues=""--%>
+                                                             <%--textClass="span9 m-wrap" radioOrCheckbox="radio"--%>
+                                                             <%--selectUrl="${path}/api/dictionary/select?typeCode=GB762-1984"/>--%>
+                                    </div>
+                                </div>
 
-                        <div id="e01Z911Group" class="control-group">
-                            <label class="control-label">借阅人电话号码</label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" mobilePhone="true" name="e01Z911" maxlength="128" id="e01Z911" value="${vo.e01Z911}" />
-                            </div>
-                        </div>
-                        <%--<div id="e01Z9JyztGroup" class="control-group">--%>
-                            <%--<label class="control-label">借阅状态</label>--%>
-                            <%--<div class="controls">--%>
-                                <%--&lt;%&ndash;<input type="text" class="span9 m-wrap" name="e01Z9Jyzt" maxlength="128" id="e01Z9Jyzt" value="" />&ndash;%&gt;--%>
-                                <%--<select class="span9 m-wrap" id="e01Z9Jyzt" name="e01Z9Jyzt" data-placeholder="Choose a Category" tabindex="1" disabled>--%>
-                                    <%--<option value=""></option>--%>
-                                    <%--<option value="0" selected>申请借阅</option>--%>
-                                    <%--<option value="1">未归还</option>--%>
-                                    <%--<option value="2">已归还</option>--%>
-                                    <%--&lt;%&ndash;<option value="1" <c:if test="${shpc.sjlx eq '1'}">selected</c:if>>干部名单</option>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<option value="2" <c:if test="${shpc.sjlx eq '2'}">selected</c:if>>汇报材料</option>&ndash;%&gt;--%>
-                                <%--</select>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                        <div id="e01Z917Group" class="control-group">
-                            <label class="control-label">批准人</label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" name="e01Z917" maxlength="128" id="e01Z917" value="${vo.e01Z917}" />
-                            </div>
-                        </div>
-                        <div id="e01Z914Group" class="control-group">
-                            <label class="control-label">借阅理由</label>
-                            <div class="controls">
-                                <input type="text" class="span9 m-wrap" name="e01Z914" maxlength="40" id="e01Z914" value="${vo.e01Z914}" />
-                            </div>
-                        </div>
-                    <%--<div id="e01Z927Group" class="control-group">--%>
-                            <%--<label class="control-label">归还日期</label>--%>
-                            <%--<div class="controls">--%>
-                                <%--<input type="text" class="span9 m-wrap" name="e01Z927" maxlength="128" id="e01Z927" value=""--%>
-                                       <%--placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                        <%--<div id="e01Z931Group" class="control-group">--%>
-                            <%--<label class="control-label">借阅经办人</label>--%>
-                            <%--<div class="controls">--%>
-                                <%--<input type="text" class="span9 m-wrap" name="e01Z931" maxlength="128" id="e01Z931" value="" />--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                        <%--<div id="e01Z934Group" class="control-group">--%>
-                            <%--<label class="control-label">归还经办人</label>--%>
-                            <%--<div class="controls">--%>
-                                <%--<input type="text" class="span9 m-wrap" name="e01Z934" maxlength="128" id="e01Z934" value="" />--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
-                        <div id="e01Z941Group" class="control-group">
-                            <label class="control-label">备注</label>
-                            <div class="controls">
-                                <textarea id="e01Z941" name="e01Z941" class="span9 m-wrap"  style="resize: none;">${vo.e01Z941}</textarea>
-                                <%--<input type="text" class="span9 m-wrap" name="e01Z941" maxlength="128" id="e01Z941" value="" />--%>
-                            </div>
-                        </div>
+                                <div id="e01Z911Group" class="control-group">
+                                    <label class="control-label">借阅人电话号码</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" mobilePhone="true" name="e01Z911" maxlength="128" id="e01Z911" value="${vo.e01Z911}" />
+                                    </div>
+                                </div>
+                                <%--<div id="e01Z9JyztGroup" class="control-group">--%>
+                                    <%--<label class="control-label">借阅状态</label>--%>
+                                    <%--<div class="controls">--%>
+                                        <%--&lt;%&ndash;<input type="text" class="span9 m-wrap" name="e01Z9Jyzt" maxlength="128" id="e01Z9Jyzt" value="" />&ndash;%&gt;--%>
+                                        <%--<select class="span9 m-wrap" id="e01Z9Jyzt" name="e01Z9Jyzt" data-placeholder="Choose a Category" tabindex="1" disabled>--%>
+                                            <%--<option value=""></option>--%>
+                                            <%--<option value="0" selected>申请借阅</option>--%>
+                                            <%--<option value="1">未归还</option>--%>
+                                            <%--<option value="2">已归还</option>--%>
+                                            <%--&lt;%&ndash;<option value="1" <c:if test="${shpc.sjlx eq '1'}">selected</c:if>>干部名单</option>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<option value="2" <c:if test="${shpc.sjlx eq '2'}">selected</c:if>>汇报材料</option>&ndash;%&gt;--%>
+                                        <%--</select>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <div id="e01Z917Group" class="control-group">
+                                    <label class="control-label">批准人</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" name="e01Z917" maxlength="128" id="e01Z917" value="${vo.e01Z917}" />
+                                    </div>
+                                </div>
+                                <div id="e01Z914Group" class="control-group">
+                                    <label class="control-label">借阅理由</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" name="e01Z914" maxlength="40" id="e01Z914" value="${vo.e01Z914}" />
+                                    </div>
+                                </div>
+                            <%--<div id="e01Z927Group" class="control-group">--%>
+                                    <%--<label class="control-label">归还日期</label>--%>
+                                    <%--<div class="controls">--%>
+                                        <%--<input type="text" class="span9 m-wrap" name="e01Z927" maxlength="128" id="e01Z927" value=""--%>
+                                               <%--placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div id="e01Z931Group" class="control-group">--%>
+                                    <%--<label class="control-label">借阅经办人</label>--%>
+                                    <%--<div class="controls">--%>
+                                        <%--<input type="text" class="span9 m-wrap" name="e01Z931" maxlength="128" id="e01Z931" value="" />--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div id="e01Z934Group" class="control-group">--%>
+                                    <%--<label class="control-label">归还经办人</label>--%>
+                                    <%--<div class="controls">--%>
+                                        <%--<input type="text" class="span9 m-wrap" name="e01Z934" maxlength="128" id="e01Z934" value="" />--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div id="e01Z941Group" class="control-group">--%>
+                                    <%--<label class="control-label">备注</label>--%>
+                                    <%--<div class="controls">--%>
+                                        <%--<textarea id="e01Z941" name="e01Z941" class="span9 m-wrap"  style="resize: none;">${vo.e01Z941}</textarea>--%>
+                                        <%--&lt;%&ndash;<input type="text" class="span9 m-wrap" name="e01Z941" maxlength="128" id="e01Z941" value="" />&ndash;%&gt;--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
 
-                        <div class="control-group">
-                            <div class="controls mt10">
-                                <button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
+                                <div class="control-group">
+                                    <div class="controls mt10">
+                                        <button id="submitbutAdd" style="margin-left:70px;" type="button" class="btn green mybutton" ><i class='icon-ok'></i> 确定</button>
 
-                                <a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>
-                            </div>
-                        </div>
+                                        <a class="btn" id="cencal"><i class="icon-remove-sign"></i> 关闭</a>
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
                     </form>
                 </div>
 
@@ -162,8 +176,6 @@
                     },
                     success : function(json){
                         showTip("提示","保存成功!",2000);
-                        $('#addModal').modal('hide');
-                        $('#addDiv').html("");
                         window.location.href ="${path }/zzb/dzda/jysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     },
                     error : function(arg1, arg2, arg3){
@@ -177,8 +189,7 @@
 
     $(function(){
         $("#cencal").on("click",function(){
-            $('#addModal').modal('hide');
-            $('#addDiv').html("");
+            window.location.href ="${path }/zzb/dzda/jysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
         });
     });
 </script>

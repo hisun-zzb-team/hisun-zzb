@@ -70,9 +70,9 @@
                             借阅档案名称：<input type="text" class="m-wrap" name="e01Z9Damc" id="e01Z9Damc" value="${e01Z9Damc}" style="width: 80px;" />
                             借阅人<input type="text" class="m-wrap" name="e01Z907" id="e01Z907" value="${e01Z907}" style="width: 80px;" />
                             借阅状态：<select class="select_form" tabindex="-1" name="e01Z9Jyzt" id="e01Z9Jyzt" style="width: 100px; margin-bottom: 0px;" >
-                            <option value="" <c:if test="${e01Z9Jyzt == ''}">selected</c:if>>全部</option>
-                                    <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>申请借阅</option>
-                                    <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>未归还</option>
+                            <option value="x" <c:if test="${e01Z9Jyzt == 'x'}">selected</c:if>>全部</option>
+                                    <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>未审核</option>
+                                    <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>已审核</option>
                                     <option value="2" <c:if test="${e01Z9Jyzt == '2'}">selected</c:if>>已归还</option>
                                     <option value="3" <c:if test="${e01Z9Jyzt == '3'}">selected</c:if>>已拒绝</option>
                             </select>
@@ -111,10 +111,10 @@
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
-                                        申请借阅
+                                        未审核
                                     </c:when>
                                     <c:when test="${vo.e01Z9Jyzt == 1}">
-                                        未归还
+                                        已审核
                                     </c:when>
                                     <c:when test="${vo.e01Z9Jyzt == 2}">
                                         已归还
@@ -133,7 +133,7 @@
                                         <a href="javascript:edit('${vo.id}','1')">审核</a>
                                     </c:when>
                                     <c:when test="${vo.e01Z9Jyzt == 1}">
-                                        <a href="javascript:edit('${vo.id}','2')">归还</a>
+                                        <a href="javascript:gh('${vo.id}','2')">归还</a>
                                     </c:when>
                                  </c:choose></TD>
                         </tr>
@@ -166,6 +166,7 @@
         });
 
     })();
+    var e01Z9Jyzt = "${e01Z9Jyzt}";
     $(function(){
         $("#auditingState option[value='${auditingState}']").attr("selected",
                 true);
@@ -178,24 +179,23 @@
     }
 
     var edit = function(id,flag){
-        debugger;
+        window.location.href ="${path }/zzb/dzda/jygl/edit?e01Z9Jyzt="+e01Z9Jyzt+"&id="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+    }
+    var gh = function(id,flag){
         $.ajax({
-            url:"${path}/zzb/dzda/jygl/ajax/edit",
+            url : "${path}/zzb/dzda/jygl/gh",
             type : "post",
-            data: {"id":id,"flag":flag},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            data : {"e01Z9Jyzt":"2","id":id},
+            dataType : "json",
+            headers: {
+                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
             },
-            dataType : "html",
-            success : function(html){
-                $('#addDiv').html(html);
-
-                $('#addModal').modal({
-                    keyboard: true
-                });
+            success : function(json){
+                showTip("提示","保存成功!",2000);
+                window.location.href ="${path }/zzb/dzda/jygl/list?e01Z9Jyzt="+e01Z9Jyzt+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
             },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
+            error : function(arg1, arg2, arg3){
+                showTip("提示","出错了请联系管理员",2000);
             }
         });
     }
@@ -208,16 +208,6 @@
         $("#e01Z9Damc").val('');
         $("#e01Z907").val('');
         $("#e01Z9Jyzt").val('');
-    }
-
-    function del(id, voname) {
-        actionByConfirm1(voname, "${path}/zzb/dzda/jysq/del/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
-            if (data.success == true) {
-                document.searchForm.submit();
-            } else {
-                showTip("提示", data.msg, 2000);
-            }
-        });
     }
 
 </script>

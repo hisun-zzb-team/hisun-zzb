@@ -34,20 +34,6 @@
 </head>
 <body>
 
-<div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button data-dismiss="modal" class="close"  type="button"></button>
-                <h3 class="modal-title" id="addTitle" >
-                    借阅申请
-                </h3>
-            </div>
-            <div class="modal-body" id="addDiv">
-            </div>
-        </div>
-    </div>
-</div>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 responsive">
@@ -74,8 +60,8 @@
                             借阅人<input type="text" class="m-wrap" name="e01Z907" id="e01Z907" value="${e01Z907}" style="width: 80px;" />
                             借阅状态：<select class="select_form" tabindex="-1" name="e01Z9Jyzt" id="e01Z9Jyzt" style="width: 100px; margin-bottom: 0px;" >
                                     <option value="" <c:if test="${e01Z9Jyzt == ''}">selected</c:if>>全部</option>
-                                    <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>申请借阅</option>
-                                    <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>未归还</option>
+                                    <option value="0" <c:if test="${e01Z9Jyzt == '0'}">selected</c:if>>未审核</option>
+                                    <option value="1" <c:if test="${e01Z9Jyzt == '1'}">selected</c:if>>已审核</option>
                                     <option value="2" <c:if test="${e01Z9Jyzt == '2'}">selected</c:if>>已归还</option>
                                     <option value="3" <c:if test="${e01Z9Jyzt == '3'}">selected</c:if>>已拒绝</option>
                             </select>
@@ -93,8 +79,8 @@
                     <TR height=28>
                         <th width=100>借阅档案名称</th>
                         <th width=100>借阅日期</th>
-                        <th >借阅单位名称</th>
                         <th width=100>借阅人</th>
+                        <th >借阅单位名称</th>
                         <th width="120">借阅状态</th>
                         <th width=50>批准人</th>
                         <th width=60>借阅经办人</th>
@@ -108,15 +94,15 @@
                                 <c:out value="${vo.e01Z9Damc}"></c:out>
                             </TD>
                             <TD width="10%"><c:out value="${vo.e01Z901}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z904A}"></c:out> </TD>
                             <TD width="10%"><c:out value="${vo.e01Z907}"></c:out> </TD>
+                            <TD width="10%"><c:out value="${vo.e01Z904A}"></c:out> </TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
-                                        申请借阅
+                                        未审核
                                     </c:when>
                                     <c:when test="${vo.e01Z9Jyzt == 1}">
-                                        未归还
+                                        已审核
                                     </c:when>
                                     <c:when test="${vo.e01Z9Jyzt == 2}">
                                         已归还
@@ -182,47 +168,11 @@
     }
 
     var add = function(){
-        $.ajax({
-            url:"${path}/zzb/dzda/jysq/ajax/add",
-            type : "post",
-            data: {},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "html",
-            success : function(html){
-                $('#addDiv').html(html);
-
-                $('#addModal').modal({
-                    keyboard: true
-                });
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
-            }
-        });
+        window.location.href ="${path }/zzb/dzda/jysq/add?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
     var edit = function(id){
-        $.ajax({
-            url:"${path}/zzb/dzda/jysq/ajax/edit",
-            type : "post",
-            data: {"id":id},
-            headers:{
-                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
-            },
-            dataType : "html",
-            success : function(html){
-                $('#addDiv').html(html);
-
-                $('#addModal').modal({
-                    keyboard: true
-                });
-            },
-            error : function(){
-                showTip("提示","出错了请联系管理员", 1500);
-            }
-        });
+        window.location.href ="${path }/zzb/dzda/jysq/edit?id="+id+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
     function searchSubmit(){

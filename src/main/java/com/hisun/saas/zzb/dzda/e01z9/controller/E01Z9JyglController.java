@@ -65,7 +65,11 @@ public class E01Z9JyglController extends BaseController {
         if(StringUtils.isNotEmpty(e01Z907)){
             query.add(CommonRestrictions.and(" e01Z907 like:e01Z907 ", "e01Z907", "%"+e01Z907+"%"));
         }
-        if(StringUtils.isNotEmpty(e01Z9Jyzt)){
+        if(StringUtils.isNotEmpty(e01Z9Jyzt)&&!"x".equals(e01Z9Jyzt)){
+            query.add(CommonRestrictions.and(" e01Z9Jyzt = :e01Z9Jyzt ", "e01Z9Jyzt", e01Z9Jyzt));
+        }
+        if(StringUtils.isEmpty(e01Z9Jyzt)){
+            e01Z9Jyzt = "0";
             query.add(CommonRestrictions.and(" e01Z9Jyzt = :e01Z9Jyzt ", "e01Z9Jyzt", e01Z9Jyzt));
         }
         List<E01Z9> e01Z9s = this.e01Z9Service.list(query,orderBy);
@@ -89,18 +93,39 @@ public class E01Z9JyglController extends BaseController {
 
     @RequestMapping(value = "/update")
     @ResponseBody
-    public Map<String, Object> update(String id,String e01Z9Jyzt) {
+    public Map<String, Object> update(E01Z9Vo vo) {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         try {
             E01Z9 entity = new E01Z9();
+            entity = this.e01Z9Service.getByPK(vo.getId());
+            entity.setE01Z9Jyzt(vo.getE01Z9Jyzt());
+            entity.setE01Z931(vo.getE01Z931());
+            entity.setE01Z9Shsj(vo.getE01Z9Shsj());
+            entity.setE01Z941(vo.getE01Z941());
+            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            e01Z9Service.update(entity);
+            map.put("code", 1);
+        } catch (Exception e) {
+            logger.error(e, e);
+            map.put("code", 0);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/gh")
+    @ResponseBody
+    public Map<String, Object> gh(String id,String e01Z9Jyzt) {
+        Map<String, Object> map = Maps.newHashMap();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(new Date());
+        try {
+            E01Z9 entity = new E01Z9();
             entity = this.e01Z9Service.getByPK(id);
             entity.setE01Z9Jyzt(e01Z9Jyzt);
-            if("2".equals(e01Z9Jyzt)){
-                entity.setE01Z934(details.getRealname());
-            }else {
-                entity.setE01Z931(details.getRealname());
-            }
+            entity.setE01Z934(details.getRealname());
+            entity.setE01Z927(date);
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             e01Z9Service.update(entity);
             map.put("code", 1);
@@ -112,34 +137,36 @@ public class E01Z9JyglController extends BaseController {
     }
 
     @RequiresPermissions("jygl:*")
-    @RequestMapping(value = "/ajax/edit")
-    public ModelAndView edit(String id,String flag) {
+    @RequestMapping(value = "/edit")
+    public ModelAndView edit(String id,String e01Z9Jyzt) {
         Map<String, Object> map = Maps.newHashMap();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(new Date());
         E01Z9Vo vo = new E01Z9Vo();
         E01Z9 entity = this.e01Z9Service.getByPK(id);
         BeanUtils.copyProperties(entity,vo);
+        vo.setE01Z931(details.getRealname());
+        vo.setE01Z9Shsj(date);
         map.put("vo",vo);
-        map.put("flag",flag);
+        map.put("e01Z9Jyzt",e01Z9Jyzt);
         return new ModelAndView("saas/zzb/dzda/e01z9/jygl/edit",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除阅档申请:${id}")
-    @RequiresPermissions("jygl:*")
-    @RequestMapping(value = "/del/{id}")
-    public @ResponseBody Map<String, Object> del(
-            @PathVariable("id") String id) throws GenericException {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            if(StringUtils.isEmpty(id)){
-                return null;
-            }
-            E01Z9 entity = this.e01Z9Service.getByPK(id);
-            this.e01Z9Service.delete(entity);
-            map.put("success", true);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new GenericException(e);
-        }
-        return map;
-    }
+//    @RequiresPermissions("jygl:*")
+//    @RequestMapping(value = "/edit/gh")
+//    public ModelAndView editGh(String id) {
+//        Map<String, Object> map = Maps.newHashMap();
+//        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//        String date = sdf.format(new Date());
+//        E01Z9Vo vo = new E01Z9Vo();
+//        E01Z9 entity = this.e01Z9Service.getByPK(id);
+//        BeanUtils.copyProperties(entity,vo);
+//        vo.setE01Z934(details.getRealname());
+//        vo.setE01Z927(date);
+//        map.put("vo",vo);
+//        return new ModelAndView("saas/zzb/dzda/e01z9/jygl/gh",map);
+//    }
+
 }

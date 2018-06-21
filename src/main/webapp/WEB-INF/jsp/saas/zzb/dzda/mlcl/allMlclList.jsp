@@ -28,22 +28,24 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
-                <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px">
+
+                <button type="button" id="daYinDa" class="btn green" style="float: right;margin-right: 5px" onclick="daYinDa();" disabled>打印</button>
+                <button type="button" id="xiaZaiDa" class="btn green" style="float: right;margin-right: 5px" onclick="xiaZaiDa();" disabled>下载</button>
+
+                <button type="button" id="button4" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('end');" disabled>最后一页</button>
+                <button type="button" id="button3" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('down');" disabled>下一页</button>
+                <button type="button" id="button2" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('up');" disabled>上一页</button>
+                <button type="button" id="button1" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('one');" disabled>第一页</button>
+                <div class="btn-group" style="padding-bottom: 0px;float: right;right: 5px;margin-left: 5px">
                     <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                         显示方式<i class="icon-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li >
-                            <a onclick="changeViewType('19')">小图(一行5张图)</a>
-                        </li>
-                        <%--<li >--%>
-                            <%--<a onclick="changeViewType('32')">大图(一行3张图)</a>--%>
-                        <%--</li>--%>
-                        <%--<li>--%>
-                            <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
-                        <%--</li>--%>
                         <li>
-                            <a onclick="changeViewType('99')">原始图(一行1张图)</a>
+                            <a onclick="changeViewShowType('qp')">全屏显示</a>
+                        </li>
+                        <li>
+                            <a onclick="changeViewShowType('db')">等比显示</a>
                         </li>
                     </ul>
                 </div>

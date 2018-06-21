@@ -18,13 +18,8 @@
 </head>
 
 
-<body onunload="testGuanbi()">
+<body>
 
-<script type="text/javascript">
-		function testGuanbi(){
-			alert("哈哈哈");
-		}
-</script>
 <div class="container-fluid" >
 	<!-- 脚本目录 -->
 	<input id="showTpWidth" type="hidden"/>
@@ -34,6 +29,10 @@
 		<input type="hidden" name="a38LogViewTimeId" id="a38LogViewTimeId">
 		<input type="hidden" name="a38LogId" id="a38LogId">
 		<input type="hidden" name="selectNodeId" id="selectNodeId" value="${e01z1Id}">
+		<input type="hidden" name="imagesCount" id="imagesCount" value="">
+		<input type="hidden" name="imageIndex" id="imageIndex" value="1">
+		<input type="hidden" name="viewShowType" id="viewShowType" value="qp">
+
 		<div class="portlet box grey" style="margin: 0px;padding: 0px;background: #f1f3f6">
 				<div style="margin: 0px;padding: 0px">
 					<Tree:tree id="viewImagesTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}?eApplyE01Z8Id=${eApplyE01Z8Id}" token="${sessionScope.OWASP_CSRFTOKEN}"
@@ -51,6 +50,8 @@
 	</div>
 </div>
 <script type="text/javascript">
+    var myLoading = new MyLoading("${path}",{zindex:999999});
+    var isChangeImage = false;//看是否点击过翻看图片的按钮
 	var timer1;
 	var timer2;
 	$(function(){
@@ -201,7 +202,67 @@
 		zTree11.selectNode(node);
 		zTree11.expandNode(node, true, false , true);
 	}
-	function loadRight(nodeId) {
+
+    //翻看图片
+    function changeImage(type){
+        var imagesCount = document.all("imagesCount").value;
+        var imageIndex = document.all("imageIndex").value;
+
+        if(imagesCount =="0"){
+            return false;
+        }
+        myLoading.show();
+        operateType = "one";
+        if(type == "one"){
+            document.all("button1").disabled = true;
+            document.all("button2").disabled = true;
+            document.all("button3").disabled = false;
+            document.all("button4").disabled = false;
+            document.all("imageIndex").value = "1";
+        }else if(type == "up"){
+            if(imageIndex == "2"){
+                document.all("button1").disabled = true;
+                document.all("button2").disabled = true;
+                document.all("button3").disabled = false;
+                document.all("button4").disabled = false;
+            }else{
+                document.all("button1").disabled = false;
+                document.all("button2").disabled = false;
+                document.all("button3").disabled = false;
+                document.all("button4").disabled = false;
+            }
+            document.all("imageIndex").value = parseInt(imageIndex) - 1;
+        }else if(type == "down"){
+            if(parseInt(imageIndex) + 1 == imagesCount){
+                document.all("button1").disabled = false;
+                document.all("button2").disabled = false;
+                document.all("button3").disabled = true;
+                document.all("button4").disabled = true;
+            }else{
+                document.all("button1").disabled = false;
+                document.all("button2").disabled = false;
+                document.all("button3").disabled = false;
+                document.all("button4").disabled = false;
+            }
+            document.all("imageIndex").value = parseInt(imageIndex) + 1;
+        }else if(type == "end"){
+            document.all("button1").disabled = false;
+            document.all("button2").disabled = false;
+            document.all("button3").disabled = true;
+            document.all("button4").disabled = true;
+            document.all("imageIndex").value = imagesCount;
+        }
+        loadRight($("#selectNodeId").val(),document.all("imageIndex").value);
+    }
+
+    function changeViewShowType(type){
+        if(document.all("viewShowType").value!=type){
+            document.all("viewShowType").value = type;
+            loadRight($("#selectNodeId").val(),document.all("imageIndex").value);
+		}
+
+	}
+	function loadRight(nodeId,imageIndex) {
 		$.ajax({
 			async: false,
 			type: "POST",
@@ -214,9 +275,13 @@
 				"a38Id": "${a38Id}",
 				"myDirName": "${myDirName}",
 				"e01z1Id": nodeId,
-				"isManage":"${isManage}"
+				"isManage":"${isManage}",
+                "imageIndex":imageIndex
 			},
 			success: function (html) {
+                isChangeImage = false;
+
+
 				$("#viewList").html(html);
 				$("#selectNodeId").val(nodeId);
 			},

@@ -18,9 +18,8 @@
 	.btn.downMobBtn{ padding:3px 6px; background-color:#FFFFFF; border:solid 1px #e5e5e5;}
 	.btn.downMobBtn:hover{ background-color:#FFFFFF !important;}
 </style>
-<%--<link href="${path}/css/images-view/images-grid.css" rel="stylesheet" type="text/css"/>--%>
-<link href="${path}/css/images-view/viewer-image.css" rel="stylesheet" type="text/css"/>
-<link href="${path}/css/images-view/main-image.css" rel="stylesheet" type="text/css"/>
+<%--<link href="${path}/css/images-view/viewer-image.css" rel="stylesheet" type="text/css"/>--%>
+<%--<link href="${path}/css/images-view/main-image.css" rel="stylesheet" type="text/css"/>--%>
 
 <form action="" id="importTpForm" method="post" enctype="multipart/form-data">
 	<input style="display: none" type="file" name="tpFile" id="tpFile" accept = 'image/*'>
@@ -59,7 +58,7 @@
 		</div>
 	</div>
 </div>
-	<div id="viewDiv" style="overflow: auto;margin: 0px;">
+	<div id="viewDiv" style="overflow: auto;margin: 0px;" oncontextmenu='return false'>
 		<c:if test="${empty e01z1Id}">
 			<table style="width: 100%;height: 100%;">
 				<tr>
@@ -82,11 +81,11 @@
 			<c:if test="${imagesSize>=0}">
 				<div class="docs-galley">
 					<ul class="docs-pictures clearfix">
-						<c:forEach items="${eImages}" var="image">
-							<li>
-								<div class="image-wrap">
-									<img data-original="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"
-										 src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" title="${image.imgNo}" alt="${image.imgNo}/${imagesSize}">
+						<c:forEach items="${images}" var="image">
+							<li style="text-align: center;">
+								<div class="image-wrap" >
+									<input type="hidden" id="showImgId" name="showImgId" value="${image.id}">
+									<img class="showImageClass" src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" title="${image.imgNo}" alt="${image.imgNo}/${imagesSize}">
 									<span style="display: block; width: 40px; height: 20px; top: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; ">${image.imgNo}/${imagesSize}</span>
 									<%--按比例挡住图片下面的部分 但是在全屏查看有问题<span style="display: block; width:100%; height: 40%; bottom: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; color:dimgrey;background-color: #979797"></span>--%>
 									<div class="dropdownMob">
@@ -122,20 +121,50 @@
 		</c:if>
 	</div>
 <%--<script  type="text/javascript" src="${path }/js/images-view/images-grid.js"></script>--%>
-<script  type="text/javascript" src="${path }/js/images-view/viewer-image.js"></script>
-<script  type="text/javascript" src="${path }/js/images-view/main-image.js"></script>
+<%--<script  type="text/javascript" src="${path }/js/images-view/viewer-image.js"></script>--%>
+<%--<script  type="text/javascript" src="${path }/js/images-view/main-image.js"></script>--%>
 <script type="text/javascript">
+
+
 	var imgs = [];
 	var isManage = "false";
-	var myLoading = new MyLoading("${path}",{zindex:999999});
+
 	$(function(){
 		changeTreeDivHeight();
 		//当浏览器大小改变的时候,要重新计算
 		$(window).resize(function(){
 			changeTreeDivHeight();
 		})
+		//如果图片数大于0 则下一页和最后一页可用
+        document.all("imagesCount").value = "${imagesSize}";
+        var imageIndex = document.all("imageIndex").value;
+		if("${imagesSize}"=="0"){
+            document.all("button1").disabled = true;
+            document.all("button2").disabled = true;
+            document.all("button3").disabled = true;
+            document.all("button4").disabled = true;
 
+            document.all("daYinDa").disabled = true;
+            document.all("xiaZaiDa").disabled = true;
+        }else{
+		    if(imageIndex!=document.all("imagesCount").value) {
+                document.all("button3").disabled = false;
+                document.all("button4").disabled = false;
+            }
+            document.all("daYinDa").disabled = false;
+            document.all("xiaZaiDa").disabled = false;
+        }
 
+        //改成图片显示的比例
+        var viewShowType =  document.all("viewShowType").value;
+		if(viewShowType=="qp"){
+            $(".showImageClass").css("height",'');
+        }else{
+		    debugger
+		    var showHeight = $(window).height()-65;
+            $(".showImageClass").css("height",showHeight+"px");
+        }
+        myLoading.hide();
 		<%--var images = "${images}";--%>
 		<%--if(images!=null && images!="") {--%>
 			<%--var imgList = images.replace('[','').replace(']','').split(',');--%>
@@ -234,22 +263,23 @@
 
 	}
 
-	function changeViewType(width){
-		if(isManage==true) {
-			$("#showTpWidth").val(width);
-			$(".imgs-grid-image").css("width", width + "%");
+	function changeViewType(type){
 
-			if (width == "100") {
-				$(".imgs-grid").css("text-align", "center");
-			} else {
-				$(".imgs-grid").css("text-align", "left");
-			}
-		}else{
-			$(".viewer-toggle").css("height", width + "%");
-			$(".docs-pictures li").css("width", width + "%");
-			$(".docs-pictures li").css("width", width + "%");
-
-		}
+//		if(isManage==true) {
+//			$("#showTpWidth").val(width);
+//			$(".imgs-grid-image").css("width", width + "%");
+//
+//			if (width == "100") {
+//				$(".imgs-grid").css("text-align", "center");
+//			} else {
+//				$(".imgs-grid").css("text-align", "left");
+//			}
+//		}else{
+//			$(".viewer-toggle").css("height", width + "%");
+//			$(".docs-pictures li").css("width", width + "%");
+//			$(".docs-pictures li").css("width", width + "%");
+//
+//		}
 	}
 	//uploadType 上传方式 frist表示插入首页，up表示插入上一页 down表示下一页 end表示尾页
 	function uploadImageByOne(imgNo,uploadType){
@@ -359,4 +389,50 @@
 			return true;
 		}
 	}
+
+    function daYinDa()
+    {
+        var imgId = $("#showImgId").val();
+        if(imgId==""){
+            showTip("提示","没有可打印图片",2000);
+        }else{
+            $.ajax({
+                url : "${path}/zzb/dzda/mlcl/images/ajax/printImg",
+                type : "post",
+                data : {
+                    "imgId":imgId
+                },
+                dataType : "json",
+                headers: {
+                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                },
+                beforeSend:function(XHR){
+                    myLoading.show();
+                },
+                success : function(json){
+                    if(json.success){
+                        showTip("提示","图片已成功打印",2000);
+                    }else{
+                        showTip("提示", "未找到打印机或其他异常打印失败", 2000);
+                    }
+                },
+                error : function(arg1, arg2, arg3){
+                    showTip("提示","出错了请联系管理员",2000);
+                },
+                complete : function(XHR, TS){
+                    myLoading.hide();
+                }
+            });
+        }
+    }
+
+    function xiaZaiDa(){
+	    var imgId = $("#showImgId").val();
+	    if(imgId==""){
+            showTip("提示","没有可下载图片",2000);
+		}else{
+            window.open("${path}/zzb/dzda/mlcl/images/ajax/downImg?imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		}
+	}
+
 </script>

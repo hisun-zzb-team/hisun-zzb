@@ -31,6 +31,7 @@ import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.saas.zzb.dzda.mlcl.service.EImagesService;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclAggregateVo;
 import com.hisun.saas.zzb.dzda.mlcl.vo.MlclTreeNode;
+import com.hisun.saas.zzb.dzda.util.PrintImage;
 import com.hisun.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -48,6 +49,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -118,12 +120,15 @@ public class EImagesController extends BaseController {
                 + a38Id + File.separator;
     }
     @RequestMapping(value = "/ajax/viewImg")
-    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName,String isManage) throws Exception {
+    public ModelAndView viewImg(String a38Id,String e01z1Id,String myDirName,String isManage,String imageIndex) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         String storePath = getTpStorePath(a38Id);
-        List<String> images = new ArrayList<String>();
+        List<EImages> images = new ArrayList<EImages>();
         int imagesSize = 0;
         List<EImages> eImages = new ArrayList<EImages>();
+        if(imageIndex==null|| imageIndex.equals("")){
+            imageIndex = "1";
+        }
         if(!e01z1Id.equals("")){
             E01Z1 e01z1 = new E01Z1();
             e01z1 = this.e01Z1Service.getByPK(e01z1Id);
@@ -131,7 +136,8 @@ public class EImagesController extends BaseController {
 
             eImages = e01z1.getImages();
 
-            for(EImages image : eImages){
+            for(EImages image : eImages) {
+
 //                String jiamfilePath = image.getImgFilePath();//加密的图片路径
 //                String jianmfilePath = "";//解密的图片路径
 //                String dirPath = uploadBasePath +storePath+myDirName;
@@ -154,14 +160,16 @@ public class EImagesController extends BaseController {
 //                if(jianmfile.exists()== false){
 //                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
 //                }
-                images.add(image.getId()+";"+image.getImgNo());
-                images.add(image.getId());
+                if (image.getImgNo().toString().equals(imageIndex)){
+//                    images.add(image.getId() + ";" + image.getImgNo());
+                    images.add(image);
+                }
             }
-         imagesSize = eImages.size();
+            imagesSize = eImages.size();
         }
 
         map.put("imagesSize", imagesSize);
-        map.put("eImages", eImages);
+//        map.put("eImages", eImages);
         map.put("images", images);
         map.put("a38Id", a38Id);
         map.put("e01z1Id", e01z1Id);
@@ -170,6 +178,61 @@ public class EImagesController extends BaseController {
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
     }
 
+    @RequestMapping(value="/ajax/downImg")
+    public void downImg(String imgId,HttpServletRequest req, HttpServletResponse resp) throws Exception{
+        imgId = StringUtils.trim(imgId);
+        EImages img = this.eImagesService.getByPK(imgId);
+        String imgPath = img.getImgFilePath();
+        if (StringUtils.isEmpty(imgPath)==false) {
+            String zpRealPath = uploadBasePath +imgPath;
+            File file = new File(zpRealPath);
+            if (file.exists()) {
+                OutputStream output=resp.getOutputStream();
+                String fileName = file.getPath().substring(file.getPath().lastIndexOf(File.separator)+1)+".jpg";
+                resp.setContentType("multipart/form-data");
+                //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
+                resp.setHeader("Content-Disposition", "attachment;fileName="+encode(fileName));
+                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,output);
+            }
+        }
+    }
+    private String encode(String filename) throws UnsupportedEncodingException {
+        if (WebUtil.getRequest().getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } else {
+            filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
+        }
+        return filename;
+    }
+
+
+    @RequestMapping(value="/ajax/printImg")
+    public @ResponseBody Map<String, Object> printImg(String imgId) throws Exception{
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            imgId = StringUtils.trim(imgId);
+            EImages img = this.eImagesService.getByPK(imgId);
+            String imgPath = img.getImgFilePath();
+            if (StringUtils.isEmpty(imgPath)==false) {
+                String zpRealPath = uploadBasePath +imgPath;
+                File file = new File(zpRealPath);
+                if (file.exists()) {
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    String fileName = file.getPath().substring(file.getPath().lastIndexOf(File.separator)+1)+".jpg";
+                    DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,outputStream);
+//                    ByteArrayOutputStream  baos=(ByteArrayOutputStream) output;
+                    ByteArrayInputStream swapStream = new ByteArrayInputStream(outputStream.toByteArray());
+
+                    new PrintImage().drawImage("001.jpg", 1,swapStream);
+                }
+            }
+            map.put("success", true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new GenericException(e);
+        }
+        return map;
+    }
     //删除临时查看的解密文件
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/jmImages")

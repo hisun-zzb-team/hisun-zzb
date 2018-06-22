@@ -647,8 +647,12 @@ public class DatpDealController extends BaseController {
                         if (Arrays.asList(Constants.EXCLUDE_FILE_AND_DIR).contains(tpFile.getName())) {
                             continue;
                         }
+
                         File newDestFile = new File(tpFile.getPath() + ".jpg");
-                        DESUtil.getInstance(Constants.DATP_KEY).decrypt(tpFile, newDestFile);
+
+                        String imgCode = getImgCode(tpFile);
+
+                        DESUtil.getInstance(Constants.DATP_KEY).decrypt(tpFile, newDestFile,imgCode,100000,1);
                         FileUtils.deleteQuietly(tpFile);
                     }
                 }
@@ -681,6 +685,37 @@ public class DatpDealController extends BaseController {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getImgCode(File file){
+        String str = "";
+        String[] filePaths = file.getPath().split("\\\\");
+        int index = 0;
+        for(int i = 0;i<filePaths.length;i++){
+            if(filePaths[i].length()==32){
+                String docStr = filePaths[i+1];
+                String[] names = docStr.split("\\.");
+                if(names!=null&&names.length>0){
+                    Integer code = Integer.parseInt(names[0]);
+                    int x = code/10;
+                    int y = code%10;
+                    str +=x;
+                    if(y>0){
+                        str += "-" + y;
+                    }
+                    Integer fileCode = Integer.parseInt(filePaths[i+2]);
+                    int fileX = fileCode/10;
+                    int fileY = fileCode%10;
+                    if(fileY==1){
+                        str +="-" + fileX;
+                    }else {
+                        str="";
+                    }
+                }
+                break;
+            }
+        }
+        return str;
     }
 
 }

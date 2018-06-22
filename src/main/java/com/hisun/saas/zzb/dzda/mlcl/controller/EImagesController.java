@@ -182,6 +182,15 @@ public class EImagesController extends BaseController {
     public void downImg(String imgId,HttpServletRequest req, HttpServletResponse resp) throws Exception{
         imgId = StringUtils.trim(imgId);
         EImages img = this.eImagesService.getByPK(imgId);
+
+        CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and("e01z1.id=:e01z1Id","e01z1Id",img.getE01z1().getId()));
+        query.add(CommonRestrictions.and("imgNo<:imgNo","imgNo",img.getImgNo()));
+        List<EImages> eImages = eImagesService.list(query,null);
+        String imgCode = "";
+        if(eImages.size()==0){
+            imgCode = getImgCode(img.getE01z1());
+        }
         String imgPath = img.getImgFilePath();
         if (StringUtils.isEmpty(imgPath)==false) {
             String zpRealPath = uploadBasePath +imgPath;
@@ -192,7 +201,7 @@ public class EImagesController extends BaseController {
                 resp.setContentType("multipart/form-data");
                 //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
                 resp.setHeader("Content-Disposition", "attachment;fileName="+encode(fileName));
-                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,output);
+                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,output,imgCode,100000,1);
             }
         }
     }
@@ -212,6 +221,15 @@ public class EImagesController extends BaseController {
         try {
             imgId = StringUtils.trim(imgId);
             EImages img = this.eImagesService.getByPK(imgId);
+
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("e01z1.id=:e01z1Id","e01z1Id",img.getE01z1().getId()));
+            query.add(CommonRestrictions.and("imgNo<:imgNo","imgNo",img.getImgNo()));
+            List<EImages> eImages = eImagesService.list(query,null);
+            String imgCode = "";
+            if(eImages.size()==0){
+                imgCode = getImgCode(img.getE01z1());
+            }
             String imgPath = img.getImgFilePath();
             if (StringUtils.isEmpty(imgPath)==false) {
                 String zpRealPath = uploadBasePath +imgPath;
@@ -219,7 +237,7 @@ public class EImagesController extends BaseController {
                 if (file.exists()) {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     String fileName = file.getPath().substring(file.getPath().lastIndexOf(File.separator)+1)+".jpg";
-                    DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,outputStream);
+                    DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,outputStream,imgCode,100000,1);
 //                    ByteArrayOutputStream  baos=(ByteArrayOutputStream) output;
                     ByteArrayInputStream swapStream = new ByteArrayInputStream(outputStream.toByteArray());
 
@@ -379,13 +397,21 @@ public class EImagesController extends BaseController {
         if(imgId==null || imgId.equals("")){
             return null;
         }
+        CommonConditionQuery query = new CommonConditionQuery();
         EImages img = this.eImagesService.getByPK(imgId);
+        query.add(CommonRestrictions.and("e01z1.id=:e01z1Id","e01z1Id",img.getE01z1().getId()));
+        query.add(CommonRestrictions.and("imgNo<:imgNo","imgNo",img.getImgNo()));
+        List<EImages> eImages = eImagesService.list(query,null);
+        String imgCode = "";
+        if(eImages.size()==0){
+            imgCode = getImgCode(img.getE01z1());
+        }
         String imgPath = img.getImgFilePath();
         if (StringUtils.isEmpty(imgPath)==false) {
             String zpRealPath = uploadBasePath +imgPath;
             File file = new File(zpRealPath);
             if (file.exists()) {
-                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,response.getOutputStream());
+                DESUtil.getInstance(Constants.DATP_KEY).decrypt(file,response.getOutputStream(),imgCode,100000,1);
                 response.setContentType(MediaType.IMAGE_JPEG_VALUE);
                 return new HttpEntity(HttpStatus.OK);
             } else {
@@ -404,6 +430,20 @@ public class EImagesController extends BaseController {
             response.setContentType(MediaType.IMAGE_PNG_VALUE);
             return new HttpEntity(HttpStatus.OK);
         }
+    }
+
+    public String getImgCode (E01Z1 e01Z1){
+        String str = "";
+        String e01Z101B = e01Z1.getE01Z101B();
+        Integer code = Integer.parseInt(e01Z101B);
+        int x = code/10;
+        int y = code%10;
+        str +=x;
+        if(y>0){
+            str += "-" + y;
+        }
+        str += "-" + e01Z1.getE01Z104();
+        return str;
     }
 
     @RequiresLog(operateType = LogOperateType.DELETE,description = "删除图片:${id}")

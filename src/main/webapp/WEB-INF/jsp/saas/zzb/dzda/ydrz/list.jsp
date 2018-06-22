@@ -15,7 +15,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- END PAGE LEVEL STYLES -->
-    <title>阅档记录</title>
+    <title>阅档日志</title>
     <style type="text/css">
     </style>
 
@@ -65,7 +65,7 @@
                 <div class="clearfix">
                     <div class="control-group">
                         <div id="query" style="float: left;">
-                        <form action="${path }/zzb/dzda/dacyjl/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm" style="margin: 0 0 0px;">
+                        <form action="${path }/zzb/dzda/ydrz/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" method="POST" id="searchForm" name="searchForm" style="margin: 0 0 0px;">
                           <%--  <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>--%>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
@@ -77,7 +77,12 @@
                             到：
                                 <input type="text" class="span12" style="width: 100px;" value='${endtime}' name="endtime" id="endtime" readonly/>
                              查阅档案姓名：<input type="text" class="m-wrap" name="a0101" id="a0101" value="${a0101}" style="width: 80px;" />
-                            <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
+                              阅档类型：<select class="select_form" tabindex="-1" name="ydlx" id="ydlx" style="width: 100px; margin-bottom: 0px;" >
+                              <option value="" >全部</option>
+                              <option value="0" >申请阅档</option>
+                              <option value="1" >其他阅档</option>
+                          </select>
+                              <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
                     </div>
@@ -88,21 +93,18 @@
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                         <TR height=28>
-                            <th width=90>申请人</th>
                             <th width=90 >查阅人</th>
-                            <th width=150>申请时间</th>
                             <th width=90>查阅档案姓名</th>
                             <th  width=150>查阅开始时间</th>
                             <th width=100>查阅总时长</th>
-                            <th>查阅情况</th>
+                            <th width=200>查阅情况</th>
+                            <th width=90>阅档类型</th>
                         </TR>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD ><c:out value="${vo.applyE01Z8.applyUserName}"></c:out></TD>
                             <TD ><c:out value="${vo.cyrName}"></c:out></TD>
-                            <TD > <fmt:formatDate value="${vo.applyE01Z8.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD ><c:out value="${vo.a0101}"></c:out></TD>
                             <TD > <fmt:formatDate value="${vo.cysj}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD ><a href="javascript:scxq('${vo.id}')"><c:out value="${vo.viewTime}"></c:out>秒</a> </TD>
@@ -112,7 +114,8 @@
                                     <c:out value="${vo1.e01Z111}"></c:out>;
                                 </c:forEach></a>
                             </div>
-
+                            <TD ><c:if test="${not empty vo.applyE01Z8}">申请查阅</c:if>
+                            <c:if test="${empty vo.applyE01Z8}">其他查阅</c:if></TD>
                             </TD>
                         </tr>
                     </c:forEach>
@@ -144,6 +147,9 @@
 
     })();
     $(function(){
+        $("#ydlx option[value='${ydlx}']").attr("selected",
+            true);
+
         $('#starttime').datepicker({
             format : 'yyyy-mm-dd',
             weekStart : 1,

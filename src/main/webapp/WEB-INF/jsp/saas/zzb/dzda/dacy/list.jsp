@@ -34,13 +34,13 @@
 </head>
 <body>
 
-<div id="addModal" class="modal container hide fade" tabindex="-1" data-width="600">
+<div id="addModal" class="modal container hide fade" tabindex="-1" data-width="800">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close"  type="button"></button>
                 <h3 class="modal-title" id="addTitle" >
-                    档案阅档申请
+                    填写查阅申请
                 </h3>
             </div>
             <div class="modal-body" id="addDiv">
@@ -54,10 +54,10 @@
             <%-- 表格开始 --%>
             <form class=""id="importForm" enctype="multipart/form-data">
                 <div class="portlet-title">
-                    <div class="caption">阅档申请</div>
+                    <div class="caption">申请列表</div>
                     <div class="clearfix fr">
                         <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
-                            阅档申请
+                            <i class="icon-plus"></i>查阅申请
                         </a>
                     </div>
 
@@ -71,16 +71,24 @@
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                            姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
-                            查阅申请内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="${readContent}" style="width: 80px;" />
+                            申请查阅档案姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
+                            申请时间：
+                                <input type="text" class="span12" style="width: 100px;" value='${starttime}' name="starttime" id="starttime" readonly/>
+                            到：
+                                <input type="text" class="span12" style="width: 100px;" value='${endtime}' name="endtime" id="endtime" readonly/>
                               申请状态：<select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
                                     <option value="" >全部</option>
                                     <option value="0" >待授权</option>
-                                    <option value="1" >同意阅档</option>
-                                    <option value="2" >拒绝授权</option>
-                                    <option value="3" >已收回</option>
-                                    <option value="4" >已结束</option>
+                                    <option value="1" >已授权</option>
+                                    <option value="2" >已拒绝</option>
                              </select>
+                            查阅状态：<select class="select_form" tabindex="-1" name="readState" id="readState" style="width: 100px; margin-bottom: 0px;" >
+                                    <option value="" >全部</option>
+                                    <option value="0" >未查阅</option>
+                                    <option value="1" >正在查阅</option>
+                                    <option value="2" >已收回</option>
+                                    <option value="3" >已拒绝</option>
+                            </select>
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -93,30 +101,31 @@
                     <thead>
 
                     <TR height=28>
-                        <th width=70>档案名称</th>
-                        <th width=150>单位职务</th>
-                        <th width=100>查阅申请内容</th>
-                        <th >查阅情况</th>
+                        <th width=70>申请人</th>
+                        <th width=70>查阅人</th>
                         <th width="120">申请时间</th>
-                        <th width=50>阅档状态</th>
-                        <th width=50>申请情况</th>
-                        <th width="40">操作</th>
+                        <th width=100>申请查阅档案姓名</th>
+                        <th width=150>申请查阅档案职务</th>
+                        <th width=100>查阅申请内容</th>
+                        <%--<th width="100" >查阅情况</th>--%>
+                        <th width=50>申请状态</th>
+                        <th width=50>查阅状态</th>
+                        <th width="70">操作</th>
+                        <th width="70">附件材料</th>
                     </thead>
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
+                            <TD width="10%"><c:out value="${vo.applyUserName}"></c:out></TD>
+                            <TD width="10%"><c:out value="${vo.e01Z807Name}"></c:out> </TD>
+                            <TD ><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
                             <TD width="10%">
-                                <c:if test="${vo.auditingState == 1}">
-                                    <a href="javascript:viewImageMain('${vo.a38.id}','${vo.a0101}','${vo.id}')"><c:out value="${vo.a0101}"></c:out></a>
-                                </c:if>
-                                <c:if test="${vo.auditingState != 1}">
                                     <c:out value="${vo.a0101}"></c:out>
-                                </c:if>
                             </TD>
                             <TD width="10%"><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD width="10%"><c:out value="${vo.readContent}"></c:out> </TD>
-                            <TD width="20%">
-                                <%--<a href="javascript:ydxiangqing('${vo.id}')">详情</a>--%>
+                           <%-- <TD width="20%">
+                                &lt;%&ndash;<a href="javascript:ydxiangqing('${vo.id}')">详情</a>&ndash;%&gt;
                                 <div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
                                     <a href="javascript:ydxiangqing('${vo.id}')">
                                         <c:if test="${not empty vo.a38Logs}">
@@ -126,44 +135,51 @@
                                         </c:if>
                                     </a>
                                 </div>
-                            </TD>
-                            <TD width="10%"><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+                            </TD>--%>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                        待授权
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
-                                       同意阅档
+                                       <a href="javascript:viewSqzt('${vo.id}')">已授权</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 2}">
-                                       拒绝授权
+                                        <a href="javascript:viewSqzt('${vo.id}')">已拒绝</a>
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 3}">
+                                </c:choose></TD>
+                            <TD width="10%">
+                                <c:choose>
+                                    <c:when test="${vo.readState == 0}">
+                                        未查阅
+                                    </c:when>
+                                    <c:when test="${vo.readState == 1}">
+                                        正在查阅
+                                    </c:when>
+                                    <c:when test="${vo.readState == 2}">
                                         已收回
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 4}">
+                                    <c:when test="${vo.readState == 3}">
                                         已结束
                                     </c:when>
                                 </c:choose></TD>
                             <TD width="10%">
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
-                                        <a href="javascript:editCysq('${vo.id}')">修改</a>
+                                        <a href="javascript:editCysq('${vo.id}')">修改</a>|
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 1}">
-                                        <a href="javascript:viewImageMain('${vo.a38.id}','${vo.a0101}','${vo.id}')">浏览</a>
+                                    <c:when test="${vo.auditingState == 1 && vo.readState !=2 && vo.readState !=3}">
+                                        <a href="javascript:viewImageMain('${vo.a38.id}','${vo.a0101}','${vo.id}')">浏览</a>|
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 2}">
-                                        <a href="javascript:editCysq('${vo.id}')">查看</a>
+                                    <c:when test="${vo.auditingState == 1 && vo.readState ==2 || vo.readState ==3}">
+                                        <a href="javascript:editCysq('${vo.id}')">查看</a>|
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 3 || vo.auditingState == 4}">
-                                        <a href="javascript:editCysq('${vo.id}')">查看</a>
-                                    </c:when>
-                                 </c:choose></TD>
+                                </c:choose>
+                                <a href="javascript:deleteYdsq('${vo.id}','${vo.auditingState}')">删除 </a>
+                            </TD>
                             <TD width="10%">
-                                <c:if test="${vo.auditingState == 1}">删除 </c:if>
-                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteYdsq('${vo.id}','${vo.auditingState}')">删除 </a></c:if>
+                                <c:if test="${empty vo.applyFilePath}">无附件</c:if>
+                                <c:if test="${not empty vo.applyFilePath}"><a href="javascript:downloadFile('${vo.id}')">下载</a></c:if>
                             </TD>
                         </tr>
                         </c:forEach>
@@ -183,34 +199,33 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                   <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
-                    <div class="btn-group" style="padding-bottom: 0px;float: right;right: 10px;margin-left: 10px;">
+                    <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="hiddenViewImgModalForLiulan()"><i class='icon-remove-sign'></i> 关闭</button>
+                    <button type="button" id="daYinDa" class="btn green" style="float: right;margin-right: 5px" onclick="daYinDa();" disabled>打印</button>
+                    <button type="button" id="xiaZaiDa" class="btn green" style="float: right;margin-right: 5px" onclick="xiaZaiDa();" disabled>下载</button>
+                    <button type="button" id="button4" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('end');" disabled>最后一页</button>
+                    <button type="button" id="button3" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('down');" disabled>下一页</button>
+                    <button type="button" id="button2" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('up');" disabled>上一页</button>
+                    <button type="button" id="button1" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('one');" disabled>第一页</button>
+                    <div class="btn-group" style="padding-bottom: 0px;float: right;right: 5px;margin-left: 5px;">
                         <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                             显示方式<i class="icon-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a onclick="changeViewType('19')">小图(一行5张图)</a>
+                                <a onclick="changeViewShowType('qp')">全屏显示</a>
                             </li>
-                            <%--<li>--%>
-                            <%--<a onclick="changeViewType('32')">大图(一行3张图)</a>--%>
-                            <%--</li>--%>
-                            <%--<li>--%>
-                            <%--<a onclick="changeViewType('50')">大图(一行2张图)</a>--%>
-                            <%--</li>--%>
                             <li>
-                                <a onclick="changeViewType('99')">原始图(一行1张图)</a>
+                                <a onclick="changeViewShowType('db')">等比显示</a>
                             </li>
                         </ul>
                     </div>
-                   <a class="btn green"  style="float: right;font-weight: bold;margin-right: 10px;" href="javascript:jieshuyuedang()">
+                    <a class="btn green"  style="float: right;font-weight: bold;margin-right: 5px;" href="javascript:jieshuyuedang()">
                         <i class=' icon-remove-sign'></i>结束阅档
                     </a>
-                    <span id="daojishi"  style="display: none;float: right;font-weight: bold;margin-right: 10px;margin-top: 5px">剩余阅档时间:<span id="timespan" style="color: #C90003"></span></span>
-
-                <%--<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>--%>
+                    <span id="daojishi"  style="display: none;float: right;font-weight: bold;margin-right: 5px;margin-top: 5px">剩余阅档时间:<span id="timespan" style="color: #C90003"></span></span>
+                    <%--<button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal" onclick="jieshuyuedang()"><i class='icon-remove-sign'></i> 结束阅档</button>--%>
                     <%--<button data-dismiss="modal" class="close" type="button" onclick="hiddenViewImgModal()"></button>--%>
-                   <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>
+                    <input type="hidden" name="eApplyE01Z8Id" id = "eApplyE01Z8Id"/>
                     <%--<input type="hidden" name="a38LogId" id = "a38LogId"/>--%>
                     <input type="hidden" name="syReadTime" id = "syReadTime"/>
                     <h3 class="modal-title" id="title">
@@ -236,9 +251,22 @@
         </div>
     </div>
 </div>
-<%-- END PAGE CONTENT--%>
-</div>
 
+<div id="viewSqztModal" class="modal container hide fade" tabindex="-1" data-width="650">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close"  type="button"></button>
+                <h3 class="modal-title" id="viewSqztTitle" >
+                    授权信息
+                </h3>
+            </div>
+            <div class="modal-body" id="viewSqztDiv">
+            </div>
+        </div>
+    </div>
+</div>
+<%-- END PAGE CONTENT--%>
 <script type="text/javascript">
     (function(){
         App.init();
@@ -254,7 +282,52 @@
     $(function(){
         $("#auditingState option[value='${auditingState}']").attr("selected",
                 true);
+
+        $("#readState option[value='${readState}']").attr("selected",
+            true);
+
+        $('#starttime').datepicker({
+            format : 'yyyy-mm-dd',
+            weekStart : 1,
+            autoclose : true,
+            todayBtn : 'linked',
+            language : 'zh-CN'
+        });
+        $('#endtime').datepicker({
+            format : 'yyyy-mm-dd',
+            weekStart : 1,
+            autoclose : true,
+            todayBtn : 'linked',
+            language : 'zh-CN'
+        });
     })
+
+    function viewSqzt(id) {
+        $.ajax({
+            url:"${path}/zzb/dzda/cysq/ajax/viewSqzt",
+            type : "post",
+            data: {"id":id},
+            headers:{
+                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType : "html",
+            success : function(html){
+                $('#viewSqztDiv').html(html);
+
+                $('#viewSqztModal').modal({
+                    keyboard: true
+                });
+            },
+            error : function(){
+                showTip("提示","出错了请联系管理员", 1500);
+            }
+        });
+    }
+
+    function downloadFile(id){
+        window.open("${path }/zzb/dzda/cysq/ajax/down?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&id="+id);
+    }
+
     var ydxiangqing = function(id){
         $.ajax({
             url:"${path}/zzb/dzda/cysq/ajax/cyqkList",
@@ -420,9 +493,7 @@
         document.getElementById("btn-"+fileName).click();
     }
     function clearData(){
-        $("#userName").val('');
-        $("#readContent").val('');
-
+        window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
 </script>

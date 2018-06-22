@@ -36,12 +36,12 @@
                             </div>
                             <div class="row-fluid">
                                 <div class="span10 ">
-                                    <div id="zcxxGroup" class="control-group">
+                                    <div id="zcqkGroup" class="control-group">
                                         <label class="control-label" style="padding-top: 30px">职称信息<br><a href="javascript:zcqk()" >修改</a></label>
                                         <div class="controls">
-                                            <textarea id="zcxx" name="zcxx" class="span12 m-wrap"
-                                                      value=""
-                                                      rows="8" style="resize: none;"></textarea>
+                                            <textarea id="zcqk" name="zcqk" class="span12 m-wrap"
+                                                      value="${vo.zcqk}"
+                                                      rows="8" style="resize: none;">${vo.zcqk}</textarea>
                                         </div>
                                     </div>
                                 </div>

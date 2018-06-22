@@ -12,6 +12,7 @@ import com.hisun.base.dao.util.CommonConditionQuery;
 import com.hisun.base.dao.util.CommonOrder;
 import com.hisun.base.dao.util.CommonOrderBy;
 import com.hisun.base.dao.util.CommonRestrictions;
+import com.hisun.base.exception.GenericException;
 import com.hisun.base.vo.PagerVo;
 import com.hisun.saas.sys.auth.UserLoginDetails;
 import com.hisun.saas.sys.auth.UserLoginDetailsUtil;
@@ -24,11 +25,9 @@ import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 import com.hisun.saas.zzb.dzda.dacy.Constants;
 import com.hisun.saas.zzb.dzda.dacy.entity.*;
 import com.hisun.saas.zzb.dzda.dacy.exchange.CyjlExcelExchange;
-import com.hisun.saas.zzb.dzda.dacy.service.EA38LogDetailService;
-import com.hisun.saas.zzb.dzda.dacy.service.EA38LogService;
-import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
-import com.hisun.saas.zzb.dzda.dacy.service.EPopedomE01Z1RelationService;
+import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
+import com.hisun.saas.zzb.dzda.dacy.vo.ECysqVo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.DateUtil;
@@ -38,6 +37,7 @@ import com.hisun.util.UUIDUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +69,8 @@ public class CyshouquanController extends BaseController {
     private E01Z1Service e01Z1Service;
     @Resource
     private EPopedomE01Z1RelationService ePopedomE01Z1RelationService;
+    @Resource
+    private ECysqService eCysqService;
 
     @Resource
     CyjlExcelExchange cyjlExcelExchange;
@@ -89,7 +91,9 @@ public class CyshouquanController extends BaseController {
                              @RequestParam(value = "userName",required = false)String userName,
                              @RequestParam(value = "readContent",required = false)String readContent,
                              @RequestParam(value = "e01Z807Name",required = false)String e01Z807Name,
-                             @RequestParam(value = "auditingState",required = false)String auditingState
+                             @RequestParam(value = "auditingState",required = false,defaultValue = "0")String auditingState,
+                             @RequestParam(value = "starttime",required = false)String starttime,
+                             @RequestParam(value = "endtime",required = false)String endtime
     ) throws UnsupportedEncodingException {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String,Object> model = new HashMap<String,Object>();
@@ -103,8 +107,15 @@ public class CyshouquanController extends BaseController {
         if(StringUtils.isNotBlank(e01Z807Name)){
             query.add(CommonRestrictions.and("e01Z807Name = :e01Z807Name ", "e01Z807Name", e01Z807Name));
         }
-        if(StringUtils.isNotBlank(auditingState)){
+        //-1表示查询全部
+        if(StringUtils.isNotBlank(auditingState) && !"-1".equals(auditingState)){
             query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState", auditingState));
+        }
+        if(StringUtils.isNotBlank(starttime)){
+            query.add(CommonRestrictions.and("createDate >= :starttime ", "starttime", new DateTime(starttime).toDate()));
+        }
+        if(StringUtils.isNotBlank(endtime)){
+            query.add(CommonRestrictions.and("createDate <= :endtime ", "endtime", new DateTime(endtime).toDate()));
         }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
@@ -117,12 +128,15 @@ public class CyshouquanController extends BaseController {
         model.put("readContent",readContent);
         model.put("e01Z807Name",e01Z807Name);
         model.put("auditingState",auditingState);
+        model.put("starttime",starttime);
+        model.put("endtime",endtime);
         return new ModelAndView("saas/zzb/dzda/dasq/list",model);
     }
     @RequestMapping(value = "/toShouquan")
     public ModelAndView toShouquan(String id,String zcsqbs){
         Map<String,Object> model = Maps.newHashMap();
         try{
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             EApplyE01Z8 entity  = eApplyE01Z8Service.getByPK(id);
             CommonConditionQuery query = new CommonConditionQuery();
             query.add(CommonRestrictions.and("sjzt = :sjzt","sjzt","1"));
@@ -132,6 +146,7 @@ public class CyshouquanController extends BaseController {
             if(a38s.size()==1){
                 a38Id = a38s.get(0).getId();
             }
+            model.put("sqr",details.getRealname());
             model.put("zcsqbs",zcsqbs);
             model.put("entity",entity);
             model.put("a38s",a38s);
@@ -143,19 +158,6 @@ public class CyshouquanController extends BaseController {
     }
 
     @RequiresPermissions("cyshouquan:*")
-    @RequestMapping(value = "/ajax/tobfShouquan")
-    public ModelAndView tobfShouquan(String a38Id,String sfzasq){
-        Map<String,Object> model = Maps.newHashMap();
-        try{
-            model.put("a38Id",a38Id);
-            model.put("sfzasq",sfzasq);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return new ModelAndView("saas/zzb/dzda/dasq/bfshouquan",model);
-    }
-
-    @RequiresPermissions("cyshouquan:*")
     @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权申请阅档:${id}")
     @RequestMapping(value = "/shouhuiQx/{id}")
     public @ResponseBody  Map<String,Object> shouhuiQx(@PathVariable("id")String id){
@@ -164,7 +166,8 @@ public class CyshouquanController extends BaseController {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(id);
             //收回权限
-            entity.setAuditingState("3");
+           // entity.setAuditingState("3");
+            entity.setReadState("2");
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             eApplyE01Z8Service.update(entity);
             model.put("success",true);
@@ -175,105 +178,43 @@ public class CyshouquanController extends BaseController {
         }
         return model;
     }
-
-    /**
-     * 授权或者拒绝
-     * @param vo
-     * @return
-     */
     @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权或拒绝申请阅档:${vo.a0101}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权或拒绝申请阅档:${vo.sqzt}")
     @RequestMapping(value = "/shouquan")
-    public @ResponseBody Map<String,Object> shouquanOrJujue(EApplyE01Z8Vo vo){
+    public @ResponseBody Map<String,Object> shouquan(ECysqVo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
         try{
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
-            entity.setSqdwpzld(details.getRealname());
-            BeanUtils.copyProperties(entity,vo);
-            //全部授权
-            if(vo.getAuditingState().equals("1")) entity.setPopedomStuffType("0");
-            entity.setSqdwpzld(details.getRealname());
-            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
+            EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getE01z8Id());
+            entity.setSqdwpzld(vo.getSqr());
+            entity.setAuditingState(vo.getSqzt());
             entity.setA38(a38Service.getByPK(vo.getA38Id()));
+            entity.setIsPrint(vo.getSfyxdy());
+            entity.setIsDownload(vo.getSfyxxz());
+            entity.setPopedomStuffType(vo.getSqclfw());//是否部分授权
+            entity.setReadState("0");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             entity.setAccreditDate(sdf.format(new Date()));
             eApplyE01Z8Service.update(entity);
-            model.put("success",true);
-        }catch (Exception e){
-            model.put("success",false);
-            e.printStackTrace();
-        }
-        return model;
-    }
-    /**
-     * 再次授权
-     * @param vo
-     * @return
-     */
-    @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "再次授权申请阅档:${vo.a0101}")
-    @RequestMapping(value = "/zcshouquan")
-    public @ResponseBody Map<String,Object> zaicishouquan(EApplyE01Z8Vo vo){
-        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
-        try{
-            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            EApplyE01Z8 entity =  new EApplyE01Z8();
-            entity.setSqdwpzld(details.getRealname());
-            BeanUtils.copyProperties(entity,vo);
-            entity.setParentApplyE01Z8Id(vo.getId());
-            entity.setId(null);
-            //全部授权
-            entity.setAuditingState("1");
-            entity.setPopedomStuffType("0");
-            entity.setIsShowToA0101("0");
-            entity.setSqdwpzld(details.getRealname());
-            EntityWrapper.wrapperSaveBaseProperties(entity,details);
-            entity.setA38(a38Service.getByPK(vo.getA38Id()));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            entity.setAccreditDate(sdf.format(new Date()));
-            eApplyE01Z8Service.save(entity);
-            model.put("success",true);
-        }catch (Exception e){
-            model.put("success",false);
-            e.printStackTrace();
-        }
-        return model;
-    }
-    @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "再次部分授权申请阅档:${vo.a0101}")
-    @RequestMapping(value = "/zcbfshouquan")
-    public @ResponseBody Map<String,Object> zcbfShouquan(EApplyE01Z8Vo vo){
-        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
-        try{
-            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            String e01z1IdContent = vo.getE01z1IdContent();
-            String[] e01z1Ids = e01z1IdContent.split(",");
-            EApplyE01Z8 entity =  new EApplyE01Z8();
-            BeanUtils.copyProperties(entity,vo);
-            entity.setSqdwpzld(details.getRealname());
-            //已审
-            entity.setAuditingState("1");
+            //授权表
+            ECysq eCysq = new ECysq();
+            org.springframework.beans.BeanUtils.copyProperties(vo,eCysq);
+            eCysq.setApplyE01Z8(entity);
+            EntityWrapper.wrapperSaveBaseProperties(eCysq,details);
+            String pk = eCysqService.save(eCysq);
             //部分授权
-            entity.setPopedomStuffType("1");
-            entity.setSqdwpzld(details.getRealname());
-            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
-            entity.setA38(a38Service.getByPK(vo.getA38Id()));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            entity.setAccreditDate(sdf.format(new Date()));
-            entity.setId(null);
-            entity.setParentApplyE01Z8Id(vo.getId());
-            entity.setIsShowToA0101("0");
-            EntityWrapper.wrapperSaveBaseProperties(entity,details);
-            String pk = eApplyE01Z8Service.save(entity);
-            EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(pk);
-            for (String id : e01z1Ids){
-                if(id.equals("")) continue;
-                EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
-                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
-                ep.setApplyE01Z8(eApplyE01Z8);
-                ep.setE01z1Id(id);
-                ePopedomE01Z1RelationService.save(ep);
+            ECysq saveEcysq = eCysqService.getByPK(pk);
+            String e01z1IdContent = vo.getSqcymlIds();
+            String[] e01z1Ids = e01z1IdContent.split(",");
+            if("1".equals(vo.getSqclfw())){
+                for (String id : e01z1Ids){
+                    if(id.equals("")) continue;
+                    EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
+                    E01Z1 e01Z1 = e01Z1Service.getByPK(id);
+                    ep.seteCysq(saveEcysq);
+                    ep.setE01z1Id(id);
+                    ePopedomE01Z1RelationService.save(ep);
+                }
             }
             model.put("success",true);
         }catch (Exception e){
@@ -281,45 +222,34 @@ public class CyshouquanController extends BaseController {
             e.printStackTrace();
         }
         return model;
+    }
+    @RequestMapping("/view")
+    @RequiresPermissions("cyshouquan:*")
+    public
+    ModelAndView view(String id) throws GenericException {
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        try {
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("applyE01Z8.id = :id ", "id", id));
+            List<ECysq> list = eCysqService.list(query,null);
+            ECysqVo vo = new ECysqVo();
+            BeanUtils.copyProperties(vo,list.get(0));
+            EApplyE01Z8Vo eApplyE01Z8Vo = new EApplyE01Z8Vo();
+            BeanUtils.copyProperties(eApplyE01Z8Vo,list.get(0).getApplyE01Z8());
+            eApplyE01Z8Vo.setSqsj(DateUtil.formatTimesTampDate(list.get(0).getApplyE01Z8().getCreateDate()));
+            vo.seteApplyE01Z8Vo(eApplyE01Z8Vo);
+            returnMap.put("vo",vo);
+            returnMap.put("code", 1);
+        } catch (Exception e) {
+            returnMap.put("code", 0);
+            returnMap.put("message", "删除失败");
+            logger.error(e, e);
+            throw new GenericException(e.getMessage());
+        }
+        return new ModelAndView("saas/zzb/dzda/dasq/view",returnMap);
     }
 
-    @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "部分授权申请阅档:${vo.a0101}")
-    @RequestMapping(value = "/bfshouquan")
-    public @ResponseBody Map<String,Object> bfShouquan(EApplyE01Z8Vo vo){
-        Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();
-        try{
-            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            String e01z1IdContent = vo.getE01z1IdContent();
-            String[] e01z1Ids = e01z1IdContent.split(",");
-            EApplyE01Z8 entity =  eApplyE01Z8Service.getByPK(vo.getId());
-            for (String id : e01z1Ids){
-                if(id.equals("")) continue;
-                EPopedomE01Z1Relation ep = new EPopedomE01Z1Relation();
-//                E01Z1 e01Z1 = e01Z1Service.getByPK(id);
-                ep.setApplyE01Z8(entity);
-                ep.setE01z1Id(id);
-                ePopedomE01Z1RelationService.save(ep);
-            }
-            entity.setSqdwpzld(details.getRealname());
-            BeanUtils.copyProperties(entity,vo);
-            //已审
-            entity.setAuditingState("1");
-            //部分授权
-            entity.setPopedomStuffType("1");
-            entity.setSqdwpzld(details.getRealname());
-            EntityWrapper.wrapperUpdateBaseProperties(entity,details);
-            entity.setA38(a38Service.getByPK(vo.getA38Id()));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            entity.setAccreditDate(sdf.format(new Date()));
-            eApplyE01Z8Service.update(entity);
-            model.put("success",true);
-        }catch (Exception e){
-            model.put("success",false);
-            e.printStackTrace();
-        }
-        return model;
-    }
+
     @RequiresPermissions("cyshouquan:*")
     @RequestMapping(value = "/getA0101")
     public @ResponseBody Map<String,Object> getA0101(@RequestParam(value = "a0101",required = true) String a0101){

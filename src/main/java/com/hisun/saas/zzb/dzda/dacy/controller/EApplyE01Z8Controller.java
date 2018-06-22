@@ -26,6 +26,7 @@ import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.dacy.entity.*;
 import com.hisun.saas.zzb.dzda.dacy.service.*;
 import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
+import com.hisun.saas.zzb.dzda.dacy.vo.ECysqVo;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.service.E01Z1Service;
 import com.hisun.util.*;
@@ -34,6 +35,7 @@ import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.converters.LongConverter;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,6 +79,8 @@ public class EApplyE01Z8Controller extends BaseController {
     private ELogDetailViewTimeService eLogDetailViewTimeService;
     @Resource
     private E01Z1Service e01Z1Service;
+    @Resource
+    private ECysqService eCysqService;
 
     @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
@@ -86,21 +90,30 @@ public class EApplyE01Z8Controller extends BaseController {
     public ModelAndView list(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                              @RequestParam(value = "userName", required = false) String userName,
-                             @RequestParam(value = "readContent", required = false) String readContent,
-                             @RequestParam(value = "auditingState", required = false) String auditingState
+                             @RequestParam(value = "starttime",required = false)String starttime,
+                             @RequestParam(value = "endtime",required = false)String endtime,
+                             @RequestParam(value = "auditingState", required = false) String auditingState,
+                             @RequestParam(value = "readState", required = false) String readState
     ) throws UnsupportedEncodingException {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String, Object> model = new HashMap<String, Object>();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and("isShowToA0101 = :isShowToA0101 ", "isShowToA0101", "0"));
+        query.add(CommonRestrictions.and("createUserId = :createUserId ", "createUserId", details.getUserid()));
         if (StringUtils.isNotBlank(userName)) {
             query.add(CommonRestrictions.and("a0101 like :a0101 ", "a0101", "%" + userName + "%"));
         }
-        if (StringUtils.isNotBlank(readContent)) {
-            query.add(CommonRestrictions.and("readContent like :readContent ", "readContent", "%" + readContent + "%"));
-        }
         if (StringUtils.isNotBlank(auditingState)) {
             query.add(CommonRestrictions.and("auditingState = :auditingState ", "auditingState", auditingState));
+        }
+        if (StringUtils.isNotBlank(readState)) {
+            query.add(CommonRestrictions.and("readState = :readState ", "readState", readState));
+        }
+        if(StringUtils.isNotBlank(starttime)){
+            query.add(CommonRestrictions.and("createDate >= :starttime ", "starttime", new DateTime(starttime).toDate()));
+        }
+        if(StringUtils.isNotBlank(endtime)){
+            query.add(CommonRestrictions.and("createDate <= :endtime ", "endtime", new DateTime(endtime).toDate()));
         }
         Long total = eApplyE01Z8Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
@@ -109,15 +122,20 @@ public class EApplyE01Z8Controller extends BaseController {
         PagerVo<EApplyE01Z8> pager = new PagerVo<EApplyE01Z8>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager", pager);
         model.put("userName", userName);
-        model.put("readContent", readContent);
+        model.put("starttime",starttime);
+        model.put("endtime",endtime);
         model.put("auditingState", auditingState);
+        model.put("readState", readState);
         return new ModelAndView("saas/zzb/dzda/dacy/list", model);
     }
 
     @RequiresPermissions("cysq:*")
     @RequestMapping(value = "/ajax/add")
     public ModelAndView add() {
-        return new ModelAndView("saas/zzb/dzda/dacy/add");
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        Map map = Maps.newHashMap();
+        map.put("sqr",details.getRealname());
+        return new ModelAndView("saas/zzb/dzda/dacy/add",map);
     }
 
     @RequiresPermissions("cysq:*")
@@ -196,8 +214,6 @@ public class EApplyE01Z8Controller extends BaseController {
                         _fileDir.mkdirs();
                     }
                     savePath = fileDir + File.separator + UUIDUtil.getUUID() + "." + FileUtil.getExtend(fileName);
-                    ;
-                    // savePath =fileDir;
                     try {
                         FileOutputStream fos = new FileOutputStream(new File(savePath));
                         fos.write(clFile.getBytes());
@@ -227,6 +243,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 entity.setIsShowToA0101("0");
                 entity.setAuditingState("0");
+                entity.setReadState("0");
                 entity.setApplyType("0");
                 entity.setAccreditType("0");
                 entity.setApplyFileName(fileName);
@@ -295,6 +312,31 @@ public class EApplyE01Z8Controller extends BaseController {
             map.put("success", false);
         }
         return map;
+    }
+    @RequestMapping("/ajax/viewSqzt")
+    @RequiresPermissions("cysq:*")
+    public
+    ModelAndView viewSqzt(String id) throws GenericException {
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        try {
+            UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("applyE01Z8.id = :id ", "id", id));
+            List<ECysq> list = eCysqService.list(query,null);
+            ECysqVo vo = new ECysqVo();
+            BeanUtils.copyProperties(vo,list.get(0));
+            EApplyE01Z8Vo eApplyE01Z8Vo = new EApplyE01Z8Vo();
+            BeanUtils.copyProperties(eApplyE01Z8Vo,list.get(0).getApplyE01Z8());
+            vo.seteApplyE01Z8Vo(eApplyE01Z8Vo);
+            returnMap.put("vo",vo);
+            returnMap.put("code", 1);
+        } catch (Exception e) {
+            returnMap.put("code", 0);
+            returnMap.put("message", "删除失败");
+            logger.error(e, e);
+            throw new GenericException(e.getMessage());
+        }
+        return new ModelAndView("saas/zzb/dzda/dacy/viewSqzt",returnMap);
     }
 
     /**
@@ -432,6 +474,8 @@ public class EApplyE01Z8Controller extends BaseController {
                 } else {
                     returnMap.put(syReadTime, ((Integer.valueOf(readTime) * 60) - Integer.valueOf(alreadyReadTime)));
                 }
+            }else {
+                query.add(CommonRestrictions.and("(applyE01Z8 is  null or applyE01Z8.id ='') and 1=:applyE01Z8", "applyE01Z8", 1));
             }
             List<EA38Log> eA38Logs = eA38LogService.list(query, new CommonOrderBy());
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -562,7 +606,7 @@ public class EApplyE01Z8Controller extends BaseController {
                 if (ea38LogViewTime == null || "".equals(ea38LogViewTime)) {
                     ea38LogDetail.setCysj(String.valueOf(viewTime / 1000));
                 } else {
-                    ea38LogDetail.setCysj(String.valueOf(ea38LogViewTime + (viewTime / 1000)));
+                    ea38LogDetail.setCysj(String.valueOf(Long.valueOf(ea38LogViewTime) + (viewTime / 1000)));
                 }
                 ea38LogDetail.setJscysj(new Date());
                 eA38LogDetailService.update(ea38LogDetail);
@@ -674,7 +718,8 @@ public class EApplyE01Z8Controller extends BaseController {
         if (StringUtils.isNotBlank(eApplyE01Z8Id) && StringUtils.isNotBlank(ydsjzt)) {
             EApplyE01Z8 eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
             //结束阅档
-            eApplyE01Z8.setAuditingState("4");
+            //eApplyE01Z8.setAuditingState("4");
+            eApplyE01Z8.setReadState("3");
             eApplyE01Z8.setEndReadDate(DateUtil.formatTimesTampDate(new Date()));
             eApplyE01Z8Service.update(eApplyE01Z8);
             //时间到期
@@ -693,7 +738,7 @@ public class EApplyE01Z8Controller extends BaseController {
             resp.setContentType("multipart/form-data");
             //2.设置文件头：最后一个参数是设置下载文件名(假如我们叫a.pdf)
             resp.setHeader("Content-Disposition", "attachment;fileName="
-                    + encode(fileRealPath.substring(fileRealPath.lastIndexOf(File.separator) + 1)));
+                    + encode(entity.getApplyFileName()/*fileRealPath.substring(fileRealPath.lastIndexOf(File.separator) + 1)*/));
             OutputStream output = resp.getOutputStream();
             byte[] b = FileUtils.readFileToByteArray(new File(fileRealPath));
             output.write(b);

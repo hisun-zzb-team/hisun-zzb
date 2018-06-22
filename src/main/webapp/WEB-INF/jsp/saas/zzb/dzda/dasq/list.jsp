@@ -50,7 +50,7 @@
             <%-- 表格开始 --%>
             <form class=""id="importForm" enctype="multipart/form-data">
                 <div class="portlet-title">
-                    <div class="caption">查阅管理</div>
+                    <div class="caption">授权列表</div>
                     <div class="clearfix fr">
 
                         <a id="sample_editable_1_new" class="btn green" href="javascript:download()">
@@ -73,18 +73,17 @@
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                            查阅人：<input type="text" class="m-wrap" name="e01Z807Name" id="e01Z807Name" value="${e01Z807Name}" style="width: 80px;" />
-                            档案名称：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
-                            查阅内容：<input type="text" class="m-wrap" name="readContent" id="readContent" value="${readContent}" style="width: 80px;" />
-                            授权状态：
-                            <select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
-                                <option value="" >全部</option>
-                                <option value="0" >待授权</option>
-                                <option value="1" >同意阅档</option>
-                                <option value="2" >拒绝授权</option>
-                                <option value="3" >已收回</option>
-                                <option value="4" >已结束</option>
-                            </select>
+                            申请查阅档案姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
+                            申请时间：
+                            <input type="text" class="span12" style="width: 100px;" value='${starttime}' name="starttime" id="starttime" readonly/>
+                            到：
+                            <input type="text" class="span12" style="width: 100px;" value='${endtime}' name="endtime" id="endtime" readonly/>
+                            授权状态：<select class="select_form" tabindex="-1" name="auditingState" id="auditingState" style="width: 100px; margin-bottom: 0px;" >
+                            <option value="-1" >全部</option>
+                            <option value="0" >待授权</option>
+                            <option value="1" >已授权</option>
+                            <option value="2" >已拒绝</option>
+                        </select>
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -96,24 +95,46 @@
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>
-                        <th width=50>档案名称</th>
-                        <th width=50>查阅人</th>
-                        <th  width=120>查阅时间</th>
-                        <th width=120>申请内容</th>
-                        <th>查阅情况</th>
-                        <th  width=120>申请时间</th>
-                        <th width=70>审核状态</th>
+                        <th width=70>申请人</th>
+                        <th width=70>查阅人</th>
+                        <th width="120">申请时间</th>
+                        <th width=100>申请查阅档案姓名</th>
+                        <th width=150>申请查阅档案职务</th>
+                        <th width=100>查阅申请内容</th>
+                        <th width=100>查阅状态</th>
+                        <th width=150>授权信息</th>
+                        <th width=50>授权状态</th>
                         <th width="90">操作</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
                         <tr style="text-overflow:ellipsis;">
-                            <TD ><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD ><c:out value="${vo.applyUserName}"></c:out></TD>
                             <TD><c:out value="${vo.e01Z807Name}"></c:out></TD>
-                            <TD ><c:out value="${vo.readDate}"></c:out> </TD>
+                            <TD ><fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate></TD>
+                            <TD ><c:out value="${vo.a0101}"></c:out></TD>
+                            <TD ><c:out value="${vo.sqcydazw}"></c:out></TD>
                             <TD><c:out value="${vo.readContent}"></c:out ></TD>
+                            <TD>
+                                <c:choose>
+                                    <c:when test="${vo.readState == 0}">
+                                        未查阅
+                                    </c:when>
+                                    <c:when test="${vo.readState == 1}">
+                                        正在查阅
+                                    </c:when>
+                                    <c:when test="${vo.readState == 2}">
+                                        已收回
+                                    </c:when>
+                                    <c:when test="${vo.readState == 3}">
+                                        已结束
+                                    </c:when>
+                                </c:choose></TD>
                             <TD >
-                                <%--<a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a>--%>
+                                <c:out value="${vo.accreditDate}"></c:out >
+                                <br><c:if test="${not empty vo.sqdwpzld}">${vo.sqdwpzld} &nbsp;授权</c:if>
+
+                               <%-- <a href="javascript:ydxiangqing('${vo.id}')">查阅情况</a>
                                 <div style="width: 380px;z-index:1;padding-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;float:left">
                                     <a href="javascript:ydxiangqing('${vo.id}')">
                                         <c:if test="${not empty vo.a38Logs}">
@@ -122,27 +143,18 @@
                                             </c:forEach>
                                         </c:if>
                                     </a>
-                                </div>
+                                </div>--%>
                             </TD>
-                            <TD w>
-                                <fmt:formatDate value="${vo.createDate}" pattern="yyyy-MM-dd HH:mm:ss"></fmt:formatDate>
-                             </TD>
                             <TD >
                                 <c:choose>
                                     <c:when test="${vo.auditingState == 0}">
                                         待授权
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1}">
-                                        同意阅档
+                                        <a href="${path}/zzb/dzda/cyshouquan/view?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">已授权</a>
                                     </c:when>
                                     <c:when test="${vo.auditingState == 2}">
-                                        拒绝授权
-                                    </c:when>
-                                    <c:when test="${vo.auditingState == 3}">
-                                        已收回
-                                    </c:when>
-                                    <c:when test="${vo.auditingState == 4}">
-                                        已结束
+                                        <a href="${path}/zzb/dzda/cyshouquan/view?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">已拒绝</a>
                                     </c:when>
                                 </c:choose>
                             </TD>
@@ -151,11 +163,8 @@
                                     <c:when test="${vo.auditingState == 0}">
                                         <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">授权</a>|
                                     </c:when>
-                                    <c:when test="${vo.auditingState == 1}">
+                                    <c:when test="${vo.auditingState == 1 && vo.readState == 1 || vo.readState == 0}">
                                         <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>|
-                                    </c:when>
-                                    <c:when test="${vo.auditingState == 3 || vo.auditingState == 2 || vo.auditingState == 4}">
-                                        <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&zcsqbs=true&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">再次授权</a>
                                     </c:when>
                                 </c:choose>
                                 <c:if test="${vo.auditingState == 1}">删除 </c:if>
@@ -204,6 +213,28 @@
         });
 
     })();
+   function view(id) {
+       $.ajax({
+           url:"${path}/zzb/dzda/cyshouquan/view",
+           type : "post",
+           data: {"id":id},
+           headers:{
+               OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+           },
+           dataType : "html",
+           success : function(html){
+               $('#viewSqztDiv').html(html);
+
+               $('#viewSqztModal').modal({
+                   keyboard: true
+               });
+           },
+           error : function(){
+               showTip("提示","出错了请联系管理员", 1500);
+           }
+       });
+   }
+
    var ydxiangqing = function(id){
        $.ajax({
            url:"${path}/zzb/dzda/cysq/ajax/cyqkList",
@@ -324,15 +355,30 @@
         $("#userName").val("");
         $("#readContent").val("");
         $("#e01Z807Name").val("");
-        $("#auditingState").val("");
+        $("#auditingState").val("-1");
         $("#pageNum").val("");
         $("#pageSize").val("");
         document.searchForm.submit();
     }
-    $(function(){
-        $("#auditingState option[value='${auditingState}']").attr("selected",
-        true);
-    })
+   $(function(){
+       $("#auditingState option[value='${auditingState}']").attr("selected",
+           true);
+
+       $('#starttime').datepicker({
+           format : 'yyyy-mm-dd',
+           weekStart : 1,
+           autoclose : true,
+           todayBtn : 'linked',
+           language : 'zh-CN'
+       });
+       $('#endtime').datepicker({
+           format : 'yyyy-mm-dd',
+           weekStart : 1,
+           autoclose : true,
+           todayBtn : 'linked',
+           language : 'zh-CN'
+       });
+   })
    function download() {
        var userName = $("#userName").val();
        var readContent = $("#readContent").val();

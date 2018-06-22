@@ -22,8 +22,10 @@ import com.hisun.saas.sys.log.RequiresLog;
 import com.hisun.saas.zzb.dzda.a38.entity.A38;
 import com.hisun.saas.zzb.dzda.a38.service.A38Service;
 import com.hisun.saas.zzb.dzda.dacy.entity.EApplyE01Z8;
+import com.hisun.saas.zzb.dzda.dacy.entity.ECysq;
 import com.hisun.saas.zzb.dzda.dacy.entity.EPopedomE01Z1Relation;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
+import com.hisun.saas.zzb.dzda.dacy.service.ECysqService;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
@@ -279,6 +281,9 @@ public class EImagesController extends BaseController {
         return map;
     }
 
+    @Resource
+    private ECysqService eCysqService;
+
     @RequestMapping("/ajax/typeAndE01z1Tree/{a38Id}")
     public
     @ResponseBody
@@ -288,10 +293,13 @@ public class EImagesController extends BaseController {
             boolean isFilter = false;
             List<EPopedomE01Z1Relation> popedomE01Z1Relations = null;
             if(eApplyE01Z8Id!=null && !eApplyE01Z8Id.equals("")){
-                EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
-                if(entity.getPopedomStuffType().equals("1")){
+                CommonConditionQuery query = new CommonConditionQuery();
+                query.add(CommonRestrictions.and("applyE01Z8.id = :applyE01Z8 ", "applyE01Z8", eApplyE01Z8Id));
+                ECysq eCysq = eCysqService.list(query,null).get(0);
+               // EApplyE01Z8 entity = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
+                if(eCysq.getSqclfw().equals("1")){
                     isFilter = true;
-                    popedomE01Z1Relations = entity.getPopedomE01Z1Relations();
+                    popedomE01Z1Relations = eCysq.getPopedomE01Z1Relations();
                 }
             }
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();

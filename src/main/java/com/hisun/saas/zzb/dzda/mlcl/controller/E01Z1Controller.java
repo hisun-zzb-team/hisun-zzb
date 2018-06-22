@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -831,5 +832,85 @@ public class E01Z1Controller extends BaseController {
         map.put("datas",this.wrongExcelColumns);
         return new ModelAndView("saas/zzb/dzda/a32/wrongList",map);
     }
+
+    /**
+     * 申请查阅 部分授权使用
+     * @param a38Id
+     * @return
+     * @throws GenericException
+     */
+
+    @RequestMapping("/ajax/tree/{a38Id}")
+    public
+    @ResponseBody
+    Map<String, Object> tree(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
+
+            CommonConditionQuery query = new CommonConditionQuery();
+            CommonOrderBy orderBy = new CommonOrderBy();
+            orderBy.add(CommonOrder.asc("sort"));
+            List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+            A38 a38 = a38Service.getByPK(a38Id);
+            CommonConditionQuery query1 = new CommonConditionQuery();
+            query1.add(CommonRestrictions.and("a38.id=:a38Id", "a38Id", a38Id));
+            CommonOrderBy orderBy1 = new CommonOrderBy();
+            orderBy1.add(CommonOrder.asc("e01z104"));
+            List<E01Z1> e01Z1s = e01Z1Service.list(query1, orderBy1);
+            List<MlclTreeNode> treeNodes = new ArrayList<MlclTreeNode>();
+            MlclTreeNode treeNode = new MlclTreeNode();
+            treeNode.setId(a38.getId());
+            treeNode.setName(a38.getA0101());
+            treeNode.setNodeType("a38");
+            treeNode.setOpen(true);
+            treeNodes.add(treeNode);
+            MlclTreeNode childTreeNode = null;
+            for (ECatalogTypeInfo eCatalogTypeInfo : eCatalogTypeInfos) {
+                childTreeNode = new MlclTreeNode();
+                childTreeNode.setId(eCatalogTypeInfo.getId());
+                childTreeNode.setName(eCatalogTypeInfo.getCatalogCode() + "." + eCatalogTypeInfo.getCatalogValue());
+                childTreeNode.setKey(eCatalogTypeInfo.getCatalogCode());
+                childTreeNode.setOpen(true);
+                childTreeNode.setNodeType("dir");
+                if (eCatalogTypeInfo.getParent() == null) {
+                    childTreeNode.setpId(a38.getId());
+                } else {
+                    childTreeNode.setpId(eCatalogTypeInfo.getParent().getId());
+                }
+                treeNodes.add(childTreeNode);
+            }
+            for (E01Z1 e01Z1 : e01Z1s) {
+                String text = e01Z1.getE01Z111();
+                String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
+                int imagesCount = e01Z1.getE01Z114()==null?0:e01Z1.getE01Z114();
+                String title = e01Z1.getE01Z111();
+
+                if (!e01z117.equals("")) {
+                    text = text + "," + e01z117;
+                    title = title + " 制成时间：" + e01z117;
+                }
+                if (imagesCount != 0) {
+                    text = text + "," + imagesCount;
+                    title = title + " 材料页数：" + imagesCount;
+                }
+                childTreeNode = new MlclTreeNode();
+                childTreeNode.setId(e01Z1.getId());
+                childTreeNode.setName(text);
+                childTreeNode.setDescription(title);
+                childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                childTreeNode.setNodeType("cl");
+                treeNodes.add(childTreeNode);
+            }
+            map.put("success", true);
+            map.put("data", treeNodes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e, e);
+            map.put("success", false);
+        }
+        return map;
+    }
+
 
 }

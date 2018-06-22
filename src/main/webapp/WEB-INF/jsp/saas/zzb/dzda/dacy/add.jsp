@@ -34,8 +34,26 @@
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="" id="id">
                         <input type="hidden" name="filePath" value="" id="filePath">
+                        <div class="control-group" id="applyUserNameGroup">
+
+                            <label class="control-label"><span class="required">*</span>申请人</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${sqr}" readonly
+                                       id="applyUserName" name="applyUserName" >
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="e01Z807NameGroup">
+
+                            <label class="control-label"><span class="required">*</span>查阅人</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${sqr}" required
+                                       id="e01Z807Name" name="e01Z807Name" >
+                            </div>
+                        </div>
+
                         <div class="control-group" id="a0101Group">
-                            <label class="control-label">查阅何人档案<span class="required">*</span></label>
+                            <label class="control-label"><span class="required">*</span>申请查阅档案姓名</label>
                             <div class="controls">
                                 <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="" required/>
                                 <%--<a href="javascript:queryUser()">添加</a>--%>
@@ -50,7 +68,7 @@
                         <%--</div>--%>
 
                         <div id="sqcydazwGroup" class="control-group">
-                            <label class="control-label">单位职务</label>
+                            <label class="control-label">申请查阅档案职务</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value=""
                                        id="sqcydazw" name="sqcydazw" >
@@ -69,7 +87,7 @@
                         </div>
                         <div class="control-group" id="e01Z824AGroup">
 
-                            <label class="control-label">查阅单位</label>
+                            <label class="control-label">查阅人单位</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value=""
                                        id="e01Z824A" name="e01Z824A" >
@@ -77,7 +95,7 @@
                         </div>
                         <div class="control-group" id="readTimeGroup">
 
-                            <label class="control-label"><span class="required">*</span>查阅时间</label>
+                            <label class="control-label"><span class="required">*</span>申请查阅时长</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="120"
                                        id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
@@ -85,20 +103,20 @@
                         </div>
                         <div class="control-group" id="phoneGroup">
 
-                            <label class="control-label">联系电话</label>
+                            <label class="control-label">查阅人联系电话</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value=""
                                        id="phone" name="phone" number="true">
                             </div>
                         </div>
                         <div id="applyRemarkGroup" class="control-group">
-                            <label class="control-label">备注</label>
+                            <label class="control-label">申请备注</label>
                             <div class="controls">
                                 <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" style="resize: none;"></textarea>
                             </div>
                         </div>
                         <div  id="clFileGroup" class="control-group">
-                            <label id="clFilelb" class="control-label">上传材料</label>
+                            <label id="clFilelb" class="control-label">材料附件</label>
                             <div class="controls">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
                                     <div class="input-append">
@@ -109,9 +127,9 @@
 													<span class="btn btn-file border_radius_none">
 													<span class="fileupload-new ">选择文件</span>
 													<span class="fileupload-exists">修改文件</span>
-													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20" fileType="doc,docx,DOC,DOCX"/>
+													<input type="file" class="default " name="clFile" id="clFile" onchange="setName(this)" fileSizeLimit="20"/>
 													</span>
-                                        <p class="textprompt">附件支持的格式有：'doc','docx'</p>
+                                        <p class="textprompt"></p>
                                         <p class="Errorred" id="attachFileError"></p>
                                         <a href="#" class="btn fileupload-exists border_radius_none" data-dismiss="fileupload">移除</a>
                                     </div>
@@ -123,12 +141,14 @@
                                 <p class="Errorred" id="attachFileError"></p>
                             </div>--%>
                         </div>
+
                         <div class="control-group">
-                            <div class="controls mt10">
+                            <div class="controls mt10" style="margin-left: 300px">
                                 <button class="btn green" type="button" style="padding:7px 20px;" onclick="formSubmit()">确定</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
                             </div>
                         </div>
+
                     </form>
                 </div>
 
@@ -174,7 +194,7 @@
 //                        var value = $("#a0101").val("");
 //                        view.show();
                     }else {
-                        showTip("提示","不存“"+$("#a0101").val()+"”在此档案",1500);
+                        showTip("提示","不存在"+$("#a0101").val()+"”在此档案",1500);
                         return false;
                     }
 
@@ -230,14 +250,13 @@
                         }
                         var fileInput = document.getElementById("clFile");
                         if (fileInput.files.length > 0) {
-                            var name = fileInput.files[0].name
+                           /* var name = fileInput.files[0].name
                             var arr = name.split(".");
                             if (arr.length < 2 || !(arr[arr.length - 1] == "doc" || arr[arr.length - 1] == "docx" || arr[arr.length - 1] == "DOC" || arr[arr.length - 1] == "DOCX")) {
                                 showTip("提示", "请上传word文件", 2000);
                                 return;
-                            }
+                            }*/
                         }
-                        //myLoading.show();
                         $("#form1").ajaxSubmit({
                             url : "${path }/zzb/dzda/cysq/save",
                             type : "post",
@@ -247,7 +266,6 @@
                                 "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
                             },
                             success : function(data){
-                                // myLoading.hide();
                                 if(data.success){
                                     window.location.href ="${path }/zzb/dzda/cysq/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                                 }else{
@@ -255,7 +273,6 @@
                                 }
                             },
                             error : function(arg1, arg2, arg3){
-                                //myLoading.hide();
                                 showTip("提示","出错了请联系管理员");
                             }
                         });

@@ -175,7 +175,7 @@ public class A01Controller extends BaseController {
             entity.setaJrshzwqk(vo.getJrshzwqk());
             entity.setaDxdbqk(vo.getDxdbqk());
             entity.setaKycgqk(vo.getKycgqk());
-            entity.setaZcqk(vo.getaZcqk());
+            entity.setaZcqk(vo.getZcqk());
             a01Service.update(entity);
             map.put("code", 1);
         } catch (Exception e) {
@@ -211,7 +211,7 @@ public class A01Controller extends BaseController {
             vo.setKycgqk(a01.getaKycgqk());
             vo.setJrshzwqk(a01.getaJrshzwqk());
             vo.setDxdbqk(a01.getaDxdbqk());
-            vo.setaZcqk(a01.getaZcqk());
+            vo.setZcqk(a01.getaZcqk());
             map.put("vo", vo);
             map.put("success", true);
         } catch (Exception e) {

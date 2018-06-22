@@ -34,10 +34,28 @@ public class EApplyE01Z8Vo implements Serializable{
     private String isDownload;//是否能下载图片 1表示能下载 0表示不能下载
     private String sqdwpzld;//申请单位批准领导
     private String a38Id;
-    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限
+    private String auditingState;//申请状态。0：待授权；1：已授权；2：已拒绝
+    private String readState;//查阅状态。0：未查阅；1：正在查阅，2已收回，3已结束
     private String e01z1IdContent;//部分授权id集合
     private String content;//查阅情况
     private String sqsj;//申请查阅时间
+    private String accreditDate;//授权时间
+
+    public String getAccreditDate() {
+        return accreditDate;
+    }
+
+    public void setAccreditDate(String accreditDate) {
+        this.accreditDate = accreditDate;
+    }
+
+    public String getReadState() {
+        return readState;
+    }
+
+    public void setReadState(String readState) {
+        this.readState = readState;
+    }
 
     public String getSqsj() {
         return sqsj;

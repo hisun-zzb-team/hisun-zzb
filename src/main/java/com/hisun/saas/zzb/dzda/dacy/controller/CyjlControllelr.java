@@ -89,6 +89,7 @@ public class CyjlControllelr extends BaseController {
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
+        query.add(CommonRestrictions.and("(applyE01Z8 is not null or applyE01Z8.id <>'') and 1=:applyE01Z8", "applyE01Z8", 1));
         this.buildParam(query,starttime,endtime,cyrName,a0101);
         Long total = eA38LogService.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();

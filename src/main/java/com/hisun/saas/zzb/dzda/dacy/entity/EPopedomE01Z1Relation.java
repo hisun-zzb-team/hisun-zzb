@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Table(name = "e_popedom_e01z1_relation")
 public class EPopedomE01Z1Relation implements Serializable{
     private String id;
-    private EApplyE01Z8 applyE01Z8;
+    private ECysq eCysq;
     private String e01z1Id;
 
     @Id
@@ -34,16 +34,16 @@ public class EPopedomE01Z1Relation implements Serializable{
     public void setId(String id) {
         this.id = id;
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "apply_e01z8_id")
-    public EApplyE01Z8 getApplyE01Z8() {
-        return applyE01Z8;
+    @JoinColumn(name = "cysq_id")
+    public ECysq geteCysq() {
+        return eCysq;
     }
 
-    public void setApplyE01Z8(EApplyE01Z8 applyE01Z8) {
-        this.applyE01Z8 = applyE01Z8;
+    public void seteCysq(ECysq eCysq) {
+        this.eCysq = eCysq;
     }
-
     @Basic
     @Column(name = "e01z1_id", nullable = true, length = 32)
     public String getE01z1Id() {

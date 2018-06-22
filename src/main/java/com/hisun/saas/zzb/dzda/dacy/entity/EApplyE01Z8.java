@@ -39,9 +39,9 @@ import java.util.List;
     private String readDate;//开始查阅时间
     private String accreditDate;//授权查阅时间
     private String endReadDate;//结束查阅时间
-    private String auditingState;//审核状态。0：待审；1：已审；2：拒绝授权 3:收回权限 4:结束阅档
+    private String auditingState;//申请状态。0：待授权；1：已授权；2：已拒绝
     private String refuseReason;//拒绝原因
-    private String readState;//查阅状态。0：未查阅；1：已查阅。审核通过后提醒用户查阅档案，查阅后即不再提醒
+    private String readState;//查阅状态。0：未查阅；1：正在查阅，2已收回，3已结束
     private String accreditType;//授权类型。0：申请查阅授权；1：管理员主动授权查看记录
     private String popedomStuffType;//授权材料范围类型。0：授权所有档案材料；1：授权指定的档案材料
     private String applyRemark;//申请备注。申请阅档时由申请用户填写
@@ -62,7 +62,7 @@ import java.util.List;
     private String applyUserId;//申请查阅人id
     private String applyUserName;//申请查阅人名字
     private List<EA38Log> a38Logs;//
-    private List<EPopedomE01Z1Relation> popedomE01Z1Relations;
+
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
@@ -103,15 +103,7 @@ import java.util.List;
     public void setA38Logs(List<EA38Log> a38Logs) {
         this.a38Logs = a38Logs;
     }
-    @OneToMany(mappedBy = "applyE01Z8", fetch = FetchType.LAZY)
-    @Cascade({org.hibernate.annotations.CascadeType.ALL})
-    public List<EPopedomE01Z1Relation> getPopedomE01Z1Relations() {
-        return popedomE01Z1Relations;
-    }
 
-    public void setPopedomE01Z1Relations(List<EPopedomE01Z1Relation> popedomE01Z1Relations) {
-        this.popedomE01Z1Relations = popedomE01Z1Relations;
-    }
 
     @Basic
     @Column(name = "a0101", nullable = true, length = 16)

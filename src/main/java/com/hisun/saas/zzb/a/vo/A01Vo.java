@@ -308,7 +308,7 @@ public class A01Vo {
     private String kycgqk;
 
     /** 职称情况 */
-    private String aZcqk;
+    private String zcqk;
 
     /* */
     //private List<A02Vo> a02Vos;
@@ -1098,11 +1098,11 @@ public class A01Vo {
         this.kycgqk = kycgqk;
     }
 
-    public String getaZcqk() {
-        return aZcqk;
+    public String getZcqk() {
+        return zcqk;
     }
 
-    public void setaZcqk(String aZcqk) {
-        this.aZcqk = aZcqk;
+    public void setZcqk(String zcqk) {
+        this.zcqk = zcqk;
     }
 }

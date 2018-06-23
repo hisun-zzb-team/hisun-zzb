@@ -73,7 +73,7 @@
                             <input type="hidden" name="OWASP_CSRFTOKEN" value="${sessionScope.OWASP_CSRFTOKEN}"/>
                             <input type="hidden" name="pageNum" value="${pager.pageNum }" id="pageNum">
                             <input type="hidden" name="pageSize" value="${pager.pageSize }" id="pageSize">
-                            申请查阅档案姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
+                            查阅档案对象姓名：<input type="text" class="m-wrap" name="userName" id="userName" value="${userName}" style="width: 80px;" />
                             申请时间：
                             <input type="text" class="span12" style="width: 100px;" value='${starttime}' name="starttime" id="starttime" readonly/>
                             到：
@@ -98,9 +98,9 @@
                         <th width=70>申请人</th>
                         <th width=70>查阅人</th>
                         <th width="120">申请时间</th>
-                        <th width=100>申请查阅档案姓名</th>
-                        <th width=150>申请查阅档案职务</th>
-                        <th width=100>查阅申请内容</th>
+                        <th width=100>查阅档案对象姓名</th>
+                        <th width=150>查阅档案对象单位及职务</th>
+                        <th width=100>查阅档案内容</th>
                         <th width=100>查阅状态</th>
                         <th width=150>授权信息</th>
                         <th width=50>授权状态</th>
@@ -167,8 +167,7 @@
                                         <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>|
                                     </c:when>
                                 </c:choose>
-                                <c:if test="${vo.auditingState == 1}">删除 </c:if>
-                                <c:if test="${vo.auditingState != 1}"><a href="javascript:deleteSq('${vo.id}')">删除 </a></c:if>
+                                <a href="javascript:deleteSq('${vo.id}')">删除 </a>
                             </TD>
                         </tr>
                     </c:forEach>

@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 <div id="sqztGroup" class="control-group">
-                    <label class="control-label">同意授权</label>
+                    <label class="control-label">同意申请</label>
                     <div class="controls">
                         <label class="radio">
                             <input type="radio" name="sqzt" value="1" <c:if test="${vo.sqzt==1}">checked</c:if>/>
@@ -71,21 +71,22 @@
                 </div>
                 <div id="tysqId" <c:if test="${vo.sqzt==2}">style="display: none" </c:if>>
                     <div id="sqclfwGroup" class="control-group">
-                        <label class="control-label">部分授权</label>
+                        <label class="control-label">授权查阅档案内容</label>
                         <div class="controls">
                             <label class="radio">
-                                <input type="radio" name="sqclfw" value="1" <c:if test="${vo.sqclfw==1}">checked</c:if>/>
-                                是
+                                <input type="radio" name="sqclfw" value="0" <c:if test="${vo.sqclfw==0}">checked</c:if>/>
+                                全部
                             </label>
                             <label class="radio">
-                                <input type="radio" name="sqclfw" value="0" <c:if test="${vo.sqclfw==0}">checked</c:if>/>
-                                否
+                                <input type="radio" name="sqclfw" value="1" <c:if test="${vo.sqclfw==1}">checked</c:if>/>
+                                部分
                             </label>
+
                         </div>
                     </div>
 
                     <div id="sqcymlIdsGroup" class="control-group"  <c:if test="${vo.sqclfw==0}">style="display: none" </c:if>>
-                        <label class="control-label">授权查看目录</label>
+                        <label class="control-label">指定查阅目录</label>
                         <div class="controls"> <%--${path}/zzb/dzda/mlcl/tpcl/ajax/tree/${a38Id}--%>
                             <input type="text" class="span8 m-wrap" value="${vo.sqcyml}" readonly
                                             />
@@ -120,7 +121,7 @@
                     </div>
                 </div>
                 <div id="sqbzGroup" class="control-group">
-                    <label class="control-label">授权备注</label>
+                    <label class="control-label">主管科室意见</label>
                     <div class="controls">
                         <textarea class="span8 m-wrap" name="sqbz" maxlength="128" id="sqbz" readonly
                                   style="resize: none;">${vo.sqbz}</textarea>

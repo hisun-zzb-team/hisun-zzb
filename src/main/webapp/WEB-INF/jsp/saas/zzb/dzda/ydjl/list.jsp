@@ -76,7 +76,7 @@
                                 <input type="text" class="span12" style="width: 100px;" value='${starttime}' name="starttime" id="starttime" readonly/>
                             到：
                                 <input type="text" class="span12" style="width: 100px;" value='${endtime}' name="endtime" id="endtime" readonly/>
-                             查阅档案姓名：<input type="text" class="m-wrap" name="a0101" id="a0101" value="${a0101}" style="width: 80px;" />
+                              查阅档案对象姓名：<input type="text" class="m-wrap" name="a0101" id="a0101" value="${a0101}" style="width: 80px;" />
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -91,7 +91,7 @@
                             <th width=90>申请人</th>
                             <th width=90 >查阅人</th>
                             <th width=150>申请时间</th>
-                            <th width=90>查阅档案姓名</th>
+                            <th width=90>查阅档案对象姓名</th>
                             <th  width=150>查阅开始时间</th>
                             <th width=100>查阅总时长</th>
                             <th>查阅情况</th>
@@ -112,7 +112,6 @@
                                     <c:out value="${vo1.e01Z111}"></c:out>;
                                 </c:forEach></a>
                             </div>
-
                             </TD>
                         </tr>
                     </c:forEach>

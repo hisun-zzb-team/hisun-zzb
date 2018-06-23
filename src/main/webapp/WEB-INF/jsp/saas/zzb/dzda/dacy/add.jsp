@@ -52,8 +52,26 @@
                             </div>
                         </div>
 
+                        <div class="control-group" id="e01Z824AGroup">
+
+                            <label class="control-label">查阅人单位及职位</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                       id="e01Z824A" name="e01Z824A" >
+                            </div>
+                        </div>
+
+                        <div class="control-group" id="phoneGroup">
+
+                            <label class="control-label">查阅人联系电话</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value=""
+                                       id="phone" name="phone" number="true">
+                            </div>
+                        </div>
+
                         <div class="control-group" id="a0101Group">
-                            <label class="control-label"><span class="required">*</span>申请查阅档案姓名</label>
+                            <label class="control-label"><span class="required">*</span>查阅档案对象姓名</label>
                             <div class="controls">
                                 <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="" required/>
                                 <%--<a href="javascript:queryUser()">添加</a>--%>
@@ -68,7 +86,7 @@
                         <%--</div>--%>
 
                         <div id="sqcydazwGroup" class="control-group">
-                            <label class="control-label">申请查阅档案职务</label>
+                            <label class="control-label">查阅档案对象单位及职务</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value=""
                                        id="sqcydazw" name="sqcydazw" >
@@ -77,22 +95,21 @@
                             </div>
 
                         </div>
+                        <div id="applyRemarkGroup" class="control-group">
+                            <label class="control-label">查阅档案原因</label>
+                            <div class="controls">
+                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" style="resize: none;"></textarea>
+                            </div>
+                        </div>
                         <div id="readContentGroup" class="control-group">
-                            <label class="control-label">查阅内容</label>
+                            <label class="control-label">查阅档案内容</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="全部材料"
                                        id="readContent" name="readContent" >
                             </div>
 
                         </div>
-                        <div class="control-group" id="e01Z824AGroup">
 
-                            <label class="control-label">查阅人单位</label>
-                            <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
-                                       id="e01Z824A" name="e01Z824A" >
-                            </div>
-                        </div>
                         <div class="control-group" id="readTimeGroup">
 
                             <label class="control-label"><span class="required">*</span>申请查阅时长</label>
@@ -101,20 +118,7 @@
                                        id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
-                        <div class="control-group" id="phoneGroup">
 
-                            <label class="control-label">查阅人联系电话</label>
-                            <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value=""
-                                       id="phone" name="phone" number="true">
-                            </div>
-                        </div>
-                        <div id="applyRemarkGroup" class="control-group">
-                            <label class="control-label">申请备注</label>
-                            <div class="controls">
-                                <textarea class="span10" style="" rows="2" name="applyRemark" maxlength="400" id="applyRemark" style="resize: none;"></textarea>
-                            </div>
-                        </div>
                         <div  id="clFileGroup" class="control-group">
                             <label id="clFilelb" class="control-label">材料附件</label>
                             <div class="controls">
@@ -163,10 +167,6 @@
 <script type="text/javascript">
     function queryUser(){
         var value = $("#a0101").val();
-        if(value == "" || value == null){
-            showTip("提示","请输入查阅人信息",1000);
-            return false;
-        }else {
             $.ajax({
                 url : "${path }/zzb/dzda/cysq/ajax/getDaxx",
                 type : "get",
@@ -203,7 +203,6 @@
                     showTip("提示","加载失败");
                 }
             });
-        }
     }
 
  /*   var myLoading = new MyLoading("${path}",20000);
@@ -231,7 +230,7 @@
         var a0101 = $("#a0101").val();
         var a0101Content = $("#a0101Content").val();
         if(a0101 == "" || a0101 == null){
-            showTip("提示","请输入查阅人信息",1000);
+            showTip("提示","请输入查阅档案对象信息",1000);
             return false;
         }else {
             $.ajax({

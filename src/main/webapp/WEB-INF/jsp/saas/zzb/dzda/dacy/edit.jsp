@@ -54,45 +54,12 @@
                                        id="e01Z807Name" name="e01Z807Name" >
                             </div>
                         </div>
-                        <div class="control-group" id="a0101Group">
-                            <label class="control-label"><span class="required">*</span>申请查阅档案姓名</label>
-                            <div class="controls">
-                                <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="${entity.a0101}" />
-                                <%--<a href="javascript:queryUser()">添加</a>--%>
-                            </div>
-                        </div>
-                        <div id="sqcydazwGroup" class="control-group">
-                            <label class="control-label">单位职务</label>
-                            <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.sqcydazw}"
-                                       id="sqcydazw" name="sqcydazw" >
-
-                                <!--<input type="text" class="span10 m-wrap"  name="pcsj" formatter="yyyymmdd"   maxlength="8" id="pcsj" type="date"/>-->
-                            </div>
-
-                        </div>
-                        <div id="readContentGroup" class="control-group">
-                            <label class="control-label">申请查阅档案职务</label>
-                            <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readContent}"
-                                       id="readContent" name="readContent" >
-                            </div>
-
-                        </div>
                         <div class="control-group" id="e01Z824AGroup">
 
-                            <label class="control-label">查阅人单位</label>
+                            <label class="control-label">查阅人单位及职位</label>
                             <div class="controls">
                                 <input size="16" type="text"  class="span10 m-wrap" value="${entity.e01Z824A}"
                                        id="e01Z824A" name="e01Z824A" >
-                            </div>
-                        </div>
-                        <div class="control-group" id="readTimeGroup">
-
-                            <label class="control-label"><span class="required">*</span>申请查阅时长</label>
-                            <div class="controls">
-                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
-                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
                             </div>
                         </div>
                         <div class="control-group" id="phoneGroup">
@@ -103,12 +70,49 @@
                                        id="phone" name="phone" number="true">
                             </div>
                         </div>
+                        <div class="control-group" id="a0101Group">
+                            <label class="control-label"><span class="required">*</span>查阅档案对象姓名</label>
+                            <div class="controls">
+                                <input type="text" class="span10 m-wrap" name="a0101"  maxlength="200" id="a0101" value="${entity.a0101}" />
+                                <%--<a href="javascript:queryUser()">添加</a>--%>
+                            </div>
+                        </div>
+                        <div id="sqcydazwGroup" class="control-group">
+                            <label class="control-label">查阅档案对象单位及职务</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.sqcydazw}"
+                                       id="sqcydazw" name="sqcydazw" >
+
+                                <!--<input type="text" class="span10 m-wrap"  name="pcsj" formatter="yyyymmdd"   maxlength="8" id="pcsj" type="date"/>-->
+                            </div>
+
+                        </div>
+
                         <div id="applyRemarkGroup" class="control-group" >
-                            <label class="control-label">申请备注</label>
+                            <label class="control-label">查阅档案原因</label>
                             <div class="controls">
                                 <textarea class="span10" rows="2" name="applyRemark" maxlength="400" id="applyRemark" value="${entity.applyRemark}" style="resize: none;">${entity.applyRemark}</textarea>
                             </div>
                         </div>
+                        <div id="readContentGroup" class="control-group">
+                            <label class="control-label">查阅档案内容</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readContent}"
+                                       id="readContent" name="readContent" >
+                            </div>
+
+                        </div>
+
+                        <div class="control-group" id="readTimeGroup">
+
+                            <label class="control-label"><span class="required">*</span>申请查阅时长</label>
+                            <div class="controls">
+                                <input size="16" type="text"  class="span10 m-wrap" value="${entity.readTime}"
+                                       id="readTime" name="readTime"  number="true"  required  maxlength="5">分钟
+                            </div>
+                        </div>
+
+
                         <div class="control-group" id="applyFileNameGroup">
                             <label class="control-label">&nbsp;&nbsp;&nbsp;</label>
                             <div class="controls">

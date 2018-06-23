@@ -354,6 +354,11 @@ public class EApplyE01Z8Controller extends BaseController {
     Map<String, Object> deleteSq(@PathVariable("id") String id) throws GenericException {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         try {
+            CommonConditionQuery query = new CommonConditionQuery();
+            query.add(CommonRestrictions.and("applyE01Z8.id = :applyE01Z8 ", "applyE01Z8",id));
+            List<ECysq> list = eCysqService.list(query,null);
+            ECysq eCysq = list.get(0);
+            eCysqService.deleteByPK(eCysq.getId());
             eApplyE01Z8Service.deleteByPK(id);
             returnMap.put("code", 1);
         } catch (Exception e) {

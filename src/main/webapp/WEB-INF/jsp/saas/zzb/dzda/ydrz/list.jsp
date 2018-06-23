@@ -76,11 +76,11 @@
                                 <input type="text" class="span12" style="width: 100px;" value='${starttime}' name="starttime" id="starttime" readonly/>
                             到：
                                 <input type="text" class="span12" style="width: 100px;" value='${endtime}' name="endtime" id="endtime" readonly/>
-                             查阅档案姓名：<input type="text" class="m-wrap" name="a0101" id="a0101" value="${a0101}" style="width: 80px;" />
+                              查阅档案对象姓名：<input type="text" class="m-wrap" name="a0101" id="a0101" value="${a0101}" style="width: 80px;" />
                               阅档类型：<select class="select_form" tabindex="-1" name="ydlx" id="ydlx" style="width: 100px; margin-bottom: 0px;" >
                               <option value="" >全部</option>
                               <option value="0" >申请阅档</option>
-                              <option value="1" >其他阅档</option>
+                              <option value="1" >普通查阅</option>
                           </select>
                               <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
@@ -94,7 +94,7 @@
                     <thead>
                         <TR height=28>
                             <th width=90 >查阅人</th>
-                            <th width=90>查阅档案姓名</th>
+                            <th width=90>查阅档案对象姓名</th>
                             <th  width=150>查阅开始时间</th>
                             <th width=100>查阅总时长</th>
                             <th width=200>查阅情况</th>
@@ -115,7 +115,7 @@
                                 </c:forEach></a>
                             </div>
                             <TD ><c:if test="${not empty vo.applyE01Z8}">申请查阅</c:if>
-                            <c:if test="${empty vo.applyE01Z8}">其他查阅</c:if></TD>
+                            <c:if test="${empty vo.applyE01Z8}">普通查阅</c:if></TD>
                             </TD>
                         </tr>
                     </c:forEach>

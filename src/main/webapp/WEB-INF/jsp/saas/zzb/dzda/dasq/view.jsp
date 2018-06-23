@@ -36,6 +36,23 @@
                 </div>
             </div>
 
+            <div class="control-group" id="e01Z824AGroup">
+
+                <label class="control-label">查阅人单位及职位</label>
+                <div class="controls">
+                    <input size="16" type="text"  class="span8 m-wrap" value="${vo.eApplyE01Z8Vo.e01Z824A}" readonly
+                           id="e01Z824A" name="e01Z824A" >
+                </div>
+            </div>
+
+            <div id="phoneGroup" class="control-group">
+                <label class="control-label">查阅人联系电话</label>
+                <div class="controls">
+                    <input type="text" class="span8 m-wrap" name="phone" maxlength="128" id="phone" readonly
+                           value="${vo.eApplyE01Z8Vo.phone }"/>
+                </div>
+            </div>
+
             <div id="createDateGroup" class="control-group">
                 <label class="control-label">申请时间</label>
                 <div class="controls">
@@ -45,7 +62,7 @@
             </div>
 
             <div id="a0101Group" class="control-group">
-                <label class="control-label"><span class="required">*</span>申请查阅档案姓名</label>
+                <label class="control-label"><span class="required">*</span>查阅档案对象姓名</label>
                 <div class="controls">
                     <input type="text" class="span8 m-wrap" required name="a0101" maxlength="128" id="a0101"
                            value="${vo.eApplyE01Z8Vo.a0101 }" readonly/>
@@ -53,7 +70,7 @@
             </div>
 
             <div id="sqcydazwGroup" class="control-group">
-                <label class="control-label">申请查阅档案职务</label>
+                <label class="control-label">查阅档案对象单位及职务</label>
                 <div class="controls">
                     <input type="text" class="span8 m-wrap" name="sqcydazw" readonly maxlength="128" id="sqcydazw"
                            value="${vo.eApplyE01Z8Vo.sqcydazw }"/>
@@ -61,7 +78,7 @@
             </div>
 
             <div id="readContentGroup" class="control-group">
-                <label class="control-label">申请查阅内容</label>
+                <label class="control-label">查阅档案内容</label>
                 <div class="controls">
                     <input type="text" class="span8 m-wrap" name="readContent" maxlength="128" id="readContent" readonly
                            value="${vo.eApplyE01Z8Vo.readContent }"/>
@@ -76,16 +93,9 @@
                 </div>
             </div>
 
-            <div id="phoneGroup" class="control-group">
-                <label class="control-label">查阅人联系电话</label>
-                <div class="controls">
-                    <input type="text" class="span8 m-wrap" name="phone" maxlength="128" id="phone" readonly
-                           value="${vo.eApplyE01Z8Vo.phone }"/>
-                </div>
-            </div>
 
             <div id="applyRemarkGroup" class="control-group">
-                <label class="control-label">申请备注</label>
+                <label class="control-label">查阅档案原因</label>
                 <div class="controls">
                         <textarea class="span8 m-wrap" name="applyRemark" maxlength="128" id="applyRemark" readonly
                                   style="resize: none;">${vo.eApplyE01Z8Vo.applyRemark }</textarea>
@@ -112,7 +122,7 @@
                 </div>
             </div>
             <div id="sqztGroup" class="control-group">
-                <label class="control-label">同意授权</label>
+                <label class="control-label">同意申请</label>
                 <div class="controls">
                     <label class="radio">
                         <input type="radio" name="sqzt" value="1" <c:if test="${vo.sqzt==1}"> checked</c:if>/>
@@ -126,21 +136,21 @@
             </div>
             <div id="tysqId" <c:if test="${vo.sqzt==2}">style="display: none" </c:if>>
                 <div id="sqclfwGroup" class="control-group">
-                    <label class="control-label">部分授权</label>
+                    <label class="control-label">授权查阅档案内容</label>
                     <div class="controls">
                         <label class="radio">
-                            <input type="radio" name="sqclfw" value="1" <c:if test="${vo.sqclfw==1}">checked</c:if>/>
-                            是
+                            <input type="radio" name="sqclfw" value="0" <c:if test="${vo.sqclfw==0}">checked</c:if>/>
+                            全部
                         </label>
                         <label class="radio">
-                            <input type="radio" name="sqclfw" value="0" <c:if test="${vo.sqclfw==0}">checked</c:if>/>
-                            否
+                            <input type="radio" name="sqclfw" value="1" <c:if test="${vo.sqclfw==1}">checked</c:if>/>
+                            部分
                         </label>
                     </div>
                 </div>
 
                 <div id="sqcymlIdsGroup" class="control-group"  <c:if test="${vo.sqclfw==0}">style="display: none" </c:if>>
-                    <label class="control-label">授权查看目录</label>
+                    <label class="control-label">指定查阅目录</label>
                     <div class="controls"> <%--${path}/zzb/dzda/mlcl/tpcl/ajax/tree/${a38Id}--%>
                         <input type="text" class="span8 m-wrap" value="${vo.sqcyml}" readonly
                         />
@@ -192,7 +202,12 @@
 </div>
 
 <script type="text/javascript">
-
+    $(function () {
+        var applyFileName = "${entity.applyFileName }";
+        if (applyFileName == "" || applyFileName == null) {
+            $("#applyFileNameGroup").hide();
+        }
+    })
     function cancel() {
         window.location.href = "${path}/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }

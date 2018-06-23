@@ -49,8 +49,8 @@
                 <table class="table table-striped table-bordered table-hover dataTable table-set">
                     <thead>
                     <TR height=28>
-                        <th >材料名称</th>
-                        <th width=70 >材料类别</th>
+                        <th width=100>材料名称</th>
+                        <th width=150 >材料类别</th>
                         <th width=140>起始时间</th>
                         <th width=140 >结束时间</th>
                         <th  width=80>时长</th>
@@ -98,7 +98,7 @@
 
 <script type="text/javascript">
     (function(){
-        $("#viewNeiRongTitle").text("${cyrName}浏览'${a0101}'的阅档详细信息 共${pager.total}条");
+        $("#viewNeiRongTitle").text("${cyrName}查阅'${a0101}'的档案详细日志 共${pager.total}条");
     })();
     var xiangxi = function(e01Z111,id){
         $.ajax({

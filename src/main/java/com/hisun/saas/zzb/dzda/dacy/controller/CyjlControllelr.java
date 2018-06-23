@@ -95,6 +95,9 @@ public class CyjlControllelr extends BaseController {
         CommonOrderBy orderBy = new CommonOrderBy();
         orderBy.add(CommonOrder.desc("cysj"));
         List<EA38Log> resultList = eA38LogService.list(query,orderBy,pageNum,pageSize);
+        for (EA38Log ea38Log :resultList){
+            EApplyE01Z8 eApplyE01Z8 = ea38Log.getApplyE01Z8();
+        }
         PagerVo<EA38Log> pager = new PagerVo<EA38Log>(resultList, total.intValue(), pageNum, pageSize);
         model.put("pager",pager);
         model.put("starttime",starttime);

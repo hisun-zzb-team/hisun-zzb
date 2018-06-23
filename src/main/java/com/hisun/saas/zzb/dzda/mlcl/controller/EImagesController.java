@@ -26,6 +26,7 @@ import com.hisun.saas.zzb.dzda.dacy.entity.ECysq;
 import com.hisun.saas.zzb.dzda.dacy.entity.EPopedomE01Z1Relation;
 import com.hisun.saas.zzb.dzda.dacy.service.EApplyE01Z8Service;
 import com.hisun.saas.zzb.dzda.dacy.service.ECysqService;
+import com.hisun.saas.zzb.dzda.dacy.vo.EApplyE01Z8Vo;
 import com.hisun.saas.zzb.dzda.mlcl.Constants;
 import com.hisun.saas.zzb.dzda.mlcl.entity.E01Z1;
 import com.hisun.saas.zzb.dzda.mlcl.entity.EImages;
@@ -37,6 +38,7 @@ import com.hisun.saas.zzb.dzda.util.PrintImage;
 import com.hisun.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -111,6 +113,13 @@ public class EImagesController extends BaseController {
         map.put("a0101", a0101);
         map.put("isManage", isManage);
         map.put("isAddLog",isAddLog);
+        EApplyE01Z8 eApplyE01Z8 = new EApplyE01Z8();
+        if(StringUtils.isNotBlank(eApplyE01Z8Id)){
+             eApplyE01Z8 = eApplyE01Z8Service.getByPK(eApplyE01Z8Id);
+        }
+        EApplyE01Z8Vo vo = new EApplyE01Z8Vo();
+        BeanUtils.copyProperties(eApplyE01Z8,vo);
+        map.put("vo", vo);
         map.put("eApplyE01Z8Id",eApplyE01Z8Id);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImgManage",map);
     }

@@ -63,6 +63,17 @@
         $(window).resize(function () {
             changeTreeDivHeight();
         })
+        var eApplyE01Z8Id = "${eApplyE01Z8Id}";
+        if(eApplyE01Z8Id !="" && eApplyE01Z8Id!=null){
+            var isPrint = "${vo.isPrint}";
+            var isDownload = "${vo.isDownload}";
+            if(isDownload == "0"){
+                $("#xiaZaiDa").hide();
+            }
+            if(isPrint == "0"){
+                $("#daYinDa").hide();
+            }
+        }
 
         if ("${isAddLog}" != "false") {
             $.ajax({

@@ -40,6 +40,15 @@ public class EApplyE01Z8Vo implements Serializable{
     private String content;//查阅情况
     private String sqsj;//申请查阅时间
     private String accreditDate;//授权时间
+    private String isPrint;//是否能打印 0表示不打印 1表示打印
+
+    public String getIsPrint() {
+        return isPrint;
+    }
+
+    public void setIsPrint(String isPrint) {
+        this.isPrint = isPrint;
+    }
 
     public String getAccreditDate() {
         return accreditDate;

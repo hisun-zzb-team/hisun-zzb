@@ -69,7 +69,7 @@ public class ShpcServiceImpl extends BaseServiceImpl<Shpc,String> implements Shp
     @Resource
     private ShtpsjService shtpsjService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

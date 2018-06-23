@@ -147,9 +147,11 @@ public class ShpcVo extends TenantEntityVo {
     }
     public String getShZtValue(){
         if(this.shZt==0){
-            return "未上会";
+            return "未投票";
         }else if(this.shZt==1){
-            return "已上会";
+            return "投票中";
+        }else if(this.shZt==2){
+            return "投票结束";
         }
         return "";
     }

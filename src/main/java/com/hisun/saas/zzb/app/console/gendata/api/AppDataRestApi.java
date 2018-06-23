@@ -30,7 +30,7 @@ public class AppDataRestApi {
 
     @Resource
     private GendataService gendataService;
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
 

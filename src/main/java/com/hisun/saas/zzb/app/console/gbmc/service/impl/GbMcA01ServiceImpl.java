@@ -39,7 +39,7 @@ public class GbMcA01ServiceImpl extends BaseServiceImpl<GbMcA01, String> impleme
 
     private GbMcA01Dao gbMcA01Dao;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

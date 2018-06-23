@@ -53,7 +53,7 @@ public class GbmcB01Controller extends BaseController{
     @Resource
     private GbMcService gbMcService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @RequestMapping("/list")

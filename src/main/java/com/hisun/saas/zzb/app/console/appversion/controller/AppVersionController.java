@@ -55,7 +55,7 @@ public class AppVersionController extends BaseController {
     private SessionFactory sessionFactory;
 
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @RequestMapping("/")

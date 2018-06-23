@@ -53,7 +53,7 @@ public class GbMcServiceImpl extends BaseServiceImpl<GbMc,String> implements GbM
     @Resource
     private GbMcA01gzjlService gbMcA01gzjlService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

@@ -61,7 +61,7 @@ public class GbmcController extends BaseController{
     @Autowired
     private GbMcA01gbrmspbService gbMcA01gbrmspbService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @RequestMapping("/")

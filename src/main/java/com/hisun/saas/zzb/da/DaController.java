@@ -41,7 +41,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/zzb/app/console/daDemo")
 public class DaController extends BaseController{
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
     @RequestMapping(value = "/dashboard")
     public ModelAndView dashboard(){

@@ -49,7 +49,7 @@ public class Sha01gbrmspbServiceImpl extends BaseServiceImpl<Sha01gbrmspb, Strin
     @Resource
     private Sha01shgxService sha01shgxService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

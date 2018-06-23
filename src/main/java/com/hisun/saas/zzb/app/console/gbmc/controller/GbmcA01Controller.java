@@ -60,7 +60,7 @@ public class GbmcA01Controller extends BaseController{
     private GbMcB01Service gbMcB01Service;
     @Autowired
     private GbMcService gbMcService;
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     private final static String DEFAULT_IMG_HEAD_PATH = "/WEB-INF/images/defaultHeadImage.png";

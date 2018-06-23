@@ -41,7 +41,7 @@ public class AppAsetA02ServiceImpl extends BaseServiceImpl<AppAsetA02,String> im
     @Resource
     private AppBsetB01Service appBsetB01Service;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

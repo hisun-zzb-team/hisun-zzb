@@ -52,7 +52,7 @@ public class AppAsetA01ServiceImpl extends BaseServiceImpl<AppAsetA01, String> i
 
     private AppAsetA01Dao appAsetA01Dao;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

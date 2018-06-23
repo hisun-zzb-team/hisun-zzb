@@ -41,7 +41,7 @@ public class Sha01gbrmspbController extends BaseController {
     @Autowired
     private Sha01gbrmspbService sha01gbrmspbService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
 

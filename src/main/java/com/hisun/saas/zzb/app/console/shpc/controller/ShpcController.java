@@ -65,7 +65,7 @@ public class ShpcController extends BaseController {
     @Autowired
     private Sha01Service sha01Service;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
     @RequestMapping("/")
     public ModelAndView list(HttpServletRequest req, String pId,

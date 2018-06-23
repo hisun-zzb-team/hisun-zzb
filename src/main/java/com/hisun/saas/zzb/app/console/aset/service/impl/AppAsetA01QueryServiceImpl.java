@@ -50,7 +50,7 @@ public class AppAsetA01QueryServiceImpl extends BaseServiceImpl<AppAsetA01Query,
     private AppBsetFlService appBsetFlService;
 
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
     
 

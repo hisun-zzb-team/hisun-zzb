@@ -77,7 +77,7 @@ public class GendataController extends BaseController{
     private DataPacketContentService dataPacketContentService;
 
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @RequestMapping(value = "/")
@@ -304,7 +304,7 @@ public class GendataController extends BaseController{
             String packetName = request.getParameter("packetName")==null?"":request.getParameter("packetName").toString();//packetName
 
 
-            String appDataPath=resourcesProperties.getProperty("upload.absolute.path")+GendataService.DATA_PATH;
+            String appDataPath=resourcesProperties.getProperty("sys.upload.absolute.path")+GendataService.DATA_PATH;
             File appDataDir = new File(appDataPath);
             if(appDataDir.exists()==false){
                 appDataDir.mkdirs();
@@ -372,7 +372,7 @@ public class GendataController extends BaseController{
             String packetName = request.getParameter("packetName")==null?"":request.getParameter("packetName").toString();//packetName
 
 
-            String appDataPath=resourcesProperties.getProperty("upload.absolute.path")+GendataService.DATA_PATH;
+            String appDataPath=resourcesProperties.getProperty("sys.upload.absolute.path")+GendataService.DATA_PATH;
             File appDataDir = new File(appDataPath);
             if(appDataDir.exists()==false){
                 appDataDir.mkdirs();
@@ -448,7 +448,7 @@ public class GendataController extends BaseController{
         try{
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
 
-            String appDataPath=resourcesProperties.getProperty("upload.absolute.path")+GendataService.DATA_PATH;
+            String appDataPath=resourcesProperties.getProperty("sys.upload.absolute.path")+GendataService.DATA_PATH;
             File appDataDir = new File(appDataPath);
             if(appDataDir.exists()==false){
                 appDataDir.mkdirs();

@@ -48,7 +48,7 @@ public class Sha01ServiceImpl extends BaseServiceImpl<Sha01,String> implements S
 
     private Sha01Dao sha01Dao;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Autowired

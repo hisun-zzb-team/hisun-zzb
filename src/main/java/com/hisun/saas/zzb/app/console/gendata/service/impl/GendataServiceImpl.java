@@ -59,7 +59,7 @@ public class GendataServiceImpl extends BaseServiceImpl<Gendata, String> impleme
 
 
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
 

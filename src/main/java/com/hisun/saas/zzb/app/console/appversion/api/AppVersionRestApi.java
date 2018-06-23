@@ -32,7 +32,7 @@ public class AppVersionRestApi {
 
     @Resource
     private AppVersionService appVersionService;
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
 

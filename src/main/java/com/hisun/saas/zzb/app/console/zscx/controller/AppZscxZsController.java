@@ -53,7 +53,7 @@ public class AppZscxZsController extends BaseController{
     @Resource
     private AppZscxZsService appZscxZsService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
     @Resource
     private AppBsetB01Service appBsetB01Service;

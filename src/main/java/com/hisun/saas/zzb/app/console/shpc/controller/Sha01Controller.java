@@ -66,7 +66,7 @@ public class Sha01Controller extends BaseController {
     @Autowired
     private Sha01Service sha01Service;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     private final static String DEFAULT_IMG_HEAD_PATH = "/WEB-INF/images/defaultHeadImage.png";

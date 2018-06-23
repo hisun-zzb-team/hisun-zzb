@@ -75,7 +75,7 @@ public class AppAsetA01Controller extends BaseController {
     @Resource
     private AppZscxZsService appZscxZsService;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     private final static String DEFAULT_IMG_HEAD_PATH = "/WEB-INF/images/defaultHeadImage.png";

@@ -69,7 +69,7 @@ public class AppAsetA01QueryController extends BaseController {
     @Resource
     private AppAsetA01Service appAsetA01Service;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
 
     @Resource

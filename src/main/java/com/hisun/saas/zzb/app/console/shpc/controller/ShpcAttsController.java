@@ -63,7 +63,7 @@ public class ShpcAttsController extends BaseController {
     @Autowired
     private SessionFactory sessionFactory;
 
-    @Value("${upload.absolute.path}")
+    @Value("${sys.upload.absolute.path}")
     private String uploadAbsolutePath;
         /**
      * 调转到附件页面

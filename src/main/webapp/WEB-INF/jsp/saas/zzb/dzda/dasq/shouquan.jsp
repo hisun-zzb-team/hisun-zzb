@@ -364,7 +364,7 @@
         $("#a38Id").val(a38Id);
         $('#addModal').modal('hide');
         $("#sqcymlIds_tree").empty();
-        refreshTreeTagByNewUrl("sqcymlIds", "setting_sqcymlIds", "", "${path}/zzb/dzda/mlcl/tpcl/ajax/tree/" + a38Id);
+        refreshTreeTagByNewUrl("sqcymlIds", setting_sqcymlIds, "", "${path}/zzb/dzda/mlcl/tpcl/ajax/tree/" + a38Id);
     }
     var form1 = new EstValidate("form1");
     function formSubmit(status) {

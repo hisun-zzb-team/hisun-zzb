@@ -289,10 +289,14 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
                 e01z1Hql.append(" and ( e.yjztps <=0 or e.yjztps is null )");
             }
         }
-        if(StringUtils.isNotBlank(dakVo.getQqcl())){
-            if("1".equals(dakVo.getQqcl())){
-                a38Hql.append("and a38.e01z4s.id is not null");
-            }
+        if(StringUtils.isNotBlank(dakVo.getLjdwmc())){
+            a38Hql.append("and e2.e01Z204A like '%"+dakVo.getLjdwmc()+"%'");
+        }
+        if(StringUtils.isNotBlank(dakVo.getCljsrqStart()) && StringUtils.isNotBlank(dakVo.getCljsrqEnd())){
+            a38Hql.append(" and ((e2.createDate >= '" + dakVo.getCljsrqStart() + "' and e2.createDate <= '%" + dakVo.getCljsrqEnd() + "%') or e2.createDate like '%" + dakVo.getCljsrqEnd()  + "%')");
+        }
+        if(StringUtils.isNotBlank(dakVo.getE01Z237())){
+            a38Hql.append("and e2.e01Z237 = '"+dakVo.getE01Z237()+"'");
         }
 
         StringBuffer queryHql = new StringBuffer();
@@ -300,9 +304,14 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         if(e01z1Hql.length()>0){
             queryHql.append("  left join a38.e01z1s e");
         }
-
         if(a38Hql.length()>0){
-            queryHql.append("  left join a38.e01z4s e4");
+            queryHql.append("  left join a38.e01z2s e2");
+        }
+
+        if(StringUtils.isNotBlank(dakVo.getQqcl())){
+            if("1".equals(dakVo.getQqcl())) {
+                queryHql.append("  join a38.e01z4s e4");
+            }
         }
 
         queryHql.append(a38Hql);

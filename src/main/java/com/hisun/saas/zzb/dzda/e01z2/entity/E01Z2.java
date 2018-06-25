@@ -34,7 +34,7 @@ public class E01Z2 extends TenantEntity implements Serializable {
     private String e01Z227;//材料制成日期
     private String e01Z231;//备注
     private Integer e01Z234;//份数
-    private String e01Z237;//材料处理标识
+    private String e01Z237;//材料处理标识 1待归档 2待处理
     private String e01Z237Content;//材料处理标识
     private String e01Z241;//零散材料序号
     private String e01Z244;//是否已受理标识

@@ -44,6 +44,51 @@ public class DakVo {
     private String yjztps;//已加载图片数
     private String yjztpsName;//已加载图片数
     private String qqcl;//是否欠缺材料
+    private String ljdwmc;//来件单位名称
+    private String cljsrqStart;//材料接收开始日期
+    private String cljsrqEnd;//材料接收结束日期
+    private String e01Z237;//材料处理状态
+    private String e01Z237Content;//材料处理状态
+
+    public String getLjdwmc() {
+        return ljdwmc;
+    }
+
+    public void setLjdwmc(String ljdwmc) {
+        this.ljdwmc = ljdwmc;
+    }
+
+    public String getCljsrqStart() {
+        return cljsrqStart;
+    }
+
+    public void setCljsrqStart(String cljsrqStart) {
+        this.cljsrqStart = cljsrqStart;
+    }
+
+    public String getCljsrqEnd() {
+        return cljsrqEnd;
+    }
+
+    public void setCljsrqEnd(String cljsrqEnd) {
+        this.cljsrqEnd = cljsrqEnd;
+    }
+
+    public String getE01Z237() {
+        return e01Z237;
+    }
+
+    public void setE01Z237(String e01Z237) {
+        this.e01Z237 = e01Z237;
+    }
+
+    public String getE01Z237Content() {
+        return e01Z237Content;
+    }
+
+    public void setE01Z237Content(String e01Z237Content) {
+        this.e01Z237Content = e01Z237Content;
+    }
 
     public String getQqcl() {
         return qqcl;

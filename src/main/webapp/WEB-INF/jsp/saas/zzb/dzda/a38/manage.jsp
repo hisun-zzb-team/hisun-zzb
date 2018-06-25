@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%--
   ~ Copyright (c) 2018. Hunan Hisun Union Information Technology Co, Ltd. All rights reserved.
   ~ http://www.hn-hisun.com
@@ -15,20 +16,6 @@
 	<title>电子档案系统</title>
 </head>
 <body>
-<div id="gjcxModal" class="modal container hide fade" tabindex="-1" data-width="85%">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button data-dismiss="modal" class="close"  type="button"></button>
-				<h3 class="modal-title" id="gjcxTitle" >
-					高级查询条件设置
-				</h3>
-			</div>
-			<div class="modal-body" id="gjcxDiv">
-			</div>
-		</div>
-	</div>
-</div>
 
 <div id="wrongModal" class="modal container hide fade" tabindex="-1" data-width="600">
 	<div class="modal-dialog">
@@ -77,46 +64,51 @@
 <div class="portlet-title">
 	<div class="caption">姓名：${a0101}</div>
 	<div class="clearfix fr">
-		<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库 </button>
-		<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 待审 </button>
+		<c:if test="${sjztManage eq '0'}">
+			<button type="button" class="btn green" onclick="formSave('0')"><i class="icon-question-sign"></i> 保存 </button>
+			<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库 </button>
+		</c:if>
 
-		<%--<div class="btn-group" style="padding-bottom: 0px">--%>
-			<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
-			<%--干部库 <i class="icon-angle-down"></i>--%>
-			<%--</a>--%>
-			<%--<ul class="dropdown-menu">--%>
-				<%--<li >--%>
-				<%--<a onclick="viewA01()">查看干部信息</a>--%>
-				<%--</li>--%>
-				<%--<li>--%>
-				<%--<a onclick="selectTyle('kccl')">提取干部信息</a>--%>
-				<%--</li>--%>
-				<%--<li>--%>
-				<%--<a onclick="selectTyle('dascqk')">取消关联</a>--%>
-				<%--</li>--%>
-			<%--</ul>--%>
-		<%--</div>--%>
-		<a  class="btn green" href="javascript:delA38ByManage()"><i class="icon-remove"></i>删除</a>
-		<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
-		<div class="btn-group" style="padding-bottom: 0px">
-			<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
-			下载<i class="icon-angle-down"></i>
-			</a>
-			<ul class="dropdown-menu">
-				<%--<li >
-				<a onclick="fileDownManage('allDa')">整本档案下载(含图片)</a>
-				</li>--%>
-				<li >
-				<a onclick="fileDownManage('danganxiazai')">电子表格目录</a>
-				</li>
-				<li>
-				<a onclick="fileDownManage('qianquecail')">欠缺材料信息</a>
-				</li>
-				<li>
-				<a onclick="fileDownManage('dangantupianxiazai')">档案图片下载</a>
-				</li>
-			</ul>
-		</div>
+		<c:if test="${sjztManage eq '1'}">
+			<button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 保存 </button>
+			<%--<div class="btn-group" style="padding-bottom: 0px">--%>
+				<%--<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">--%>
+				<%--干部库 <i class="icon-angle-down"></i>--%>
+				<%--</a>--%>
+				<%--<ul class="dropdown-menu">--%>
+					<%--<li >--%>
+					<%--<a onclick="viewA01()">查看干部信息</a>--%>
+					<%--</li>--%>
+					<%--<li>--%>
+					<%--<a onclick="selectTyle('kccl')">提取干部信息</a>--%>
+					<%--</li>--%>
+					<%--<li>--%>
+					<%--<a onclick="selectTyle('dascqk')">取消关联</a>--%>
+					<%--</li>--%>
+				<%--</ul>--%>
+			<%--</div>--%>
+			<a  class="btn green" href="javascript:delA38ByManage()"><i class="icon-remove"></i>删除</a>
+			<%--<a  class="btn green" href="javascript:zhuanchu()"><i class="icon-share-alt"></i>转递</a>--%>
+			<div class="btn-group" style="padding-bottom: 0px">
+				<a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
+				下载<i class="icon-angle-down"></i>
+				</a>
+				<ul class="dropdown-menu">
+					<%--<li >
+					<a onclick="fileDownManage('allDa')">整本档案下载(含图片)</a>
+					</li>--%>
+					<li >
+					<a onclick="fileDownManage('danganxiazai')">电子表格目录</a>
+					</li>
+					<li>
+					<a onclick="fileDownManage('qianquecail')">欠缺材料信息</a>
+					</li>
+					<li>
+					<a onclick="fileDownManage('dangantupianxiazai')">档案图片下载</a>
+					</li>
+				</ul>
+			</div>
+		</c:if>
 		<a class="btn"  onclick="cancel()"><i class="icon-remove-sign"></i> 取消</a>
 	</div>
 </div>

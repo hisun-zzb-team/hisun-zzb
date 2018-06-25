@@ -503,11 +503,11 @@
     }
 
     function download(){
-        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 
     };
     function downloadMB(){
-        window.open("${path}/zzb/dzda/e01z1/downloadMB/{a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+        window.open("${path}/zzb/dzda/e01z1/downloadMB/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     }
     function uploadFile(){
         document.getElementById("mlxxFile").click();

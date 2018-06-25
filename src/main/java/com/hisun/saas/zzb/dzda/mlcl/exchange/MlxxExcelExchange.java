@@ -392,6 +392,9 @@ public class MlxxExcelExchange extends AbsExcelExchange{
                         case 10:
                                 str = "十";
                                 break;
+                        case 11:
+                                str = "十一";
+                                break;
                         case 41:
                                 str = "(一)";
                                 break;

@@ -272,7 +272,6 @@
     function changeImage(type) {
         var imagesCount = document.all("imagesCount").value;
         var imageIndex = document.all("imageIndex").value;
-
         if (imagesCount == "0") {
             return false;
         }
@@ -402,6 +401,7 @@
         nodeType = treeNode.nodeType;
         if (treeNode != null && nodeType == "cl") {
             loadRight(treeNode.id);
+            document.all("imageIndex").value = 1;
         }
     }
     function hiddenViewImgModalForLiulan() {//隐藏图片查看时 删除临时的解密图片

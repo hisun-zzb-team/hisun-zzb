@@ -842,10 +842,10 @@ public class E01Z1Controller extends BaseController {
      * @throws GenericException
      */
 
-    @RequestMapping("/ajax/tree/{a38Id}")
+    @RequestMapping("/ajax/tree")
     public
     @ResponseBody
-    Map<String, Object> tree(@PathVariable(value = "a38Id") String a38Id) throws GenericException {
+    Map<String, Object> tree(String a38Id) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();

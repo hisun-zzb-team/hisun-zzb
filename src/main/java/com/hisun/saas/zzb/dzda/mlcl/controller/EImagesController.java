@@ -190,7 +190,8 @@ public class EImagesController extends BaseController {
     }
 
     @RequestMapping(value="/ajax/downImg")
-    public void downImg(String imgId,HttpServletRequest req, HttpServletResponse resp) throws Exception{
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载:${damc}的档案:${clmc}的第:${imgNo}张图片")
+    public void downImg(String imgId,HttpServletRequest req, HttpServletResponse resp,String imgNo,String clmc,String damc) throws Exception{
         imgId = StringUtils.trim(imgId);
         EImages img = this.eImagesService.getByPK(imgId);
 
@@ -227,7 +228,8 @@ public class EImagesController extends BaseController {
 
 
     @RequestMapping(value="/ajax/printImg")
-    public @ResponseBody Map<String, Object> printImg(String imgId) throws Exception{
+    @RequiresLog(operateType = LogOperateType.PRINT,description = "打印:${damc}的档案:${clmc}的第:${imgNo}张图片")
+    public @ResponseBody Map<String, Object> printImg(String imgId,String imgNo,String clmc,String damc) throws Exception{
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             imgId = StringUtils.trim(imgId);

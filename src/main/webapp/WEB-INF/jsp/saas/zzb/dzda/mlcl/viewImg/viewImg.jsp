@@ -85,6 +85,9 @@
 							<li style="text-align: center;">
 								<div class="image-wrap" >
 									<input type="hidden" id="showImgId" name="showImgId" value="${image.id}">
+									<input type="hidden" id="showImgNo" name="showImgNo" value="${image.imgNo}">
+									<input type="hidden" id="showClmc" name="showClmc" value="${image.e01z1.e01Z111}">
+									<input type="hidden" id="showDamc" name="showDamc" value="${image.e01z1.a38.a0101}">
 									<img class="showImageClass" src="${path}/zzb/dzda/mlcl/images/showImages?a38Id=${a38Id}&imgId=${image.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}" title="${image.imgNo}" alt="${image.imgNo}/${imagesSize}">
 									<span style="display: block; width: 40px; height: 20px; top: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; ">${image.imgNo}/${imagesSize}</span>
 									<%--按比例挡住图片下面的部分 但是在全屏查看有问题<span style="display: block; width:100%; height: 40%; bottom: 0; left: 0; z-index: 1111; position: absolute; text-align: center; font-size: 16px; cursor: pointer; color:dimgrey;background-color: #979797"></span>--%>
@@ -396,6 +399,10 @@
     function daYinDa()
     {
         var imgId = $("#showImgId").val();
+        var imgNo = $("#showImgNo").val();
+        var clmc = $("#showClmc").val();
+        var damc = $("#showDamc").val();
+
         if(imgId==""){
             showTip("提示","没有可打印图片",2000);
         }else{
@@ -403,7 +410,11 @@
                 url : "${path}/zzb/dzda/mlcl/images/ajax/printImg",
                 type : "post",
                 data : {
-                    "imgId":imgId
+                    "imgId":imgId,
+                    "imgNo":imgNo,
+                    "clmc":clmc,
+                    "damc":damc,
+
                 },
                 dataType : "json",
                 headers: {
@@ -430,11 +441,14 @@
     }
 
     function xiaZaiDa(){
+        var imgNo = $("#showImgNo").val();
+        var clmc = $("#showClmc").val();
+        var damc = $("#showDamc").val();
 	    var imgId = $("#showImgId").val();
 	    if(imgId==""){
             showTip("提示","没有可下载图片",2000);
 		}else{
-            window.open("${path}/zzb/dzda/mlcl/images/ajax/downImg?imgId="+imgId+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+            window.open("${path}/zzb/dzda/mlcl/images/ajax/downImg?imgId="+imgId+"&imgNo="+imgNo+"&clmc="+clmc+"&damc="+damc+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 		}
 	}
 

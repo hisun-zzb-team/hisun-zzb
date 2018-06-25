@@ -289,11 +289,22 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
                 e01z1Hql.append(" and ( e.yjztps <=0 or e.yjztps is null )");
             }
         }
+        if(StringUtils.isNotBlank(dakVo.getQqcl())){
+            if("1".equals(dakVo.getQqcl())){
+                a38Hql.append("and a38.e01z4s.id is not null");
+            }
+        }
+
         StringBuffer queryHql = new StringBuffer();
         queryHql.append("select DISTINCT(a38) from A38 a38 ");
         if(e01z1Hql.length()>0){
             queryHql.append("  left join a38.e01z1s e");
         }
+
+        if(a38Hql.length()>0){
+            queryHql.append("  left join a38.e01z4s e4");
+        }
+
         queryHql.append(a38Hql);
         queryHql.append(e01z1Hql);
         queryHql.append(" order by COALESCE((case when a38.smxh='' then '-9999' else a38.smxh END),'-9999') desc, a38.a0101 asc ");

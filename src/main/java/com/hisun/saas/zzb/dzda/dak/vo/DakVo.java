@@ -43,6 +43,15 @@ public class DakVo {
     private String e01Z117End;//材料制成时间 结束
     private String yjztps;//已加载图片数
     private String yjztpsName;//已加载图片数
+    private String qqcl;//是否欠缺材料
+
+    public String getQqcl() {
+        return qqcl;
+    }
+
+    public void setQqcl(String qqcl) {
+        this.qqcl = qqcl;
+    }
 
     public String getA0101() {
         return a0101;

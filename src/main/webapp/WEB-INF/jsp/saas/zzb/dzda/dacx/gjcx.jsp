@@ -226,7 +226,7 @@
                         </div>
 
                         <div class="portlet-title">
-                            <div class="caption">目录信息</div>
+                            <div class="caption">其他信息</div>
                         </div>
 
                         <div class="row-fluid">
@@ -346,6 +346,28 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="portlet-title">
+                            <div class="caption">欠缺材料</div>
+                        </div>
+
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div id="qqclGroup" class="control-group">
+                                    <label class="control-label">是否欠缺材料</label>
+
+                                    <div class="controls">
+                                       <select name="qqcl" style="width: 377.13px;height: 34px">
+                                           <option value=""></option>
+                                           <option value="1">是</option>
+                                       </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-title">
+                            <div class="caption">材料接收</div>
                         </div>
 
                     </form>

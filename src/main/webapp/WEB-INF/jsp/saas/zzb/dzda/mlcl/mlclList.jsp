@@ -124,7 +124,7 @@
                                     <a href="javascript:xztpButton()">卸载图片</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:downloadButton()">下载图片</a>
+                                    <a href="javascript:downloadImgButton()">下载图片</a>
                                 </li>
                             </ul>
                         </div>
@@ -499,7 +499,7 @@
         <%--});--%>
     }
 
-    function downloadButton(){
+    function downloadImgButton(){
         window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
     }
 

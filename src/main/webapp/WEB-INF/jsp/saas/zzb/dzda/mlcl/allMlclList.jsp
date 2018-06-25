@@ -96,7 +96,6 @@
             <form class="" id="importForm" enctype="multipart/form-data">
                 <input type="hidden" name="queryId" value="${queryId}"/>
                 <input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
-                <input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
                 <input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
                 <input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>
                 <input type="hidden" id="eCatalogTypeTreeParentId" name="eCatalogTypeTreeParentId"
@@ -237,7 +236,6 @@
     }
     function add() {
         var a38Id = $("#a38Id").val();
-        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
         var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
         var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
         var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
@@ -251,7 +249,6 @@
             },
             data: {
                 "a38Id": a38Id,
-                "eCatalogTypeTreeId": eCatalogTypeTreeId,
                 "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
                 "eCatalogTypeTreeName": eCatalogTypeTreeName,
                 "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
@@ -289,7 +286,6 @@
     }
     function edit(id) {
         var a38Id = $("#a38Id").val();
-        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
         var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
         var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
         var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
@@ -304,14 +300,12 @@
             data: {
                 "id": id,
                 "a38Id": a38Id,
-                "eCatalogTypeTreeId": eCatalogTypeTreeId,
                 "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
                 "eCatalogTypeTreeName": eCatalogTypeTreeName,
                 "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId
             },
             success: function (html) {
                 $("#rightList").html(html);
-                $("#treeId").val(eCatalogTypeTreeId);
             },
             error: function () {
                 myLoading.hide();
@@ -350,7 +344,6 @@
 
     function del(id, voname) {
         var a38Id = $("#a38Id").val();
-        var eCatalogTypeTreeId = $("#eCatalogTypeTreeId").val();
         var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
         var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
         var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
@@ -362,7 +355,6 @@
                     type: 'POST',
                     dataType: "html",
                     data: {
-                        "eCatalogTypeTreeId": eCatalogTypeTreeId,
                         "eCatalogTypeTreeCode": eCatalogTypeTreeCode,
                         "eCatalogTypeTreeParentId": eCatalogTypeTreeParentId,
                         "eCatalogTypeTreeName": eCatalogTypeTreeName,

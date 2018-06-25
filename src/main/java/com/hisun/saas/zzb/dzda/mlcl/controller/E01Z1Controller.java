@@ -101,7 +101,7 @@ public class E01Z1Controller extends BaseController {
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,
                                                @RequestParam(value="pageSize",defaultValue="10") int pageSize) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
-        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
+        String eCatalogTypeTreeId = "";
         String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
         String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
@@ -121,19 +121,17 @@ public class E01Z1Controller extends BaseController {
             CommonConditionQuery query = new CommonConditionQuery();
 
             CommonOrderBy orderBy = new CommonOrderBy();
-            if(StringUtils.isEmpty(eCatalogTypeTreeId)){
+            if(StringUtils.isEmpty(eCatalogTypeTreeCode)){
                 orderBy.add(CommonOrder.asc("e01z101b"));
                 orderBy.add(CommonOrder.asc("e01Z104"));
                 eCatalogTypeTreeName="所有材料";
                 url = "saas/zzb/dzda/mlcl/allMlclList";
             }else {
                 ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-                eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+                eCatalogTypeInfo=eCatalogTypeService.getECatalogTypeInfoByCatalogCode(eCatalogTypeTreeCode);
                 eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
+                eCatalogTypeTreeId = eCatalogTypeInfo.getId();
                 orderBy.add(CommonOrder.asc("e01Z104"));
-                if(StringUtils.isEmpty(eCatalogTypeTreeCode)&&StringUtils.isNotEmpty(eCatalogTypeTreeId)){
-                    eCatalogTypeTreeCode=eCatalogTypeInfo.getCatalogCode();
-                }
             }
 
             CommonConditionQuery eCatalogTypeQuery = new CommonConditionQuery();
@@ -158,7 +156,7 @@ public class E01Z1Controller extends BaseController {
                 }
                 url = "saas/zzb/dzda/mlcl/allMlclList";
             }else  {
-                if(StringUtils.isEmpty(eCatalogTypeTreeId)){
+                if(StringUtils.isEmpty(eCatalogTypeTreeCode)){
                     query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
                 }else {
                     query.add(CommonRestrictions.and(" a38.id = :id ", "id", a38Id));
@@ -179,7 +177,6 @@ public class E01Z1Controller extends BaseController {
             }
             PagerVo<E01Z1Vo> pager = new PagerVo<E01Z1Vo>(vos, total.intValue(), pageNum, pageSize);
             map.put("pager", pager);
-            map.put("eCatalogTypeTreeId",eCatalogTypeTreeId);
             map.put("eCatalogTypeTreeCode",eCatalogTypeTreeCode);
             map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
             map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
@@ -200,7 +197,6 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/ajax/addMlcl")
     public @ResponseBody ModelAndView addMlcl(HttpServletRequest request){
         Map<String, Object> map = Maps.newHashMap();
-        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
         String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
         String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
@@ -215,9 +211,8 @@ public class E01Z1Controller extends BaseController {
         vo.setE01Z104(sort);
         vo.setE01Z124(1);
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-        eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+        eCatalogTypeInfo=eCatalogTypeService.getECatalogTypeInfoByCatalogCode(eCatalogTypeTreeCode);
         eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
-        map.put("eCatalogTypeTreeId",eCatalogTypeTreeId);
         map.put("eCatalogTypeTreeCode",eCatalogTypeTreeCode);
         map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
         map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
@@ -231,12 +226,11 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> save(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeId"));
         String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeCode"));
         String eCatalogTypeTreeName = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeName"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
-        eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+        eCatalogTypeInfo=eCatalogTypeService.getECatalogTypeInfoByCatalogCode(eCatalogTypeTreeCode);
         eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
         try {
             int sort = this.e01Z1Service.getMaxSort(a38Id,eCatalogTypeTreeCode);
@@ -245,7 +239,7 @@ public class E01Z1Controller extends BaseController {
             BeanUtils.copyProperties(e01Z1, vo);
             e01Z1.setE01Z101B(eCatalogTypeTreeCode);
             e01Z1.setE01Z101A(eCatalogTypeTreeName);
-            e01Z1.setECatalogTypeId(eCatalogTypeTreeId);
+            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
             e01Z1.setYjztps(0);
             if(StringUtils.isNotBlank(a38Id)){
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
@@ -289,7 +283,6 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping(value = "/update")
     public @ResponseBody Map<String, Object> update(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
-        String eCatalogTypeTreeId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeEditId"));
         String eCatalogTypeTreeCode = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeEditCode"));
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentEditId"));
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
@@ -301,11 +294,11 @@ public class E01Z1Controller extends BaseController {
             if(StringUtils.isEmpty(eCatalogTypeTreeParentId)){
                 eCatalogTypeTreeCode = e01Z1.getE01Z101B();
             }
-            eCatalogTypeInfo=eCatalogTypeService.getByPK(eCatalogTypeTreeId);
+            eCatalogTypeInfo=eCatalogTypeService.getECatalogTypeInfoByCatalogCode(eCatalogTypeTreeCode);
             String eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
             vo.setE01Z101B(eCatalogTypeTreeCode);
             vo.setE01Z101A(eCatalogTypeTreeName);
-            vo.setECatalogTypeId(eCatalogTypeTreeId);
+            vo.setECatalogTypeId(eCatalogTypeInfo.getId());
             int oldSort = e01Z1.getE01Z104();
 
             BeanUtils.copyProperties(e01Z1, vo);

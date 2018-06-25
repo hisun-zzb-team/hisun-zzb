@@ -518,6 +518,7 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料:{a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
@@ -646,6 +647,7 @@ public class E01Z1Controller extends BaseController {
         }
     }
 
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料模板:{a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/downloadMB/{a38Id}")
     public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,

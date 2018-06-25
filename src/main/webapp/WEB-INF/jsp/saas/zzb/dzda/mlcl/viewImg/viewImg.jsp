@@ -143,16 +143,19 @@
             document.all("button2").disabled = true;
             document.all("button3").disabled = true;
             document.all("button4").disabled = true;
-
-            document.all("daYinDa").disabled = true;
-            document.all("xiaZaiDa").disabled = true;
+			try {
+                document.all("daYinDa").disabled = true;
+                document.all("xiaZaiDa").disabled = true;
+            }catch(e){}
         }else{
 		    if(imageIndex!=document.all("imagesCount").value) {
                 document.all("button3").disabled = false;
                 document.all("button4").disabled = false;
             }
-            document.all("daYinDa").disabled = false;
-            document.all("xiaZaiDa").disabled = false;
+            try {
+				document.all("daYinDa").disabled = false;
+				document.all("xiaZaiDa").disabled = false;
+            }catch(e){}
         }
 
         //改成图片显示的比例

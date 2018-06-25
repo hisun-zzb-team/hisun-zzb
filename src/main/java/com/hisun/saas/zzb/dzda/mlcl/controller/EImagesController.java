@@ -372,7 +372,7 @@ public class EImagesController extends BaseController {
                     isAdd = true;
                 }
                 if(isAdd == true) {
-                    String text = e01Z1.getE01Z111();
+                    String text = getImgCode(e01Z1)+"、"+e01Z1.getE01Z111();
                     String e01z117 = StringUtils.trimNull2Empty(e01Z1.getE01Z117());//制成时间
                     int imagesCount = e01Z1.getYjztps();
                     String title = e01Z1.getE01Z111();

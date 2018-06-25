@@ -852,6 +852,9 @@ public class E01Z1Controller extends BaseController {
             CommonOrderBy orderBy = new CommonOrderBy();
             orderBy.add(CommonOrder.asc("sort"));
             List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
+            if(!StringUtils.isNotBlank(a38Id)){
+                return map;
+            }
             A38 a38 = a38Service.getByPK(a38Id);
             CommonConditionQuery query1 = new CommonConditionQuery();
             query1.add(CommonRestrictions.and("a38.id=:a38Id", "a38Id", a38Id));

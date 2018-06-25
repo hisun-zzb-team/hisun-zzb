@@ -61,6 +61,19 @@
                                     </div>
                                 </div>
                                 <div class="span6 ">
+                                    <div id="e01Z541Group" class="control-group">
+                                        <label class="control-label">档案位置</label>
+
+                                        <div class="controls">
+                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z541}"
+                                                   id="e01Z541" name="e01Z541">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span6 ">
                                     <div id="e01Z507AGroup" class="control-group">
                                         <label class="control-label">来件单位名称</label>
 
@@ -70,8 +83,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row-fluid">
+
                                 <div class="span6 ">
                                     <div class="control-group" id="e01Z501Group">
                                         <label class="control-label">接收日期</label>
@@ -83,18 +95,35 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="row-fluid">
                                 <div class="span6 ">
-                                    <div id="e01Z541Group" class="control-group">
-                                        <label class="control-label">档案位置</label>
+                                    <div class="control-group" id="sjlyGroup">
+                                        <label class="control-label">数据来源</label>
 
                                         <div class="controls">
-                                            <input type="text" class="span10 m-wrap" value="${vo.e01Z541}"
-                                                   id="e01Z541" name="e01Z541">
+                                            <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                                <option value=""></option>
+                                                <option value="1" <c:if test="${vo.sjly eq '1'}">selected</c:if>>导入excel</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="span6 ">
+                                    <div id="fileNameGroup" class="control-group">
+                                        <label class="control-label">文件下载</label>
+
+                                        <div class="controls">
+                                            <div class="btn-group" id="gbrmspbDownDiv" <c:if test="${empty vo.filePath}">
+                                                style="visibility:hidden"</c:if>>
+                                                <a class="btn blue" herf="javascript:void(0)" onclick="downloadFile()"><i
+                                                        class="icon-circle-arrow-down"></i>下载文件</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row-fluid">
                                 <div class="span6 ">
                                     <div class="control-group" id="e01Z521Group">
@@ -171,7 +200,7 @@
                                         <div class="controls">
                                             <input type="text" class="span10 m-wrap" number="true" name="e01Z511"
                                                    maxlength="200" id="e01Z511"
-                                                   value="${vo.name}"/>
+                                                   value="${vo.e01Z511}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -183,33 +212,6 @@
                                             <input type="text" class="span10 m-wrap" number="true" name="e01Z514"
                                                    maxlength="200" id="e01Z514"
                                                    value="${vo.e01Z514}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span6 ">
-                                    <div class="control-group" id="sjlyGroup">
-                                        <label class="control-label"><span class="required">*</span>数据来源</label>
-
-                                        <div class="controls">
-                                            <select name="sjly"  class="span10 m-wrap" id="sjly" required>
-                                                <option value=""></option>
-                                                <option value="1" <c:if test="${vo.sjly eq '1'}">selected</c:if>>导入excel</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="span6 ">
-                                    <div id="fileNameGroup" class="control-group">
-                                        <label class="control-label">文件下载</label>
-
-                                        <div class="controls">
-                                            <div class="btn-group" id="gbrmspbDownDiv" <c:if test="${empty vo.filePath}">
-                                                style="visibility:hidden"</c:if>>
-                                                <a class="btn blue" herf="javascript:void(0)" onclick="downloadFile()"><i
-                                                        class="icon-circle-arrow-down"></i>下载文件</a>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

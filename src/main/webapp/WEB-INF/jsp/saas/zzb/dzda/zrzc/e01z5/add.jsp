@@ -17,7 +17,7 @@
 
     <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
     <!-- BEGIN PAGE LEVEL STYLES -->
-    <link rel="stylesheet" href="${path }/css/DT_bootstrap.css" />
+    <link rel="stylesheet" href="${path }/css/DT_bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="${path }/css/bootstrap-fileupload.css">
 
     <link href="${path }/css/style.css" rel="stylesheet" type="text/css">
@@ -25,12 +25,12 @@
     <title>档案接收</title>
     <style type="text/css">
     </style>
-    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css" />
-    <script src="${path}/js/bootstrap-fileupload.js"  type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="${path}/css/bootstrap-fileupload.css"/>
+    <script src="${path}/js/bootstrap-fileupload.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css"
-          href="${path}/css/select2_metro.css" />
+          href="${path}/css/select2_metro.css"/>
     <link href="${path}/css/common/common.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="${path}/css/DT_bootstrap.css" />
+    <link rel="stylesheet" href="${path}/css/DT_bootstrap.css"/>
     <script type="text/javascript" src="${path}/js/select2.min.js"></script>
     <script type="text/javascript"
             src="${path}/js/jquery.dataTables.min.js"></script>
@@ -47,7 +47,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button data-dismiss="modal" class="close" id="closeE01z5" type="button"></button>
-                <h3 class="modal-title" id="addTitle" >
+                <h3 class="modal-title" id="addTitle">
                     导入文件错误列表
                 </h3>
             </div>
@@ -75,7 +75,9 @@
                     <div class="clearfix fr">
 
                         <div class="btn-group" style="padding-bottom: 0px">
-                            <button class="btn green" type="button" style="padding:7px 20px; margin: 7px 10px" onclick="formSubmit()">确定</button>
+                            <button class="btn green" type="button" style="padding:7px 20px; margin: 7px 10px"
+                                    onclick="formSubmit()">确定
+                            </button>
                             <button type="button" class="btn btn-default" onclick="cancel()"><i
                                     class='icon-remove-sign'></i> 关闭
                             </button>
@@ -91,9 +93,9 @@
                         <input type="hidden" name="id" value="" id="id">
                         <input type="hidden" name="filePath" value="" id="filePath">
                         <div class="row-fluid">
-                           <%-- <div class="span6 ">
+                            <div class="span6 ">
                                 <div class="control-group" id="nameGroup">
-                                    <label class="control-label">档案名称</label>
+                                    <label class="control-label">档案名称<span class="required">*</span></label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" name="name" maxlength="200" id="name"
@@ -102,36 +104,48 @@
                                     </div>
 
                                 </div>
-                            </div>--%>
+                            </div>
+                            <div class="span6 ">
+                                <div id="e01Z541Group" class="control-group">
+                                    <label class="control-label">档案位置</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value=""
+                                               id="e01Z541" name="e01Z541">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
                             <div class="span6 ">
                                 <div id="e01Z507AGroup" class="control-group">
                                     <label class="control-label">来件单位名称<span class="required">*</span></label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" value=""  required
+                                        <input type="text" class="span10 m-wrap" value="" required
                                                id="e01Z507A" name="e01Z507A">
                                     </div>
                                 </div>
                             </div>
-                               <div class="span6 ">
-                                   <div class="control-group" id="e01Z501Group">
-                                       <label class="control-label">接收日期</label>
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z501Group">
+                                    <label class="control-label">接收日期</label>
 
-                                       <div class="controls">
-                                           <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
-                                                  id="e01Z501" readonly
-                                                  value=""/>
-                                       </div>
-                                   </div>
-                               </div>
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="e01Z501" maxlength="200"
+                                               id="e01Z501" readonly
+                                               value=""/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
                                 <div class="control-group" id="sjlyGroup">
-                                    <label class="control-label">数据来源<span class="required">*</span></label>
+                                    <label class="control-label">数据来源</label>
 
                                     <div class="controls">
-                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                        <select name="sjly" class="span10 m-wrap" id="sjly">
                                             <option value=""></option>
                                             <option value="1">导入excel</option>
                                         </select>
@@ -140,10 +154,11 @@
                             </div>
 
                             <div class="span6 ">
-                                <div  id="clFileGroup" class="control-group">
-                                    <label id="clFilelb" class="control-label">上传接收文件<span class="required">*</span></label>
+                                <div id="clFileGroup" class="control-group">
+                                    <label id="clFilelb" class="control-label">上传接收文件</label>
                                     <div class="controls">
-                                        <input type="file" class="default"  name="clFile" id="clFile"  fileSizeLimit="20" required  fileType="csv,xls,xlsx,CSV,XLS,XLSX"/>
+                                        <input type="file" class="default" name="clFile" id="clFile" fileSizeLimit="20"
+                                               fileType="csv,xls,xlsx,CSV,XLS,XLSX"/>
                                         <%--<p class="textprompt">上传文件支持的格式有：'csv','xls','xlsx'</p>--%>
                                         <%--<div class="fileupload fileupload-new" data-provides="fileupload">--%>
                                         <%--<div class="input-append">--%>
@@ -167,7 +182,6 @@
                         </div>
 
                         <div class="row-fluid">
-
 
 
                         </div>
@@ -200,8 +214,11 @@
                                     <label class="control-label">案卷质量</label>
 
                                     <div class="controls">
-                                        <SelectTag:SelectTag id="e01Z527"  textClass="m-wrap span10" needNullValue="true"  defaultkeys="1"
-                                                             token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
+                                        <SelectTag:SelectTag id="e01Z527" textClass="m-wrap span10" needNullValue="true"
+                                                             defaultkeys="1"
+                                                             token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                             radioOrCheckbox="radio"
+                                                             selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
                                     </div>
                                 </div>
                             </div>
@@ -264,22 +281,12 @@
                             </div>
                         </div>
                         <div class="row-fluid">
-                            <div class="span6 ">
-                                <div id="e01Z541Group" class="control-group">
-                                    <label class="control-label">档案位置</label>
 
-                                    <div class="controls">
-                                        <input type="text" class="span10 m-wrap" value=""
-                                               id="e01Z541" name="e01Z541">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span6 ">
+                            <div>
                                 <div id="e01Z544Group" class="control-group">
                                     <label class="control-label">备注</label>
-
                                     <div class="controls">
-                                            <textarea class="span10 m-wrap" rows="2" name="e01Z544" maxlength="200"
+                                            <textarea class="span11" rows="2" name="e01Z544" maxlength="400"
                                                       id="e01Z544" style="resize: none;"></textarea>
                                     </div>
                                 </div>
@@ -301,12 +308,12 @@
 <script type="text/javascript" src="${path }/js/common/loading.js"></script>
 <script type="text/javascript">
 
-var myLoading = new MyLoading("${path}",20000);
-    (function(){
+    var myLoading = new MyLoading("${path}", 20000);
+    (function () {
         App.init();
 
-        $("#btn-browseTemplate").bind("change",function(evt){
-            if($(this).val()){
+        $("#btn-browseTemplate").bind("change", function (evt) {
+            if ($(this).val()) {
                 ajaxSubmit();
             }
             $(this).val('');
@@ -315,11 +322,11 @@ var myLoading = new MyLoading("${path}",20000);
     })();
 
 
-    $(function(){
-        $('#sjly').change(function(){
-            var value =$(this).children('option:selected').val();//这就是selected的值
-            if(value ==1){
-                $("#clFile").attr("accept","application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    $(function () {
+        $('#sjly').change(function () {
+            var value = $(this).children('option:selected').val();//这就是selected的值
+            if (value == 1) {
+                $("#clFile").attr("accept", "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
         })
     })
@@ -339,7 +346,7 @@ var myLoading = new MyLoading("${path}",20000);
             todayBtn: 'linked',
             language: 'zh-CN'
         });
-        $("#e01Z501").datepicker("setDate",new Date());
+        $("#e01Z501").datepicker("setDate", new Date());
         $('#e01Z531').datepicker({
             format: 'yyyy-mm-dd',
             weekStart: 1,
@@ -355,15 +362,15 @@ var myLoading = new MyLoading("${path}",20000);
             language: 'zh-CN'
         });
     })
-    var cancel= function(){
+    var cancel = function () {
         window.location.href = "${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
     }
 
     var myVld = new EstValidate("form1");
-    function formSubmit(){
+    function formSubmit() {
         var riq = $("#e01Z534").val();
         var bool = myVld.form();
-        if(!bool){
+        if (!bool) {
             return;
         }
         var fileInput = document.getElementById("clFile");
@@ -374,58 +381,58 @@ var myLoading = new MyLoading("${path}",20000);
 //                showTip("提示", "请上传Excel文件", 2000);
 //                return;
 //            }
-        }else{
+        }/* else {
             showTip("提示", "请上传接收文件", 2000);
             return;
-        }
+        }*/
         myLoading.show();
         $("#form1").ajaxSubmit({
-            url : "${path }/zzb/dzda/dajs/save",
-            type : "post",
-            dataType : "json",
-            enctype : "multipart/form-data",
+            url: "${path }/zzb/dzda/dajs/save",
+            type: "post",
+            dataType: "json",
+            enctype: "multipart/form-data",
             headers: {
-                "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
+                "OWASP_CSRFTOKEN": "${sessionScope.OWASP_CSRFTOKEN}"
             },
-            success : function(data){
-                 myLoading.hide();
-                if(data.code==1){
-                    if(data.isWrong){
+            success: function (data) {
+                myLoading.hide();
+                if (data.code == 1) {
+                    if (data.isWrong) {
                         $.ajax({
-                            url:"${path}/zzb/dzda/dajs/ajax/cwjl",
-                            type : "post",
+                            url: "${path}/zzb/dzda/dajs/ajax/cwjl",
+                            type: "post",
                             data: {},
-                            headers:{
-                                OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
+                            headers: {
+                                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
                             },
-                            dataType : "html",
-                            success : function(html){
+                            dataType: "html",
+                            success: function (html) {
                                 $('#e01z5Div').html(html);
 
                                 $('#e01z5Modal').modal({backdrop: 'static', keyboard: false});
                             },
-                            error : function(){
-                                showTip("提示","出错了请联系管理员", 1500);
+                            error: function () {
+                                showTip("提示", "出错了请联系管理员", 1500);
                             }
                         });
-                    }else {
-                        window.location.href ="${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
+                    } else {
+                        window.location.href = "${path }/zzb/dzda/dajs/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
                     }
-                }else{
+                } else {
                     showTip("提示", "新增失败", 2000);
                 }
             },
-            error : function(arg1, arg2, arg3){
+            error: function (arg1, arg2, arg3) {
                 myLoading.hide();
-                showTip("提示","出错了请联系管理员");
+                showTip("提示", "出错了请联系管理员");
             }
         });
     }
 
-$("#closeE01z5").on("click",function(){
-    $('#e01z5Modal').modal('hide');
-    $('#e01z5Div').html("");
-});
+    $("#closeE01z5").on("click", function () {
+        $('#e01z5Modal').modal('hide');
+        $('#e01z5Div').html("");
+    });
 </script>
 </body>
 </html>

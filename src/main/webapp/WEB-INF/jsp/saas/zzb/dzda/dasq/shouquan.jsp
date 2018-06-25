@@ -183,7 +183,7 @@
                     <div class="controls"> <%--${path}/zzb/dzda/mlcl/tpcl/ajax/tree/${a38Id}--%>
                         <Tree:tree id="sqcymlIds" valueName="sqcyml"
                                    selectClass="span8 m-wrap"
-                                   treeUrl="${path}/zzb/dzda/e01z1/ajax/tree/1"
+                                   treeUrl="${path}/zzb/dzda/e01z1/ajax/tree/${a38Id}"
                                    token="${sessionScope.OWASP_CSRFTOKEN}"
                                    submitType="get" dataType="json" isSearch="false" radioOrCheckbox="checkbox"
                                    chkboxType=' "Y" : "s", "N" : "" '

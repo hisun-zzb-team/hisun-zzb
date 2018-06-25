@@ -158,7 +158,7 @@ public class E01Z5Controller extends BaseController {
 //        query.add(CommonRestrictions.and(" pId = :pId ", "pId", pId));
         Long total = e01z5Service.count(query);
         CommonOrderBy orderBy = new CommonOrderBy();
-//        orderBy.add(CommonOrder.asc("sort"));
+        orderBy.add(CommonOrder.desc("e01Z501"));
         List<E01Z5> resultList = e01z5Service.list(query,orderBy,pageNum,pageSize);
         List<E01Z5ResVo> e01z5Vos = new ArrayList<E01Z5ResVo>();
         E01Z5ResVo vo = new E01Z5ResVo();
@@ -200,6 +200,7 @@ public class E01Z5Controller extends BaseController {
             return returnMap;
         }
         try{
+            Map<String,Object>  map = Maps.newHashMap();
             String fileName = "";
             String filePath = "";
             if (clFile != null && !clFile.isEmpty()) {
@@ -230,34 +231,39 @@ public class E01Z5Controller extends BaseController {
                         output.close();
                     }
                 }
+                map = saveFile(filePath);
+                if((boolean) map.get("isWrong")){
+                    returnMap.put("code",1);
+                    returnMap.putAll(map);
+                    return returnMap;
+                }
             }
-            Map<String,Object>  map = saveFile(filePath);
-            if((boolean) map.get("isWrong")){
-                returnMap.put("code",1);
-                returnMap.putAll(map);
-                return returnMap;
-            }
+
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
-            A38 a38 = a38Service.getByPK((String) map.get("a38Id"));
-            a38.setSjzt("0");
-            a38.setA3801(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
-            if(StringUtils.isNotBlank(vo.getE01Z501())){
-                a38.setA3801(DateUtil.formatDateByFormat(DateUtil.parseDefaultDate(vo.getE01Z501()),DateUtil.NOCHAR_PATTERN2));
-            }
-            a38.setJsr(details.getRealname());
-            a38.setA3834(vo.getE01Z541());
-            a38.setA3804B(vo.getE01Z507A());
-            a38.setZryy(vo.getE01Z544());
-            a38Service.update(a38);
+            String a38Id = (String) map.get("a38Id");
+            A38 a38;
             E01Z5 entity = new  E01Z5();
+            if(StringUtils.isNotBlank(a38Id)){
+                a38 = a38Service.getByPK(a38Id);
+                a38.setSjzt("0");
+                a38.setA3801(DateUtil.formatDateByFormat(new Date(),DateUtil.NOCHAR_PATTERN2));
+                if(StringUtils.isNotBlank(vo.getE01Z501())){
+                    a38.setA3801(DateUtil.formatDateByFormat(DateUtil.parseDefaultDate(vo.getE01Z501()),DateUtil.NOCHAR_PATTERN2));
+                }
+                a38.setJsr(details.getRealname());
+                a38.setA3834(vo.getE01Z541());
+                a38.setA3804B(vo.getE01Z507A());
+                a38.setZryy(vo.getE01Z544());
+                a38Service.update(a38);
+                entity.setA38(a38);
+            }
             ConvertUtils.register(new DateConverter(null), java.util.Date.class);
             BeanUtils.copyProperties(entity, vo);
             entity.setE01Z501(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z501())? DateUtil.parseDefaultDate(vo.getE01Z501()) :null );
             entity.setE01Z524(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z524())? DateUtil.parseDefaultDate(vo.getE01Z524()) :null );
             entity.setE01Z531(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z531())? DateUtil.parseDefaultDate(vo.getE01Z531()) :null );
             entity.setE01Z534(com.hisun.util.StringUtils.isNotBlank(vo.getE01Z534())? DateUtil.parseDefaultDate(vo.getE01Z534()) :null );
-            entity.setA38(a38);
-            entity.setName(a38.getA0101());
+         //   entity.setName(a38.getA0101());
             entity.setFileName(fileName);
             entity.setFilePath(filePath);
             entity.setId(null);
@@ -308,7 +314,7 @@ public class E01Z5Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z5/view", model);
     }
     @RequiresPermissions("dajs:*")
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "更新回执日期:${hzrq}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "修改回执日期:${hzrq}")
     @RequestMapping("/updateHzrq")
     public @ResponseBody Map<String,Object> updateHzrq(@RequestParam(value = "id",required = true) String id,
                                                        @RequestParam(value = "hzrq",required = true) String hzrq){

@@ -243,6 +243,7 @@ public class A38Controller extends BaseController {
         A38 a38 = a38Service.getByPK(id);
         map.put("id",id);
         map.put("a0101",a38.getA0101());
+        map.put("sjztManage",a38.getSjzt());
         map.put("listType",listType);
         return new ModelAndView("saas/zzb/dzda/a38/manage",map);
     }

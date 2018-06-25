@@ -330,7 +330,7 @@ public class A38Controller extends BaseController {
         model.put("vo", vo);
         return new ModelAndView("saas/zzb/dzda/a38/edit", model);
     }
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "修改档案:${vo.a0101}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改档案:${vo.a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/update")
     public @ResponseBody Map<String,Object> update(@ModelAttribute A38Vo vo, HttpServletRequest request) throws GenericException{
@@ -360,6 +360,7 @@ public class A38Controller extends BaseController {
         return returnMap;
     }
 
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改数据状态:${vo.a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/update/Sjzt")
     public @ResponseBody Map<String,Object> updateSjzt(String a38Ids,String sjzt) throws GenericException{
@@ -392,7 +393,7 @@ public class A38Controller extends BaseController {
         return returnMap;
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "添加档案:${id}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除档案:${a0101}")
     /**
      * 删除
      * @param id

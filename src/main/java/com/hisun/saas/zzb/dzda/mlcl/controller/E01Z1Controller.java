@@ -321,11 +321,11 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${id}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${e01Z111}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
-            @PathVariable("id") String id) throws GenericException {
+            @PathVariable("id") String id,String e01Z111) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             if(StringUtils.isEmpty(id)){

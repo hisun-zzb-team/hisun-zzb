@@ -249,13 +249,14 @@ public class DatpDealController extends BaseController {
         String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
         String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
         try {
-
+            A38 a38 = a38Service.getByPK(a38Id);
 
             map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
             map.put("currentNodeId", currentNodeId);
             map.put("currentNodeName", currentNodeName);
             map.put("currentNodeParentId", currentNodeParentId);
             map.put("a38Id", a38Id);
+            map.put("a0101", a38.getA0101());
         } catch (Exception e) {
             logger.error(e);
             throw new GenericException(e);
@@ -270,13 +271,14 @@ public class DatpDealController extends BaseController {
 //        String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
 //        String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
         try {
-
+            A38 a38 = a38Service.getByPK(a38Id);
 
             map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
             map.put("currentNodeId", a38Id);
             map.put("currentNodeName", "");
             map.put("currentNodeParentId", "");
             map.put("a38Id", a38Id);
+            map.put("a0101", a38.getA0101());
         } catch (Exception e) {
             logger.error(e);
             throw new GenericException(e);
@@ -291,12 +293,15 @@ public class DatpDealController extends BaseController {
         String currentNodeName = StringUtils.trimNull2Empty(request.getParameter("currentNodeName"));
         String currentNodeParentId = StringUtils.trimNull2Empty(request.getParameter("currentNodeParentId"));//取得当前树节点的父ID属性
         try {
+            E01Z1 e01Z1 = e01Z1Service.getByPK(e01z1Id);
 
             map.put("maxFileSize", Constants.DATP_MAX_FILE_SIZE);
             map.put("currentNodeId", currentNodeId);
             map.put("currentNodeName", currentNodeName);
             map.put("currentNodeParentId", currentNodeParentId);
             map.put("e01z1Id", e01z1Id);
+            map.put("e01Z111", e01Z1.getE01Z111());
+            map.put("a0101", e01Z1.getA38().getA0101());
         } catch (Exception e) {
             logger.error(e);
             throw new GenericException(e);
@@ -305,7 +310,7 @@ public class DatpDealController extends BaseController {
     }
 
 
-    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片")
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片:${a0101}")
     @RequestMapping(value = "/save/{a38Id}", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -388,7 +393,7 @@ public class DatpDealController extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片")
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片:${a0101}")
     @RequestMapping(value = "/saveInit/{a38Id}", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -458,7 +463,7 @@ public class DatpDealController extends BaseController {
     }
 
 
-    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片")
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片：a0101,e01Z111")
     @RequestMapping(value = "/e01z1/save/{e01z1Id}", method = RequestMethod.POST)
     public
     @ResponseBody
@@ -607,6 +612,7 @@ public class DatpDealController extends BaseController {
         return ispass;
     }
 
+    @RequiresLog(operateType = LogOperateType.DELETE, description = "卸载图片：a0101")
     @RequestMapping(value = "/delete/{a38Id}")
     public
     @ResponseBody
@@ -625,7 +631,7 @@ public class DatpDealController extends BaseController {
         return map;
     }
 
-
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD, description = "下载图片：a0101")
     @RequestMapping(value = "/download/{a38Id}")
     public void zipDown(@PathVariable(value = "a38Id") String a38Id, HttpServletResponse resp) {
         String srcPath = uploadBasePath + getTpStorePath(a38Id);

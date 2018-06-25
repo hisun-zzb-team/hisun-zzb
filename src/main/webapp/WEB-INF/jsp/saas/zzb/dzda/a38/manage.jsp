@@ -508,7 +508,7 @@
 	var delA38ByManage = function(){
 		var id = "${id}";
 		var itemName = "${a0101}";
-		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id,{} ,function(data,status){
+		actionByConfirm1(itemName, "${path}/zzb/dzda/a38/delete/" + id + "?a0101=${a0101}",{} ,function(data,status){
 			if (data.code == "1") {
 				showTip("提示","删除成功", 2000);
 				if("${listType}"=="shList"){

@@ -363,7 +363,7 @@
    function uploadAndSaveFile() {
         if ($("#isPass").val() == "true") {
             $("#uploadAndSaveFileForm").ajaxSubmit({
-                url: "${path}/zzb/dzda/mlcl/tpcl/e01z1/save/${e01z1Id}",
+                url: "${path}/zzb/dzda/mlcl/tpcl/e01z1/save/${e01z1Id}?e01Z111=${e01Z111}&a0101=${a0101}",
                 type: "post",
                 headers: {
                     OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"

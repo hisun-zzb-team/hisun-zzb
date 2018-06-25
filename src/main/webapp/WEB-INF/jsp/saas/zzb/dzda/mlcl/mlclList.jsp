@@ -471,7 +471,7 @@
 
 
     function xztpButton(){
-        actionByConfirm1('',"${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}",null,function(json){
+        actionByConfirm1('',"${path}/zzb/dzda/mlcl/tpcl/delete/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
             if(json.success){
                 showTip("提示", json.message, 1500);
                 mlLoad();
@@ -500,7 +500,7 @@
     }
 
     function downloadImgButton(){
-        window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}");
+        window.open("${path}/zzb/dzda/mlcl/tpcl/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     }
 
     function download(){

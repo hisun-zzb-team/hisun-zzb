@@ -165,7 +165,9 @@ public class E01Z7Controller extends BaseController {
     @RequiresPermissions("dazd:*")
     @RequestMapping("/add")
     public ModelAndView add() {
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("yjr",details.getRealname());
         return new ModelAndView("saas/zzb/dzda/zrzc/e01z7/add", returnMap);
     }
 
@@ -190,16 +192,18 @@ public class E01Z7Controller extends BaseController {
             E01Z7 entity = new E01Z7();
             String destPath = uploadBasePath + Constants.DACD_STORE_PATH + "e" + File.separator + UUIDUtil.getUUID() + File.separator;//excel存放路径
             new File(destPath).mkdirs();
-            String filePath = "";
-            String fileName = "";
+            String filePath = null;
+            String fileName = null;
             String zipFileName = vo.getE01Z704A();
             if(StringUtils.isNotEmpty(vo.getE01Z701())){
                 zipFileName = zipFileName+" "+vo.getE01Z701();
             }
 
             for (String a38Id:a38ids){
-                filePath = getFilePath(a38Id,destPath);
                 entity = new E01Z7();
+                if(StringUtils.isNotBlank(vo.getSjly())){
+                    filePath = getFilePath(a38Id,destPath);
+                }
                 A38 a38 = a38Service.getByPK(a38Id);
                 a38.setA3821(vo.getE01Z704A());
                 a38.setZcyy(vo.getE01Z731());
@@ -214,12 +218,15 @@ public class E01Z7Controller extends BaseController {
                 if(StringUtils.isNotEmpty(a38.getA0107())){
                     fileName=fileName+"("+a38.getA0107()+")";
                 }
-                ConvertUtils.register(new DateConverter(null), java.util.Date.class);
-                BeanUtils.copyProperties(entity, vo);
-                entity.setE01Z701(StringUtils.isNotBlank(vo.getE01Z701())? DateUtil.parseDefaultDate(vo.getE01Z701()) :null );
-                entity.setE01Z727(StringUtils.isNotBlank(vo.getE01Z727())? DateUtil.parseDefaultDate(vo.getE01Z727()) :null );
                 entity.setA38(a38);
                 entity.setName(a38.getA0101());
+                ConvertUtils.register(new DateConverter(null), java.util.Date.class);
+                BeanUtils.copyProperties(entity, vo);
+                if(a38ids.length>1)entity.setDwzw(a38.getA0157());
+                entity.setName(a38.getA0101());
+                entity.setE01Z701(StringUtils.isNotBlank(vo.getE01Z701())? DateUtil.parseDefaultDate(vo.getE01Z701()) :null );
+                entity.setE01Z727(StringUtils.isNotBlank(vo.getE01Z727())? DateUtil.parseDefaultDate(vo.getE01Z727()) :null );
+                entity.setJsrq(StringUtils.isNotBlank(vo.getJsrq())? DateUtil.parseDefaultDate(vo.getJsrq()) :null );
                 entity.setE01Z717(details.getRealname());
                 entity.setFileName(fileName);
                 entity.setFilePath(filePath);
@@ -227,15 +234,6 @@ public class E01Z7Controller extends BaseController {
                 EntityWrapper.wrapperSaveBaseProperties(entity, details);
                 e01z7Service.save(entity);
             }
-
-            if(a38ids.length>1){
-                returnMap.put("destPath", destPath);
-                returnMap.put("zipFileName", zipFileName);
-            }else if(a38ids.length==1){
-                returnMap.put("filePath", filePath);
-                returnMap.put("fileName", fileName);
-            }
-            returnMap.put("a38IdsLength", a38ids.length);
             returnMap.put("code", 1);
         } catch (GenericException e) {
             returnMap.put("code", -1);
@@ -312,6 +310,7 @@ public class E01Z7Controller extends BaseController {
             BeanUtils.copyProperties(vo,e01Z7);
             vo.setE01Z701(e01Z7.getE01Z701()==null?null:DateUtil.formatDefaultDate(e01Z7.getE01Z701()));
             vo.setE01Z727(e01Z7.getE01Z727()==null?null:DateUtil.formatDefaultDate(e01Z7.getE01Z727()));
+            vo.setJsrq(e01Z7.getJsrq()==null?null:DateUtil.formatDefaultDate(e01Z7.getJsrq()));
             model.put("vo",vo);
         }catch (Exception e){
             logger.error(e);

@@ -39,7 +39,7 @@
     <tbody>
     <c:forEach items="${pager.datas}" var="vo">
         <tr style="text-overflow:ellipsis;">
-            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101}"></td>
+            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101},${vo.a0157}"></td>
             <td>${vo.a0101}</td>
             <td>${vo.a0104Content}</td>
             <td>${vo.a0107} </td>

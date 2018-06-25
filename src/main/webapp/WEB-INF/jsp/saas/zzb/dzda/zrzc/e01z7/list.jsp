@@ -80,7 +80,7 @@
 										<a href="${path}/zzb/dzda/dazd/view/${vo.id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">查看</a>|
 										<a href="javascript:deleteE01z7('${vo.id}') ">删除</a>|
 										<c:choose>
-											<c:when test="${vo.fileName == '' || vo.fileName == null}">
+											<c:when test="${vo.filePath == '' || vo.filePath == null}">
 												下载
 											</c:when>
 											<c:otherwise>

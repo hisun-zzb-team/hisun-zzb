@@ -108,19 +108,32 @@
                             </div>
                         </div>
 
-
                         <div class="row-fluid">
                             <div class="span6 ">
-                                <div class="control-group" id="e01Z701Group">
-                                    <label class="control-label">转递日期</label>
+                                <div class="control-group" id="dwzwGroup">
+                                    <label class="control-label">单位职务</label>
 
                                     <div class="controls">
-                                        <input type="text" class="span10 m-wrap" name="e01Z701" maxlength="200"
-                                               id="e01Z701" readonly
-                                               value=""/>
+                                        <input type="text" class="span10 m-wrap" name="dwzw" maxlength="200"
+                                               id="dwzw" value=""/>
                                     </div>
                                 </div>
                             </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="yjrGroup">
+                                    <label class="control-label">移交人</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="yjr" maxlength="200"
+                                               id="yjr"
+                                               value="${yjr}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row-fluid">
                             <div class="span6 ">
                                 <div class="control-group" id="e01Z721Group">
                                     <label class="control-label">转递原因</label>
@@ -131,7 +144,42 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z701Group">
+                                    <label class="control-label">移交日期</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="e01Z701" maxlength="200"
+                                               id="e01Z701" readonly
+                                               value=""/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group" id="jsrGroup">
+                                    <label class="control-label">接收人</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="jsr" maxlength="200"
+                                               id="jsr" value=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="jsrqGroup">
+                                    <label class="control-label">接收日期</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="jsrq" maxlength="200"
+                                               id="jsrq" readonly
+                                               value=""/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row-fluid">
                             <div class="span6 ">
                                 <div class="control-group" id="e01Z724Group">
@@ -181,10 +229,10 @@
 
                             <div class="span6 ">
                                 <div class="control-group" id="sjlyGroup">
-                                    <label class="control-label"><span class="required">*</span>转递数据源</label>
+                                    <label class="control-label">转递数据源</label>
 
                                     <div class="controls">
-                                        <select name="sjly"  class="span10 m-wrap" id="sjly" required>
+                                        <select name="sjly"  class="span10 m-wrap" id="sjly">
                                             <option value=""></option>
                                             <option value="1">转成excel</option>
                                         </select>
@@ -334,6 +382,13 @@
             language: 'zh-CN'
         });
         $('#e01Z701').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
+        $('#jsrq').datepicker({
             format: 'yyyy-mm-dd',
             weekStart: 1,
             autoclose: true,

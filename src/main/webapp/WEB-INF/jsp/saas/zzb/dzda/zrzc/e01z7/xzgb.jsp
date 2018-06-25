@@ -80,7 +80,7 @@
                                     <tbody>
                                     <c:forEach items="${pager.datas}" var="vo">
                                         <tr style="text-overflow:ellipsis;">
-                                            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101}"></td>
+                                            <td><input type="checkbox" name="a38Check" onchange="checkChange(this)" value="${vo.id },${vo.a0101},${vo.a0157}"></td>
                                             <td>${vo.a0101}</td>
                                             <td>${vo.a0104Content}</td>
                                             <td>${vo.a0107} </td>
@@ -194,7 +194,7 @@
         });*/
     }
     var ids = [];
-
+    var dwzw = "";
     function saveXzda(){
 
         if(ids.length>0){
@@ -204,6 +204,7 @@
                 var idAndName =ids[i].split(",");
                 var id = idAndName[0];
                 var name = idAndName[1];
+                var dwzw =idAndName[2];
                 if(id !=""){
                     if(idString == ""){
                         idString =id;
@@ -213,6 +214,14 @@
                     idString=idString+","+id;
                     nameString = nameString+","+name;
                 }
+            }
+            if(ids.length==1){
+                $('#dwzw').removeAttr("readonly");//去除input元素的readonly属性 　　
+                $("#dwzw").val(dwzw);
+            }else {
+                $("#dwzw").val('');
+                $('#dwzw').attr("readonly","readonly")
+               // $("#dwzw").readOnly(true);
             }
             $("#name").val(nameString);
             $("#nameContent").val(idString);

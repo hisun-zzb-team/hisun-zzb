@@ -37,6 +37,42 @@ public class E01Z7  extends TenantEntity implements Serializable {
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
     private String sjly;//数据来源
+    private String dwzw;//单位职务
+    private String jsr;//接收人
+    private Date jsrq;//'接收日期'
+    private String yjr;//移交人
+
+    public String getDwzw() {
+        return dwzw;
+    }
+
+    public void setDwzw(String dwzw) {
+        this.dwzw = dwzw;
+    }
+
+    public String getJsr() {
+        return jsr;
+    }
+
+    public void setJsr(String jsr) {
+        this.jsr = jsr;
+    }
+
+    public Date getJsrq() {
+        return jsrq;
+    }
+
+    public void setJsrq(Date jsrq) {
+        this.jsrq = jsrq;
+    }
+
+    public String getYjr() {
+        return yjr;
+    }
+
+    public void setYjr(String yjr) {
+        this.yjr = yjr;
+    }
 
     @Basic
     @Column(name = "sjly")

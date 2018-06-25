@@ -91,7 +91,7 @@
                             <th width=90>申请人</th>
                             <th width=90 >查阅人</th>
                             <th width=150>申请时间</th>
-                            <th width=90>查阅档案对象姓名</th>
+                            <th width=100>查阅档案对象姓名</th>
                             <th  width=150>查阅开始时间</th>
                             <th width=100>查阅总时长</th>
                             <th>查阅情况</th>

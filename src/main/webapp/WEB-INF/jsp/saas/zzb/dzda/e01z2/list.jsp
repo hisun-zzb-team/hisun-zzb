@@ -96,7 +96,7 @@
                     <TD ><c:out value="${vo.e01Z244Content}"></c:out></TD>
                     <td>
                         <a href="javascript:edite01z2('${vo.id}')" class="">修改</a>|
-                        <a href="javascript:deletee01z2('${vo.id}')" class="">删除</a>
+                        <a href="javascript:deletee01z2('${vo.id}','${vo.e01Z214}')" class="">删除</a>
                     </td>
                 </TR>
             </c:forEach>
@@ -163,8 +163,8 @@
                 }
             });
         }
-        function deletee01z2(id){
-            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+        function deletee01z2(id,name){
+            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id+"?e01Z214="+name+"OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
                 if(json.code == "1"){
                     showTip("提示","删除成功",1500);
                     setTimeout(function(){
@@ -214,7 +214,7 @@
         }
 
         function download() {
-            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+            window.open("${path}/zzb/dzda/e01z2/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
         }
 
         function uploadFile(){

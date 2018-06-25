@@ -165,7 +165,7 @@
 
 	function del(id, voname) {
 		var a38Id = $("#a38Id").val();
-		actionByConfirm1(voname, "${path}/zzb/dzda/e01z4/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
+		actionByConfirm1(voname, "${path}/zzb/dzda/e01z4/delete/" + id+"?e01Z411="+voname+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
 			if (data.success == true) {
 				showTip("提示", "成功删除！", 2000);
 				$.ajax({
@@ -193,7 +193,7 @@
 	}
 
 	function download() {
-		window.open("${path}/zzb/dzda/e01z4/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+		window.open("${path}/zzb/dzda/e01z4/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
 	}
 
 	function uploadFile(){

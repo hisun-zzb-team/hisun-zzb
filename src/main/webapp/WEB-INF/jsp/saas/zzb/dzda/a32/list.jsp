@@ -88,7 +88,7 @@
                             <TD ><c:out value="${vo.a3211}"></c:out></TD>
                             <td>
                                 <a href="javascript:editA32('${vo.id}')" class="">修改</a>|
-                                <a href="javascript:deleteA32('${vo.id}')" class="">删除</a>
+                                <a href="javascript:deleteA32('${vo.id}','${vo.gzbm}')" class="">删除</a>
                             </td>
                         </TR>
                     </c:forEach>
@@ -155,9 +155,9 @@
               }
           });
       }
-      function deleteA32(id){
+      function deleteA32(id,name){
           console.log(id);
-          actionByConfirm1('',"${path}/zzb/dzda/a32/delete/"+id,null,function(json){
+          actionByConfirm1('',"${path}/zzb/dzda/a32/delete/"+id+"?gzbm="+name,null,function(json){
               if(json.code == 1){
                   showTip("提示","操作成功");
                   setTimeout(function(){
@@ -209,7 +209,7 @@
       }
 
       function download() {
-          window.open("${path}/zzb/dzda/a32/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+          window.open("${path}/zzb/dzda/a32/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
       }
 
       function uploadFile(){

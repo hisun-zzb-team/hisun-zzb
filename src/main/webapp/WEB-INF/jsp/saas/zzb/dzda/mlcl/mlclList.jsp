@@ -355,7 +355,7 @@
         var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
         var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
         var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
-        actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
+        actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id+"?a0101=${a0101}&e01Z111="+voname+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
                 $.ajax({
@@ -504,11 +504,11 @@
     }
 
     function download(){
-        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+        window.open("${path}/zzb/dzda/e01z1/download/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     };
 
     function downloadMB(){
-        window.open("${path}/zzb/dzda/e01z1/downloadMB/{a38Id}?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
+        window.open("${path}/zzb/dzda/e01z1/downloadMB/${a38Id}?a0101=${a0101}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}");
     }
 
     function uploadFile(){

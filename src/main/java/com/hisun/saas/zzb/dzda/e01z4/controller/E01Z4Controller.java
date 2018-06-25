@@ -110,9 +110,11 @@ public class E01Z4Controller extends BaseController {
                     vos.add(vo);
                 }
             }
+            A38 a38 = a38Service.getByPK(a38Id);
             PagerVo<E01Z4Vo> pager = new PagerVo<E01Z4Vo>(vos, total.intValue(), pageNum, pageSize);
             map.put("pager", pager);
             map.put("a38Id",a38Id);
+            map.put("a0101",a38.getA0101());
             map.put("total",total);
         }catch(Exception e){
             logger.error(e);
@@ -201,7 +203,7 @@ public class E01Z4Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${id}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${e01Z411}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
@@ -286,6 +288,7 @@ public class E01Z4Controller extends BaseController {
         return map;
     }
 
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载欠缺材料:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){

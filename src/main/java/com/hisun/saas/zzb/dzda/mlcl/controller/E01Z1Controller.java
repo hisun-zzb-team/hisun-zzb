@@ -63,8 +63,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author zhout {605144321@qq.com}
-*/
+ * @author zhout {605144321@qq.com}
+ */
 @Controller
 @RequestMapping("/zzb/dzda/e01z1")
 public class E01Z1Controller extends BaseController {
@@ -321,7 +321,7 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${e01Z111}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除'${a0101}'材料'${e01Z111}'")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
@@ -518,7 +518,7 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料:{a0101}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
@@ -647,12 +647,12 @@ public class E01Z1Controller extends BaseController {
         }
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料模板:{a0101}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料模板:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/downloadMB/{a38Id}")
     public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
-                         @RequestParam(value="xml",defaultValue="2")int xml,
-                         @RequestParam(value="dml",defaultValue="6") int dml){
+                           @RequestParam(value="xml",defaultValue="2")int xml,
+                           @RequestParam(value="dml",defaultValue="6") int dml){
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
 

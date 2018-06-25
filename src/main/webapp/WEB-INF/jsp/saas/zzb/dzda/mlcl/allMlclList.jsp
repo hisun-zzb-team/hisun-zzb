@@ -354,7 +354,7 @@
         var eCatalogTypeTreeCode = $("#eCatalogTypeTreeCode").val();
         var eCatalogTypeTreeName = $("#eCatalogTypeTreeName").val();
         var eCatalogTypeTreeParentId = $("#eCatalogTypeTreeParentId").val();
-        actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
+        actionByConfirm1(voname, "${path}/zzb/dzda/e01z1/delete/" + id+"?a0101=${a0101}&e01Z111="+voname+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}", {}, function (data, status) {
             if (data.success == true) {
                 showTip("提示", "成功删除！", 2000);
                 $.ajax({

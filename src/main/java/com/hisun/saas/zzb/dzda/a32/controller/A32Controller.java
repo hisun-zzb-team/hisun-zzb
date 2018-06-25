@@ -89,6 +89,8 @@ public class A32Controller extends BaseController {
         orderBy.add(CommonOrder.asc("px"));
         List<A32> resultList = a32Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A32> pager = new PagerVo<A32>(resultList, total.intValue(), pageNum, pageSize);
+        A38 a38 = a38Service.getByPK(a38Id);
+        model.put("a0101",a38.getA0101());
         model.put("pager",pager);
         model.put("a38Id",a38Id);
         return new ModelAndView("saas/zzb/dzda/a32/list",model);
@@ -171,6 +173,8 @@ public class A32Controller extends BaseController {
         }
         return map;
     }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除工资变动:${gzbm}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
     public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
@@ -186,6 +190,7 @@ public class A32Controller extends BaseController {
         return returnMap;
     }
 
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载工资变动:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){

@@ -83,8 +83,10 @@ public class A52Controller extends BaseController {
         orderBy.add(CommonOrder.asc("px"));
         List<A52> resultList = a52Service.list(query,orderBy,pageNum,pageSize);
         PagerVo<A52> pager = new PagerVo<A52>(resultList, total.intValue(), pageNum, pageSize);
+        A38 a38 = a38Service.getByPK(a38Id);
         model.put("pager",pager);
         model.put("a38Id",a38Id);
+        model.put("a0101",a38.getA0101());
         return new ModelAndView("saas/zzb/dzda/a52/list",model);
     }
 
@@ -164,9 +166,11 @@ public class A52Controller extends BaseController {
          }
         return map;
     }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除职务变动:${a5204}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a5204) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
             a52Service.deleteByPK(id);
@@ -179,6 +183,7 @@ public class A52Controller extends BaseController {
         return returnMap;
     }
 
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载职务变动:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){

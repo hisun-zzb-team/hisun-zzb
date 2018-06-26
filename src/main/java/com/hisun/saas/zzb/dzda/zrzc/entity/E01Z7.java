@@ -42,6 +42,8 @@ public class E01Z7  extends TenantEntity implements Serializable {
     private Date jsrq;//'接收日期'
     private String yjr;//移交人
 
+    @Basic
+    @Column(name = "dwzw")
     public String getDwzw() {
         return dwzw;
     }
@@ -50,6 +52,8 @@ public class E01Z7  extends TenantEntity implements Serializable {
         this.dwzw = dwzw;
     }
 
+    @Basic
+    @Column(name = "jsr")
     public String getJsr() {
         return jsr;
     }
@@ -58,6 +62,8 @@ public class E01Z7  extends TenantEntity implements Serializable {
         this.jsr = jsr;
     }
 
+    @Basic
+    @Column(name = "jsrq")
     public Date getJsrq() {
         return jsrq;
     }
@@ -66,6 +72,8 @@ public class E01Z7  extends TenantEntity implements Serializable {
         this.jsrq = jsrq;
     }
 
+    @Basic
+    @Column(name = "yjr")
     public String getYjr() {
         return yjr;
     }

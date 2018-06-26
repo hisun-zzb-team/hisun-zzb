@@ -106,6 +106,20 @@
                                 </div>
                             </div>
                             <div class="span6 ">
+                                <div class="control-group" id="dadwzwGroup">
+                                    <label class="control-label">档案单位职务</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="dadwzw" maxlength="200"
+                                               id="dadwzw"
+                                               value=""/>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span6 ">
                                 <div id="e01Z541Group" class="control-group">
                                     <label class="control-label">档案位置</label>
 
@@ -115,15 +129,54 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="span6 ">
+                                <div id="yjrGroup" class="control-group">
+                                    <label class="control-label">移交人</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value=""
+                                               id="yjr" name="yjr">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="row-fluid">
                             <div class="span6 ">
                                 <div id="e01Z507AGroup" class="control-group">
-                                    <label class="control-label">来件单位名称<span class="required">*</span></label>
+                                    <label class="control-label">来档单位<span class="required">*</span></label>
 
                                     <div class="controls">
                                         <input type="text" class="span10 m-wrap" value="" required
                                                id="e01Z507A" name="e01Z507A">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div class="control-group" id="e01Z527Group">
+                                    <label class="control-label">案卷质量</label>
+
+                                    <div class="controls">
+                                        <SelectTag:SelectTag id="e01Z527" textClass="m-wrap span10" needNullValue="true"
+                                                             defaultkeys="1"
+                                                             token="${sessionScope.OWASP_CSRFTOKEN}"
+                                                             radioOrCheckbox="radio"
+                                                             selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid">
+
+                            <div class="span6 ">
+                                <div class="control-group" id="jsrGroup">
+                                    <label class="control-label">接收人</label>
+
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" name="jsr" maxlength="200"
+                                               id="jsr"
+                                               value=""/>
                                     </div>
                                 </div>
                             </div>
@@ -209,29 +262,7 @@
                         </div>
 
                         <div class="row-fluid">
-                            <div class="span6 ">
-                                <div class="control-group" id="e01Z527Group">
-                                    <label class="control-label">案卷质量</label>
 
-                                    <div class="controls">
-                                        <SelectTag:SelectTag id="e01Z527" textClass="m-wrap span10" needNullValue="true"
-                                                             defaultkeys="1"
-                                                             token="${sessionScope.OWASP_CSRFTOKEN}"
-                                                             radioOrCheckbox="radio"
-                                                             selectUrl="${path}/api/dictionary/select?typeCode=DAZL-2018"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span6 ">
-                                <div id="e01Z531Group" class="control-group">
-                                    <label class="control-label">回执日期</label>
-
-                                    <div class="controls">
-                                        <input type="text" class="span10 m-wrap" value="" readonly
-                                               id="e01Z531" name="e01Z531">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="row-fluid">
                             <div class="span6 ">
@@ -281,12 +312,21 @@
                             </div>
                         </div>
                         <div class="row-fluid">
+                            <div class="span6 ">
+                                <div id="e01Z531Group" class="control-group">
+                                    <label class="control-label">回执日期</label>
 
-                            <div>
+                                    <div class="controls">
+                                        <input type="text" class="span10 m-wrap" value="" readonly
+                                               id="e01Z531" name="e01Z531">
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="span6 ">
                                 <div id="e01Z544Group" class="control-group">
                                     <label class="control-label">备注</label>
                                     <div class="controls">
-                                            <textarea class="span11" rows="2" name="e01Z544" maxlength="400"
+                                            <textarea class="span10 m-wrap" rows="2" name="e01Z544" maxlength="400"
                                                       id="e01Z544" style="resize: none;"></textarea>
                                     </div>
                                 </div>
@@ -381,10 +421,11 @@
 //                showTip("提示", "请上传Excel文件", 2000);
 //                return;
 //            }
-        }/* else {
-            showTip("提示", "请上传接收文件", 2000);
-            return;
-        }*/
+        }
+        /* else {
+         showTip("提示", "请上传接收文件", 2000);
+         return;
+         }*/
         myLoading.show();
         $("#form1").ajaxSubmit({
             url: "${path }/zzb/dzda/dajs/save",

@@ -40,6 +40,17 @@ public class E01Z2 extends TenantEntity implements Serializable {
     private String e01Z244;//是否已受理标识
     private String e01Z244Content;//是否已受理标识
     private Integer e01Z214;// 材料序号
+    private String yjr;//移交人
+
+    @Basic
+    @Column(name = "yjr")
+    public String getYjr() {
+        return yjr;
+    }
+
+    public void setYjr(String yjr) {
+        this.yjr = yjr;
+    }
 
     @Basic
     @Column(name = "e01z244_content", nullable = true, length = 64)

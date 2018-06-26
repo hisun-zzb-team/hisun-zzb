@@ -41,6 +41,40 @@ public class E01Z5  extends TenantEntity implements Serializable {
     private String filePath;//上传文件路径
     private String fileName; //上传文件名称
     private String sjly;//数据来源
+    private String jsr;//接收人
+    private String yjr;//移交人
+    private String dadwzw;//档案单位职务
+
+    @Basic
+    @Column(name = "jsr")
+    public String getJsr() {
+        return jsr;
+    }
+
+    public void setJsr(String jsr) {
+        this.jsr = jsr;
+    }
+
+    @Basic
+    @Column(name = "yjr")
+    public String getYjr() {
+        return yjr;
+    }
+
+    public void setYjr(String yjr) {
+        this.yjr = yjr;
+    }
+
+    @Basic
+    @Column(name = "dadwzw")
+    public String getDadwzw() {
+        return dadwzw;
+    }
+
+    public void setDadwzw(String dadwzw) {
+        this.dadwzw = dadwzw;
+    }
+
     @Basic
     @Column(name = "sjly")
     public String getSjly() {

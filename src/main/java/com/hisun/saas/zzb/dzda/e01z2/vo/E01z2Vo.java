@@ -34,6 +34,15 @@ public class E01z2Vo implements Serializable {
     private String e01Z244Content;//是否已受理标识
     private Integer e01Z214;// 材料序号
     private Integer row;//行数
+    private String yjr;//移交人
+
+    public String getYjr() {
+        return yjr;
+    }
+
+    public void setYjr(String yjr) {
+        this.yjr = yjr;
+    }
 
     public String getE01Z237Content() {
         return e01Z237Content;

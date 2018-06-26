@@ -66,32 +66,30 @@
 
             <TR height=28>
                 <th width="30">序号</th>
-                <th width="100">来件单位名称</th>
                 <th>材料名称</th>
-                <th width="60">收件日期</th>
-                <th width="60">接收人</th>
                 <th width="120">材料类号</th>
-
-                <th width="30">页数</th>
                 <th width="60">制成日期</th>
-                <th width="30">份数</th>
-                <th width="60">处理状态</th>
-                <th width="60">受理状态</th>
+                <th width="30">页数</th>
+                <th width="100">来件单位</th>
+                <th width="60">移交日期</th>
+                <th width="60">移交人</th>
+                <th width="60">接收人</th>
+                <th width="60">是否已处理</th>
+                <th width="80">材料处理状态</th>
                 <th width="70">操作</th>
             </thead>
             <tbody>
             <c:forEach items="${pager.datas}" var="vo">
                 <tr style="text-overflow:ellipsis;">
                     <TD><c:out value="${vo.e01Z214}"></c:out></TD>
-                    <TD><c:out value="${vo.e01Z204A}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z221A}"></c:out></TD>
-                    <TD><c:out value="${vo.e01Z201}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z207}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z211A}"></c:out></TD>
-
-                    <TD><c:out value="${vo.e01Z224}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z227}"></c:out></TD>
-                    <TD ><c:out value="${vo.e01Z234}"></c:out></TD>
+                    <TD><c:out value="${vo.e01Z224}"></c:out></TD>
+                    <TD><c:out value="${vo.e01Z204A}"></c:out></TD>
+                    <TD><c:out value="${vo.e01Z201}"></c:out></TD>
+                    <TD ><c:out value="${vo.yjr}"></c:out></TD>
+                    <TD ><c:out value="${vo.e01Z207}"></c:out></TD>
                     <TD><c:out value="${vo.e01Z237Content}"></c:out></TD>
                     <TD ><c:out value="${vo.e01Z244Content}"></c:out></TD>
                     <td>

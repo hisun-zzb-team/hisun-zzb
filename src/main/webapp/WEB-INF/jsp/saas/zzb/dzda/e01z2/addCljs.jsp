@@ -31,23 +31,13 @@
 
             <div class="row-fluid">
                 <div class="span6 ">
-                    <div id="e01Z204AGroup" class="control-group">
-                        <label class="control-label"><span class="required">*</span>来件单位名称</label>
-                        <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z204A" required maxlength="128" id="e01Z204A" value="" />
-                        </div>
-                    </div>
-                </div>
-                <div class="span6 ">
                     <div id="e01Z221AGroup" class="control-group">
                         <label class="control-label"><span class="required">*</span>材料名称：</label>
                         <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z221A" required  maxlength="128" id="e01Z221A" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z221A"  maxlength="128" required id="e01Z221A" value="" />
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row-fluid">
                 <div class="span6 ">
                     <div id="e01Z217Group" class="control-group">
                         <label class="control-label">材料编号：</label>
@@ -56,66 +46,31 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="row-fluid">
                 <div class="span6 ">
                     <div id="e01Z211AGroup" class="control-group">
                         <label class="control-label">材料类号：</label>
-                        <div class="controls" >
+                        <div class="controls">
                             <Tree:tree id="e01Z211B" valueName="e01Z211A" treeUrl="${path}/sys/admin/dzda/catalogType/cljs/tree" token="${sessionScope.OWASP_CSRFTOKEN}"
-                                       submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span10 m-wrap"
+                                       defaultkeys="" defaultvalues="" submitType="post" dataType="json" isSearch="false" isSelectTree="true" required="false" onClick="onClickByTree1" selectClass="span10 m-wrap"
                             />
                             <%--<input type="hidden" id="currentNodeName" name="e01Z211" value="${currentNodeName}"/>--%>
                         </div>
                     </div>
                 </div>
+                <div class="span6 ">
+                    <div id="e01Z227Group" class="control-group">
+                        <label class="control-label">材料制成日期：</label>
+                        <div class="controls">
+                            <input type="text" class="span10 m-wrap" name="e01Z227"  maxlength="128" id="e01Z227" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <div class="row-fluid">
-                <div class="span6 ">
-                    <div id="e01Z207Group" class="control-group">
-                        <label class="control-label">接收人：</label>
-                        <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z207"  maxlength="128" id="e01Z207" value=""/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="span6 ">
-                    <div id="e01Z214Group" class="control-group">
-                        <label class="control-label"><span class="required">*</span>材料接收顺序号</label>
-                        <div class="controls">
-                            <input type="text" number="true"  required maxlength="3" class="span10 m-wrap" name="e01Z214"  maxlength="128" id="e01Z214" value="${sort}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="row-fluid">
-            <div class="span6 ">
-                <div id="e01Z201Group" class="control-group">
-                    <label class="control-label">收件日期：</label>
-                    <div class="controls">
-                        <input type="text" class="span10 m-wrap" name="e01Z201"  maxlength="128" id="e01Z201" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
-                    </div>
-                </div>
-            </div>
-            <div class="span6 ">
-                <div id="e01Z227Group" class="control-group">
-                    <label class="control-label">材料制成日期：</label>
-                    <div class="controls">
-                        <input type="text" class="span10 m-wrap" name="e01Z227"  maxlength="128" id="e01Z227" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="row-fluid">
-                <div class="span6 ">
-                    <div id="e01Z224Group" class="control-group">
-                        <label class="control-label">页数：</label>
-                        <div class="controls">
-                            <input type="text" number="true" class="span10 m-wrap" name="e01Z224"  maxlength="128" id="e01Z224" value="" />
-                        </div>
-                    </div>
-                </div>
                 <div class="span6 ">
                     <div id="e01Z234Group" class="control-group">
                         <label class="control-label">份数：</label>
@@ -124,23 +79,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-            <div class="row-fluid">
                 <div class="span6 ">
-                    <div id="e01Z237Group" class="control-group">
-                        <label class="control-label">材料处理状态：</label>
+                    <div id="e01Z224Group" class="control-group">
+                        <label class="control-label">页数：</label>
                         <div class="controls">
-                            <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content" textClass="m-wrap span10" token="${sessionScope.OWASP_CSRFTOKEN}" needNullValue="true" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="span6 ">
-                    <div id="e01Z244Group" class="control-group">
-                        <label class="control-label">是否已处理：</label>
-                        <div class="controls">
-                            <SelectTag:SelectTag id="e01Z244" valueName="e01Z244Content" textClass="m-wrap span10" needNullValue="true"
-                                                 token="${sessionScope.OWASP_CSRFTOKEN}"     radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+                            <input type="text" number="true" class="span10 m-wrap" name="e01Z224"  maxlength="128" id="e01Z224" value="" />
                         </div>
                     </div>
                 </div>
@@ -148,10 +91,77 @@
             </div>
             <div class="row-fluid">
                 <div class="span6 ">
+                    <div id="e01Z204AGroup" class="control-group">
+                        <label class="control-label"><span class="required">*</span>来件单位</label>
+                        <div class="controls">
+                            <input type="text" class="span10 m-wrap" name="e01Z204A" required maxlength="128" id="e01Z204A" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 ">
+                    <div id="e01Z201Group" class="control-group">
+                        <label class="control-label">移交日期：</label>
+                        <div class="controls">
+                            <input type="text" class="span10 m-wrap" name="e01Z201"  maxlength="128" id="e01Z201" value=""  placeholder="日期格式 例如：2018或201801或20180101" isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row-fluid">
+                <div class="span6 ">
+                    <div id="yjrGroup" class="control-group">
+                        <label class="control-label">移交人：</label>
+                        <div class="controls">
+                            <input type="text" class="span10 m-wrap" name="yjr"  maxlength="128" id="yjr" value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 ">
+                    <div id="e01Z207Group" class="control-group">
+                        <label class="control-label">接收人：</label>
+                        <div class="controls">
+                            <input type="text" class="span10 m-wrap" name="e01Z207"  maxlength="128" id="e01Z207" value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6 ">
+                    <div id="e01Z244Group" class="control-group">
+                        <label class="control-label">是否已处理：</label>
+                        <div class="controls">
+                            <SelectTag:SelectTag id="e01Z244" needNullValue="true" valueName="e01Z244Content" textClass="m-wrap span10" defaultkeys="" defaultvalues=""
+                                                 radioOrCheckbox="radio" token="${sessionScope.OWASP_CSRFTOKEN}" selectUrl="${path}/api/dictionary/select?typeCode=SFBS-2018"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="span6 ">
+                    <div id="e01Z237Group" class="control-group">
+                        <label class="control-label">材料处理状态：</label>
+                        <div class="controls">
+                            <SelectTag:SelectTag id="e01Z237" needNullValue="true" valueName="e01Z237Content"  defaultkeys="" token="${sessionScope.OWASP_CSRFTOKEN}" defaultvalues=""
+                                                 textClass="m-wrap span10" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row-fluid">
+                <%--<div class="span6 ">
                     <div id="e01Z241Group" class="control-group">
                         <label class="control-label">零散材料序号：</label>
                         <div class="controls">
-                            <input type="text" class="span10 m-wrap" name="e01Z241"  maxlength="128" id="e01Z241" value="" />
+                            <input type="text" class="span10 m-wrap" name="e01Z241"  maxlength="128" id="e01Z241" value="${e01z2.e01Z241}" />
+                        </div>
+                    </div>
+                </div>--%>
+                <div class="span6 ">
+                    <div id="e01Z214Group" class="control-group">
+                        <label class="control-label"><span class="required">*</span>材料接收顺序号</label>
+                        <div class="controls">
+                            <input type="text" number="true"  required maxlength="3" class="span10 m-wrap" name="e01Z214"  maxlength="128" id="e01Z214" value="${sort}" />
                         </div>
                     </div>
                 </div>
@@ -165,7 +175,6 @@
                 </div>
 
             </div>
-
 
             <div  >
                 <center>
@@ -200,28 +209,6 @@
             });
         }
         function onClickByTree1 (event, treeId, treeNode){
-           // $("#currentNodeId").val(treeNode.id);//赋值
-            $("#currentNodeName").val(treeNode.name);//赋值
-        //    $("#currentNodeParentId").val(treeNode.pId);//赋值
-            /*var currentNodeId = $("#currentNodeId").val();
-            var currentNodeName = $("#currentNodeName").val();
-            var currentNodeParentId = $("#currentNodeParentId").val();*/
-         /*   $.ajax({
-                url : "${path}/sys/admin/dzda/catalogType/ajax/changeAddEdit?currentNodeId="+currentNodeId+"&currentNodeName="+currentNodeName+"&currentNodeParentId="+currentNodeParentId,
-                type : "get",
-                data : null,
-                dataType : "json",
-                headers: {
-                    "OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
-                },
-                success : function(data){
-                    $("#sort").val(data.sort);//赋值
-                    $("#catalogCode").val(data.catalogCode);
-                },
-                error : function(){
-
-                }
-            });*/
         }
         var addForm = new EstValidate("form1");
         function submite01z2(){

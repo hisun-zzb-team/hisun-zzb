@@ -250,6 +250,86 @@
                                 </div>
                             </div>
 
+                            <div class="portlet-title">
+                                <div class="caption">欠缺材料</div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span6 ">
+                                    <div id="qqclGroup" class="control-group">
+                                        <label class="control-label">是否欠缺材料</label>
+
+                                        <div class="controls">
+                                            <select name="qqcl" class="span10">
+                                                <option value=""></option>
+                                                <option value="1" <c:if test="${vo.qqcl=='1'}">selected</c:if>>是</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="portlet-title">
+                                <div class="caption">材料接收</div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span6 ">
+                                    <div id="cljsGroup" class="control-group">
+                                        <label class="control-label">材料接收记录</label>
+
+                                        <div class="controls">
+                                            <select name="cljs" class="span10">
+                                                <option value=""></option>
+                                                <option value="1" <c:if test="${vo.cljs=='1'}">selected</c:if>>有</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span6 ">
+                                    <div id="ljdwmcGroup" class="control-group">
+                                        <label class="control-label">来件单位名称</label>
+
+                                        <div class="controls">
+                                            <input type="text" class="span10 m-wrap" name="ljdwmc" maxlength="128"
+                                                   id="ljdwmc" value="${vo.ljdwmc}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="span6 ">
+                                    <div id="cljsrqGroup" class="control-group">
+                                        <label class="control-label">材料接收日期</label>
+
+                                        <div class="controls">
+                                            <input type="text" class="span5 m-wrap"
+                                                   placeholder="日期格式 例如：2018或201801或20180101" isDate="true"
+                                                   dateformat="yyyy,yyyymm,yyyymmdd" value="${vo.cljsrqStart}"
+                                                   name="cljsrqStart" id="cljsrqStart"/>
+                                            <input type="text" class="span5 m-wrap"
+                                                   placeholder="日期格式 例如：2018或201801或20180101" isDate="true"
+                                                   dateformat="yyyy,yyyymm,yyyymmdd" value="${vo.cljsrqEnd}" name="cljsrqEnd"
+                                                   id="cljsrqEnd"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span6 ">
+                                    <div id="e01Z237Group" class="control-group">
+                                        <label class="control-label">材料处理状态：</label>
+                                        <div class="controls">
+                                            <SelectTag:SelectTag id="e01Z237" valueName="e01Z237Content"
+                                                                 defaultkeys="${vo.e01Z237}" defaultvalues="${vo.e01Z237Content}"
+                                                                 textClass="m-wrap span10" token="${sessionScope.OWASP_CSRFTOKEN}" needNullValue="true" radioOrCheckbox="radio" selectUrl="${path}/api/dictionary/select?typeCode=CLCLBS-2018"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </form>
                     </div>
 

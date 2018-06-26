@@ -358,7 +358,7 @@
                                     <label class="control-label">是否欠缺材料</label>
 
                                     <div class="controls">
-                                       <select name="qqcl" style="width: 377.13px;height: 34px">
+                                       <select name="qqcl" class="span10">
                                            <option value=""></option>
                                            <option value="1" <c:if test="${vo.qqcl=='1'}">selected</c:if>>是</option>
                                        </select>
@@ -376,7 +376,7 @@
                                     <label class="control-label">材料接收记录</label>
 
                                     <div class="controls">
-                                        <select name="cljs" style="width: 377.13px;height: 34px">
+                                        <select name="cljs" class="span10">
                                             <option value=""></option>
                                             <option value="1" <c:if test="${vo.cljs=='1'}">selected</c:if>>有</option>
                                         </select>

@@ -191,6 +191,7 @@
                 <button type="button" id="button3" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('down');" disabled>下一页</button>
                 <button type="button" id="button2" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('up');" disabled>上一页</button>
                 <button type="button" id="button1" class="btn green" style="float: right;margin-right: 5px" onclick="changeImage('one');" disabled>第一页</button>
+                <button type="button" id="daduibiBtn" class="btn green" style="float: right;margin-right: 5px" onclick="daDuibi();" disabled>对比</button>
                 <div class="btn-group" style="padding-bottom: 0px;float: right;right: 5px;margin-left: 5px;">
                     <a class="btn green dropdown-toggle" data-toggle="dropdown" href="#">
                         显示方式<i class="icon-angle-down"></i>

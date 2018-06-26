@@ -19,7 +19,27 @@
 
 
 <body>
-
+<div id="imgDuiBiModal" class="modal container hide fade" tabindex="-1" data-width="1010" data-height="600">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-default" style="float: right;font-weight: bold;" data-dismiss="modal"><i class='icon-remove-sign'></i> 关闭</button>
+                <div  style="float: right;height: 30px;">
+                    <Tree:tree id="imgDuibiTree" treeUrl="${path}/zzb/dzda/mlcl/images/ajax/typeAndE01z1Tree/${a38Id}" selectClass="span5 m-wrap" height="18px" token="${sessionScope.OWASP_CSRFTOKEN}"
+                               submitType="post" dataType="json" isSearch="false" isSelectTree="true" onClick="showDuibiImg"/>
+                </div>
+                <div  style="float: right;height: 30px;margin-top: 5px">
+                    选择对比材料
+                </div>
+                <h3 class="modal-title" id="imgDuiBiTitle">
+                    材料对比
+                </h3>
+            </div>
+            <div class="modal-body" id="imgDuiBiDiv" style="background-color: #f1f3f6;margin-top: 0px;padding-top: 0px;padding-bottom: 0px">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <!-- 脚本目录 -->
     <input id="showTpWidth" type="hidden"/>
@@ -432,6 +452,69 @@
         $("#timespan").html("");
         //window.location.href ="${path }/zzb/dzda/cysq/list";
         location.reload();
+    }
+
+    function daDuibi(){
+        var divHeight = $(window).height() -60;
+        var divWidth = $(window).width() - 100;
+        $('#viewImgModal').attr("data-height", divHeight);
+        $('#viewImgModal').attr("data-width", divWidth);
+//        $("#imgDuibiTree_tree").empty();
+        refreshTreeTag("imgDuibiTree", setting_imgDuibiTree, "");
+        var treeObj = $.fn.zTree.getZTreeObj("imgDuibiTree_tree");
+        var nodes = treeObj.getSelectedNodes();
+        if (nodes.length>0) {
+            treeObj.cancelSelectedNode(nodes[0]);
+        }
+        $("#imgDuibiTree").val('')
+        $("#imgDuibiTree_value").val('')
+        $.ajax({
+            url: "${path}/zzb/dzda/mlcl/images/ajax/imgDuibi",
+            type: "post",
+            data: {
+
+            },
+            headers: {
+                OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+            },
+            dataType: "html",
+            success: function (html) {
+                $('#imgDuiBiDiv').html(html);
+                $('#imgDuiBiModal').modal({backdrop: 'static', keyboard: false});
+            },
+            error: function () {
+                showTip("提示", "出错了请联系管理员", 1500);
+            }
+        });
+    }
+    function showDuibiImg(e,treeId, treeNode){
+       var e01z1Id = $("#selectNodeId").val();
+       var duibiE01z1Id = treeNode.id;
+       var nodeType = treeNode.nodeType;
+       if(nodeType=="dir"){
+           showTip("提示", "请选择材料进行对比", 1500);
+       }else if(e01z1Id==duibiE01z1Id){
+           showTip("提示", "不可选择同一份材料进行对比", 1500);
+       }else{
+           $.ajax({
+               url: "${path}/zzb/dzda/mlcl/images/ajax/imgDuibi",
+               type: "post",
+               data: {
+                   "e01z1Id":e01z1Id,
+                   "duibiE01z1Id":duibiE01z1Id
+               },
+               headers: {
+                   OWASP_CSRFTOKEN: "${sessionScope.OWASP_CSRFTOKEN}"
+               },
+               dataType: "html",
+               success: function (html) {
+                   $('#imgDuiBiDiv').html(html);
+               },
+               error: function () {
+                   showTip("提示", "出错了请联系管理员", 1500);
+               }
+           });
+       }
     }
 
 

@@ -126,6 +126,7 @@
                         <th width=70 style="text-align: center">接收日期</th>
                         <th width=70 style="text-align: center">干部状态</th>
                         <th width=70 style="text-align: center">现职级时间</th>
+                        <th width=70 style="text-align: center">档案详情</th>
                     </thead>
                     <tbody>
                     <c:forEach items="${pager.datas}" var="vo">
@@ -139,6 +140,7 @@
                             <TD style="text-align: center"><c:out value="${vo.gbztContent}"></c:out></TD>
                             <TD style="text-align: center"><c:out value="${vo.dutyLevelValue}"></c:out><br><c:out
                                     value="${vo.dutyLevelTimeBase}"></c:out></TD>
+                            <TD><a href="${path}/zzb/dzda/a38/editManage?id=${vo.id }&isDacx=1&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">详情</a></TD>
                         </TR>
                     </c:forEach>
                     </tbody>

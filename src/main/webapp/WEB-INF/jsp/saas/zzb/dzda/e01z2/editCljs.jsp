@@ -182,7 +182,7 @@
                     <div style="margin:auto;">
                         <input type="hidden" name="a38Id" value="${a38Id}">
                         <input type="hidden" name="id" value="${e01z2.id}">
-                        <button class="btn green" type="button" style="padding:7px 20px;" onclick="submite01z2()">确定</button>
+                        <button class="btn green" id="submitbut" type="button" style="padding:7px 20px;" onclick="submite01z2()">确定</button>
                         <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
                     </div>
                 </center>
@@ -192,16 +192,16 @@
 
     <script type="text/javascript">
         function cencal(){
+            var isDacx = $("#isDacx").val();
             $.ajax({
                 url : "${path }/zzb/dzda/e01z2/ajax/list",
                 type : "get",
-                data : {"a38Id":"${a38Id}"},
+                data : {"a38Id":"${a38Id}","isDacx":isDacx},
                 dataType : "html",
                 headers:{
                     OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
                 },
                 success : function(html){
-                    console.log(111);
                     var view = $("#tab_show");
                     view.html(html);
                 },
@@ -210,6 +210,13 @@
                 }
             });
         }
+
+        $(function () {
+            var isDacx = $("#isDacx").val();
+            if(isDacx=='1'){
+                $("#submitbut").hide();
+            }
+        })
         function onClickByTree1 (event, treeId, treeNode){
             // $("#currentNodeId").val(treeNode.id);//赋值
             $("#currentNodeName").val(treeNode.name);//赋值

@@ -39,7 +39,7 @@
             <%-- 表格开始 --%>
             <div class="portlet-title">
                 <div class="clearfix fr">
-
+                    <div <c:if test="${isDacx=='1'}"> style="display: none" </c:if>>
                     <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                         <i class="icon-plus"></i>增加工资变动
                     </a>
@@ -49,6 +49,7 @@
                     <a  class="btn green" href="javascript:download()">
                         <i class="icon-circle-arrow-down"></i>导出
                     </a>
+                    </div>
                 </div>
                 <form action="" id="uploadForm">
                     <input type="file" style="display: none" name="gzbdFile" id="gzbdFile" accept = '.csv,
@@ -87,8 +88,10 @@
                             <TD ><c:out value="${vo.a3204}"></c:out></TD>
                             <TD ><c:out value="${vo.a3211}"></c:out></TD>
                             <td>
-                                <a href="javascript:editA32('${vo.id}')" class="">修改</a>|
-                                <a href="javascript:deleteA32('${vo.id}','${vo.gzbm}')" class="">删除</a>
+                                <a href="javascript:editA32('${vo.id}')" class=""><c:if test="${isDacx=='1'}">查看</c:if><c:if test="${isDacx!='1'}">修改</c:if></a>
+                                <c:if test="${isDacx!='1'}">
+                                    |<a href="javascript:deleteA32('${vo.id}','${vo.gzbm}')" class="">删除</a>
+                                </c:if>
                             </td>
                         </TR>
                     </c:forEach>

@@ -97,7 +97,7 @@ public class E01Z1Controller extends BaseController {
 
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/mlxxList")
-    public @ResponseBody ModelAndView mlxxList(HttpServletRequest request,
+    public @ResponseBody ModelAndView mlxxList(HttpServletRequest request,String isDacx,
                                                @RequestParam(value="pageNum",defaultValue="1")int pageNum,
                                                @RequestParam(value="pageSize",defaultValue="10") int pageSize) throws GenericException {
         Map<String, Object> map = Maps.newHashMap();
@@ -184,7 +184,7 @@ public class E01Z1Controller extends BaseController {
             map.put("smxh",smxh);
             map.put("a0101",a38.getA0101());
             map.put("jztpTitle",jztpTitle);
-
+            map.put("isDacx",isDacx);
             map.put("total",total);
         }catch(Exception e){
             logger.error(e);

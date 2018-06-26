@@ -60,7 +60,8 @@
 					"eCatalogTypeTreeName":"所有材料",
 					"a38Id":a38Id,
 					"pageNum":pageNum,
-					"pageSize":pageSize
+					"pageSize":pageSize,
+                    "isDacx":$("#isDacx").val()
 
 				},
 				success : function(html){
@@ -85,7 +86,8 @@
 					"eCatalogTypeTreeParentId":eCatalogTypeTreeParentId,
 					"a38Id":a38Id,
 					"pageNum":pageNum,
-					"pageSize":pageSize
+					"pageSize":pageSize,
+					"isDacx":$("#isDacx").val()
 				},
 				success : function(html){
 					$("#rightList").html(html);
@@ -129,7 +131,8 @@
 				"eCatalogTypeTreeId":treeNode.id,
 				"eCatalogTypeTreeCode":treeNode.key,
 				"eCatalogTypeTreeParentId":treeNode.pId,
-				"a38Id":a38Id
+				"a38Id":a38Id,
+                "isDacx":$("#isDacx").val()
 			},
 			success : function(html){
 				$("#rightList").html(html);
@@ -159,7 +162,8 @@
 				"eCatalogTypeTreeCode":"",
 				"eCatalogTypeTreeParentId":"",
 				"eCatalogTypeTreeName":"所有材料",
-				"a38Id":a38Id
+				"a38Id":a38Id,
+                "isDacx":$("#isDacx").val()
 			},
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"

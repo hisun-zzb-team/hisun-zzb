@@ -101,7 +101,7 @@
                        value="${eCatalogTypeTreeParentId}"/>
                 <div class="portlet-title">
                     <div class="caption">${eCatalogTypeTreeName} </div>
-                    <div class="clearfix fr">
+                    <div class="clearfix fr" id="dacx_mlcl_id">
                         <a id="sample_editable_1_new" class="btn green" href="javascript:add()">
                             <i class="icon-plus"></i> 增加材料
                         </a>
@@ -177,13 +177,17 @@
                             <td>${vo.e01Z117} </td>
                             <td>${vo.e01Z114}</td>
                             <td>${vo.yjztps}</td>
-                            <td><a href="javascript:jztp('${vo.id}','${vo.e01Z111}')" class="">加载</a></td>
+                            <td>
+                                <c:if test="${isDacx=='1'}">加载</c:if>
+                                <c:if test="${isDacx !='1'}"><a href="javascript:jztp('${vo.id}','${vo.e01Z111}')" class="">加载</a></c:if></td>
                             <td><a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}')" class="">浏览</a></td>
                             <%--<td st>${vo.e01Z107}</td>--%>
                             <td>
-                                <a href="javascript:edit('${vo.id}')" class="">修改</a>|
-                                <a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}','true')" class="">图片调整</a>|
+                                <a href="javascript:edit('${vo.id}')" class=""><c:if test="${isDacx=='1'}">查看</c:if><c:if test="${isDacx!='1'}">修改</c:if></a>
+                                <c:if test="${isDacx!='1'}">
+                                    |<a href="javascript:viewImageMain('${vo.id}','${vo.e01Z101B}','true')" class="">图片调整</a>|
                                 <a href="javascript:del('${vo.id}','${vo.e01Z111}')" class="">删除</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>
@@ -229,6 +233,13 @@
 </div>
 
 <script type="text/javascript">
+    $(function () {
+        var isDacx = $("#isDacx").val();
+        if(isDacx=='1'){
+            $("#dacx_mlcl_id").hide();
+        }
+    })
+
     function unloadFile() {
         document.getElementById("btn-unloadFile").click();
     }

@@ -99,7 +99,7 @@
                     <div >
                         <input type="hidden" name="a38Id" value="${a38Id}">
                         <input type="hidden" name="id" value="${a52.id}">
-                        <button class="btn green" type="button" style="padding:7px 20px;" onclick="submitA52()">确定</button>
+                        <button class="btn green" id="submitbut" type="button" style="padding:7px 20px;" onclick="submitA52()">确定</button>
                         <a class="btn" href="javascript:cencal()"><i class="icon-remove-sign"></i> 取消</a>
                     </div>
                     </center>
@@ -109,10 +109,11 @@
 
     <script type="text/javascript">
         function cencal(){
+            var isDacx = $("#isDacx").val();
             $.ajax({
                 url : "${path }/zzb/dzda/a52/ajax/list",
                 type : "get",
-                data : {"a38Id":"${a38Id}"},
+                data : {"a38Id":"${a38Id}","isDacx":isDacx},
                 dataType : "html",
                 headers:{
                     OWASP_CSRFTOKEN:"${sessionScope.OWASP_CSRFTOKEN}"
@@ -128,6 +129,10 @@
             });
         }
         $(function(){
+            var isDacx = $("#isDacx").val();
+            if(isDacx=='1'){
+                $("#submitbut").hide();
+            }
             $("#a5204").val("${a52.a5204}");
             $("#a5211").val("${a52.a5211}");
             $("#a5227In").val("${a52.a5227In}");

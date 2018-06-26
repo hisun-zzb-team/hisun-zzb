@@ -119,6 +119,7 @@
 						<th width=70  style="text-align: center">现职级时间</th>
 						<th width="50">修改者</th>
 						<th width=70>修改时间</th>
+					</TR>
 					</thead>
 					<tbody>
 					<c:forEach items="${pager.datas}" var="vo">

@@ -80,7 +80,7 @@ public class A32Controller extends BaseController {
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/ajax/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-                             @RequestParam(value = "a38Id",required = true) String a38Id) throws UnsupportedEncodingException {
+                             @RequestParam(value = "a38Id",required = true) String a38Id,String isDacx) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
@@ -93,6 +93,7 @@ public class A32Controller extends BaseController {
         model.put("a0101",a38.getA0101());
         model.put("pager",pager);
         model.put("a38Id",a38Id);
+        model.put("isDacx",isDacx);
         return new ModelAndView("saas/zzb/dzda/a32/list",model);
     }
 

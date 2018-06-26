@@ -172,6 +172,11 @@
 	var editForm = new EstValidate("editForm");
 
 	$(function(){
+	    var isDacx = $("#isDacx").val();
+	    if(isDacx=='1'){
+            $("#submitbut").hide();
+        }
+
 		$("#submitbut").on("click",function(){
 			var eCatalogTypeTreeEditId = $("#eCatalogTypeTreeEditId").val();
 			var eCatalogTypeTreeEditCode = $("#eCatalogTypeTreeEditCode").val();
@@ -235,6 +240,7 @@
 	});
 
 	function cencal(){
+        var isDacx = $("#isDacx").val();
 		var eCatalogTypeTreeEditId = $("#eCatalogTypeTreeEditId").val();
 		var eCatalogTypeTreeEditCode = $("#eCatalogTypeTreeEditCode").val();
 		var eCatalogTypeTreeEditName = $("#eCatalogTypeTreeEditName").val();
@@ -249,7 +255,8 @@
 				"eCatalogTypeTreeCode":eCatalogTypeTreeEditCode,
 				"eCatalogTypeTreeParentId":eCatalogTypeTreeParentEditId,
 				"eCatalogTypeTreeName":eCatalogTypeTreeEditName,
-				"a38Id":a38Id
+				"a38Id":a38Id,
+				"isDacx":isDacx
 			},
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"
@@ -264,3 +271,4 @@
 	}
 
 </script>
+</div>

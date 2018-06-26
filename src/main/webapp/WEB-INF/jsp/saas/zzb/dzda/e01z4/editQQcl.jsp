@@ -107,6 +107,10 @@
 <script type="text/javascript">
 	var myLoading = new MyLoading("${path}",20000);
 	jQuery(document).ready(function() {
+        var isDacx = $("#isDacx").val();
+        if(isDacx=='1'){
+            $("#submitbut").hide();
+        }
 		App.init();
 		var startDate = $("#pcsjValue").datepicker({
 			language:  'zh-CN',
@@ -210,13 +214,15 @@
 	});
 
 	function cencal(){
+        var isDacx = $("#isDacx").val();
 		var a38Id = $("#a38Id").val();
 		$.ajax({
 			url: "${path}/zzb/dzda/e01z4/ajax/list",// 请求的action路径
 			type: 'POST',
 			dataType : "html",
 			data:{
-				"a38Id":a38Id
+				"a38Id":a38Id,
+                "isDacx":isDacx
 			},
 			headers: {
 				"OWASP_CSRFTOKEN":"${sessionScope.OWASP_CSRFTOKEN}"

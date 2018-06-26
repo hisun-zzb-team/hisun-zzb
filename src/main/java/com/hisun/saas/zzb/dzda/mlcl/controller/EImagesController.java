@@ -143,34 +143,9 @@ public class EImagesController extends BaseController {
         if(!e01z1Id.equals("")){
             E01Z1 e01z1 = new E01Z1();
             e01z1 = this.e01Z1Service.getByPK(e01z1Id);
-
-
             eImages = e01z1.getImages();
 
             for(EImages image : eImages) {
-
-//                String jiamfilePath = image.getImgFilePath();//加密的图片路径
-//                String jianmfilePath = "";//解密的图片路径
-//                String dirPath = uploadBasePath +storePath+myDirName;
-//                File storeDir = new File(dirPath);
-//                if (storeDir.exists() == false) {
-//                    storeDir.mkdirs();
-//                }
-//                jiamfilePath = uploadBasePath+jiamfilePath;
-//                String fileName ="";
-//                if(image.getImgFilePath().lastIndexOf("\\")!=-1){
-//                    fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("\\")+1);
-//                }else{
-//                    fileName = image.getImgFilePath().substring(image.getImgFilePath().lastIndexOf("/")+1);
-//                }
-//                fileName = image.getE01z1().getE01Z101B()+fileName;//在入库的图片名前加入分类的编码
-//                String showFilePath = myDirName+ File.separator+fileName+".jpg";
-//                jianmfilePath =dirPath + File.separator+fileName+".jpg";
-
-//                File jianmfile = new File(jianmfilePath);//解密图片 检查是否已经解密，如果已经解密则不进行解密
-//                if(jianmfile.exists()== false){
-//                    DESUtil.decrypt(new File(jiamfilePath),new File(jianmfilePath));
-//                }
                 if (image.getImgNo().toString().equals(imageIndex)){
 //                    images.add(image.getId() + ";" + image.getImgNo());
                     images.add(image);
@@ -188,6 +163,40 @@ public class EImagesController extends BaseController {
         map.put("isManage", isManage);
         return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/viewImg",map);
     }
+
+    @RequestMapping(value = "/ajax/imgDuibi")
+    public ModelAndView imgDuibi(String e01z1Id,String duibiE01z1Id) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<EImages> images = new ArrayList<EImages>();
+        int imagesSize = 0;
+        int duibiImagesSize = 0;
+        List<EImages> eImages = new ArrayList<EImages>();
+        List<EImages> duibiImages = new ArrayList<EImages>();
+        if(e01z1Id!=null && !e01z1Id.equals("")){
+            E01Z1 e01z1  = this.e01Z1Service.getByPK(e01z1Id);
+            eImages = e01z1.getImages();
+            for(EImages image : eImages) {
+                images.add(image);
+            }
+            imagesSize = eImages.size();
+        }
+
+        if(duibiE01z1Id!=null && !duibiE01z1Id.equals("")){
+            E01Z1 e01z1  = this.e01Z1Service.getByPK(duibiE01z1Id);
+            duibiImages = e01z1.getImages();
+
+            duibiImagesSize = duibiImages.size();
+        }
+
+        map.put("imagesSize", imagesSize);
+        map.put("images", images);
+        map.put("duibiImagesSize", duibiImagesSize);
+        map.put("duibiImages", duibiImages);
+        map.put("e01z1Id", e01z1Id);
+        map.put("duibiE01z1Id", duibiE01z1Id);
+        return new ModelAndView("saas/zzb/dzda/mlcl/viewImg/imgDuibi",map);
+    }
+
 
     @RequestMapping(value="/ajax/downImg")
     @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载:${damc}的档案:${clmc}的第:${imgNo}张图片")

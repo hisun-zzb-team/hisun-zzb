@@ -155,7 +155,9 @@
                 document.all("button3").disabled = false;
                 document.all("button4").disabled = false;
             }
+
             try {
+                document.all("daduibiBtn").disabled = false;
 				document.all("daYinDa").disabled = false;
 				document.all("xiaZaiDa").disabled = false;
             }catch(e){}

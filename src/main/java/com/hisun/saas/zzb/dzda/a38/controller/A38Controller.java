@@ -597,7 +597,7 @@ public class A38Controller extends BaseController {
      */
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a0101) throws GenericException{
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
             A38 a38 = this.a38Service.getByPK(id);

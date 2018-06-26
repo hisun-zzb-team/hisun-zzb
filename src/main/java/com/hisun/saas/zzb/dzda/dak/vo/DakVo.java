@@ -49,6 +49,15 @@ public class DakVo {
     private String cljsrqEnd;//材料接收结束日期
     private String e01Z237;//材料处理状态
     private String e01Z237Content;//材料处理状态
+    private String cljs;//1:有
+
+    public String getCljs() {
+        return cljs;
+    }
+
+    public void setCljs(String cljs) {
+        this.cljs = cljs;
+    }
 
     public String getLjdwmc() {
         return ljdwmc;

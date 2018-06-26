@@ -304,6 +304,13 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         if(e01z1Hql.length()>0){
             queryHql.append("  left join a38.e01z1s e");
         }
+        if(StringUtils.isNotBlank(dakVo.getCljs())){
+            queryHql.append("join a38.e01z2s e2");
+        }else{
+            queryHql.append("left join a38.e01z2s e2");
+        }
+
+
         if(a38Hql.length()>0){
             queryHql.append("  left join a38.e01z2s e2");
         }

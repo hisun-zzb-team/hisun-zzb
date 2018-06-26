@@ -372,6 +372,21 @@
 
                         <div class="row-fluid">
                             <div class="span6 ">
+                                <div id="cljsGroup" class="control-group">
+                                    <label class="control-label">材料接收记录</label>
+
+                                    <div class="controls">
+                                        <select name="cljs" style="width: 377.13px;height: 34px">
+                                            <option value=""></option>
+                                            <option value="1" <c:if test="${vo.cljs=='1'}">selected</c:if>>有</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid">
+                            <div class="span6 ">
                                 <div id="ljdwmcGroup" class="control-group">
                                     <label class="control-label">来件单位名称</label>
 

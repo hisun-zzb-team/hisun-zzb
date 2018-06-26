@@ -100,6 +100,8 @@ public class A32Controller extends BaseController {
     public ModelAndView addGzbd(String a38Id){
         Map map = Maps.newHashMap();
         int sort = a32Service.getMaxSort(a38Id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("sort",sort);
         return new ModelAndView("saas/zzb/dzda/a32/addGzbd",map);
@@ -109,16 +111,18 @@ public class A32Controller extends BaseController {
     public ModelAndView editGzbd(String a38Id,String id){
         Map map = Maps.newHashMap();
         A32 a32 = a32Service.getByPK(id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("a32",a32);
         return new ModelAndView("saas/zzb/dzda/a32/editGzbd",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新工资变动:${vo.gzbm}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改\""+"${a0101}"+"\"工资变动:${vo.gzbm}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
     public @ResponseBody
-    Map<String, Object> update(A32Vo vo){
+    Map<String, Object> update(A32Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -141,10 +145,10 @@ public class A32Controller extends BaseController {
         }
         return map;
     }
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加工资变动:${vo.gzbm}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加\""+"${a0101}"+"\"工资变动:${vo.gzbm}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save")
-    public @ResponseBody Map<String, Object> save(A32Vo vo){
+    public @ResponseBody Map<String, Object> save(A32Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -174,10 +178,10 @@ public class A32Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除工资变动:${gzbm}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除\""+"${a0101}"+"\"工资变动:${gzbm}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a0101,String gzbm) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
             a32Service.deleteByPK(id);
@@ -193,7 +197,7 @@ public class A32Controller extends BaseController {
     @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载工资变动:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
-    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+    public void download(@PathVariable("a38Id") String a38Id, String a0101,HttpServletResponse resp){
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         CommonOrderBy orderBy = new CommonOrderBy();

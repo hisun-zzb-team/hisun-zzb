@@ -30,6 +30,7 @@
 
 					<form action="${path }/zzb/dzda/e01z1/save" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
 						<input type="hidden" id="a38Id" name="a38Id" value="${a38Id }"/>
+						<input type="hidden" id="a0101" name="a0101" value="${a0101 }"/>
 						<input type="hidden" id="eCatalogTypeId" name="eCatalogTypeId" value="${eCatalogTypeId }"/>
 						<div id="e01Z401Group" class="control-group">
 							<label class="control-label">材料名称<span class="required">*</span></label>

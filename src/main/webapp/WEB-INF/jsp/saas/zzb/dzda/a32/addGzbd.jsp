@@ -28,7 +28,7 @@
             </div>
         </div>
         <form action="${path}/zzb/dzda/a32/ajax/save" class="form-horizontal" id="form1" method="post">
-
+            <input type="hidden" id="a0101" name="a0101" value="${a0101 }"/>
                 <div class="row-fluid">
                     <div class="span6 ">
                         <div id="gzbmGroup" class="control-group">

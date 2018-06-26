@@ -28,6 +28,7 @@
 		<input type="hidden" name="id" id="id" value="${vo.id}"/>
 		<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
 		<input type="hidden" id="yjztps" name="yjztps" value="${yjztps}"/>
+		<input type="hidden" name="a0101" id="a0101" value="${a0101}"/>
 		<input type="hidden" id="eCatalogTypeTreeEditId" name="eCatalogTypeTreeEditId" value="${eCatalogTypeTreeEditId}"/>
 		<input type="hidden" id="eCatalogTypeTreeEditCode" name="eCatalogTypeTreeEditCode" value="${eCatalogTypeTreeEditCode}"/>
 		<input type="hidden" id="eCatalogTypeTreeEditName" name="eCatalogTypeTreeEditName" value="${eCatalogTypeTreeEditName}"/>

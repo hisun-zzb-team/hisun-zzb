@@ -213,6 +213,8 @@ public class E01Z1Controller extends BaseController {
         ECatalogTypeInfo eCatalogTypeInfo = new ECatalogTypeInfo();
         eCatalogTypeInfo=eCatalogTypeService.getECatalogTypeInfoByCatalogCode(eCatalogTypeTreeCode);
         eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("eCatalogTypeTreeCode",eCatalogTypeTreeCode);
         map.put("eCatalogTypeTreeName",eCatalogTypeTreeName);
         map.put("eCatalogTypeTreeParentId",eCatalogTypeTreeParentId);
@@ -221,7 +223,7 @@ public class E01Z1Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/mlcl/addMlcl",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加材料:${vo.e01Z111}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加\""+"${vo.a0101}"+"\"目录材料:${vo.e01Z111}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody Map<String, Object> save(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
@@ -268,6 +270,8 @@ public class E01Z1Controller extends BaseController {
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         //map.put("eCatalogTypeTreeEditId",e01Z1.getECatalogTypeId());
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("eCatalogTypeTreeEditCode",e01Z1.getE01Z101B());
         map.put("eCatalogTypeTreeEditName",e01Z1.getE01Z101A());
         map.put("catalogTypeEditName",e01Z1.getE01Z101A());
@@ -278,7 +282,7 @@ public class E01Z1Controller extends BaseController {
         return new ModelAndView("saas/zzb/dzda/mlcl/editMlcl",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改材料目录:${vo.e01Z111}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改\""+"${vo.a0101}"+"\"目录材料:${vo.e01Z111}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
     public @ResponseBody Map<String, Object> update(E01Z1Vo vo,HttpServletRequest request) throws GenericException {
@@ -314,11 +318,11 @@ public class E01Z1Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除'${a0101}'材料'${e01Z111}'")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除\""+"${a0101}"+"\"目录材料:${e01Z111}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
-            @PathVariable("id") String id,String e01Z111) throws GenericException {
+            @PathVariable("id") String id,String e01Z111,String a0101) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             if(StringUtils.isEmpty(id)){
@@ -516,7 +520,8 @@ public class E01Z1Controller extends BaseController {
     @RequestMapping("/download/{a38Id}")
     public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
                          @RequestParam(value="xml",defaultValue="2")int xml,
-                         @RequestParam(value="dml",defaultValue="6") int dml){
+                         @RequestParam(value="dml",defaultValue="6") int dml,
+                            String a0101){
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
 
@@ -643,7 +648,7 @@ public class E01Z1Controller extends BaseController {
     @RequiresLog(operateType = LogOperateType.SAVE,description = "下载材料模板:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/downloadMB/{a38Id}")
-    public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,
+    public void downloadMB(@PathVariable("a38Id") String a38Id, HttpServletResponse resp,String a0101,
                            @RequestParam(value="xml",defaultValue="2")int xml,
                            @RequestParam(value="dml",defaultValue="6") int dml){
         CommonConditionQuery query = new CommonConditionQuery();

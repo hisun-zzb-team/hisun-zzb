@@ -154,7 +154,7 @@
           });
       }
       function deleteA38(id,name){
-          actionByConfirm1('',"${path}/zzb/dzda/a52/delete/"+id+"?a5204="+name,null,function(json){
+          actionByConfirm1('',"${path}/zzb/dzda/a52/delete/"+id+"?a0101=${a0101}&a5204="+name,null,function(json){
               if(json.code == 1){
                   showTip("提示","操作成功");
                   setTimeout(function(){

@@ -103,6 +103,8 @@ public class E0z2Controller extends BaseController {
     public ModelAndView addCljs(String a38Id){
         Map map = Maps.newHashMap();
         int sort = e01z2Service.getMaxSort(a38Id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("sort",sort);
         return new ModelAndView("saas/zzb/dzda/e01z2/addCljs",map);
@@ -112,16 +114,18 @@ public class E0z2Controller extends BaseController {
     public ModelAndView editcljs(String a38Id,String id){
         Map map = Maps.newHashMap();
         E01Z2 e01z2 = e01z2Service.getByPK(id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("e01z2",e01z2);
         return new ModelAndView("saas/zzb/dzda/e01z2/editCljs",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新材料接收:${vo.e01Z204A}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改\""+"${a0101}"+"\"材料接收:${vo.e01Z221A}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
     public @ResponseBody
-    Map<String, Object> update(E01z2Vo vo){
+    Map<String, Object> update(E01z2Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -144,10 +148,10 @@ public class E0z2Controller extends BaseController {
         }
         return map;
     }
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加材料接收:${vo.e01Z204A}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加\""+"${a0101}"+"\"材料接收:${vo.e01Z221A}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save")
-    public @ResponseBody Map<String, Object> save(E01z2Vo vo){
+    public @ResponseBody Map<String, Object> save(E01z2Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -177,10 +181,10 @@ public class E0z2Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料接收:${e01Z204A}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除\""+"${a0101}"+"\"材料接收:${e01Z221A}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException {
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a0101,String e01Z221A) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
             e01z2Service.deleteByPK(id);
@@ -196,7 +200,7 @@ public class E0z2Controller extends BaseController {
     @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载材料接收:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
-    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+    public void download(@PathVariable("a38Id") String a38Id,String a0101, HttpServletResponse resp){
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         List<E01Z2> resultList = e01z2Service.list(query,null);

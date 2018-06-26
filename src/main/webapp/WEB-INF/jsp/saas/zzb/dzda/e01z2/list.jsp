@@ -94,7 +94,7 @@
                     <TD ><c:out value="${vo.e01Z244Content}"></c:out></TD>
                     <td>
                         <a href="javascript:edite01z2('${vo.id}')" class="">修改</a>|
-                        <a href="javascript:deletee01z2('${vo.id}','${vo.e01Z214}')" class="">删除</a>
+                        <a href="javascript:deletee01z2('${vo.id}','${vo.e01Z221A}')" class="">删除</a>
                     </td>
                 </TR>
             </c:forEach>
@@ -162,7 +162,7 @@
             });
         }
         function deletee01z2(id,name){
-            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id+"?e01Z214="+name+"OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+            actionByConfirm1('',"${path}/zzb/dzda/e01z2/delete/"+id+"?a0101=${a0101}&e01Z221A="+name+"&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
                 if(json.code == "1"){
                     showTip("提示","删除成功",1500);
                     setTimeout(function(){

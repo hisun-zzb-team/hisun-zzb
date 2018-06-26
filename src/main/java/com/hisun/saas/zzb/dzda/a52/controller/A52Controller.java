@@ -94,6 +94,8 @@ public class A52Controller extends BaseController {
     public ModelAndView addZwbd(String a38Id){
         Map map = Maps.newHashMap();
         int sort = a52Service.getMaxSort(a38Id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("sort",sort);
         return new ModelAndView("saas/zzb/dzda/a52/addZwbd",map);
@@ -103,15 +105,17 @@ public class A52Controller extends BaseController {
     public ModelAndView editZwbd(String a38Id,String id){
         Map map = Maps.newHashMap();
         A52 a52 = a52Service.getByPK(id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("a52",a52);
         return new ModelAndView("saas/zzb/dzda/a52/editZwbd",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "更新职务变动:${vo.a5204}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改\""+"${a0101}"+"\"职务变动:${vo.a5204}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
-    public @ResponseBody Map<String, Object> update(A52Vo vo){
+    public @ResponseBody Map<String, Object> update(A52Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -134,10 +138,10 @@ public class A52Controller extends BaseController {
         }
         return map;
     }
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加职务变动:${vo.a5204}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加\""+"${a0101}"+"\"职务变动:${vo.a5204}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save")
-    public @ResponseBody Map<String, Object> save(A52Vo vo){
+    public @ResponseBody Map<String, Object> save(A52Vo vo,String a0101){
         Map<String,Object> map = Maps.newHashMap();
         try {
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -167,10 +171,10 @@ public class A52Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除职务变动:${a5204}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除\""+"${a0101}"+"\"职务变动:${a5204}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a5204) throws GenericException {
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id,String a5204,String a0101) throws GenericException {
         Map<String,Object> returnMap = new HashMap<String,Object>();
         try{
             a52Service.deleteByPK(id);
@@ -186,7 +190,7 @@ public class A52Controller extends BaseController {
     @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载职务变动:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
-    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+    public void download(@PathVariable("a38Id") String a38Id,String a0101, HttpServletResponse resp){
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         List<A52> resultList = a52Service.list(query,null);

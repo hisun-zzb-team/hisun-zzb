@@ -26,6 +26,7 @@
 		</div>
 	<form action="${path}/zzb/dzda/e01z1/save" class="form-horizontal" id="addForm" method="post">
 		<input type="hidden" name="a38Id" id="a38Id" value="${a38Id}"/>
+		<input type="hidden" name="a0101" id="a0101" value="${a0101}"/>
 		<input type="hidden" id="eCatalogTypeTreeId" name="eCatalogTypeTreeId" value="${eCatalogTypeTreeId}"/>
 		<input type="hidden" id="eCatalogTypeTreeCode" name="eCatalogTypeTreeCode" value="${eCatalogTypeTreeCode}"/>
 		<input type="hidden" id="eCatalogTypeTreeName" name="eCatalogTypeTreeName" value="${eCatalogTypeTreeName}"/>

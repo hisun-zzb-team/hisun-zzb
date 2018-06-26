@@ -157,7 +157,7 @@
       }
       function deleteA32(id,name){
           console.log(id);
-          actionByConfirm1('',"${path}/zzb/dzda/a32/delete/"+id+"?gzbm="+name,null,function(json){
+          actionByConfirm1('',"${path}/zzb/dzda/a32/delete/"+id+"?a0101=${a0101}&gzbm="+name,null,function(json){
               if(json.code == 1){
                   showTip("提示","操作成功");
                   setTimeout(function(){

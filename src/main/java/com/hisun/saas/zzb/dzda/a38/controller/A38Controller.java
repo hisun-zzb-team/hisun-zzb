@@ -394,29 +394,6 @@ public class A38Controller extends BaseController {
         return returnMap;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除档案:${a0101}")
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-    @RequiresPermissions("a38:*")
-    @RequestMapping("/delete/{id}")
-    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{
-        Map<String,Object> returnMap = new HashMap<String,Object>();
-        try{
-            A38 a38 = this.a38Service.getByPK(id);
-            this.eImagesService.deleteEImagesAndFileByA38(a38);
-            a38Service.delete(a38);
-            returnMap.put("code",1);
-        }catch (Exception e){
-            logger.error(e,e);
-            returnMap.put("code",-1);
-        }
-
-        return returnMap;
-    }
-
     @RequiresPermissions("a38:dakList ")
     @RequestMapping(value = "/ajax/gjcx")
     public ModelAndView gjcx(HttpServletRequest request,String id,String listType){
@@ -610,6 +587,29 @@ public class A38Controller extends BaseController {
                 file.delete();
             }
         }
+    }
+
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除档案:${a0101}")
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @RequiresPermissions("a38:*")
+    @RequestMapping("/delete/{id}")
+    public @ResponseBody Map<String,Object> delete(@PathVariable("id") String id) throws GenericException{
+        Map<String,Object> returnMap = new HashMap<String,Object>();
+        try{
+            A38 a38 = this.a38Service.getByPK(id);
+            this.eImagesService.deleteEImagesAndFileByA38(a38);
+            a38Service.delete(a38);
+            returnMap.put("code",1);
+        }catch (Exception e){
+            logger.error(e,e);
+            returnMap.put("code",-1);
+        }
+
+        return returnMap;
     }
 
     @RequiresPermissions("a38:*")

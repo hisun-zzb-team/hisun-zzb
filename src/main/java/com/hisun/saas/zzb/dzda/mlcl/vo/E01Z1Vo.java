@@ -36,6 +36,8 @@ public class E01Z1Vo {
     private String parentName;
     private Integer row;
 
+    private String a0101;
+
     public String getId() {
         return id;
     }
@@ -226,5 +228,13 @@ public class E01Z1Vo {
 
     public void setRow(Integer row) {
         this.row = row;
+    }
+
+    public String getA0101() {
+        return a0101;
+    }
+
+    public void setA0101(String a0101) {
+        this.a0101 = a0101;
     }
 }

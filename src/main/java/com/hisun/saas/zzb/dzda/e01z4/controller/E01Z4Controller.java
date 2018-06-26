@@ -128,15 +128,17 @@ public class E01Z4Controller extends BaseController {
     public ModelAndView add(String a38Id){
         Map<String, Object> map = Maps.newHashMap();
         int sort = this.e01Z4Service.getMaxSort(a38Id);
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("px",sort);
         return new ModelAndView("saas/zzb/dzda/e01z4/addQQcl",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加欠缺材料:${vo.e01Z401}")
+    @RequiresLog(operateType = LogOperateType.SAVE,description = "增加\""+"${a0101}"+"\"欠缺材料:${vo.e01Z401}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody Map<String, Object> save(E01Z4Vo vo,HttpServletRequest request) throws GenericException {
+    public @ResponseBody Map<String, Object> save(E01Z4Vo vo,String a0101,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
         try {
@@ -172,16 +174,18 @@ public class E01Z4Controller extends BaseController {
         String id = StringUtils.trimNull2Empty(request.getParameter("id"));
         E01Z4 e01Z4 = e01Z4Service.getByPK(id);
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
+        A38 a38 = this.a38Service.getByPK(a38Id);
+        map.put("a0101",a38.getA0101());
         map.put("a38Id",a38Id);
         map.put("vo",e01Z4);
         map.put("eCatalogTypeId",e01Z4.getECatalogTypeId());
         return new ModelAndView("saas/zzb/dzda/e01z4/editQQcl",map);
     }
 
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改材料目录:${vo.e01Z411}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "修改\""+"${a0101}"+"\"欠缺材料:${vo.e01Z401}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/update")
-    public @ResponseBody Map<String, Object> update(E01Z4Vo vo,HttpServletRequest request) throws GenericException {
+    public @ResponseBody Map<String, Object> update(E01Z4Vo vo,String a0101,HttpServletRequest request) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         String id = StringUtils.trimNull2Empty(request.getParameter("id"));
         try {
@@ -203,11 +207,11 @@ public class E01Z4Controller extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除材料:${e01Z411}")
+    @RequiresLog(operateType = LogOperateType.DELETE,description = "删除\""+"${a0101}"+"\"欠缺材料:${e01Z401}")
     @RequiresPermissions("a38:*")
     @RequestMapping(value = "/delete/{id}")
     public @ResponseBody Map<String, Object> delete(
-            @PathVariable("id") String id) throws GenericException {
+            @PathVariable("id") String id,String a0101,String e01Z401) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             this.e01Z4Service.deleteByPK(id);
@@ -291,7 +295,7 @@ public class E01Z4Controller extends BaseController {
     @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载欠缺材料:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/download/{a38Id}")
-    public void download(@PathVariable("a38Id") String a38Id, HttpServletResponse resp){
+    public void download(@PathVariable("a38Id") String a38Id,String a0101, HttpServletResponse resp){
         CommonConditionQuery query = new CommonConditionQuery();
         query.add(CommonRestrictions.and(" a38_id = :a38Id ", "a38Id", a38Id));
         List<E01Z4> resultList = e01Z4Service.list(query,null);

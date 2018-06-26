@@ -134,7 +134,7 @@ public class DatpDealController extends BaseController {
 
                 DecimalFormat decimalFormat = new DecimalFormat("00");
                 childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z104()));
-                childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                childTreeNode.setpId(this.eCatalogTypeService.getECatalogTypeInfoByCatalogCode(e01Z1.getE01Z101B()).getId());
                 childTreeNode.setNodeType("cl");
                 treeNodes.add(childTreeNode);
             }
@@ -474,7 +474,7 @@ public class DatpDealController extends BaseController {
         E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
         String storeTmpRealPath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + UUIDUtil.getUUID() + File.separator;//原文件临时目录
         String storeZipRealPath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + UUIDUtil.getUUID() + File.separator;//上传zip文件临时目录
-        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getByPK(e01Z1.getECatalogTypeId());
+        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getECatalogTypeInfoByCatalogCode(e01Z1.getE01Z101B());
         String realStorePath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + eCatalogTypeInfo.getCatalogCode()
                 + "." + eCatalogTypeInfo.getCatalogValue() + File.separator;
         try {

@@ -15,7 +15,7 @@ public class E01Z1Vo {
     private String e01Z111Remark;//材料名称备注
     private String e01Z117;//材料制成时间
     //    private Integer e01Z107;//扫描序号（单份材料的扫描序号）
-    private String eCatalogTypeId;//材料类别主键
+//    private String eCatalogTypeId;//材料类别主键
     private String e01Z101B;//材料类别字典代码
     private String e01Z101A;//材料类别字典内容
     private Integer e01Z114;//材料页数
@@ -52,13 +52,13 @@ public class E01Z1Vo {
 //        this.a38 = a38;
 //    }
 
-    public String geteCatalogTypeId() {
-        return eCatalogTypeId;
-    }
-
-    public void seteCatalogTypeId(String eCatalogTypeId) {
-        this.eCatalogTypeId = eCatalogTypeId;
-    }
+//    public String geteCatalogTypeId() {
+//        return eCatalogTypeId;
+//    }
+//
+//    public void seteCatalogTypeId(String eCatalogTypeId) {
+//        this.eCatalogTypeId = eCatalogTypeId;
+//    }
 
     public String getE01Z111() {
         return e01Z111;
@@ -91,14 +91,6 @@ public class E01Z1Vo {
 //    public void setE01Z107(Integer e01Z107) {
 //        this.e01Z107 = e01Z107;
 //    }
-
-    public String getECatalogTypeId() {
-        return eCatalogTypeId;
-    }
-
-    public void setECatalogTypeId(String eCatalogTypeId) {
-        this.eCatalogTypeId = eCatalogTypeId;
-    }
 
     public String getE01Z101B() {
         return e01Z101B;

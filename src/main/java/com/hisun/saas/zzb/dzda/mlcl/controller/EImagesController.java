@@ -393,7 +393,7 @@ public class EImagesController extends BaseController {
                     childTreeNode.setDescription(title);
                     DecimalFormat decimalFormat = new DecimalFormat("00");
                     childTreeNode.setKey(decimalFormat.format(e01Z1.getE01Z104()));
-                    childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                    childTreeNode.setpId(this.eCatalogTypeService.getECatalogTypeInfoByCatalogCode(e01Z1.getE01Z101B()).getId());
                     childTreeNode.setNodeType("cl");
 
                     treeNodes.add(childTreeNode);

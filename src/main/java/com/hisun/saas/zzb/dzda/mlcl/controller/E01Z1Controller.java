@@ -239,7 +239,7 @@ public class E01Z1Controller extends BaseController {
             BeanUtils.copyProperties(e01Z1, vo);
             e01Z1.setE01Z101B(eCatalogTypeTreeCode);
             e01Z1.setE01Z101A(eCatalogTypeTreeName);
-            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+            //e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
             e01Z1.setYjztps(0);
             if(StringUtils.isNotBlank(a38Id)){
                 e01Z1.setA38(this.a38Service.getByPK(a38Id));
@@ -267,7 +267,7 @@ public class E01Z1Controller extends BaseController {
         E01Z1 e01Z1 = e01Z1Service.getByPK(id);
         String eCatalogTypeTreeParentId = StringUtils.trimNull2Empty(request.getParameter("eCatalogTypeTreeParentId"));
         String a38Id = StringUtils.trimNull2Empty(request.getParameter("a38Id"));
-        map.put("eCatalogTypeTreeEditId",e01Z1.getECatalogTypeId());
+        //map.put("eCatalogTypeTreeEditId",e01Z1.getECatalogTypeId());
         map.put("eCatalogTypeTreeEditCode",e01Z1.getE01Z101B());
         map.put("eCatalogTypeTreeEditName",e01Z1.getE01Z101A());
         map.put("catalogTypeEditName",e01Z1.getE01Z101A());
@@ -298,7 +298,7 @@ public class E01Z1Controller extends BaseController {
             String eCatalogTypeTreeName = eCatalogTypeInfo.getCatalogValue();
             vo.setE01Z101B(eCatalogTypeTreeCode);
             vo.setE01Z101A(eCatalogTypeTreeName);
-            vo.setECatalogTypeId(eCatalogTypeInfo.getId());
+//            vo.setECatalogTypeId(eCatalogTypeInfo.getId());
             int oldSort = e01Z1.getE01Z104();
 
             BeanUtils.copyProperties(e01Z1, vo);
@@ -896,7 +896,7 @@ public class E01Z1Controller extends BaseController {
                 childTreeNode.setId(e01Z1.getId());
                 childTreeNode.setName(text);
                 childTreeNode.setDescription(title);
-                childTreeNode.setpId(e01Z1.getECatalogTypeId());
+                childTreeNode.setpId(this.eCatalogTypeService.getECatalogTypeInfoByCatalogCode(e01Z1.getE01Z101B()).getId());
                 childTreeNode.setNodeType("cl");
                 treeNodes.add(childTreeNode);
             }

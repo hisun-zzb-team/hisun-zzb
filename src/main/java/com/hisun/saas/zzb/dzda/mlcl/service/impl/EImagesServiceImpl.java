@@ -230,7 +230,7 @@ public class EImagesServiceImpl extends BaseServiceImpl<EImages, String>
 
     public void saveEImagesByJztp(E01Z1 e01Z1, File storePathFile) throws Exception {
         this.deleteEImagesByE01ez1(e01Z1);
-        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getByPK(e01Z1.getECatalogTypeId());
+        ECatalogTypeInfo eCatalogTypeInfo = this.eCatalogTypeService.getECatalogTypeInfoByCatalogCode(e01Z1.getE01Z101B());
         String realStorePath = uploadBasePath + getTpStorePath(e01Z1.getA38().getId()) + eCatalogTypeInfo.getCatalogCode()
                 + "." + eCatalogTypeInfo.getCatalogValue() + File.separator;
         File realStorePathFile = new File(realStorePath);

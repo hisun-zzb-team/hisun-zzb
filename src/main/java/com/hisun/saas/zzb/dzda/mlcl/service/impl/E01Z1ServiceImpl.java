@@ -525,7 +525,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
                             org.springframework.beans.BeanUtils.copyProperties(e01Z1Vo, e01Z1);
                             e01Z1.setE01Z101B(eCatalogTypeInfo.getCatalogCode());
                             e01Z1.setE01Z101A(eCatalogTypeInfo.getCatalogValue());
-                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
+//                            e01Z1.setECatalogTypeId(eCatalogTypeInfo.getId());
                             e01Z1.setYjztps(0);
                             e01Z1.setE01Z104(sort);
                             if (com.hisun.util.StringUtils.isNotBlank(a38Id)) {

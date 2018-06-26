@@ -164,10 +164,10 @@
                                         <a href="${path}/zzb/dzda/cyshouquan/toShouquan?id=${vo.id}&OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}">授权</a>|
                                     </c:when>
                                     <c:when test="${vo.auditingState == 1 && vo.readState == 1 || vo.readState == 0}">
-                                        <a href="javascript:shouhuiQx('${vo.id}')">收回权限</a>|
+                                        <a href="javascript:shouhuiQx('${vo.id}','${vo.applyUserName}','${vo.a0101}')">收回权限</a>|
                                     </c:when>
                                 </c:choose>
-                                <a href="javascript:deleteSq('${vo.id}')">删除 </a>
+                                <a href="javascript:deleteSq('${vo.id}','${vo.applyUserName}','${vo.a0101}')">删除 </a>
                             </TD>
                         </tr>
                     </c:forEach>
@@ -261,8 +261,8 @@
         $("#pageSize").val(pageSize);
         document.searchForm.submit();
     }
-    function shouhuiQx(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+    function shouhuiQx(id,applyUserName,a0101){
+        actionByConfirm1('',"${path}/zzb/dzda/cyshouquan/shouhuiQx/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&a0101="+a0101+"&applyUserName="+applyUserName,null,function(json){
             if(json.success){
                 showTip("提示","操作成功");
                 window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";
@@ -271,8 +271,8 @@
             }
         },"收回权限")
     }
-    function deleteSq(id){
-        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}",null,function(json){
+    function deleteSq(id,applyUserName,a0101){
+        actionByConfirm1('',"${path}/zzb/dzda/cysq/deleteSq/"+id+"?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}&a0101="+a0101+"&applyUserName="+applyUserName,null,function(json){
             if(json.code == 1){
                 showTip("提示","删除成功");
                 window.location.href ="${path }/zzb/dzda/cyshouquan/list?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}";

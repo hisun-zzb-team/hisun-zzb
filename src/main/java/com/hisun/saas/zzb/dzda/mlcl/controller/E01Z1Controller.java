@@ -853,6 +853,7 @@ public class E01Z1Controller extends BaseController {
             orderBy.add(CommonOrder.asc("sort"));
             List<ECatalogTypeInfo> eCatalogTypeInfos = eCatalogTypeService.list(query, orderBy);
             if(!StringUtils.isNotBlank(a38Id)){
+                map.put("success", true);
                 return map;
             }
             A38 a38 = a38Service.getByPK(a38Id);

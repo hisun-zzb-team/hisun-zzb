@@ -25,6 +25,33 @@ public class ECysqVo {
     private String sqcymlIds;//部分授权目录 e01z1Id字符串 “，”隔开
     private String a38Id;//
     private EApplyE01Z8Vo eApplyE01Z8Vo;
+    private String cysqr;//查阅申请人
+    private String cydadxmc;//查阅档案对象姓名
+    private String sqztContent;//授权状态
+
+    public String getCysqr() {
+        return cysqr;
+    }
+
+    public void setCysqr(String cysqr) {
+        this.cysqr = cysqr;
+    }
+
+    public String getCydadxmc() {
+        return cydadxmc;
+    }
+
+    public void setCydadxmc(String cydadxmc) {
+        this.cydadxmc = cydadxmc;
+    }
+
+    public String getSqztContent() {
+        return sqztContent;
+    }
+
+    public void setSqztContent(String sqztContent) {
+        this.sqztContent = sqztContent;
+    }
 
     public EApplyE01Z8Vo geteApplyE01Z8Vo() {
         return eApplyE01Z8Vo;

@@ -158,9 +158,9 @@ public class CyshouquanController extends BaseController {
     }
 
     @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权申请阅档:${id}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "收回${applyUserName}申请查阅${a0101}的档案权限")
     @RequestMapping(value = "/shouhuiQx/{id}")
-    public @ResponseBody  Map<String,Object> shouhuiQx(@PathVariable("id")String id){
+    public @ResponseBody  Map<String,Object> shouhuiQx(@PathVariable("id")String id,String a0101,String applyUserName){
         Map<String,Object> model = Maps.newHashMap();
         try{
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -179,7 +179,7 @@ public class CyshouquanController extends BaseController {
         return model;
     }
     @RequiresPermissions("cyshouquan:*")
-    @RequiresLog(operateType = LogOperateType.UPDATE,description = "授权或拒绝申请阅档:${vo.sqzt}")
+    @RequiresLog(operateType = LogOperateType.UPDATE,description = "${vo.sqztContent} ${vo.cysqr}申请查阅:${vo.cydadxmc}的档案")
     @RequestMapping(value = "/shouquan")
     public @ResponseBody Map<String,Object> shouquan(ECysqVo vo){
         Map<java.lang.String, java.lang.Object> model = Maps.newHashMap();

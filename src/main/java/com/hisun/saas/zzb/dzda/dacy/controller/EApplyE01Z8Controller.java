@@ -346,12 +346,12 @@ public class EApplyE01Z8Controller extends BaseController {
      * @return
      * @throws GenericException
      */
-    @RequiresLog(operateType = LogOperateType.DELETE, description = "更新档案申请查阅记录:${id}")
+    @RequiresLog(operateType = LogOperateType.DELETE, description = "删除${applyUserName}申请查阅${a0101}的档案记录")
     @RequestMapping("/deleteSq/{id}")
     @RequiresPermissions("cysq:*")
     public
     @ResponseBody
-    Map<String, Object> deleteSq(@PathVariable("id") String id) throws GenericException {
+    Map<String, Object> deleteSq(@PathVariable("id") String id,String a0101,String applyUserName) throws GenericException {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         try {
             CommonConditionQuery query = new CommonConditionQuery();

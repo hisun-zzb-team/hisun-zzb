@@ -135,6 +135,9 @@
         <form action="" class="form-horizontal" id="form1" method="post">
             <input type="hidden" name="e01z8Id" value="${entity.id }"/>
             <input type="hidden" name="a38Id" value="${a38Id}" id="a38Id">
+            <input type="hidden" name="cysqr" value="${entity.applyUserName}">
+            <input type="hidden" name="cydadxmc" value="${entity.a0101}">
+            <%--<input type="hidden" name="sqztContent" value="">&lt;%&ndash; 授权状态&ndash;%&gt;--%>
             <div id="sqrGroup" class="control-group">
                 <label class="control-label">授权人</label>
                 <div class="controls">
@@ -327,6 +330,7 @@
                 $("#tysqId").show();
             } else {
                 $("#tysqId").hide();
+
             }
         });
 
@@ -368,7 +372,16 @@
     }
     var form1 = new EstValidate("form1");
     function formSubmit(status) {
+        debugger
         var sqzt = $('input[name="sqzt"]:checked').val();
+        var sqztContent = "";
+        if(sqzt=='1'){
+            $("#sqztContent").val('同意');
+            sqztContent="同意";
+        }else {
+            $("#sqztContent").val('拒绝');
+            sqztContent="拒绝";
+        }
         var a38 = $("#a38Id").val();
         if (sqzt=="1" && a38 == "" || a38 == null) {
             showTip("提示", "请选择申请查阅档案姓名", 2000);
@@ -395,7 +408,7 @@
         var bool = form1.form();
         if (bool) {
             $.ajax({
-                url: "${path }/zzb/dzda/cyshouquan/shouquan",
+                url: "${path }/zzb/dzda/cyshouquan/shouquan?sqztContent="+sqztContent,
                 type: "post",
                 data: $("#form1").serialize(),
                 headers: {

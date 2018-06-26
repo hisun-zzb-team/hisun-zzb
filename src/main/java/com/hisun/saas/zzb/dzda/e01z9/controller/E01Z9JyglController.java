@@ -55,8 +55,9 @@ public class E01Z9JyglController extends BaseController {
     @RequiresPermissions("jygl:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
-                             String e01Z9Damc,String e01Z907,String e01Z9Jyzt) throws UnsupportedEncodingException {
+                             String e01Z9Damc,String e01Z907,String e01Z9Jyzt,String e01z9Yh) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
+        UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         CommonConditionQuery query = new CommonConditionQuery();
         CommonOrderBy orderBy = new CommonOrderBy();
         if(StringUtils.isNotEmpty(e01Z9Damc)){
@@ -72,8 +73,18 @@ public class E01Z9JyglController extends BaseController {
             e01Z9Jyzt = "0";
             query.add(CommonRestrictions.and(" e01Z9Jyzt = :e01Z9Jyzt ", "e01Z9Jyzt", e01Z9Jyzt));
         }
-        List<E01Z9> e01Z9s = this.e01Z9Service.list(query,orderBy);
-        Long total = this.e01Z9Service.count(query);
+        int total = 0;
+        List<E01Z9> e01Z9s = new ArrayList<>();
+        Map<String,Object> resultMap = new HashMap<>();
+        if(StringUtils.isNotEmpty(e01z9Yh)){
+            resultMap = this.e01Z9Service.getYqE01Z9("",details.getTenantId(),pageNum,pageSize,e01Z9Damc,e01Z907,"x".equals(e01Z9Jyzt)?"":e01Z9Jyzt,e01z9Yh);
+            e01Z9s = ( List<E01Z9>) resultMap.get("e01Z9s");
+            total = (int) resultMap.get("total");
+        }else {
+            e01Z9s = this.e01Z9Service.list(query,orderBy);
+            Long totalL = this.e01Z9Service.count(query);
+            total = totalL.intValue();
+        }
         List<E01Z9Vo> a01Z9Vos = new ArrayList<E01Z9Vo>();
         E01Z9Vo vo = new E01Z9Vo();
         for(E01Z9 entity : e01Z9s){
@@ -82,10 +93,11 @@ public class E01Z9JyglController extends BaseController {
             a01Z9Vos.add(vo);
         }
 
-        PagerVo<E01Z9Vo> pager = new PagerVo<E01Z9Vo>(a01Z9Vos, total.intValue(), pageNum, pageSize);
+        PagerVo<E01Z9Vo> pager = new PagerVo<E01Z9Vo>(a01Z9Vos, total, pageNum, pageSize);
         model.put("e01Z9Damc",e01Z9Damc);
         model.put("e01Z907",e01Z907);
         model.put("e01Z9Jyzt",e01Z9Jyzt);
+        model.put("e01z9Yh",e01z9Yh);
         model.put("pager",pager);
         model.put("total",total);
         return new ModelAndView("saas/zzb/dzda/e01z9/jygl/list",model);
@@ -103,6 +115,9 @@ public class E01Z9JyglController extends BaseController {
             entity.setE01Z931(vo.getE01Z931());
             entity.setE01Z9Shsj(vo.getE01Z9Shsj());
             entity.setE01Z941(vo.getE01Z941());
+            if("1".equals(vo.getE01Z9Jyzt())){
+                entity.setE01z9Yhsj(vo.getE01z9Yhsj());
+            }
             EntityWrapper.wrapperUpdateBaseProperties(entity,details);
             e01Z9Service.update(entity);
             map.put("code", 1);
@@ -141,13 +156,21 @@ public class E01Z9JyglController extends BaseController {
     public ModelAndView edit(String id,String e01Z9Jyzt) {
         Map<String, Object> map = Maps.newHashMap();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(new Date());
+        String e01Z9Shsj = sdf.format(date);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE,5);
+        date = cal.getTime();
+        String e01z9Yhsj = sdf.format(date);
+
         E01Z9Vo vo = new E01Z9Vo();
         E01Z9 entity = this.e01Z9Service.getByPK(id);
         BeanUtils.copyProperties(entity,vo);
         vo.setE01Z931(details.getRealname());
-        vo.setE01Z9Shsj(date);
+        vo.setE01Z9Shsj(e01Z9Shsj);
+        vo.setE01z9Yhsj(e01z9Yhsj);
         map.put("vo",vo);
         map.put("e01Z9Jyzt",e01Z9Jyzt);
         return new ModelAndView("saas/zzb/dzda/e01z9/jygl/edit",map);

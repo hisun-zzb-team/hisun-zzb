@@ -2,6 +2,11 @@ package com.hisun.saas.zzb.dzda.e01z9.vo;
 
 import com.hisun.saas.zzb.dzda.a38.vo.A38Vo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class E01Z9Vo {
     /** 借阅档案主键 */
     private String id;
@@ -56,6 +61,12 @@ public class E01Z9Vo {
 
     /** 是否删除 */
     private String isDel;
+
+    /** 应还日期 */
+    private String e01z9Yhsj;
+
+    /** 是否逾期 0:未逾期，1:已逾期 */
+    private int e01z9Yh;
 
     public String getId() {
         return id;
@@ -199,5 +210,30 @@ public class E01Z9Vo {
 
     public void setIsDel(String isDel) {
         this.isDel = isDel;
+    }
+
+    public String getE01z9Yhsj() {
+        return e01z9Yhsj;
+    }
+
+    public void setE01z9Yhsj(String e01z9Yhsj) {
+        this.e01z9Yhsj = e01z9Yhsj;
+    }
+
+    public int getE01z9Yh() {
+        e01z9Yh=0;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date date = new Date();
+        String nowDate = sdf.format(date);
+
+        int e01z9YhsjNum = Integer.parseInt(e01z9Yhsj);
+        int nowDateNum = Integer.parseInt(nowDate);
+
+        if(e01z9YhsjNum<nowDateNum){
+            e01z9Yh=1;
+        }
+
+
+        return e01z9Yh;
     }
 }

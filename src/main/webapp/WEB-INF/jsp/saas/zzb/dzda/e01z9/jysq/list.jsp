@@ -65,6 +65,11 @@
                                     <option value="2" <c:if test="${e01Z9Jyzt == '2'}">selected</c:if>>已归还</option>
                                     <option value="3" <c:if test="${e01Z9Jyzt == '3'}">selected</c:if>>已拒绝</option>
                             </select>
+                            是否逾期：<select class="select_form" tabindex="-1" name="e01z9Yh" id="e01z9Yh" style="width: 100px; margin-bottom: 0px;" >
+                            <option value="" <c:if test="${e01z9Yh == ''}">selected</c:if>></option>
+                            <option value="1" <c:if test="${e01z9Yh == '1'}">selected</c:if>>是</option>
+                            <option value="0" <c:if test="${e01z9Yh == '0'}">selected</c:if>>否</option>
+                            </select>
                             <button type="button" class="btn Short_but" onclick="searchSubmit()">查询</button>
                             <button type="button" class="btn Short_but" onclick="clearData()">清空</button>
                         </form>
@@ -85,22 +90,37 @@
                         <th width=60>借阅经办人</th>
                         <th width="100">借阅审核时间</th>
                         <th width="120">借阅状态</th>
+                        <th width="100">应还时间</th>
                         <th width=60>归还经办人</th>
                         <th width="100">归还时间</th>
                         <th width="40">操作</th>
                     </thead>
                     <tbody>
                         <c:forEach items="${pager.datas}" var="vo">
-                            <TD width="10%">
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
                                 <c:out value="${vo.e01Z9Damc}"></c:out>
                             </TD>
-                            <TD width="10%"><c:out value="${vo.e01Z907}"></c:out> </TD>
-                            <TD width="10%"><c:out value="${vo.e01Z901}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z904A}"></c:out> </TD>
-                            <TD width="10%"><c:out value="${vo.e01Z917}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z931}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z9Shsj}"></c:out></TD>
-                            <TD width="10%">
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z907}"></c:out> </TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z901}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z904A}"></c:out> </TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z917}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z931}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z9Shsj}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
                                         未审核
@@ -115,9 +135,17 @@
                                         已拒绝
                                     </c:when>
                                 </c:choose></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z934}"></c:out></TD>
-                            <TD width="10%"><c:out value="${vo.e01Z927}"></c:out></TD>
-                            <TD width="10%">
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01z9Yhsj}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z934}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
+                                <c:out value="${vo.e01Z927}"></c:out></TD>
+                            <TD width="10%"
+                                <c:if test="${vo.e01z9Yh eq 1}">style="color: #FF0000"</c:if>>
                                 <c:choose>
                                     <c:when test="${vo.e01Z9Jyzt == 0}">
                                         <a href="javascript:edit('${vo.id}')">修改</a>
@@ -186,6 +214,7 @@
         $("#e01Z9Damc").val('');
         $("#e01Z907").val('');
         $("#e01Z9Jyzt").val('');
+        $("#e01Z9Yh").val('');
     }
 
     function del(id, voname) {

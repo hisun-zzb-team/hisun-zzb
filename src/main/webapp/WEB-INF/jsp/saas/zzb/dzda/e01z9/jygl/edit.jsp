@@ -159,13 +159,13 @@
                                     <label class="control-label">是否通过</label>
                                     <div style="float:left;margin-top: 5px;margin-left: 40px;">
                                         <label class="radio">
-                                            <input type="radio" name="e01Z9Jyzt" value="1" checked/>
+                                            <input type="radio" name="e01Z9Jyzt" onclick="dis('1')" value="1" checked/>
                                             是&nbsp;&nbsp;&nbsp;
                                         </label>
                                     </div>
                                     <div style="float:left;margin-left:20px;margin-top: 5px">
                                         <label class="radio">
-                                            <input type="radio" name="e01Z9Jyzt" value="3"/>
+                                            <input type="radio" name="e01Z9Jyzt" onclick="dis('3')" value="3"/>
                                             否
                                         </label>
                                     </div>
@@ -175,6 +175,13 @@
                                     <div class="controls">
                                         <textarea id="e01Z941" name="e01Z941" class="span9 m-wrap" style="resize: none;"></textarea>
                                         <%--<input type="text" class="span9 m-wrap" name="e01Z941" maxlength="128" id="e01Z941" value="" />--%>
+                                    </div>
+                                </div>
+                                <div id="e01z9YhsjGroup" class="control-group" >
+                                    <label class="control-label">应还日期</label>
+                                    <div class="controls">
+                                        <input type="text" class="span9 m-wrap" name="e01z9Yhsj" maxlength="128" id="e01z9Yhsj" value="${vo.e01z9Yhsj}"
+                                               placeholder="日期格式 例如：2018或201801或20180101"  isDate="true" dateformat="yyyy,yyyymm,yyyymmdd"/>
                                     </div>
                                 </div>
                             </dd>
@@ -198,6 +205,15 @@
     <%-- END PAGE CONTENT--%>
 </div>
 <script type="text/javascript">
+
+    function dis(flag) {
+        if(flag=='1'){
+            $("#e01z9YhsjGroup").css("display","block");
+        }
+        if(flag=='3'){
+            $("#e01z9YhsjGroup").css("display","none");
+        }
+    }
 
     var e01Z9Jyzt = "${e01Z9Jyzt}";
     $(function(){

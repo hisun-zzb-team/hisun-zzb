@@ -52,7 +52,7 @@ public class E01Z9JysqController extends BaseController {
     @RequiresPermissions("jysq:*")
     @RequestMapping("/list")
     public ModelAndView list(@RequestParam(value="pageNum",defaultValue = "1")int pageNum,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize,HttpServletRequest request,
-                             String e01Z9Damc,String e01Z907,String e01Z9Jyzt) throws UnsupportedEncodingException {
+                             String e01Z9Damc,String e01Z907,String e01Z9Jyzt,String e01z9Yh) throws UnsupportedEncodingException {
         Map<String,Object> model = new HashMap<String,Object>();
         UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
         CommonConditionQuery query = new CommonConditionQuery();
@@ -68,8 +68,18 @@ public class E01Z9JysqController extends BaseController {
         if(StringUtils.isNotEmpty(e01Z9Jyzt)){
             query.add(CommonRestrictions.and(" e01Z9Jyzt = :e01Z9Jyzt ", "e01Z9Jyzt", e01Z9Jyzt));
         }
-        List<E01Z9> e01Z9s = this.e01Z9Service.list(query,orderBy);
-        Long total = this.e01Z9Service.count(query);
+        int total = 0;
+        List<E01Z9> e01Z9s = new ArrayList<>();
+        Map<String,Object> resultMap = new HashMap<>();
+        if(StringUtils.isNotEmpty(e01z9Yh)){
+            resultMap = this.e01Z9Service.getYqE01Z9(details.getUserid(),details.getTenantId(),pageNum,pageSize,e01Z9Damc,e01Z907,e01Z9Jyzt,e01z9Yh);
+            e01Z9s = ( List<E01Z9>) resultMap.get("e01Z9s");
+            total = (int) resultMap.get("total");
+        }else {
+            e01Z9s = this.e01Z9Service.list(query,orderBy);
+            Long totalL = this.e01Z9Service.count(query);
+            total = totalL.intValue();
+        }
         List<E01Z9Vo> a01Z9Vos = new ArrayList<E01Z9Vo>();
         E01Z9Vo vo = new E01Z9Vo();
         for(E01Z9 entity : e01Z9s){
@@ -78,10 +88,11 @@ public class E01Z9JysqController extends BaseController {
             a01Z9Vos.add(vo);
         }
 
-        PagerVo<E01Z9Vo> pager = new PagerVo<E01Z9Vo>(a01Z9Vos, total.intValue(), pageNum, pageSize);
+        PagerVo<E01Z9Vo> pager = new PagerVo<E01Z9Vo>(a01Z9Vos, total, pageNum, pageSize);
         model.put("e01Z9Damc",e01Z9Damc);
         model.put("e01Z907",e01Z907);
         model.put("e01Z9Jyzt",e01Z9Jyzt);
+        model.put("e01z9Yh",e01z9Yh);
         model.put("pager",pager);
         model.put("total",total);
         return new ModelAndView("saas/zzb/dzda/e01z9/jysq/list",model);

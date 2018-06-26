@@ -65,6 +65,9 @@ public class E01Z9 extends TenantEntity implements Serializable {
     /** 是否删除 */
     private String isDel;
 
+    /** 应还日期 */
+    private String e01z9Yhsj;
+
     @Id
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
@@ -245,6 +248,16 @@ public class E01Z9 extends TenantEntity implements Serializable {
 
     public void setIsDel(String isDel) {
         this.isDel = isDel;
+    }
+
+    @Basic
+    @Column(name = "e01z9_yhsj", nullable = true, length = 8)
+    public String getE01z9Yhsj() {
+        return e01z9Yhsj;
+    }
+
+    public void setE01z9Yhsj(String e01z9Yhsj) {
+        this.e01z9Yhsj = e01z9Yhsj;
     }
 
     @Override

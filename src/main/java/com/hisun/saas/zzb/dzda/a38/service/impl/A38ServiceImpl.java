@@ -548,7 +548,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
         return  filePath;
     }
 
-    public int saveFromGzslws(DataSource dataSource)throws Exception{
+    public int saveFromGzslws(DataSource dataSource,String a3807B)throws Exception{
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         //处理了多少条
         int order = 0;
@@ -557,7 +557,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 
         int count =0;
         List<Map<String, Object>> countList = queryRunner.query(conn,
-                "select count(*) as count from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'  " , new MapListHandler(),(Object[]) null);
+                "select count(*) as count from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='"+a3807B+"'  " , new MapListHandler(),(Object[]) null);
         for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
             Map<String, Object> m = li.next();
             for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
@@ -576,7 +576,7 @@ public class A38ServiceImpl extends BaseServiceImpl<A38,String>
 //            int num2 = (i+1)*400;
 //            String sql = "select * from (select a38.*,rownum rn from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'\n" +
 //                    "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38) where rn >"+num1+" and rn<"+num2+" ";
-             String sql = "select a38.* from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143'\n" +
+             String sql = "select a38.* from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='"+a3807B+"'\n" +
                 "               order by nvl(a38.A_SCAN_CODE,'-9999') desc,a38.a0101 asc,a38.pk_a38";
             List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
             for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {

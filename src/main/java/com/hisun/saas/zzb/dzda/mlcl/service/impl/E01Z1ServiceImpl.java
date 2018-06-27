@@ -565,7 +565,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
     }
 
 
-    public int saveFromGzslws(DataSource dataSource)throws Exception{
+    public int saveFromGzslws(DataSource dataSource,String a3807B)throws Exception{
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         //处理了多少条
         int order = 0;
@@ -575,7 +575,7 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
         int count =0;
         List<Map<String, Object>> countList = queryRunner.query(conn,
                 "select count(*) as count from e01z1 where e01z1.A_IS_DESTROY='0' and e01z1.PK_A38 in(" +
-                        "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " , new MapListHandler(),(Object[]) null);
+                        "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='"+a3807B+"') " , new MapListHandler(),(Object[]) null);
         for (Iterator<Map<String, Object>> li = countList.iterator(); li.hasNext();) {
             Map<String, Object> m = li.next();
             for (Iterator<Map.Entry<String, Object>> mi = m.entrySet().iterator(); mi.hasNext();) {
@@ -593,8 +593,8 @@ public class E01Z1ServiceImpl extends BaseServiceImpl<E01Z1,String>
             int num1 = i*400;
             int num2 = (i+1)*400;
             String sql = "select * from (select e01z1.*,rownum rn from e01z1 where e01z1.A_IS_DESTROY = '0' and e01z1.PK_A38 in(" +
-                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='GZZZB3002143') " +
-                    "order by e01z1.PK_E01Z1) where rn >"+num1+" and rn<"+num2+" ";
+                    "select a38.PK_A38 from a38 where a38.A_STATE = '1' and a38.A_IS_DESTROY = '0' and a38.a3807b='"+a3807B+"') " +
+                    "order by e01z1.PK_E01Z1) where rn >"+num1+" and rn<="+num2+" ";
 
             List<Map<String, Object>> list = queryRunner.query(conn, sql, new MapListHandler(),(Object[]) null);
             for (Iterator<Map<String, Object>> li = list.iterator(); li.hasNext();) {

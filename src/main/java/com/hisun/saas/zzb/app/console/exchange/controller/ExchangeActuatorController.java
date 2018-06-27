@@ -283,17 +283,19 @@ public class ExchangeActuatorController extends BaseController {
                         exchangeActuator.getPort(),
                         exchangeActuator.getDatabaseName(),
                         exchangeActuator.getUserName(), exchangeActuator.getPassword());
-                this.a38Service.saveFromGzslws(dataSource);
-                this.e01Z1Service.saveFromGzslws(dataSource);
-                this.a32Service.saveFromGzslws(dataSource);
-                this.a52Service.saveFromGzslws(dataSource);
-                this.e01Z4Service.saveFromGzslws(dataSource);
+                String a3807B = "001";//导入档案的管理单位ID
+                this.a38Service.saveFromGzslws(dataSource,a3807B);
+                this.e01Z1Service.saveFromGzslws(dataSource,a3807B);
+                this.a32Service.saveFromGzslws(dataSource,a3807B);
+                this.a52Service.saveFromGzslws(dataSource,a3807B);
+                this.e01Z4Service.saveFromGzslws(dataSource,a3807B);
                 //a38 a32 a52 e01z1 z01z4
             } else if (sourceType == ExchangeActuator.source_gbglxt) {//从干部管理系统(长沙远望)
                 DataSource dataSource = C3p0Util.getSqlServerDataSource(exchangeActuator.getIp(),
                         exchangeActuator.getPort(),
                         exchangeActuator.getDatabaseName(),
                         exchangeActuator.getUserName(), exchangeActuator.getPassword());
+
                 this.appBsetFlService.saveFromYw(dataSource);
                 this.appBsetB01Service.saveFromYw(dataSource);
                 this.appBsetFl2B01Service.saveFromYw(dataSource);

@@ -23,5 +23,5 @@ public interface E01Z4Service extends BaseService<E01Z4,String>{
      * @param dataSource
      * @return
      */
-    int saveFromGzslws(DataSource dataSource)throws Exception;
+    int saveFromGzslws(DataSource dataSource,String a3807B)throws Exception;
 }

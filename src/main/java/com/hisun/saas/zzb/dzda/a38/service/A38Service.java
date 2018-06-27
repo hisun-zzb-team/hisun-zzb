@@ -41,5 +41,5 @@ public interface A38Service extends BaseService<A38,String>{
      * @param dataSource
      * @return
      */
-    int saveFromGzslws(DataSource dataSource)throws Exception;
+    int saveFromGzslws(DataSource dataSource,String a3807B)throws Exception;
 }

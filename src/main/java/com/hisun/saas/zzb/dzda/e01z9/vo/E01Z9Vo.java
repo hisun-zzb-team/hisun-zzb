@@ -222,15 +222,17 @@ public class E01Z9Vo {
 
     public int getE01z9Yh() {
         e01z9Yh=0;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-        String nowDate = sdf.format(date);
+        if("1".equals(e01Z9Jyzt)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date date = new Date();
+            String nowDate = sdf.format(date);
 
-        int e01z9YhsjNum = Integer.parseInt(e01z9Yhsj);
-        int nowDateNum = Integer.parseInt(nowDate);
+            int e01z9YhsjNum = Integer.parseInt(e01z9Yhsj);
+            int nowDateNum = Integer.parseInt(nowDate);
 
-        if(e01z9YhsjNum<nowDateNum){
-            e01z9Yh=1;
+            if(e01z9YhsjNum<nowDateNum){
+                e01z9Yh=1;
+            }
         }
 
 

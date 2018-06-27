@@ -112,10 +112,10 @@
                 </div>
             </c:if>
         </c:if>
-    <c:if test="${!isDacx eq '1'}">
+    <c:if test="${isDacx != '1'}">
         <a class="btn" onclick="cancel()"><i class="icon-remove-sign"></i> 取消</a>
     </c:if>
-    <c:if test="${isDacx eq '1'}">
+    <c:if test="${isDacx == '1'}">
         <a class="btn" href="${path}/zzb/dzda/dacx/bdwdalist?OWASP_CSRFTOKEN=${sessionScope.OWASP_CSRFTOKEN}"><i class="icon-remove-sign"></i> 取消</a>
     </c:if>
     </div>

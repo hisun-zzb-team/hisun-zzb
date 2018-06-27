@@ -34,6 +34,7 @@
                     <form action="" class="form-horizontal" id="form1" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="${entity.id}" id="id">
                         <input type="hidden" name="auditingState" value="${entity.auditingState}" >
+                        <input type="hidden" name="readState" value="${entity.readState}" >
                         <input type="hidden" name="accreditType" value="${entity.accreditType}" >
                         <%--<input type="hidden" name="e01Z807Name" value="${entity.e01Z807Name}">--%>
 
@@ -309,7 +310,7 @@
                              }*/
                         }
                         $("#form1").ajaxSubmit({
-                            url : "${path }/zzb/dzda/cysq/save",
+                            url : "${path }/zzb/dzda/cysq/update",
                             type : "post",
                             dataType : "json",
                             enctype : "multipart/form-data",

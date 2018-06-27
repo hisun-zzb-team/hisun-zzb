@@ -70,7 +70,7 @@
             <button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 入库</button>
         </c:if>
 
-        <c:if test="${!isDacx eq '1'}">
+        <c:if test="${isDacx !='1'}">
             <c:if test="${sjztManage eq '1'}">
                 <button type="button" class="btn green" onclick="formSave('1')"><i class="icon-ok"></i> 保存</button>
                 <%--<div class="btn-group" style="padding-bottom: 0px">--%>

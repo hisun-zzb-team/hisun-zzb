@@ -315,7 +315,7 @@ public class DatpDealController extends BaseController {
     public
     @ResponseBody
     Map<String, Object> save(@RequestParam(value = "zipfile", required = false) MultipartFile file,
-                             @PathVariable(value = "a38Id") String a38Id) throws GenericException {
+                             @PathVariable(value = "a38Id") String a38Id,String a0101) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);//临时目录
@@ -398,7 +398,7 @@ public class DatpDealController extends BaseController {
     public
     @ResponseBody
     Map<String, Object> saveInit(@RequestParam(value = "zipfile", required = false) MultipartFile file,
-                             @PathVariable(value = "a38Id") String a38Id) throws GenericException {
+                             @PathVariable(value = "a38Id") String a38Id,String a0101) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         String storeTmpRealPath = uploadBasePath + getTpStoreTmpPath(a38Id);//临时目录
@@ -463,12 +463,12 @@ public class DatpDealController extends BaseController {
     }
 
 
-    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片：a0101,e01Z111")
+    @RequiresLog(operateType = LogOperateType.SAVE, description = "加载图片：${a0101},${e01Z111}")
     @RequestMapping(value = "/e01z1/save/{e01z1Id}", method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Object> saveE01z1Tp(@RequestParam(value = "zipfile", required = false) MultipartFile file,
-                                    @PathVariable(value = "e01z1Id") String e01z1Id) throws GenericException {
+    Map<String, Object> saveE01z1Tp(@RequestParam(value = "zipfile", required = false) MultipartFile file,String a0101,
+                                    @PathVariable(value = "e01z1Id") String e01z1Id,String e01Z111) throws GenericException {
         Map<String, Object> map = new HashMap<String, Object>();
         UserLoginDetails userLoginDetails = UserLoginDetailsUtil.getUserLoginDetails();
         E01Z1 e01Z1 = this.e01Z1Service.getByPK(e01z1Id);
@@ -612,7 +612,7 @@ public class DatpDealController extends BaseController {
         return ispass;
     }
 
-    @RequiresLog(operateType = LogOperateType.DELETE, description = "卸载图片：a0101")
+    @RequiresLog(operateType = LogOperateType.DELETE, description = "卸载图片：${a0101}")
     @RequestMapping(value = "/delete/{a38Id}")
     public
     @ResponseBody
@@ -631,9 +631,9 @@ public class DatpDealController extends BaseController {
         return map;
     }
 
-    @RequiresLog(operateType = LogOperateType.DOWNLOAD, description = "下载图片：a0101")
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD, description = "下载图片：${a0101}")
     @RequestMapping(value = "/download/{a38Id}")
-    public void zipDown(@PathVariable(value = "a38Id") String a38Id, HttpServletResponse resp) {
+    public void zipDown(@PathVariable(value = "a38Id") String a38Id, String a0101,HttpServletResponse resp) {
         String srcPath = uploadBasePath + getTpStorePath(a38Id);
         String destPath = uploadBasePath + getTpDownStore();
         String zipPath = uploadBasePath + getTpDownStore();

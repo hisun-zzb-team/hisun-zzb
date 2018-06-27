@@ -676,6 +676,7 @@ public class A38Controller extends BaseController {
         return map;
     }
 
+    @RequiresLog(operateType = LogOperateType.DOWNLOAD,description = "下载档案:${a0101}")
     @RequiresPermissions("a38:*")
     @RequestMapping("/dagl/download")
     public void download( HttpServletResponse resp){

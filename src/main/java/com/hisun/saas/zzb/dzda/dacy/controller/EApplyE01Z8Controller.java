@@ -207,7 +207,6 @@ public class EApplyE01Z8Controller extends BaseController {
             String savePath = "";
             if (clFile != null && !clFile.isEmpty()) {
                 fileName = clFile.getOriginalFilename();
-                if (fileName.endsWith(".doc") || fileName.endsWith(".DOC") || fileName.endsWith(".docx") || fileName.endsWith(".DOCX")) {
                     String fileDir = uploadAbsolutePath + "/e01z8";
                     File _fileDir = new File(fileDir);
                     if (_fileDir.exists() == false) {
@@ -223,7 +222,6 @@ public class EApplyE01Z8Controller extends BaseController {
                         e.printStackTrace();
                         throw new GenericException(e);
                     }
-                }
             }
             String a0a01s;
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
@@ -280,7 +278,6 @@ public class EApplyE01Z8Controller extends BaseController {
                 if (fileName.equals(entity.getApplyFileName())) {
                     FileUtils.deleteQuietly(new File(entity.getApplyFilePath()));
                 }
-                if (fileName.endsWith(".doc") || fileName.endsWith(".DOC") || fileName.endsWith(".docx") || fileName.endsWith(".DOCX")) {
                     String fileDir = uploadAbsolutePath + "/e01z8";
                     File _fileDir = new File(fileDir);
                     if (_fileDir.exists() == false) {
@@ -299,7 +296,6 @@ public class EApplyE01Z8Controller extends BaseController {
                     }
                     vo.setApplyFileName(fileName);
                     vo.setApplyFilePath(savePath);
-                }
             }
             UserLoginDetails details = UserLoginDetailsUtil.getUserLoginDetails();
             BeanUtils.copyProperties(entity, vo);
